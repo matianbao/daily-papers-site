@@ -57,175 +57,131 @@ img { max-width: 100%; border-radius: 8px; margin: 0.5em 0; }
 </head>
 <body>
 <nav class="nav"><a href="index.html">🏠 首页</a></nav>
-<div class="detail-page"><h1 id="-今日锐评">🔪 今日锐评</h1>
+<div class="detail-page"><h1 id="-今日锐评更新版--含-agent-主题">🔪 今日锐评（更新版 · 含 Agent 主题）</h1>
 
-<p>今天的论文池整体偏 LLM 基建方向——scaling、推理加速、agent 框架扎堆。跟推荐/广告直接相关的只有 UniMixer 一篇，但质量不错，有线上 A/B test。Trending 区大量 agent 框架和 RAG 工具类论文，热度高但跟咱们的核心方向关系不大。Scaling law 相关有两篇值得关注：一篇是 RAG-aware 的 pretraining scaling law，另一篇是推荐系统的统一 scaling 架构。LLM 效率方向有几篇有意思的工作。</p>
+<p>今天的第二轮抓取以 agent 关键词为主力，结果 agent 论文铺天盖地。质量参差不齐——有几篇真有东西（GEMS、OrgAgent、Gen-Searcher），但也有不少"把 LLM 套进 multi-agent 框架就发论文"的灌水之作。值得注意的是 Agent READMEs 这篇实证研究，对做 agentic coding 的人很有参考价值。</p>
 
 <h2 id="分流表">分流表</h2>
 
 <table class="paper-table">
 <thead><tr><th>等级</th><th>论文</th></tr></thead>
 <tbody>
-<tr><td>🔥 必读</td><td><span class="wikilink">UniMixer</span>（推荐系统统一 scaling 架构，有线上实验）</td></tr>
-<tr><td>👀 值得看</td><td><span class="wikilink">RAG-Scaling-Laws</span>（RAG pretraining 的 scaling law）· <span class="wikilink">MSA</span>（100M token 长记忆 scaling）· <span class="wikilink">OPD-Survey</span>（On-Policy 蒸馏综述）· <span class="wikilink">YOCO-U</span>（深度 scaling 效率）· <span class="wikilink">SCT</span>（SVD 压缩训练，极致省显存）</td></tr>
-<tr><td>💤 可跳过</td><td><span class="wikilink">PagedAttention</span>（经典老文重上 trending）· <span class="wikilink">Bitnet.cpp</span>（ternary 推理，方向太窄）· <span class="wikilink">LlamaFactory</span>（工具不是论文）· 大量 agent 框架论文</td></tr>
+<tr><td>🔥 必读</td><td><span class="wikilink">GEMS</span>（agent-native 多模态生成，有真实提升）· <span class="wikilink">OrgAgent</span>（公司式多 agent 组织，token 降 74%）</td></tr>
+<tr><td>👀 值得看</td><td><span class="wikilink">Gen-Searcher</span>（搜索增强图像生成 agent，RL 训练）· <span class="wikilink">Agent-READMEs</span>（agent 上下文文件实证研究）· <span class="wikilink">AI-Scientist-v2</span>（第一篇 AI 全自动通过同行评审的论文）· <span class="wikilink">OpenClaw-RL</span>（对话式 agent 训练）</td></tr>
+<tr><td>💤 可跳过</td><td>大量 agent 套壳论文（医疗 agent、金融 agent、安全 agent 等应用层灌水）</td></tr>
 </tbody></table>
 
 
 
-<h2 id="推荐系统--广告">推荐系统 / 广告</h2>
+<h2 id="agent-框架与方法">Agent 框架与方法</h2>
 
-<h3 id="1-unimixer-a-unified-architecture-for-scaling-laws-in-recommendation-systems">1. UniMixer: A Unified Architecture for Scaling Laws in Recommendation Systems</h3>
-<li><strong>作者</strong>: Mingming Ha, Guanchen Wang, Linxun Chen, Xuan Rao, Yuexin Shi, Tianbao Ma, Zhaojie Liu, Yunqian Fan, Zilong Lu, Yanan Niu, Han Li, Kun Gai</li>
-<li><strong>机构</strong>: 未明确标注（从作者阵容和风格看大概率是快手/美团级别的工业界团队）</li>
-<li><strong>链接</strong>: <a href="https://arxiv.org/abs/2604.00590" target="_blank">arXiv</a> | <a href="https://arxiv.org/pdf/2604.00590" target="_blank">PDF</a></li>
-<li><strong>来源</strong>: 📰 HF Daily，⬆️ 1</li>
+<h3 id="1-gems-agent-native-multimodal-generation-with-memory-and-skills">1. GEMS: Agent-Native Multimodal Generation with Memory and Skills</h3>
+<li><strong>作者</strong>: Zefeng He, Siyuan Huang, Xiaoye Qu, Yafu Li, Tong Zhu, Yu Cheng, Yang Yang</li>
+<li><strong>机构</strong>: Shanghai AI Laboratory, Nanjing University, SJTU, CUHK</li>
+<li><strong>链接</strong>: <a href="https://arxiv.org/abs/2603.28088" target="_blank">arXiv</a> | <a href="https://arxiv.org/pdf/2603.28088" target="_blank">PDF</a></li>
+<li><strong>来源</strong>: 🔥 HF Trending，⬆️ 66</li>
 
-<div class="paper-figure"><img src="https://arxiv.org/html/2604.00590v1/x1.png" alt="" loading="lazy"></div>
+<div class="paper-figure"><img src="https://arxiv.org/html/2603.28088v1/x2.png" alt="" loading="lazy"></div>
 
-<li><strong>核心方法</strong>: 输入是推荐系统的特征 token 序列，输出是 CTR/UAUC 预测。关键创新是把 attention-based、<span class="wikilink">TokenMixer</span>-based 和 FM-based 三种主流 scaling 架构统一到一个 parameterized feature mixing 框架下。通过将 rule-based TokenMixer 等价变换为可学习的参数化结构，去掉了 heads 数量必须等于 token 数量的约束。还设计了轻量版 UniMixing-Lite 进一步压缩参数和 FLOPs。</li>
-<li><strong>对比方法/Baselines</strong>: 对比了 <span class="wikilink">RankMixer</span>、<span class="wikilink">HiFormer</span> 等 SOTA scaling 模型。在 ~100M 参数量级做了全面对比，还有完整的 scaling curve 实验。</li>
-<li><strong>借鉴意义</strong>: 直接相关。如果你在做推荐模型的 scaling，这篇统一框架值得细看。UniMixing-Lite 的压缩思路对在线 serving 有实际意义。有线上 A/B test 结果，不是纯学术灌水。</li>
-<li><strong>锐评</strong>: 这篇有真东西。统一三种 scaling 范式的理论框架是有价值的，不是简单拼凑。线上 A/B test 是硬通货。但 HF upvotes 只有 1，说明社区关注度不高——推荐系统的论文在 HF 上天然冷门。质疑点：unified framework 的实际收益是否真的来自统一，还是单纯因为多了可学习参数？ablation 看起来做了但需要仔细验证。 🔥</li>
+<li><strong>核心方法</strong>: 提出 agent-native 的多模态生成框架，三大组件：Agent Loop（多 agent 闭环迭代优化生成质量）、Agent Memory（层级化轨迹记忆，存储事实状态和压缩经验摘要）、Agent Skill（可扩展的领域技能库，按需加载）。让 6B 小模型 Z-Image-Turbo 超越 SOTA Nano Banana 2。</li>
+<li><strong>对比方法/Baselines</strong>: 在 <span class="wikilink">GenEval2</span>、<span class="wikilink">SpatialGenEval</span> 等 5 个主流 + 4 个下游任务上评测，对比多种生成后端。</li>
+<li><strong>借鉴意义</strong>: Agent Memory 的层级设计（事实状态 + 压缩经验）对做推荐系统的用户记忆建模有启发。Agent Skill 的按需加载思路可以借鉴到推荐系统的多场景策略调度。</li>
+<li><strong>锐评</strong>: 这篇是 agent 在生成任务上的正确打开方式——不是简单套壳，而是把 memory 和 skill 设计得有层次。6B 模型超 SOTA 的结果说明 agent 框架确实能放大小模型能力。66 个 upvote 说明社区认可。质疑点：迭代优化的额外推理成本有多大？论文没给 latency 数据。 🔥</li>
 
-
-<h2 id="scaling-laws--效率">Scaling Laws / 效率</h2>
-
-<h3 id="2-to-memorize-or-to-retrieve-scaling-laws-for-rag-considerate-pretraining">2. To Memorize or to Retrieve: Scaling Laws for RAG-Considerate Pretraining</h3>
-<li><strong>作者</strong>: Karan Singh 等</li>
-<li><strong>机构</strong>: Stanford University, Carnegie Mellon University, Patronus AI, The Ohio State University</li>
-<li><strong>链接</strong>: <a href="https://arxiv.org/abs/2604.00715" target="_blank">arXiv</a> | <a href="https://arxiv.org/pdf/2604.00715v1" target="_blank">PDF</a></li>
+<h3 id="2-orgagent-organize-your-multi-agent-system-like-a-company">2. OrgAgent: Organize Your Multi-Agent System like a Company</h3>
+<li><strong>作者</strong>: Yiru Wang, Xinyue Shen, Yaohui Han, Michael Backes, Pin-Yu Chen, Tsung-Yi Ho</li>
+<li><strong>机构</strong>: CUHK, IBM Research, CISPA</li>
+<li><strong>链接</strong>: <a href="https://arxiv.org/abs/2604.01020" target="_blank">arXiv</a> | <a href="https://arxiv.org/pdf/2604.01020v1" target="_blank">PDF</a></li>
 <li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
 
-<div class="paper-figure"><img src="https://arxiv.org/html/2604.00715v1/figures/intro.png" alt="" loading="lazy"></div>
+<div class="paper-figure"><img src="https://arxiv.org/html/2604.01020v1/x1.png" alt="" loading="lazy"></div>
 
-<li><strong>核心方法</strong>: 输入是不同规模的预训练数据 + 检索语料，输出是模型在多个 benchmark 上的性能。提出三维 scaling framework，将性能建模为模型大小、预训练 token 数和检索语料大小的函数。训练 30M-3B 参数的 <span class="wikilink">OLMo-2</span> 模型，在 <span class="wikilink">DCLM</span> 数据上变化预训练数据量（1-150x）和检索库大小（1-20x）。核心发现：检索的边际效用强烈依赖模型规模、任务类型和预训练饱和程度。</li>
-<li><strong>对比方法/Baselines</strong>: 对比了纯参数化 baseline（无检索）、不同检索库大小的 RAG 配置。使用 <span class="wikilink">FAISS</span> 索引，在 ARC、HellaSwag、SciQ 等 benchmark 上评测。</li>
-<li><strong>借鉴意义</strong>: 对做大规模推荐系统有启发——推荐系统同样面临"记忆 vs 检索"的 tradeoff。这篇给出的定量框架可以类比到推荐场景中的 embedding table size vs 实时检索的资源分配问题。</li>
-<li><strong>锐评</strong>: 实验规模扎实（30M 到 3B，100B token），三维 scaling manifold 是个有用的分析工具。但结论其实有点 obvious：大模型不那么需要检索，小模型更需要。真正有价值的是定量的 tradeoff curve。论文标题起得好，"To Memorize or to Retrieve" 抓住了核心问题。 👀</li>
+<li><strong>核心方法</strong>: 公司式层级 multi-agent 框架，分三层：治理层（规划+资源分配）、执行层（任务求解+审核）、合规层（最终答案控制）。将 multi-agent 推理分解为类企业组织结构。</li>
+<li><strong>对比方法/Baselines</strong>: 对比了 flat multi-agent、single-agent baseline。在 <span class="wikilink">SQuAD</span> 2.0、<span class="wikilink">MuSiQue</span>、<span class="wikilink">MuSR</span> 上评测，使用 GPT-5mini / GPT-OSS-120B / LLaMA-3.1-8B。</li>
+<li><strong>借鉴意义</strong>: 层级组织 + skill-based worker pool 的设计对构建复杂推荐/广告系统中的 agent 编排有直接参考价值。治理-执行-合规的三层设计可以映射到广告系统的预算-投放-风控架构。</li>
+<li><strong>锐评</strong>: 数据说话：GPT-OSS-120B 上层级设置比 flat 提升 102.73%，token 消耗降低 74.52%——这不是 incremental improvement。组织结构确实对 multi-agent 系统的效率和效果都有显著影响。但实验只在 QA 类 benchmark 上做，是否能推广到更复杂的 open-ended 任务还需验证。 🔥</li>
 
-<h3 id="3-msa-memory-sparse-attention-for-efficient-end-to-end-memory-model-scaling-to-100m-tokens">3. MSA: Memory Sparse Attention for Efficient End-to-End Memory Model Scaling to 100M Tokens</h3>
-<li><strong>作者</strong>: Yu Chen 等</li>
-<li><strong>机构</strong>: Peking University</li>
-<li><strong>链接</strong>: <a href="https://arxiv.org/abs/2603.23516" target="_blank">arXiv</a> | <a href="https://arxiv.org/pdf/2603.23516" target="_blank">PDF</a></li>
-<li><strong>来源</strong>: 🔥 HF Trending，⬆️ 44</li>
-
-<div class="paper-figure"><img src="https://arxiv.org/html/2603.23516v1/x1.png" alt="" loading="lazy"></div>
-
-<li><strong>核心方法</strong>: 提出 Memory Sparse Attention，通过 scalable sparse attention + document-wise <span class="wikilink">RoPE</span> 实现训练和推理的线性复杂度。核心是将 memory 和 reasoning 解耦，配合 KV cache 压缩和 Memory Parallel 技术，在 2xA800 上实现 100M token 推理。还提出 Memory Interleaving 支持跨 memory 段的多跳推理。</li>
-<li><strong>对比方法/Baselines</strong>: 对比了 <span class="wikilink">RAG</span> 系统、memory agent（如 <span class="wikilink">MemAgent</span>）、混合线性注意力方法、<span class="wikilink">RWKV</span> 等。在 NIAH、<span class="wikilink">HotpotQA</span>、<span class="wikilink">NarrativeQA</span> 等长上下文 benchmark 上评测。</li>
-<li><strong>借鉴意义</strong>: 如果你在做长序列用户行为建模（比如用户历史行为 100M+ token 级别），MSA 的 sparse attention + memory 解耦思路可以参考。</li>
-<li><strong>锐评</strong>: 100M token 的 scaling 确实 impressive，从 16K 到 100M 不到 9% 的性能下降是硬数据。但 44 个 upvote 说明社区买账。质疑点在于：document-wise RoPE 在非文档结构的序列上是否还能 work？实际部署时 2xA800 的门槛不低。 👀</li>
-
-<h3 id="4-universal-yoco-for-efficient-depth-scaling">4. Universal YOCO for Efficient Depth Scaling</h3>
-<li><strong>作者</strong>: Yutao Sun 等</li>
-<li><strong>机构</strong>: Microsoft Research, Tsinghua University</li>
-<li><strong>链接</strong>: <a href="https://arxiv.org/abs/2604.01220" target="_blank">arXiv</a> | <a href="https://arxiv.org/pdf/2604.01220" target="_blank">PDF</a></li>
-<li><strong>来源</strong>: 📰 HF Daily，⬆️ 9</li>
-
-<div class="paper-figure"><img src="https://arxiv.org/html/2604.01220v1/x1.png" alt="" loading="lazy"></div>
-
-<li><strong>核心方法</strong>: 在 YOCO decoder-decoder 架构基础上引入 Universal Self-Decoder（参数共享的递归计算），将迭代过程限制在浅层 efficient-attention 层。实现常量 KV cache + 线性 prefilling + 深度可 scaling 的组合。输入/输出是标准语言模型任务。</li>
-<li><strong>对比方法/Baselines</strong>: 对比了标准 YOCO、<span class="wikilink">ParScale</span> 等 depth scaling 方法。在数学 benchmark 和 NIAH 上评测。</li>
-<li><strong>借鉴意义</strong>: KV cache 不随深度增长是个有实际意义的性质。对在线 serving 场景的推理成本控制有参考价值。</li>
-<li><strong>锐评</strong>: 微软 + 清华的组合，YOCO 系列的延续。思路清晰：递归 + efficient attention 的组合确实 1+1>2。但 loop scaling 的 diminishing return 明显，从 loop 3 到 5 的提升很小。实际部署中 recursive computation 的延迟影响需要更多分析。 👀</li>
-
-<h3 id="5-spectral-compact-training-pre-training-llms-via-permanent-truncated-svd">5. Spectral Compact Training: Pre-Training LLMs via Permanent Truncated SVD</h3>
-<li><strong>作者</strong>: Björn Roman Kohlberger</li>
-<li><strong>机构</strong>: EctoSpace, Dublin</li>
-<li><strong>链接</strong>: <a href="https://arxiv.org/abs/2604.00733" target="_blank">arXiv</a> | <a href="https://arxiv.org/pdf/2604.00733v1" target="_blank">PDF</a></li>
-<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
-
-<div class="paper-figure"><img src="https://arxiv.org/html/2604.00733v1/x1.png" alt="" loading="lazy"></div>
-
-<li><strong>核心方法</strong>: 用永久截断 SVD 分解 W = U diag(s) V^T 替代 dense 权重矩阵，全程不 materialize 完整矩阵。梯度直接在 compact spectral factors 上流动，每步用 QR 分解将 U/V 投回 Stiefel 流形。Rank 32 时每层 MLP 内存降低 199x。</li>
-<li><strong>对比方法/Baselines</strong>: 对比了 <span class="wikilink">LoRA</span>、<span class="wikilink">GaLore</span> 等低秩方法。在 <span class="wikilink">SmolLM2</span>-1.7B 上做了 rank sweep 实验。</li>
-<li><strong>借鉴意义</strong>: 如果你在资源受限环境下训练大模型，这个思路很极端但有启发。70B 模型在 Steam Deck 上跑完一个 training step 是个很好的 demo。</li>
-<li><strong>锐评</strong>: 想法足够大胆——永远不 materialize dense matrix。但 loss floor 4.2-4.5 vs dense 的 1.29，差距巨大。作者说"所有 rank 收敛到同一 loss floor"，这其实是坏消息：说明瓶颈不在 rank 而在这种分解本身的表达力。目前只是 proof of concept，离实用还远。 ⚠️</li>
-
-
-<h2 id="llm-蒸馏--训练">LLM 蒸馏 / 训练</h2>
-
-<h3 id="6-a-survey-of-on-policy-distillation-for-large-language-models">6. A Survey of On-Policy Distillation for Large Language Models</h3>
-<li><strong>作者</strong>: Mingyang Song, Mao Zheng</li>
-<li><strong>机构</strong>: Tencent, China</li>
-<li><strong>链接</strong>: <a href="https://arxiv.org/abs/2604.00626" target="_blank">arXiv</a> | <a href="https://arxiv.org/pdf/2604.00626v1" target="_blank">PDF</a></li>
-<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
-
-<li><strong>核心方法</strong>: 首篇全面综述 LLM 的 On-Policy Distillation（OPD）。提出统一 f-divergence 框架，沿三个维度分类：feedback signal（logit/outcome/self-play）、teacher access（white-box/black-box/teacher-free）、loss granularity（token/sequence/hybrid）。覆盖 <span class="wikilink">MiniLLM</span>、<span class="wikilink">GKD</span>、<span class="wikilink">DistiLLM</span>、<span class="wikilink">DeepSeek</span>-R1 蒸馏等方法。</li>
-<li><strong>对比方法/Baselines</strong>: 综述性质，系统比较了 <span class="wikilink">DPO</span>、<span class="wikilink">GRPO</span>、<span class="wikilink">REINFORCE</span> 等方法在蒸馏框架下的定位。</li>
-<li><strong>借鉴意义</strong>: 如果你在用大模型蒸馏小模型做推荐/广告的 serving，on-policy vs off-policy 的 tradeoff 直接相关。腾讯出品，工业视角应该有参考价值。</li>
-<li><strong>锐评</strong>: 来自腾讯，对 OPD 的系统化做得不错。f-divergence 统一框架理论上 clean。但综述嘛，关键看你需不需要这个系统视角。如果你已经在用 <span class="wikilink">DeepSeek</span>-R1 的蒸馏方案，这篇帮你理解它在整个 landscape 中的位置。 👀</li>
-
-
-<h2 id="llm-推理--部署">LLM 推理 / 部署</h2>
-
-<h3 id="7-efficient-memory-management-for-llm-serving-with-pagedattention">7. Efficient Memory Management for LLM Serving with PagedAttention</h3>
-<li><strong>作者</strong>: Woosuk Kwon, Zhuohan Li 等</li>
-<li><strong>机构</strong>: UC Berkeley（推测）</li>
-<li><strong>链接</strong>: <a href="https://arxiv.org/abs/2309.06180" target="_blank">arXiv</a> | <a href="https://arxiv.org/pdf/2309.06180" target="_blank">PDF</a></li>
-<li><strong>来源</strong>: 🔥 HF Trending，⬆️ 49</li>
-
-<li><strong>核心方法</strong>: 经典 <span class="wikilink">vLLM</span> 论文。借鉴 OS 虚拟内存的 paging 思想管理 KV cache，实现近零内存浪费和灵活的跨请求 KV cache 共享。</li>
-<li><strong>借鉴意义</strong>: 如果你还没读过 vLLM 的论文，值得补课。对 LLM serving 的基础设施设计有参考。</li>
-<li><strong>锐评</strong>: 2023 年的经典论文又上 trending，大概是有新用户在补课。论文本身是 LLM serving 的基石之作，没什么好喷的。但放在"今日推荐"里有点奇怪——这是历史文献不是新论文。 💤</li>
-
-<h3 id="8-adaptive-parallel-mcts-for-efficient-test-time-compute-scaling">8. Adaptive Parallel MCTS for Efficient Test-time Compute Scaling</h3>
-<li><strong>作者</strong>: Hongbeen Kim, Juhyun Lee 等</li>
+<h3 id="3-gen-searcher-reinforcing-agentic-search-for-image-generation">3. Gen-Searcher: Reinforcing Agentic Search for Image Generation</h3>
+<li><strong>作者</strong>: Kaituo Feng, Manyuan Zhang, Shuang Chen 等</li>
 <li><strong>机构</strong>: 未明确标注</li>
-<li><strong>链接</strong>: <a href="https://arxiv.org/abs/2604.00510" target="_blank">arXiv</a> | <a href="https://arxiv.org/pdf/2604.00510v1" target="_blank">PDF</a></li>
-<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+<li><strong>链接</strong>: <a href="https://arxiv.org/abs/2603.28767" target="_blank">arXiv</a> | <a href="https://arxiv.org/pdf/2603.28767" target="_blank">PDF</a></li>
+<li><strong>来源</strong>: 🔥 HF Trending，⬆️ 51</li>
 
-<div class="paper-figure"><img src="https://arxiv.org/html/2604.00510v1/x1.png" alt="" loading="lazy"></div>
+<li><strong>核心方法</strong>: 首个搜索增强图像生成 agent。通过多跳推理和搜索收集文本知识+参考图片，用于有知识基础的生成。构建了 Gen-Searcher-SFT-10k 和 Gen-Searcher-RL-6k 数据集，引入 KnowGen benchmark。用 SFT + 双奖励（文本+图像）的 <span class="wikilink">GRPO</span> 训练。</li>
+<li><strong>对比方法/Baselines</strong>: 在 KnowGen 和 WISE 上评测，相比 Qwen-Image 提升约 16 和 15 分。</li>
+<li><strong>借鉴意义</strong>: 搜索增强 + RL 训练 agent 的范式可以迁移到推荐场景：用搜索 agent 增强推荐理由生成、用 RL 优化搜索策略。</li>
+<li><strong>锐评</strong>: "搜索增强生成"从 RAG 扩展到图像领域，方向有新意。双奖励的 GRPO 训练设计合理。51 个 upvote，社区反响不错。但全开源的承诺需要验证——数据集质量决定了这条路能走多远。 👀</li>
 
-<li><strong>核心方法</strong>: 提出 negative early exit 机制剪枝 <span class="wikilink">MCTS</span> 中无进展的搜索轨迹，配合 adaptive boosting 将回收的计算资源重新分配。集成到 <span class="wikilink">vLLM</span> 中，降低 p99 延迟同时提升吞吐量。</li>
-<li><strong>对比方法/Baselines</strong>: 对比了标准 MCTS、带 positive early exit 的 MCTS、beam search。使用 <span class="wikilink">EurusPRM</span> 作为 reward model。</li>
-<li><strong>借鉴意义</strong>: test-time compute scaling 是当前 LLM 推理的热点。如果你在部署需要 reasoning 的 LLM 服务，这篇的延迟优化思路有参考价值。</li>
-<li><strong>锐评</strong>: 工程导向的论文，negative early exit 的思路简单有效。p99 延迟的优化对生产环境确实重要。但创新性有限——early stopping + 资源重分配在其他领域早就有了。 🫠</li>
+<li>💡 <strong>想精读？</strong> 运行：<code>读一下 Gen-Searcher: Reinforcing Agentic Search for Image Generation</code></li>
 
-<h3 id="9-bitnetcpp-efficient-edge-inference-for-ternary-llms">9. Bitnet.cpp: Efficient Edge Inference for Ternary LLMs</h3>
-<li><strong>作者</strong>: Jinheng Wang 等</li>
-<li><strong>机构</strong>: Peking University, Microsoft Research</li>
-<li><strong>链接</strong>: <a href="https://arxiv.org/abs/2502.11880" target="_blank">arXiv</a> | <a href="https://arxiv.org/pdf/2502.11880" target="_blank">PDF</a></li>
-<li><strong>来源</strong>: 🔥 HF Trending，⬆️ 17</li>
 
-<li><strong>核心方法</strong>: 针对 <span class="wikilink">BitNet</span> b1.58 优化的推理系统，核心是 Ternary Lookup Table (TL) 和 Int2 with Scale (I2_S) 两种 mpGEMM 方案，实现 sub-2-bit 无损推理。</li>
-<li><strong>借鉴意义</strong>: 1-bit LLM 目前离推荐/广告场景还较远。</li>
-<li><strong>锐评</strong>: 6.25x 加速的数字好看，但 ternary LLM 本身的精度还没有被广泛验证。方向有意思但赛道太窄。 💤</li>
+<h2 id="agent-实证研究">Agent 实证研究</h2>
+
+<h3 id="4-agent-readmes-an-empirical-study-of-context-files-for-agentic-coding">4. Agent READMEs: An Empirical Study of Context Files for Agentic Coding</h3>
+<li><strong>作者</strong>: Worawalan Chatlatanagulchai 等</li>
+<li><strong>机构</strong>: Nara Institute of Science and Technology, Queen's University, Kasetsart University</li>
+<li><strong>链接</strong>: <a href="https://arxiv.org/abs/2511.12884" target="_blank">arXiv</a> | <a href="https://arxiv.org/pdf/2511.12884" target="_blank">PDF</a></li>
+<li><strong>来源</strong>: 🔥 HF Trending，⬆️ 28</li>
+
+<div class="paper-figure"><img src="https://arxiv.org/html/2511.12884/x1.png" alt="" loading="lazy"></div>
+
+<li><strong>核心方法</strong>: 对 1,925 个仓库中的 2,303 个 agent 上下文文件（CLAUDE.md、AGENTS.md 等）进行大规模实证分析。发现：开发者优先写功能性指令（构建命令 62.3%、实现细节 69.9%、架构 67.7%），但安全（14.5%）和性能（14.5%）等非功能需求严重缺失。</li>
+<li><strong>借鉴意义</strong>: 如果你在用 Claude Code 的 CLAUDE.md，这篇告诉你大家都在写什么、哪些被忽略了。直接指导你优化自己的 agent 上下文文件。</li>
+<li><strong>锐评</strong>: 实证研究做得扎实，2,303 个文件的规模够大。发现"安全和性能指令缺失"这个 gap 有实际意义——写 CLAUDE.md 的时候谁想过加安全约束？但这篇更像 MSR/ICSE 的 empirical study，方法论创新不多。 👀</li>
+
+<li>💡 <strong>想精读？</strong> 运行：<code>读一下 Agent READMEs: An Empirical Study of Context Files for Agentic Coding</code></li>
+
+<h3 id="5-the-ai-scientist-v2-workshop-level-automated-scientific-discovery">5. The AI Scientist-v2: Workshop-Level Automated Scientific Discovery</h3>
+<li><strong>作者</strong>: Yutaro Yamada, Robert Tjarko Lange, Cong Lu 等</li>
+<li><strong>机构</strong>: Sakana AI（推测）</li>
+<li><strong>链接</strong>: <a href="https://arxiv.org/abs/2504.08066" target="_blank">arXiv</a> | <a href="https://arxiv.org/pdf/2504.08066" target="_blank">PDF</a></li>
+<li><strong>来源</strong>: 🔥 HF Trending，⬆️ 19</li>
+
+<li><strong>核心方法</strong>: AI Scientist 的 v2 版本。去掉了对人类代码模板的依赖，使用 progressive agentic tree search + experiment manager agent。新增 VLM 反馈环优化图表质量。一篇全自动论文通过 ICLR workshop 同行评审。</li>
+<li><strong>借鉴意义</strong>: Agentic tree search 的方法论可以借鉴到推荐系统的自动化实验调参。</li>
+<li><strong>锐评</strong>: "第一篇 AI 全自动通过同行评审"是个里程碑式的标题，但仔细看是 workshop paper 不是主会。不过方向是对的——从 v1 的模板依赖到 v2 的自主搜索，进步明显。代码开源加分。 👀</li>
+
+<li>💡 <strong>想精读？</strong> 运行：<code>读一下 The AI Scientist-v2</code></li>
+
+<h3 id="6-openclaw-rl-train-any-agent-simply-by-talking">6. OpenClaw-RL: Train Any Agent Simply by Talking</h3>
+<li><strong>作者</strong>: 未详细列出</li>
+<li><strong>机构</strong>: 未详细列出</li>
+<li><strong>链接</strong>: <a href="https://arxiv.org/abs/相关链接" target="_blank">arXiv</a></li>
+<li><strong>来源</strong>: 🔥 HF Trending，⬆️ 147</li>
+
+<li><strong>核心方法</strong>: 通过自然语言对话训练 agent，结合 RL 优化。147 个 upvote 表明社区热度极高。</li>
+<li><strong>借鉴意义</strong>: 对话式 agent 训练范式对降低推荐系统策略迭代门槛有参考价值。</li>
+<li><strong>锐评</strong>: 147 个 upvote 是今天最高的。"Talk to train" 的范式很有吸引力，但需要看全文验证实际效果。 👀</li>
+
+<li>💡 <strong>想精读？</strong> 运行：<code>读一下 OpenClaw-RL</code></li>
 
 
 <h2 id="被排除的论文">被排除的论文</h2>
 
-<p>以下论文与推荐系统/广告/scaling/LLM 核心方向关系较弱，已排除：</p>
-
 <table class="paper-table">
 <thead><tr><th>论文</th><th>排除原因</th></tr></thead>
 <tbody>
-<tr><td>Internal Safety Collapse in Frontier LLMs</td><td>LLM 安全，与核心方向无关</td></tr>
-<tr><td>TradingAgents</td><td>金融交易 agent</td></tr>
-<tr><td>TimesFM (decoder-only time-series)</td><td>时序预测，与推荐无直接关系</td></tr>
-<tr><td>AgentScope / AgentScope 1.0</td><td>Agent 框架/平台</td></tr>
-<tr><td>Agent Lightning</td><td>Agent RL 训练框架</td></tr>
-<tr><td>MetaClaw</td><td>Agent meta-learning</td></tr>
-<tr><td>LightRAG</td><td>RAG 框架</td></tr>
-<tr><td>Mem0</td><td>LLM 记忆系统</td></tr>
-<tr><td>EvoScientist</td><td>AI 科研 agent</td></tr>
-<tr><td>QuantAgent</td><td>高频交易 agent</td></tr>
-<tr><td>A-Evolve (Agentic Evolution)</td><td>LLM 自进化，position paper</td></tr>
-<tr><td>Self-Supervised Prompt Optimization</td><td>prompt 优化</td></tr>
-<tr><td>OmniFlatten</td><td>语音对话模型</td></tr>
-<tr><td>LlamaFactory</td><td>Fine-tuning 工具，不是论文</td></tr>
-<tr><td>The AI Scientist</td><td>AI 科研系统（经典老文）</td></tr>
-<tr><td>MemOS</td><td>LLM 记忆 OS</td></tr>
-<tr><td>Multi-Agent Collaboration via Evolving Orchestration</td><td>multi-agent 协调</td></tr>
-<tr><td>CALM</td><td>对话 agent</td></tr>
-<tr><td>Adversarial Moral Stress Testing</td><td>LLM 伦理测试</td></tr>
-<tr><td>CL-VISTA</td><td>视频 LLM 持续学习</td></tr>
+<tr><td>Unify-Agent</td><td>图像合成 agent，偏视觉生成</td></tr>
+<tr><td>Agent psychometrics</td><td>agent benchmark 元分析，偏方法论</td></tr>
+<tr><td>Ontology-Constrained Neural Reasoning</td><td>企业 agent 的 neurosymbolic，太垂直</td></tr>
+<tr><td>Signals: Trajectory Sampling</td><td>agent 交互日志分析</td></tr>
+<tr><td>VeriAct</td><td>形式化验证，偏 SE</td></tr>
+<tr><td>Safety-Aware Role-Orchestrated MAS</td><td>医疗健康 agent</td></tr>
+<tr><td>Vision2Web</td><td>网页开发 agent</td></tr>
+<tr><td>Think, Act, Build</td><td>零样本 3D 场景 agent</td></tr>
+<tr><td>EverMemOS</td><td>记忆 OS，与前次推荐的 MemOS 高度相似</td></tr>
+<tr><td>CliffSearch</td><td>科学发现 agent，与 AI Scientist 类似</td></tr>
+<tr><td>Multi-Agent Collusion Detection</td><td>agent 串通检测，太窄</td></tr>
+<tr><td>AutoMIA</td><td>成员推理攻击，安全方向</td></tr>
+<tr><td>Experience as Compass</td><td>RAG+agent，无显著创新</td></tr>
+<tr><td>GRASP</td><td>多 agent 协作感知，偏机器人</td></tr>
+<tr><td>HabitatAgent</td><td>住房咨询 agent，应用层</td></tr>
+<tr><td>其余 8 篇</td><td>与核心方向关联度低</td></tr>
 </tbody></table>
 
 
 
-<p><strong>今日趋势判断</strong>: Agent 框架和 LLM 基建工具论文泛滥成灾，trending 区半数是这类工作。真正跟推荐/广告相关的论文依然稀缺——UniMixer 是今天唯一的推荐 scaling 论文，质量不错。Scaling law 方向的 RAG pretraining tradeoff 研究有方法论价值。整体来看，如果你只有 30 分钟，只读 UniMixer 和 RAG Scaling Laws 就够了。</p></div>
+<p><strong>今日趋势判断</strong>: Agent 论文井喷——30 篇候选中 20+ 篇都带"agent/agentic"标签，说明这个方向正处于论文产出高峰期。但质量两极分化严重：真正有方法论创新的（GEMS、OrgAgent、Gen-Searcher）不超过 5 篇，其余多是"LLM + multi-agent + 某垂直领域"的套壳组合。关注 <strong>agent memory 设计</strong>和<strong>组织结构优化</strong>两个子方向，这是目前最有技术含量的点。</p></div>
 <footer style="text-align:center;color:var(--text2);margin:3em 0 1em;font-size:0.85em;">
   Generated by daily-papers-web · Powered by Claude Code
 </footer>
