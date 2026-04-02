@@ -13,7 +13,7 @@
 * { margin: 0; padding: 0; box-sizing: border-box; }
 body { font-family: -apple-system, 'Segoe UI', Helvetica, Arial, sans-serif;
   background: var(--bg); color: var(--text); line-height: 1.7;
-  max-width: 900px; margin: 0 auto; padding: 20px; }
+  max-width: 960px; margin: 0 auto; padding: 20px; }
 a { color: var(--accent); text-decoration: none; }
 a:hover { text-decoration: underline; }
 h1 { font-size: 1.8em; margin: 1em 0 0.5em; border-bottom: 1px solid var(--border); padding-bottom: 0.3em; }
@@ -52,7 +52,32 @@ img { max-width: 100%; border-radius: 8px; margin: 0.5em 0; }
 .badge-fire { background: rgba(248,81,73,0.2); color: var(--fire); }
 .badge-look { background: rgba(88,166,255,0.2); color: var(--accent); }
 .badge-skip { background: rgba(139,148,158,0.2); color: var(--text2); }
-@media (max-width: 600px) { body { padding: 12px; } h1 { font-size: 1.4em; } }
+/* ── Tab system ─────────────────────────────────────────── */
+.tab-bar { display: flex; gap: 0; margin: 1.5em 0 0; border-bottom: 2px solid var(--border);
+  overflow-x: auto; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
+.tab-bar::-webkit-scrollbar { display: none; }
+.tab-btn { padding: 10px 20px; background: none; border: none; color: var(--text2);
+  font-size: 0.95em; cursor: pointer; white-space: nowrap; position: relative;
+  transition: color 0.2s; font-family: inherit; }
+.tab-btn:hover { color: var(--text); }
+.tab-btn.active { color: var(--accent); font-weight: 600; }
+.tab-btn.active::after { content: ''; position: absolute; bottom: -2px; left: 0; right: 0;
+  height: 2px; background: var(--accent); border-radius: 2px 2px 0 0; }
+.tab-btn .tab-count { display: inline-block; background: var(--surface); border: 1px solid var(--border);
+  padding: 0 6px; border-radius: 10px; font-size: 0.8em; margin-left: 6px; min-width: 20px; text-align: center; }
+.tab-btn.active .tab-count { background: rgba(88,166,255,0.15); border-color: var(--accent); color: var(--accent); }
+.tab-panel { display: none; animation: fadeIn 0.25s ease; }
+.tab-panel.active { display: block; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+/* ── Paper card ─────────────────────────────────────────── */
+.paper-card { background: var(--surface); border: 1px solid var(--border);
+  border-radius: 12px; padding: 20px 24px; margin: 16px 0; transition: border-color 0.2s; }
+.paper-card:hover { border-color: var(--accent); }
+.paper-card h3 { margin-top: 0; font-size: 1.1em; }
+.paper-card .paper-figure { margin: 12px 0; }
+.paper-card .paper-figure img { max-height: 280px; object-fit: contain; }
+@media (max-width: 600px) { body { padding: 12px; } h1 { font-size: 1.4em; }
+  .tab-btn { padding: 8px 14px; font-size: 0.85em; } .paper-card { padding: 14px 16px; } }
 </style>
 </head>
 <body>
@@ -73,9 +98,8 @@ img { max-width: 100%; border-radius: 8px; margin: 0.5em 0; }
 
 
 
-<h2 id="agent框架与基础设施">Agent框架与基础设施</h2>
-
-<h3 id="1-openclaw-rl-train-any-agent-simply-by-talking">1. OpenClaw-RL: Train Any Agent Simply by Talking</h3>
+<div class="tab-bar"><button class="tab-btn active" data-tab="all" onclick="switchTab('all')">📋 全部<span class="tab-count">8</span></button><button class="tab-btn" data-tab="agent框架与基础设施" onclick="switchTab('agent框架与基础设施')">🏗️ Agent框架与基础设施<span class="tab-count">1</span></button><button class="tab-btn" data-tab="多模态与生成agent" onclick="switchTab('多模态与生成agent')">🎨 多模态与生成Agent<span class="tab-count">2</span></button><button class="tab-btn" data-tab="agent评估与安全" onclick="switchTab('agent评估与安全')">📊 Agent评估与安全<span class="tab-count">2</span></button><button class="tab-btn" data-tab="agent记忆系统" onclick="switchTab('agent记忆系统')">🧠 Agent记忆系统<span class="tab-count">1</span></button><button class="tab-btn" data-tab="3d视觉与vlm" onclick="switchTab('3d视觉与vlm')">👁️ 3D视觉与VLM<span class="tab-count">1</span></button><button class="tab-btn" data-tab="llm基础" onclick="switchTab('llm基础')">🤖 LLM基础<span class="tab-count">1</span></button></div>
+<div id="panel-all" class="tab-panel active"><h2 id="agent框架与基础设施">Agent框架与基础设施</h2><div class="paper-card"><h3 id="1-openclaw-rl-train-any-agent-simply-by-talking">1. OpenClaw-RL: Train Any Agent Simply by Talking</h3>
 <li><strong>作者</strong>: Yinjie Wang, Xuyang Chen, Xiaolong Jin, Mengdi Wang, Ling Yang</li>
 <li><strong>机构</strong>: 未知</li>
 <li><strong>链接</strong>: <a href="https://arxiv.org/abs/2603.10165" target="_blank">arXiv</a> | <a href="https://arxiv.org/pdf/2603.10165" target="_blank">PDF</a></li>
@@ -88,11 +112,7 @@ img { max-width: 100%; border-radius: 8px; margin: 0.5em 0; }
 <li><strong>对比方法/Baselines</strong>: 对比: <span class="wikilink">RLVR</span>, <span class="wikilink">PPO</span>, <span class="wikilink">GRPO</span>, <span class="wikilink">DPO</span>, <span class="wikilink">MajorityVote</span>；基于: <span class="wikilink">PRM</span>, <span class="wikilink">On-Policy</span> 蒸馏</li>
 <li><strong>借鉴意义</strong>: "next-state signal 是免费的学习信号"这个观察非常实用。异步解耦架构可直接搬到生产环境做在线 agent 持续学习。</li>
 <li><strong>锐评</strong>: 147 个 upvote 不是白来的，统一多流 MDP 框架设计干净利落。但标题"Train Any Agent Simply by Talking"把牛吹到了平流层。OPD 对 noisy/adversarial next-state 的鲁棒性讨论缺席，同时声称搞定 personal + general agent 两条线，每条深度是否足够需要看全文确认。 🔥</li>
-
-
-<h2 id="多模态与生成agent">多模态与生成Agent</h2>
-
-<h3 id="2-gems-agent-native-multimodal-generation-with-memory-and-skills">2. GEMS: Agent-Native Multimodal Generation with Memory and Skills</h3>
+</div><h2 id="多模态与生成agent">多模态与生成Agent</h2><div class="paper-card"><h3 id="2-gems-agent-native-multimodal-generation-with-memory-and-skills">2. GEMS: Agent-Native Multimodal Generation with Memory and Skills</h3>
 <li><strong>作者</strong>: Zefeng He, Siyuan Huang, Xiaoye Qu, Yafu Li, Tong Zhu, Yu Cheng, Yang Yang</li>
 <li><strong>机构</strong>: Shanghai AI Laboratory, Nanjing University, Shanghai Jiao Tong University, CUHK</li>
 <li><strong>链接</strong>: <a href="https://arxiv.org/abs/2603.28088" target="_blank">arXiv</a> | <a href="https://arxiv.org/pdf/2603.28088" target="_blank">PDF</a></li>
@@ -104,9 +124,7 @@ img { max-width: 100%; border-radius: 8px; margin: 0.5em 0; }
 <li><strong>核心方法</strong>: 三层 agent 架构用于多模态生成的 inference-time scaling。<span class="wikilink">Agent Loop</span>（Planner/Decomposer/Verifier/Refiner 闭环）、<span class="wikilink">Agent Memory</span>（层次化 trajectory-level 记忆）、<span class="wikilink">Agent Skill</span>（可扩展技能集合）。6B 模型套 agent 框架超越 SOTA 大模型。</li>
 <li><strong>对比方法/Baselines</strong>: 对比: <span class="wikilink">Nano Banana 2</span>, <span class="wikilink">Qwen-Image</span>, <span class="wikilink">GPT</span>；评测: <span class="wikilink">GenEval2</span>, <span class="wikilink">SpatialGenEval</span>, <span class="wikilink">DPG</span></li>
 <li><strong>借鉴意义</strong>: Memory 分层设计和 Skill 按需加载机制可直接借鉴。证明小模型+agent框架>大模型单推。</li>
-<li><strong>锐评</strong>: "Agent-Native"这个词造得精准。6B 干翻 SOTA 确实漂亮。但四个 agent 每轮迭代都调 MLLM，推理成本一个字没提。Memory 压缩细节和 scalability 需要看全文确认。 🔥</li>
-
-<h3 id="3-the-ai-scientist-v2-workshop-level-automated-scientific-discovery-via-agentic-tree-search">3. The AI Scientist-v2: Workshop-Level Automated Scientific Discovery via Agentic Tree Search</h3>
+<li><strong>锐评</strong>: "Agent-Native"这个词造得精准。6B 干翻 SOTA 确实漂亮。但四个 agent 每轮迭代都调 MLLM，推理成本一个字没提。Memory 压缩细节和 scalability 需要看全文确认。 🔥</li></div><div class="paper-card"><h3 id="3-the-ai-scientist-v2-workshop-level-automated-scientific-discovery-via-agentic-tree-search">3. The AI Scientist-v2: Workshop-Level Automated Scientific Discovery via Agentic Tree Search</h3>
 <li><strong>作者</strong>: Yutaro Yamada, Robert Tjarko Lange, Cong Lu, Shengran Hu, Chris Lu, Jakob Foerster, Jeff Clune, David Ha</li>
 <li><strong>机构</strong>: 未知</li>
 <li><strong>链接</strong>: <a href="https://arxiv.org/abs/2504.08066" target="_blank">arXiv</a> | <a href="https://arxiv.org/pdf/2504.08066" target="_blank">PDF</a></li>
@@ -116,11 +134,7 @@ img { max-width: 100%; border-radius: 8px; margin: 0.5em 0; }
 <li><strong>对比方法/Baselines</strong>: 基于: <span class="wikilink">AI Scientist v1</span></li>
 <li><strong>借鉴意义</strong>: Agentic tree search 作为长程任务规划范式，"agent 管 agent"的分层架构对复杂 multi-agent 系统设计有直接参考价值。</li>
 <li><strong>锐评</strong>: 从"能跑通"到"能过审"确实是里程碑，但过的是 ICLR workshop，三投一中并不比人类高。"profoundly impact human knowledge generation"这种宏大叙事让人牙酸。tree search 的具体设计在摘要中完全没提。开源加分。 👀</li>
-
-
-<h2 id="agent评估与安全">Agent评估与安全</h2>
-
-<h3 id="4-agent-readmes-an-empirical-study-of-context-files-for-agentic-coding">4. Agent READMEs: An Empirical Study of Context Files for Agentic Coding</h3>
+</div><h2 id="agent评估与安全">Agent评估与安全</h2><div class="paper-card"><h3 id="4-agent-readmes-an-empirical-study-of-context-files-for-agentic-coding">4. Agent READMEs: An Empirical Study of Context Files for Agentic Coding</h3>
 <li><strong>作者</strong>: Worawalan Chatlatanagulchai, Hao Li, Yutaro Kashiwa, Brittany Reid 等</li>
 <li><strong>机构</strong>: Kasetsart University, Queen's University, Nara Institute of Science and Technology</li>
 <li><strong>链接</strong>: <a href="https://arxiv.org/abs/2511.12884" target="_blank">arXiv</a> | <a href="https://arxiv.org/pdf/2511.12884" target="_blank">PDF</a></li>
@@ -131,9 +145,7 @@ img { max-width: 100%; border-radius: 8px; margin: 0.5em 0; }
 <li><strong>核心方法</strong>: 对 1,925 个 GitHub 仓库中的 2,303 个 Agent 上下文文件（<span class="wikilink">CLAUDE.md</span>、<span class="wikilink">AGENTS.md</span>）进行大规模实证研究，产出 16 类指令分类体系。发现演化模式更接近配置代码而非传统文档。</li>
 <li><strong>对比方法/Baselines</strong>: 无显式对比，实证描述性研究</li>
 <li><strong>借鉴意义</strong>: 揭示了开发者几乎不在 context file 中写安全和性能要求（仅 14.5%），agent 写的代码可能安全裸奔。</li>
-<li><strong>锐评</strong>: 选题精准，2,303 个文件规模够。但方法论就是"挖数据+分类+统计"，发现问题不解决问题。First mover 优势是实实在在的。 👀</li>
-
-<h3 id="5-experience-as-a-compass-multi-agent-rag-with-evolving-orchestration-and-agent-prompts-hera">5. Experience as a Compass: Multi-agent RAG with Evolving Orchestration and Agent Prompts (HERA)</h3>
+<li><strong>锐评</strong>: 选题精准，2,303 个文件规模够。但方法论就是"挖数据+分类+统计"，发现问题不解决问题。First mover 优势是实实在在的。 👀</li></div><div class="paper-card"><h3 id="5-experience-as-a-compass-multi-agent-rag-with-evolving-orchestration-and-agent-prompts-hera">5. Experience as a Compass: Multi-agent RAG with Evolving Orchestration and Agent Prompts (HERA)</h3>
 <li><strong>作者</strong>: Sha Li</li>
 <li><strong>机构</strong>: Virginia Tech</li>
 <li><strong>链接</strong>: <a href="http://arxiv.org/abs/2604.00901v1" target="_blank">arXiv</a> | <a href="https://arxiv.org/pdf/2604.00901v1" target="_blank">PDF</a></li>
@@ -145,11 +157,7 @@ img { max-width: 100%; border-radius: 8px; margin: 0.5em 0; }
 <li><strong>对比方法/Baselines</strong>: 对比: <span class="wikilink">CORAG</span>, <span class="wikilink">DeepResearcher</span>；评测: <span class="wikilink">HotpotQA</span>, <span class="wikilink">MusiQue</span>, <span class="wikilink">AmbigQA</span>, <span class="wikilink">HoVer</span></li>
 <li><strong>借鉴意义</strong>: 双层进化思路值得借鉴——不仅优化"谁和谁合作"，还优化"每个人怎么干活"。经验库是轻量级 agent memory 实现。</li>
 <li><strong>锐评</strong>: 38.69% 平均提升吓人但依赖 baseline 选取。RoPE 撞名 Rotary Position Embedding 是认真的吗。框架复杂度高，"emergent self-organization"用在显式设计了 ADD/PRUNE/MERGE 的系统上多少在贴金。执行力不错。 👀</li>
-
-
-<h2 id="agent记忆系统">Agent记忆系统</h2>
-
-<h3 id="6-oblivion-self-adaptive-agentic-memory-control-through-decay-driven-activation">6. Oblivion: Self-Adaptive Agentic Memory Control through Decay-Driven Activation</h3>
+</div><h2 id="agent记忆系统">Agent记忆系统</h2><div class="paper-card"><h3 id="6-oblivion-self-adaptive-agentic-memory-control-through-decay-driven-activation">6. Oblivion: Self-Adaptive Agentic Memory Control through Decay-Driven Activation</h3>
 <li><strong>作者</strong>: Ashish Rana, Chia-Chien Hung</li>
 <li><strong>机构</strong>: GWDG, Georg-August-Universität Göttingen</li>
 <li><strong>链接</strong>: <a href="http://arxiv.org/abs/2604.00131v1" target="_blank">arXiv</a> | <a href="https://arxiv.org/pdf/2604.00131v1" target="_blank">PDF</a></li>
@@ -161,11 +169,7 @@ img { max-width: 100%; border-radius: 8px; margin: 0.5em 0; }
 <li><strong>对比方法/Baselines</strong>: 对比: <span class="wikilink">EverMemOS</span>, <span class="wikilink">FullCTX</span>, <span class="wikilink">BeyondPrompts</span></li>
 <li><strong>借鉴意义</strong>: "遗忘是特性不是 bug"。Uncertainty-gated retrieval 可直接用于任何 RAG-based agent 减少不必要检索。</li>
 <li><strong>锐评</strong>: 和 EverMemOS 对照看很有意思。"遗忘"的切入点确实被大多数记忆系统忽视。但五个组件的 hyperparameter 敏感性未充分讨论，"self-adaptive"这个词用得慷慨——很多 threshold 看起来还是手调的。 👀</li>
-
-
-<h2 id="3d视觉与vlm">3D视觉与VLM</h2>
-
-<h3 id="7-think-act-build-tab-an-agentic-framework-with-vlms-for-zero-shot-3d-visual-grounding">7. Think, Act, Build (TAB): An Agentic Framework with VLMs for Zero-Shot 3D Visual Grounding</h3>
+</div><h2 id="3d视觉与vlm">3D视觉与VLM</h2><div class="paper-card"><h3 id="7-think-act-build-tab-an-agentic-framework-with-vlms-for-zero-shot-3d-visual-grounding">7. Think, Act, Build (TAB): An Agentic Framework with VLMs for Zero-Shot 3D Visual Grounding</h3>
 <li><strong>作者</strong>: Haibo Wang, Zihao Lin, Zhiyang Xu, Lifu Huang</li>
 <li><strong>机构</strong>: UC Davis, Virginia Tech</li>
 <li><strong>链接</strong>: <a href="https://arxiv.org/abs/2604.00528" target="_blank">arXiv</a> | <a href="https://arxiv.org/pdf/2604.00528" target="_blank">PDF</a></li>
@@ -178,11 +182,7 @@ img { max-width: 100%; border-radius: 8px; margin: 0.5em 0; }
 <li><strong>对比方法/Baselines</strong>: 对比: <span class="wikilink">SPAZER</span>, <span class="wikilink">SeeGround</span>, <span class="wikilink">SeqVLM</span>；基于: <span class="wikilink">SAM</span>, <span class="wikilink">GPT</span>；评测: <span class="wikilink">ScanRefer</span>, Nr3D</li>
 <li><strong>借鉴意义</strong>: "语义理解归 LLM，结构计算归确定性算法"的解耦范式，对任何需要空间理解的 agent 有直接参考价值。</li>
 <li><strong>锐评</strong>: Zero-shot 干掉全监督方法，解耦思路优雅。Benchmark 清洗工作说明作者在认真做研究。但推理开销（多少次 VLM + SAM 调用）完全没讨论，对一个号称实用的框架不可接受。 🔥</li>
-
-
-<h2 id="llm基础">LLM基础</h2>
-
-<h3 id="8-towards-reliable-truth-aligned-uncertainty-estimation-in-large-language-models">8. Towards Reliable Truth-Aligned Uncertainty Estimation in Large Language Models</h3>
+</div><h2 id="llm基础">LLM基础</h2><div class="paper-card"><h3 id="8-towards-reliable-truth-aligned-uncertainty-estimation-in-large-language-models">8. Towards Reliable Truth-Aligned Uncertainty Estimation in Large Language Models</h3>
 <li><strong>作者</strong>: Ponhvoan Srey, Quang Minh Nguyen, Xiaobao Wu</li>
 <li><strong>机构</strong>: NTU, KAIST, Shanghai Jiao Tong University</li>
 <li><strong>链接</strong>: <a href="http://arxiv.org/abs/2604.00445v1" target="_blank">arXiv</a> | <a href="https://arxiv.org/pdf/2604.00445v1" target="_blank">PDF</a></li>
@@ -194,8 +194,109 @@ img { max-width: 100%; border-radius: 8px; margin: 0.5em 0; }
 <li><strong>对比方法/Baselines</strong>: 对比: <span class="wikilink">Entropy</span>, <span class="wikilink">MSP</span>, <span class="wikilink">CUE</span>, <span class="wikilink">CoE</span>；评测: <span class="wikilink">TriviaQA</span>, <span class="wikilink">PopQA</span>, <span class="wikilink">SciQ</span></li>
 <li><strong>借鉴意义</strong>: Agent 需要知道"什么时候不确定"来决定是否调用工具或求助人类。TAC 可直接集成到 agent 决策循环做门控。</li>
 <li><strong>锐评</strong>: Proxy failure 概念抓得好，TAC 方法实用。但跨域迁移性能下降明显，本质上还是给不可靠信号打补丁。有用但别指望解决 hallucination。 👀</li>
+</div></div>
+<div id="panel-agent框架与基础设施" class="tab-panel"><h2 id="agent框架与基础设施">Agent框架与基础设施</h2><div class="paper-card"><h3 id="1-openclaw-rl-train-any-agent-simply-by-talking">1. OpenClaw-RL: Train Any Agent Simply by Talking</h3>
+<li><strong>作者</strong>: Yinjie Wang, Xuyang Chen, Xiaolong Jin, Mengdi Wang, Ling Yang</li>
+<li><strong>机构</strong>: 未知</li>
+<li><strong>链接</strong>: <a href="https://arxiv.org/abs/2603.10165" target="_blank">arXiv</a> | <a href="https://arxiv.org/pdf/2603.10165" target="_blank">PDF</a></li>
+<li><strong>来源</strong>: 🔥 HF Trending，⬆️ 147</li>
+<li>📒 <strong>笔记</strong>: <span class="wikilink">OpenClaw-RL</span></li>
 
+<div class="paper-figure"><img src="https://arxiv.org/html/2603.10165v1/x1.png" alt="" loading="lazy"></div>
 
+<li><strong>核心方法</strong>: 将所有 agent 交互产生的 next-state 信号（用户回复、工具输出、终端/GUI 状态变化）统一为在线学习信号源。核心组件：用 <span class="wikilink">PRM</span> judge 提取 evaluative scalar reward；Hindsight-Guided <span class="wikilink">On-Policy Distillation</span>（OPD）构造增强 teacher context 提供 token-level 方向性监督。异步四组件解耦设计，零协调开销。</li>
+<li><strong>对比方法/Baselines</strong>: 对比: <span class="wikilink">RLVR</span>, <span class="wikilink">PPO</span>, <span class="wikilink">GRPO</span>, <span class="wikilink">DPO</span>, <span class="wikilink">MajorityVote</span>；基于: <span class="wikilink">PRM</span>, <span class="wikilink">On-Policy</span> 蒸馏</li>
+<li><strong>借鉴意义</strong>: "next-state signal 是免费的学习信号"这个观察非常实用。异步解耦架构可直接搬到生产环境做在线 agent 持续学习。</li>
+<li><strong>锐评</strong>: 147 个 upvote 不是白来的，统一多流 MDP 框架设计干净利落。但标题"Train Any Agent Simply by Talking"把牛吹到了平流层。OPD 对 noisy/adversarial next-state 的鲁棒性讨论缺席，同时声称搞定 personal + general agent 两条线，每条深度是否足够需要看全文确认。 🔥</li>
+</div></div>
+<div id="panel-多模态与生成agent" class="tab-panel"><h2 id="多模态与生成agent">多模态与生成Agent</h2><div class="paper-card"><h3 id="2-gems-agent-native-multimodal-generation-with-memory-and-skills">2. GEMS: Agent-Native Multimodal Generation with Memory and Skills</h3>
+<li><strong>作者</strong>: Zefeng He, Siyuan Huang, Xiaoye Qu, Yafu Li, Tong Zhu, Yu Cheng, Yang Yang</li>
+<li><strong>机构</strong>: Shanghai AI Laboratory, Nanjing University, Shanghai Jiao Tong University, CUHK</li>
+<li><strong>链接</strong>: <a href="https://arxiv.org/abs/2603.28088" target="_blank">arXiv</a> | <a href="https://arxiv.org/pdf/2603.28088" target="_blank">PDF</a></li>
+<li><strong>来源</strong>: 🔥 HF Trending，⬆️ 66</li>
+<li>📒 <strong>笔记</strong>: <span class="wikilink">GEMS - Agent-Native Multimodal Generation with Memory and Skills</span></li>
+
+<div class="paper-figure"><img src="https://arxiv.org/html/2603.28088v1/x2.png" alt="" loading="lazy"></div>
+
+<li><strong>核心方法</strong>: 三层 agent 架构用于多模态生成的 inference-time scaling。<span class="wikilink">Agent Loop</span>（Planner/Decomposer/Verifier/Refiner 闭环）、<span class="wikilink">Agent Memory</span>（层次化 trajectory-level 记忆）、<span class="wikilink">Agent Skill</span>（可扩展技能集合）。6B 模型套 agent 框架超越 SOTA 大模型。</li>
+<li><strong>对比方法/Baselines</strong>: 对比: <span class="wikilink">Nano Banana 2</span>, <span class="wikilink">Qwen-Image</span>, <span class="wikilink">GPT</span>；评测: <span class="wikilink">GenEval2</span>, <span class="wikilink">SpatialGenEval</span>, <span class="wikilink">DPG</span></li>
+<li><strong>借鉴意义</strong>: Memory 分层设计和 Skill 按需加载机制可直接借鉴。证明小模型+agent框架>大模型单推。</li>
+<li><strong>锐评</strong>: "Agent-Native"这个词造得精准。6B 干翻 SOTA 确实漂亮。但四个 agent 每轮迭代都调 MLLM，推理成本一个字没提。Memory 压缩细节和 scalability 需要看全文确认。 🔥</li></div><div class="paper-card"><h3 id="3-the-ai-scientist-v2-workshop-level-automated-scientific-discovery-via-agentic-tree-search">3. The AI Scientist-v2: Workshop-Level Automated Scientific Discovery via Agentic Tree Search</h3>
+<li><strong>作者</strong>: Yutaro Yamada, Robert Tjarko Lange, Cong Lu, Shengran Hu, Chris Lu, Jakob Foerster, Jeff Clune, David Ha</li>
+<li><strong>机构</strong>: 未知</li>
+<li><strong>链接</strong>: <a href="https://arxiv.org/abs/2504.08066" target="_blank">arXiv</a> | <a href="https://arxiv.org/pdf/2504.08066" target="_blank">PDF</a></li>
+<li><strong>来源</strong>: 🔥 HF Trending，⬆️ 19</li>
+
+<li><strong>核心方法</strong>: 在 v1 基础上去掉人工代码模板依赖，改用 progressive <span class="wikilink">agentic tree search</span>，由 experiment manager agent 管理搜索。引入 <span class="wikilink">VLM</span> 反馈环迭代优化论文图表。端到端完成假设→实验→分析→写作。</li>
+<li><strong>对比方法/Baselines</strong>: 基于: <span class="wikilink">AI Scientist v1</span></li>
+<li><strong>借鉴意义</strong>: Agentic tree search 作为长程任务规划范式，"agent 管 agent"的分层架构对复杂 multi-agent 系统设计有直接参考价值。</li>
+<li><strong>锐评</strong>: 从"能跑通"到"能过审"确实是里程碑，但过的是 ICLR workshop，三投一中并不比人类高。"profoundly impact human knowledge generation"这种宏大叙事让人牙酸。tree search 的具体设计在摘要中完全没提。开源加分。 👀</li>
+</div></div>
+<div id="panel-agent评估与安全" class="tab-panel"><h2 id="agent评估与安全">Agent评估与安全</h2><div class="paper-card"><h3 id="4-agent-readmes-an-empirical-study-of-context-files-for-agentic-coding">4. Agent READMEs: An Empirical Study of Context Files for Agentic Coding</h3>
+<li><strong>作者</strong>: Worawalan Chatlatanagulchai, Hao Li, Yutaro Kashiwa, Brittany Reid 等</li>
+<li><strong>机构</strong>: Kasetsart University, Queen's University, Nara Institute of Science and Technology</li>
+<li><strong>链接</strong>: <a href="https://arxiv.org/abs/2511.12884" target="_blank">arXiv</a> | <a href="https://arxiv.org/pdf/2511.12884" target="_blank">PDF</a></li>
+<li><strong>来源</strong>: 🔥 HF Trending，⬆️ 28</li>
+
+<div class="paper-figure"><img src="https://arxiv.org/html/2511.12884/x1.png" alt="" loading="lazy"></div>
+
+<li><strong>核心方法</strong>: 对 1,925 个 GitHub 仓库中的 2,303 个 Agent 上下文文件（<span class="wikilink">CLAUDE.md</span>、<span class="wikilink">AGENTS.md</span>）进行大规模实证研究，产出 16 类指令分类体系。发现演化模式更接近配置代码而非传统文档。</li>
+<li><strong>对比方法/Baselines</strong>: 无显式对比，实证描述性研究</li>
+<li><strong>借鉴意义</strong>: 揭示了开发者几乎不在 context file 中写安全和性能要求（仅 14.5%），agent 写的代码可能安全裸奔。</li>
+<li><strong>锐评</strong>: 选题精准，2,303 个文件规模够。但方法论就是"挖数据+分类+统计"，发现问题不解决问题。First mover 优势是实实在在的。 👀</li></div><div class="paper-card"><h3 id="5-experience-as-a-compass-multi-agent-rag-with-evolving-orchestration-and-agent-prompts-hera">5. Experience as a Compass: Multi-agent RAG with Evolving Orchestration and Agent Prompts (HERA)</h3>
+<li><strong>作者</strong>: Sha Li</li>
+<li><strong>机构</strong>: Virginia Tech</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2604.00901v1" target="_blank">arXiv</a> | <a href="https://arxiv.org/pdf/2604.00901v1" target="_blank">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+
+<div class="paper-figure"><img src="https://arxiv.org/html/2604.00901v1/figures/HERA.png" alt="" loading="lazy"></div>
+
+<li><strong>核心方法</strong>: <span class="wikilink">HERA</span> 分层进化 multi-agent RAG。全局层通过经验库优化 query-specific agent 拓扑；局部层通过 <span class="wikilink">RoPE</span>（Role-Aware Prompt Evolution）双维度精炼 agent prompt。Orchestration 和 agent 行为同时在线进化。</li>
+<li><strong>对比方法/Baselines</strong>: 对比: <span class="wikilink">CORAG</span>, <span class="wikilink">DeepResearcher</span>；评测: <span class="wikilink">HotpotQA</span>, <span class="wikilink">MusiQue</span>, <span class="wikilink">AmbigQA</span>, <span class="wikilink">HoVer</span></li>
+<li><strong>借鉴意义</strong>: 双层进化思路值得借鉴——不仅优化"谁和谁合作"，还优化"每个人怎么干活"。经验库是轻量级 agent memory 实现。</li>
+<li><strong>锐评</strong>: 38.69% 平均提升吓人但依赖 baseline 选取。RoPE 撞名 Rotary Position Embedding 是认真的吗。框架复杂度高，"emergent self-organization"用在显式设计了 ADD/PRUNE/MERGE 的系统上多少在贴金。执行力不错。 👀</li>
+</div></div>
+<div id="panel-agent记忆系统" class="tab-panel"><h2 id="agent记忆系统">Agent记忆系统</h2><div class="paper-card"><h3 id="6-oblivion-self-adaptive-agentic-memory-control-through-decay-driven-activation">6. Oblivion: Self-Adaptive Agentic Memory Control through Decay-Driven Activation</h3>
+<li><strong>作者</strong>: Ashish Rana, Chia-Chien Hung</li>
+<li><strong>机构</strong>: GWDG, Georg-August-Universität Göttingen</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2604.00131v1" target="_blank">arXiv</a> | <a href="https://arxiv.org/pdf/2604.00131v1" target="_blank">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+
+<div class="paper-figure"><img src="https://arxiv.org/html/2604.00131v1/x1.png" alt="" loading="lazy"></div>
+
+<li><strong>核心方法</strong>: 将遗忘建模为 decay-driven 可访问性衰减（非显式删除），read/write 双路径解耦。Read path 基于不确定性门控决定何时检索；Write path 仅强化对回复有贡献的记忆。Decayer/Activator/Recognizer/Memory Manager 四组件由 Executor 编排。</li>
+<li><strong>对比方法/Baselines</strong>: 对比: <span class="wikilink">EverMemOS</span>, <span class="wikilink">FullCTX</span>, <span class="wikilink">BeyondPrompts</span></li>
+<li><strong>借鉴意义</strong>: "遗忘是特性不是 bug"。Uncertainty-gated retrieval 可直接用于任何 RAG-based agent 减少不必要检索。</li>
+<li><strong>锐评</strong>: 和 EverMemOS 对照看很有意思。"遗忘"的切入点确实被大多数记忆系统忽视。但五个组件的 hyperparameter 敏感性未充分讨论，"self-adaptive"这个词用得慷慨——很多 threshold 看起来还是手调的。 👀</li>
+</div></div>
+<div id="panel-3d视觉与vlm" class="tab-panel"><h2 id="3d视觉与vlm">3D视觉与VLM</h2><div class="paper-card"><h3 id="7-think-act-build-tab-an-agentic-framework-with-vlms-for-zero-shot-3d-visual-grounding">7. Think, Act, Build (TAB): An Agentic Framework with VLMs for Zero-Shot 3D Visual Grounding</h3>
+<li><strong>作者</strong>: Haibo Wang, Zihao Lin, Zhiyang Xu, Lifu Huang</li>
+<li><strong>机构</strong>: UC Davis, Virginia Tech</li>
+<li><strong>链接</strong>: <a href="https://arxiv.org/abs/2604.00528" target="_blank">arXiv</a> | <a href="https://arxiv.org/pdf/2604.00528" target="_blank">PDF</a></li>
+<li><strong>来源</strong>: 📰 HF Daily，⬆️ 3</li>
+<li>📒 <strong>笔记</strong>: <span class="wikilink">TAB - Think Act Build</span></li>
+
+<div class="paper-figure"><img src="https://arxiv.org/html/2604.00528v1/x1.png" alt="" loading="lazy"></div>
+
+<li><strong>核心方法</strong>: 将 3D Visual Grounding 重构为 2D→3D 生成式重建。用 2D <span class="wikilink">VLM</span> 处理空间语义，确定性多视图几何完成 3D 实例化。<span class="wikilink">Semantic-Anchored Geometric Expansion</span>：先锚定目标再利用多视图几何传播。完全绕开 3D 点云依赖。</li>
+<li><strong>对比方法/Baselines</strong>: 对比: <span class="wikilink">SPAZER</span>, <span class="wikilink">SeeGround</span>, <span class="wikilink">SeqVLM</span>；基于: <span class="wikilink">SAM</span>, <span class="wikilink">GPT</span>；评测: <span class="wikilink">ScanRefer</span>, Nr3D</li>
+<li><strong>借鉴意义</strong>: "语义理解归 LLM，结构计算归确定性算法"的解耦范式，对任何需要空间理解的 agent 有直接参考价值。</li>
+<li><strong>锐评</strong>: Zero-shot 干掉全监督方法，解耦思路优雅。Benchmark 清洗工作说明作者在认真做研究。但推理开销（多少次 VLM + SAM 调用）完全没讨论，对一个号称实用的框架不可接受。 🔥</li>
+</div></div>
+<div id="panel-llm基础" class="tab-panel"><h2 id="llm基础">LLM基础</h2><div class="paper-card"><h3 id="8-towards-reliable-truth-aligned-uncertainty-estimation-in-large-language-models">8. Towards Reliable Truth-Aligned Uncertainty Estimation in Large Language Models</h3>
+<li><strong>作者</strong>: Ponhvoan Srey, Quang Minh Nguyen, Xiaobao Wu</li>
+<li><strong>机构</strong>: NTU, KAIST, Shanghai Jiao Tong University</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2604.00445v1" target="_blank">arXiv</a> | <a href="https://arxiv.org/pdf/2604.00445v1" target="_blank">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+
+<div class="paper-figure"><img src="https://arxiv.org/html/2604.00445v1/figures/calibration_Entropy0.png" alt="" loading="lazy"></div>
+
+<li><strong>核心方法</strong>: 形式化定义 <span class="wikilink">UE</span> 的 proxy failure 现象，提出 <span class="wikilink">TAC</span>（Truth AnChoring），将原始不确定性分数映射到真值对齐空间。通用后处理层，可叠加在任意 UE 方法上，few-shot/noisy label 下仍有效。</li>
+<li><strong>对比方法/Baselines</strong>: 对比: <span class="wikilink">Entropy</span>, <span class="wikilink">MSP</span>, <span class="wikilink">CUE</span>, <span class="wikilink">CoE</span>；评测: <span class="wikilink">TriviaQA</span>, <span class="wikilink">PopQA</span>, <span class="wikilink">SciQ</span></li>
+<li><strong>借鉴意义</strong>: Agent 需要知道"什么时候不确定"来决定是否调用工具或求助人类。TAC 可直接集成到 agent 决策循环做门控。</li>
+<li><strong>锐评</strong>: Proxy failure 概念抓得好，TAC 方法实用。但跨域迁移性能下降明显，本质上还是给不可靠信号打补丁。有用但别指望解决 hallucination。 👀</li>
+</div></div>
+<hr>
 <h2 id="被排除的论文">被排除的论文</h2>
 
 <table class="paper-table">
@@ -230,5 +331,21 @@ img { max-width: 100%; border-radius: 8px; margin: 0.5em 0; }
 <footer style="text-align:center;color:var(--text2);margin:3em 0 1em;font-size:0.85em;">
   Generated by daily-papers-web · Powered by Claude Code
 </footer>
+
+<script>
+function switchTab(tabId) {
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  document.querySelector('[data-tab="'+tabId+'"]').classList.add('active');
+  document.getElementById('panel-'+tabId).classList.add('active');
+  history.replaceState(null,'','#'+tabId);
+}
+document.addEventListener('DOMContentLoaded', function() {
+  var hash = location.hash.slice(1);
+  var target = hash && document.querySelector('[data-tab="'+hash+'"]');
+  if (target) switchTab(hash);
+});
+</script>
+
 </body>
 </html>
