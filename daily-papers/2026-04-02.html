@@ -111,6 +111,12 @@ img { max-width: 100%; border-radius: 8px; margin: 0.5em 0; }
 .topic-filter-bar .clear-filter { background: none; border: 1px solid var(--border);
   color: var(--text2); padding: 2px 10px; border-radius: 4px; cursor: pointer; font-size: 0.85em; margin-left: auto; }
 .topic-filter-bar .clear-filter:hover { background: var(--border); color: var(--text); }
+.topic-page { animation: fadeIn 0.25s ease; }
+.topic-date-group { margin: 16px 0 24px; }
+.topic-date-header { font-size: 1.05em; color: var(--accent); margin: 0 0 8px;
+  padding: 8px 0; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 8px; }
+.topic-date-count { font-size: 0.8em; color: var(--text2); font-weight: 400; }
+.topic-total { font-size: 0.85em; color: var(--text2); font-weight: 400; margin-left: 4px; }
 .trend-label:hover { overflow: visible; z-index: 10; }
 .trend-label:hover::after { content: attr(data-full); position: absolute; right: 0; top: -28px;
   background: var(--surface); border: 1px solid var(--border); padding: 4px 10px;

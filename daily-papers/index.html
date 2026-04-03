@@ -111,6 +111,12 @@ img { max-width: 100%; border-radius: 8px; margin: 0.5em 0; }
 .topic-filter-bar .clear-filter { background: none; border: 1px solid var(--border);
   color: var(--text2); padding: 2px 10px; border-radius: 4px; cursor: pointer; font-size: 0.85em; margin-left: auto; }
 .topic-filter-bar .clear-filter:hover { background: var(--border); color: var(--text); }
+.topic-page { animation: fadeIn 0.25s ease; }
+.topic-date-group { margin: 16px 0 24px; }
+.topic-date-header { font-size: 1.05em; color: var(--accent); margin: 0 0 8px;
+  padding: 8px 0; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 8px; }
+.topic-date-count { font-size: 0.8em; color: var(--text2); font-weight: 400; }
+.topic-total { font-size: 0.85em; color: var(--text2); font-weight: 400; margin-left: 4px; }
 .trend-label:hover { overflow: visible; z-index: 10; }
 .trend-label:hover::after { content: attr(data-full); position: absolute; right: 0; top: -28px;
   background: var(--surface); border: 1px solid var(--border); padding: 4px 10px;
@@ -5229,8 +5235,11 @@ function selectDate(ds){
   var el=document.getElementById('main-content');
   if(!day){ el.innerHTML='<div class="no-data">该日期无推荐数据</div>'; return; }
   el.dataset.date=ds;
-  // Clear topic filter when switching dates
-  if(typeof clearTopicFilter==='function') clearTopicFilter();
+  // Clear topic filter state (not via clearTopicFilter to avoid recursion)
+  activeTopic=null;
+  document.querySelectorAll('.trend-row').forEach(function(r){
+    r.classList.remove('active-topic','dimmed');
+  });
   // Show full content from hidden div
   var content=document.getElementById('content-'+ds);
   if(content){
@@ -5301,10 +5310,13 @@ function renderTrends(){
   el.innerHTML=html;
 }
 var activeTopic=null;
+var savedDateBeforeTopic=null;
 function filterByTopic(topic){
   var mc=document.getElementById('main-content');
-  // Toggle: click same topic to clear
+  // Toggle: click same topic to clear → go back to saved date
   if(activeTopic===topic){ clearTopicFilter(); return; }
+  // Save current date so we can go back
+  if(!activeTopic && mc.dataset.date) savedDateBeforeTopic=mc.dataset.date;
   activeTopic=topic;
   // Highlight active trend row
   document.querySelectorAll('.trend-row').forEach(function(r){
@@ -5312,43 +5324,58 @@ function filterByTopic(topic){
     if(r.dataset.topic===topic) r.classList.add('active-topic');
     else r.classList.add('dimmed');
   });
-  // Remove existing filter bar
-  var old=mc.querySelector('.topic-filter-bar');
-  if(old) old.remove();
-  // Add filter bar after day-hero
-  var hero=mc.querySelector('.day-hero');
-  if(hero){
-    var bar=document.createElement('div');
-    bar.className='topic-filter-bar';
-    bar.innerHTML='<span>🔍 筛选主题: <strong>'+topic+'</strong></span><button class="clear-filter" onclick="clearTopicFilter()">✕ 清除</button>';
-    hero.after(bar);
+  // Deselect calendar & quality timeline
+  document.querySelectorAll('.cal-day').forEach(function(d){d.classList.remove('selected');});
+  document.querySelectorAll('.qt-row').forEach(function(r){r.classList.remove('selected');});
+  // Count total matching papers
+  var totalCount=0;
+  // Build topic page: collect papers from all days, sorted by date (newest first)
+  var html='<div class="topic-page">';
+  html+='<div class="topic-filter-bar"><span>🔍 主题: <strong>'+topic+'</strong></span>'
+    +'<button class="clear-filter" onclick="clearTopicFilter()">✕ 返回</button></div>';
+  DAYS_DATA.forEach(function(d){
+    var content=document.getElementById('content-'+d.date);
+    if(!content) return;
+    // Find matching paper cards in this day's hidden content
+    var cards=content.querySelectorAll('.paper-card[data-topic="'+topic+'"]');
+    if(cards.length===0) return;
+    totalCount+=cards.length;
+    html+='<div class="topic-date-group">';
+    html+='<h3 class="topic-date-header">📅 '+d.date+' '+d.weekday+'<span class="topic-date-count">'+cards.length+' 篇</span></h3>';
+    cards.forEach(function(card){
+      html+='<div class="paper-card" data-topic="'+topic+'">'+card.innerHTML+'</div>';
+    });
+    html+='</div>';
+  });
+  if(totalCount===0){
+    html+='<div class="no-data">该主题下暂无论文</div>';
   }
-  // Filter paper cards
-  mc.querySelectorAll('.paper-card').forEach(function(card){
-    var ct=card.getAttribute('data-topic')||'';
-    card.style.display=(ct===topic)?'':'none';
-  });
-  // Hide section headers (h2) that have no visible cards after them
-  mc.querySelectorAll('h2').forEach(function(h2){
-    var next=h2.nextElementSibling;
-    var hasVisible=false;
-    while(next && next.tagName!=='H2'){
-      if(next.classList && next.classList.contains('paper-card') && next.style.display!=='none') hasVisible=true;
-      next=next.nextElementSibling;
-    }
-    h2.style.display=hasVisible?'':'none';
-  });
+  html+='</div>';
+  // Update header count
+  var countSpan=totalCount>0?' <span class="topic-total">共 '+totalCount+' 篇</span>':'';
+  html=html.replace('<strong>'+topic+'</strong>','<strong>'+topic+'</strong>'+countSpan);
+  mc.innerHTML=html;
+  mc.dataset.date='';
+  mc.scrollTop=0;
+  // Re-render KaTeX in new content
+  if(typeof renderMathInElement==='function'){
+    renderMathInElement(mc,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}]});
+  }
+  history.replaceState(null,'','#topic-'+encodeURIComponent(topic));
 }
 function clearTopicFilter(){
+  var prevTopic=activeTopic;
   activeTopic=null;
   document.querySelectorAll('.trend-row').forEach(function(r){
     r.classList.remove('active-topic','dimmed');
   });
-  var mc=document.getElementById('main-content');
-  var bar=mc.querySelector('.topic-filter-bar');
-  if(bar) bar.remove();
-  mc.querySelectorAll('.paper-card').forEach(function(card){ card.style.display=''; });
-  mc.querySelectorAll('h2').forEach(function(h2){ h2.style.display=''; });
+  // Go back to the previously selected date
+  if(savedDateBeforeTopic){
+    selectDate(savedDateBeforeTopic);
+    savedDateBeforeTopic=null;
+  } else if(DAYS_DATA.length>0){
+    selectDate(DAYS_DATA[0].date);
+  }
 }
 function renderQuality(){
   var el=document.getElementById('quality-timeline');
@@ -5369,10 +5396,21 @@ document.addEventListener('DOMContentLoaded',function(){
   renderTrends();
   renderQuality();
   var hash=location.hash.slice(1);
-  var initDate=hash||DAYS_DATA[0].date;
-  var parts=initDate.split('-');
-  renderCalendar(parseInt(parts[0]),parseInt(parts[1]));
-  selectDate(initDate);
+  // Check if hash is a topic filter
+  if(hash.startsWith('topic-')){
+    var topic=decodeURIComponent(hash.slice(6));
+    var parts=DAYS_DATA[0].date.split('-');
+    renderCalendar(parseInt(parts[0]),parseInt(parts[1]));
+    savedDateBeforeTopic=DAYS_DATA[0].date;
+    // Need to render a default date first so hidden content is accessible
+    selectDate(DAYS_DATA[0].date);
+    filterByTopic(topic);
+  } else {
+    var initDate=hash||DAYS_DATA[0].date;
+    var parts=initDate.split('-');
+    renderCalendar(parseInt(parts[0]),parseInt(parts[1]));
+    selectDate(initDate);
+  }
 });
 </script>
 
