@@ -99,7 +99,18 @@ img { max-width: 100%; border-radius: 8px; margin: 0.5em 0; }
 /* Trends */
 .trend-row { display: flex; align-items: center; gap: 8px; margin: 6px 0; font-size: 0.85em; }
 .trend-label { width: 90px; text-align: right; color: var(--text2); white-space: nowrap;
-  overflow: hidden; text-overflow: ellipsis; flex-shrink: 0; cursor: pointer; position: relative; }
+  overflow: hidden; text-overflow: ellipsis; flex-shrink: 0; cursor: pointer; position: relative;
+  transition: color 0.2s; }
+.trend-row.active-topic .trend-label { color: var(--accent); font-weight: 600; }
+.trend-row.active-topic .trend-bar { opacity: 1; }
+.trend-row:not(.active-topic).dimmed .trend-label { opacity: 0.4; }
+.trend-row:not(.active-topic).dimmed .trend-bar { opacity: 0.3; }
+.topic-filter-bar { display: flex; align-items: center; gap: 10px; padding: 8px 14px;
+  margin-bottom: 12px; background: rgba(88,166,255,0.1); border: 1px solid var(--accent);
+  border-radius: 8px; font-size: 0.9em; animation: fadeIn 0.25s ease; }
+.topic-filter-bar .clear-filter { background: none; border: 1px solid var(--border);
+  color: var(--text2); padding: 2px 10px; border-radius: 4px; cursor: pointer; font-size: 0.85em; margin-left: auto; }
+.topic-filter-bar .clear-filter:hover { background: var(--border); color: var(--text); }
 .trend-label:hover { overflow: visible; z-index: 10; }
 .trend-label:hover::after { content: attr(data-full); position: absolute; right: 0; top: -28px;
   background: var(--surface); border: 1px solid var(--border); padding: 4px 10px;
@@ -190,7 +201,7 @@ details.paper-note .note-body h3 { font-size: 1em; }
 
 
 <div class="tab-bar"><button class="tab-btn active" data-tab="all" onclick="switchTab('all')">📋 全部<span class="tab-count">10</span></button><button class="tab-btn" data-tab="agenttooluse" onclick="switchTab('agenttooluse')">🤖 🤖 Agent × Tool Use<span class="tab-count">3</span></button><button class="tab-btn" data-tab="推荐系统" onclick="switchTab('推荐系统')">📈 📊 推荐系统<span class="tab-count">1</span></button><button class="tab-btn" data-tab="agentreinforcementlearning" onclick="switchTab('agentreinforcementlearning')">🤖 🧠 Agent × Reinforcement Learning<span class="tab-count">2</span></button><button class="tab-btn" data-tab="ragrl" onclick="switchTab('ragrl')">📄 🔍 RAG × RL<span class="tab-count">1</span></button><button class="tab-btn" data-tab="memoryagent" onclick="switchTab('memoryagent')">🤖 💾 Memory × Agent<span class="tab-count">3</span></button></div>
-<div id="panel-all" class="tab-panel active"><h2 id="-agent--tool-use">🤖 Agent × Tool Use</h2><div class="paper-card"><h3 id="1-can-a-single-model-master-both-multi-turn-conversations-and-tool-use-calm-a-unified-conversational-agentic-language-model">1. Can a Single Model Master Both Multi-turn Conversations and Tool Use? CALM: A Unified Conversational Agentic Language Model</h3>
+<div id="panel-all" class="tab-panel active"><h2 id="-agent--tool-use">🤖 Agent × Tool Use</h2><div class="paper-card" data-topic="🤖 Agent × Tool Use"><h3 id="1-can-a-single-model-master-both-multi-turn-conversations-and-tool-use-calm-a-unified-conversational-agentic-language-model">1. Can a Single Model Master Both Multi-turn Conversations and Tool Use? CALM: A Unified Conversational Agentic Language Model</h3>
 <li><strong>作者</strong>: Emre Can Acikgoz et al.</li>
 <li><strong>机构</strong>: University of Illinois Urbana-Champaign, Oumi</li>
 <li><strong>链接</strong>: <a href="https://arxiv.org/abs/2502.08820" target="_blank">arXiv</a> | <a href="https://arxiv.org/pdf/2502.08820" target="_blank">PDF</a></li>
@@ -353,7 +364,7 @@ details.paper-note .note-body h3 { font-size: 1em; }
 <li><span class="wikilink">MultiWOZ</span>: TOD 评估 benchmark</li>
 <li><span class="wikilink">LoRA</span>: 训练使用的参数高效微调方法</li>
 <li><span class="wikilink">function calling</span>: 核心能力之一</li>
-<li><span class="wikilink">Task-Oriented Dialogue</span>: 核心能力之一</li></div></details></div><div class="paper-card"><h3 id="2-agentscope-10-a-developer-centric-framework-for-building-agentic-applications">2. AgentScope 1.0: A Developer-Centric Framework for Building Agentic Applications</h3>
+<li><span class="wikilink">Task-Oriented Dialogue</span>: 核心能力之一</li></div></details></div><div class="paper-card" data-topic="🤖 Agent × Tool Use"><h3 id="2-agentscope-10-a-developer-centric-framework-for-building-agentic-applications">2. AgentScope 1.0: A Developer-Centric Framework for Building Agentic Applications</h3>
 <li><strong>作者</strong>: Dawei Gao et al.</li>
 <li><strong>机构</strong>: Alibaba Group</li>
 <li><strong>链接</strong>: <a href="https://arxiv.org/abs/2504.01943" target="_blank">arXiv</a> | <a href="https://arxiv.org/pdf/2504.01943" target="_blank">PDF</a></li>
@@ -449,7 +460,7 @@ details.paper-note .note-body h3 { font-size: 1em; }
 <li><span class="wikilink">OpenTelemetry</span>: 可观测性标准</li>
 <li><span class="wikilink">ReAct</span>: 推理+行动范式</li>
 <li><span class="wikilink">LangChain</span>: 竞品框架</li>
-<li><span class="wikilink">AutoGen</span>: 微软 multi-agent 框架</li></div></details></div><div class="paper-card"><h3 id="3-agent-lightning-train-any-ai-agents-with-reinforcement-learning">3. Agent Lightning: Train ANY AI Agents with Reinforcement Learning</h3>
+<li><span class="wikilink">AutoGen</span>: 微软 multi-agent 框架</li></div></details></div><div class="paper-card" data-topic="🤖 Agent × Tool Use"><h3 id="3-agent-lightning-train-any-ai-agents-with-reinforcement-learning">3. Agent Lightning: Train ANY AI Agents with Reinforcement Learning</h3>
 <li><strong>作者</strong>: Yixiu Liu et al.</li>
 <li><strong>机构</strong>: Unknown</li>
 <li><strong>链接</strong>: <a href="https://arxiv.org/abs/2504.01553" target="_blank">arXiv</a> | <a href="https://arxiv.org/pdf/2504.01553" target="_blank">PDF</a></li>
@@ -683,7 +694,7 @@ details.paper-note .note-body h3 { font-size: 1em; }
 <li><strong>RL 训练框架</strong>: <span class="wikilink">VeRL</span></li>
 <li><strong>可观测性</strong>: <span class="wikilink">OpenTelemetry</span></li>
 <li><strong>评估基准</strong>: Spider (text-to-SQL), MuSiQue (multi-hop QA), Calc-X (math tool-use)</li></div></details>
-</div><h2 id="-推荐系统">📊 推荐系统</h2><div class="paper-card"><h3 id="4-multi-agent-video-recommenders-evolution-patterns-and-open-challenges">4. Multi-Agent Video Recommenders: Evolution, Patterns, and Open Challenges</h3>
+</div><h2 id="-推荐系统">📊 推荐系统</h2><div class="paper-card" data-topic="📊 推荐系统"><h3 id="4-multi-agent-video-recommenders-evolution-patterns-and-open-challenges">4. Multi-Agent Video Recommenders: Evolution, Patterns, and Open Challenges</h3>
 <li><strong>作者</strong>: Unknown</li>
 <li><strong>机构</strong>: Unknown</li>
 <li><strong>链接</strong>: <a href="https://arxiv.org/abs/2504.01555" target="_blank">arXiv</a> | <a href="https://arxiv.org/pdf/2504.01555" target="_blank">PDF</a></li>
@@ -757,7 +768,7 @@ $$</div>
 
 <li><span class="wikilink">MARL</span>: 多智能体强化学习</li>
 <li><span class="wikilink">MARS</span>: 多智能体推荐系统</li></div></details>
-</div><h2 id="-agent--reinforcement-learning">🧠 Agent × Reinforcement Learning</h2><div class="paper-card"><h3 id="5-skill0-in-context-agentic-reinforcement-learning-for-skill-internalization">5. SKILL0: In-Context Agentic Reinforcement Learning for Skill Internalization</h3>
+</div><h2 id="-agent--reinforcement-learning">🧠 Agent × Reinforcement Learning</h2><div class="paper-card" data-topic="🧠 Agent × Reinforcement Learning"><h3 id="5-skill0-in-context-agentic-reinforcement-learning-for-skill-internalization">5. SKILL0: In-Context Agentic Reinforcement Learning for Skill Internalization</h3>
 <li><strong>作者</strong>: Unknown</li>
 <li><strong>机构</strong>: Unknown</li>
 <li><strong>链接</strong>: <a href="https://arxiv.org/abs/2504.01379" target="_blank">arXiv</a> | <a href="https://arxiv.org/pdf/2504.01379" target="_blank">PDF</a></li>
@@ -766,7 +777,7 @@ $$</div>
 <li><strong>核心方法</strong>: <span class="wikilink">SKILL0</span> 提出 <span class="wikilink">ICRL</span>（In-Context Reinforcement Learning），让 agent 在上下文中通过 <span class="wikilink">RL</span> 学习技能并内化。使用 <span class="wikilink">SkillBank</span> 存储可复用技能，<span class="wikilink">GRPO</span> 优化。与 <span class="wikilink">ExpeL</span>、<span class="wikilink">MemRL</span> 等 memory-augmented RL 方法对比。</li>
 <li><strong>对比方法/Baselines</strong>: <span class="wikilink">ExpeL</span>, <span class="wikilink">MemRL</span>, <span class="wikilink">ZeroSearch</span>, <span class="wikilink">SimpleMem</span></li>
 <li><strong>借鉴意义</strong>: 把 RL 和 in-context learning 结合的思路对 agent 长期学习有启发。SkillBank 的设计可以借鉴到推荐系统的 agent 策略复用。</li>
-<li><strong>锐评</strong>: 概念很性感——agent 自己学技能然后记住。但 "skill internalization" 说白了就是把 few-shot examples 用 RL 选出来。在 HotpotQA 上的提升是否能迁移到更复杂的 agent 场景？存疑。👀</li></div><div class="paper-card"><h3 id="6-batched-contextual-reinforcement-a-task-scaling-law-for-efficient-reasoning">6. Batched Contextual Reinforcement: A Task-Scaling Law for Efficient Reasoning</h3>
+<li><strong>锐评</strong>: 概念很性感——agent 自己学技能然后记住。但 "skill internalization" 说白了就是把 few-shot examples 用 RL 选出来。在 HotpotQA 上的提升是否能迁移到更复杂的 agent 场景？存疑。👀</li></div><div class="paper-card" data-topic="🧠 Agent × Reinforcement Learning"><h3 id="6-batched-contextual-reinforcement-a-task-scaling-law-for-efficient-reasoning">6. Batched Contextual Reinforcement: A Task-Scaling Law for Efficient Reasoning</h3>
 <li><strong>作者</strong>: Unknown</li>
 <li><strong>机构</strong>: Unknown</li>
 <li><strong>链接</strong>: <a href="https://arxiv.org/abs/2504.01478" target="_blank">arXiv</a> | <a href="https://arxiv.org/pdf/2504.01478" target="_blank">PDF</a></li>
@@ -832,7 +843,7 @@ $$</div>
 
 <li><span class="wikilink">GRPO</span>: 基础 RL 算法</li>
 <li><span class="wikilink">DeepSeek</span>: 对比模型</li></div></details>
-</div><h2 id="-rag--rl">🔍 RAG × RL</h2><div class="paper-card"><h3 id="7-optimizing-rag-rerankers-with-llm-feedback-via-reinforcement-learning">7. Optimizing RAG Rerankers with LLM Feedback via Reinforcement Learning</h3>
+</div><h2 id="-rag--rl">🔍 RAG × RL</h2><div class="paper-card" data-topic="🔍 RAG × RL"><h3 id="7-optimizing-rag-rerankers-with-llm-feedback-via-reinforcement-learning">7. Optimizing RAG Rerankers with LLM Feedback via Reinforcement Learning</h3>
 <li><strong>作者</strong>: Unknown</li>
 <li><strong>机构</strong>: Unknown</li>
 <li><strong>链接</strong>: <a href="https://arxiv.org/abs/2504.01489" target="_blank">arXiv</a> | <a href="https://arxiv.org/pdf/2504.01489" target="_blank">PDF</a></li>
@@ -898,7 +909,7 @@ $$</div>
 <li><span class="wikilink">RAG</span>: 检索增强生成</li>
 <li><span class="wikilink">GTE</span>: 基础检索器</li>
 <li><span class="wikilink">RL</span>: 训练方法</li></div></details>
-</div><h2 id="-memory--agent">💾 Memory × Agent</h2><div class="paper-card"><h3 id="8-msa-memory-sparse-attention-for-efficient-end-to-end-memory-model-scaling-to-10m">8. MSA: Memory Sparse Attention for Efficient End-to-End Memory Model Scaling to 10M+</h3>
+</div><h2 id="-memory--agent">💾 Memory × Agent</h2><div class="paper-card" data-topic="💾 Memory × Agent"><h3 id="8-msa-memory-sparse-attention-for-efficient-end-to-end-memory-model-scaling-to-10m">8. MSA: Memory Sparse Attention for Efficient End-to-End Memory Model Scaling to 10M+</h3>
 <li><strong>作者</strong>: Unknown</li>
 <li><strong>机构</strong>: Unknown</li>
 <li><strong>链接</strong>: <a href="https://arxiv.org/abs/2504.01444" target="_blank">arXiv</a> | <a href="https://arxiv.org/pdf/2504.01444" target="_blank">PDF</a></li>
@@ -963,7 +974,7 @@ $$</div>
 
 <li><span class="wikilink">KV cache</span>: 核心优化对象</li>
 <li><span class="wikilink">RoPE</span>: 位置编码</li>
-<li><span class="wikilink">KaLMv2</span>: 主要对比方法</li></div></details></div><div class="paper-card"><h3 id="9-mem0-building-production-ready-ai-agents-with-scalable-long-term-memory">9. Mem0: Building Production-Ready AI Agents with Scalable Long-Term Memory</h3>
+<li><span class="wikilink">KaLMv2</span>: 主要对比方法</li></div></details></div><div class="paper-card" data-topic="💾 Memory × Agent"><h3 id="9-mem0-building-production-ready-ai-agents-with-scalable-long-term-memory">9. Mem0: Building Production-Ready AI Agents with Scalable Long-Term Memory</h3>
 <li><strong>作者</strong>: Unknown</li>
 <li><strong>机构</strong>: Unknown</li>
 <li><strong>链接</strong>: <a href="https://arxiv.org/abs/2504.01390" target="_blank">arXiv</a> | <a href="https://arxiv.org/pdf/2504.01390" target="_blank">PDF</a></li>
@@ -1037,7 +1048,7 @@ $$</div>
 
 <li><span class="wikilink">MemGPT</span>: 主要对比方法</li>
 <li><span class="wikilink">LangMem</span>: 记忆管理方案</li>
-<li><span class="wikilink">RAG</span>: 传统检索增强方案</li></div></details></div><div class="paper-card"><h3 id="10-memos-a-memory-os-for-ai-system">10. MemOS: A Memory OS for AI System</h3>
+<li><span class="wikilink">RAG</span>: 传统检索增强方案</li></div></details></div><div class="paper-card" data-topic="💾 Memory × Agent"><h3 id="10-memos-a-memory-os-for-ai-system">10. MemOS: A Memory OS for AI System</h3>
 <li><strong>作者</strong>: Unknown</li>
 <li><strong>机构</strong>: Unknown</li>
 <li><strong>链接</strong>: <a href="https://arxiv.org/abs/2504.01561" target="_blank">arXiv</a> | <a href="https://arxiv.org/pdf/2504.01561" target="_blank">PDF</a></li>
@@ -1111,7 +1122,7 @@ $$</div>
 <li><span class="wikilink">RAG</span>: 传统检索方案</li>
 <li><span class="wikilink">KV cache</span>: 核心管理对象</li></div></details>
 </div></div>
-<div id="panel-agenttooluse" class="tab-panel"><h2 id="-agent--tool-use">🤖 Agent × Tool Use</h2><div class="paper-card"><h3 id="1-can-a-single-model-master-both-multi-turn-conversations-and-tool-use-calm-a-unified-conversational-agentic-language-model">1. Can a Single Model Master Both Multi-turn Conversations and Tool Use? CALM: A Unified Conversational Agentic Language Model</h3>
+<div id="panel-agenttooluse" class="tab-panel"><h2 id="-agent--tool-use">🤖 Agent × Tool Use</h2><div class="paper-card" data-topic="🤖 Agent × Tool Use"><h3 id="1-can-a-single-model-master-both-multi-turn-conversations-and-tool-use-calm-a-unified-conversational-agentic-language-model">1. Can a Single Model Master Both Multi-turn Conversations and Tool Use? CALM: A Unified Conversational Agentic Language Model</h3>
 <li><strong>作者</strong>: Emre Can Acikgoz et al.</li>
 <li><strong>机构</strong>: University of Illinois Urbana-Champaign, Oumi</li>
 <li><strong>链接</strong>: <a href="https://arxiv.org/abs/2502.08820" target="_blank">arXiv</a> | <a href="https://arxiv.org/pdf/2502.08820" target="_blank">PDF</a></li>
@@ -1274,7 +1285,7 @@ $$</div>
 <li><span class="wikilink">MultiWOZ</span>: TOD 评估 benchmark</li>
 <li><span class="wikilink">LoRA</span>: 训练使用的参数高效微调方法</li>
 <li><span class="wikilink">function calling</span>: 核心能力之一</li>
-<li><span class="wikilink">Task-Oriented Dialogue</span>: 核心能力之一</li></div></details></div><div class="paper-card"><h3 id="2-agentscope-10-a-developer-centric-framework-for-building-agentic-applications">2. AgentScope 1.0: A Developer-Centric Framework for Building Agentic Applications</h3>
+<li><span class="wikilink">Task-Oriented Dialogue</span>: 核心能力之一</li></div></details></div><div class="paper-card" data-topic="🤖 Agent × Tool Use"><h3 id="2-agentscope-10-a-developer-centric-framework-for-building-agentic-applications">2. AgentScope 1.0: A Developer-Centric Framework for Building Agentic Applications</h3>
 <li><strong>作者</strong>: Dawei Gao et al.</li>
 <li><strong>机构</strong>: Alibaba Group</li>
 <li><strong>链接</strong>: <a href="https://arxiv.org/abs/2504.01943" target="_blank">arXiv</a> | <a href="https://arxiv.org/pdf/2504.01943" target="_blank">PDF</a></li>
@@ -1370,7 +1381,7 @@ $$</div>
 <li><span class="wikilink">OpenTelemetry</span>: 可观测性标准</li>
 <li><span class="wikilink">ReAct</span>: 推理+行动范式</li>
 <li><span class="wikilink">LangChain</span>: 竞品框架</li>
-<li><span class="wikilink">AutoGen</span>: 微软 multi-agent 框架</li></div></details></div><div class="paper-card"><h3 id="3-agent-lightning-train-any-ai-agents-with-reinforcement-learning">3. Agent Lightning: Train ANY AI Agents with Reinforcement Learning</h3>
+<li><span class="wikilink">AutoGen</span>: 微软 multi-agent 框架</li></div></details></div><div class="paper-card" data-topic="🤖 Agent × Tool Use"><h3 id="3-agent-lightning-train-any-ai-agents-with-reinforcement-learning">3. Agent Lightning: Train ANY AI Agents with Reinforcement Learning</h3>
 <li><strong>作者</strong>: Yixiu Liu et al.</li>
 <li><strong>机构</strong>: Unknown</li>
 <li><strong>链接</strong>: <a href="https://arxiv.org/abs/2504.01553" target="_blank">arXiv</a> | <a href="https://arxiv.org/pdf/2504.01553" target="_blank">PDF</a></li>
@@ -1605,7 +1616,7 @@ $$</div>
 <li><strong>可观测性</strong>: <span class="wikilink">OpenTelemetry</span></li>
 <li><strong>评估基准</strong>: Spider (text-to-SQL), MuSiQue (multi-hop QA), Calc-X (math tool-use)</li></div></details>
 </div></div>
-<div id="panel-推荐系统" class="tab-panel"><h2 id="-推荐系统">📊 推荐系统</h2><div class="paper-card"><h3 id="4-multi-agent-video-recommenders-evolution-patterns-and-open-challenges">4. Multi-Agent Video Recommenders: Evolution, Patterns, and Open Challenges</h3>
+<div id="panel-推荐系统" class="tab-panel"><h2 id="-推荐系统">📊 推荐系统</h2><div class="paper-card" data-topic="📊 推荐系统"><h3 id="4-multi-agent-video-recommenders-evolution-patterns-and-open-challenges">4. Multi-Agent Video Recommenders: Evolution, Patterns, and Open Challenges</h3>
 <li><strong>作者</strong>: Unknown</li>
 <li><strong>机构</strong>: Unknown</li>
 <li><strong>链接</strong>: <a href="https://arxiv.org/abs/2504.01555" target="_blank">arXiv</a> | <a href="https://arxiv.org/pdf/2504.01555" target="_blank">PDF</a></li>
@@ -1680,7 +1691,7 @@ $$</div>
 <li><span class="wikilink">MARL</span>: 多智能体强化学习</li>
 <li><span class="wikilink">MARS</span>: 多智能体推荐系统</li></div></details>
 </div></div>
-<div id="panel-agentreinforcementlearning" class="tab-panel"><h2 id="-agent--reinforcement-learning">🧠 Agent × Reinforcement Learning</h2><div class="paper-card"><h3 id="5-skill0-in-context-agentic-reinforcement-learning-for-skill-internalization">5. SKILL0: In-Context Agentic Reinforcement Learning for Skill Internalization</h3>
+<div id="panel-agentreinforcementlearning" class="tab-panel"><h2 id="-agent--reinforcement-learning">🧠 Agent × Reinforcement Learning</h2><div class="paper-card" data-topic="🧠 Agent × Reinforcement Learning"><h3 id="5-skill0-in-context-agentic-reinforcement-learning-for-skill-internalization">5. SKILL0: In-Context Agentic Reinforcement Learning for Skill Internalization</h3>
 <li><strong>作者</strong>: Unknown</li>
 <li><strong>机构</strong>: Unknown</li>
 <li><strong>链接</strong>: <a href="https://arxiv.org/abs/2504.01379" target="_blank">arXiv</a> | <a href="https://arxiv.org/pdf/2504.01379" target="_blank">PDF</a></li>
@@ -1689,7 +1700,7 @@ $$</div>
 <li><strong>核心方法</strong>: <span class="wikilink">SKILL0</span> 提出 <span class="wikilink">ICRL</span>（In-Context Reinforcement Learning），让 agent 在上下文中通过 <span class="wikilink">RL</span> 学习技能并内化。使用 <span class="wikilink">SkillBank</span> 存储可复用技能，<span class="wikilink">GRPO</span> 优化。与 <span class="wikilink">ExpeL</span>、<span class="wikilink">MemRL</span> 等 memory-augmented RL 方法对比。</li>
 <li><strong>对比方法/Baselines</strong>: <span class="wikilink">ExpeL</span>, <span class="wikilink">MemRL</span>, <span class="wikilink">ZeroSearch</span>, <span class="wikilink">SimpleMem</span></li>
 <li><strong>借鉴意义</strong>: 把 RL 和 in-context learning 结合的思路对 agent 长期学习有启发。SkillBank 的设计可以借鉴到推荐系统的 agent 策略复用。</li>
-<li><strong>锐评</strong>: 概念很性感——agent 自己学技能然后记住。但 "skill internalization" 说白了就是把 few-shot examples 用 RL 选出来。在 HotpotQA 上的提升是否能迁移到更复杂的 agent 场景？存疑。👀</li></div><div class="paper-card"><h3 id="6-batched-contextual-reinforcement-a-task-scaling-law-for-efficient-reasoning">6. Batched Contextual Reinforcement: A Task-Scaling Law for Efficient Reasoning</h3>
+<li><strong>锐评</strong>: 概念很性感——agent 自己学技能然后记住。但 "skill internalization" 说白了就是把 few-shot examples 用 RL 选出来。在 HotpotQA 上的提升是否能迁移到更复杂的 agent 场景？存疑。👀</li></div><div class="paper-card" data-topic="🧠 Agent × Reinforcement Learning"><h3 id="6-batched-contextual-reinforcement-a-task-scaling-law-for-efficient-reasoning">6. Batched Contextual Reinforcement: A Task-Scaling Law for Efficient Reasoning</h3>
 <li><strong>作者</strong>: Unknown</li>
 <li><strong>机构</strong>: Unknown</li>
 <li><strong>链接</strong>: <a href="https://arxiv.org/abs/2504.01478" target="_blank">arXiv</a> | <a href="https://arxiv.org/pdf/2504.01478" target="_blank">PDF</a></li>
@@ -1756,7 +1767,7 @@ $$</div>
 <li><span class="wikilink">GRPO</span>: 基础 RL 算法</li>
 <li><span class="wikilink">DeepSeek</span>: 对比模型</li></div></details>
 </div></div>
-<div id="panel-ragrl" class="tab-panel"><h2 id="-rag--rl">🔍 RAG × RL</h2><div class="paper-card"><h3 id="7-optimizing-rag-rerankers-with-llm-feedback-via-reinforcement-learning">7. Optimizing RAG Rerankers with LLM Feedback via Reinforcement Learning</h3>
+<div id="panel-ragrl" class="tab-panel"><h2 id="-rag--rl">🔍 RAG × RL</h2><div class="paper-card" data-topic="🔍 RAG × RL"><h3 id="7-optimizing-rag-rerankers-with-llm-feedback-via-reinforcement-learning">7. Optimizing RAG Rerankers with LLM Feedback via Reinforcement Learning</h3>
 <li><strong>作者</strong>: Unknown</li>
 <li><strong>机构</strong>: Unknown</li>
 <li><strong>链接</strong>: <a href="https://arxiv.org/abs/2504.01489" target="_blank">arXiv</a> | <a href="https://arxiv.org/pdf/2504.01489" target="_blank">PDF</a></li>
@@ -1823,7 +1834,7 @@ $$</div>
 <li><span class="wikilink">GTE</span>: 基础检索器</li>
 <li><span class="wikilink">RL</span>: 训练方法</li></div></details>
 </div></div>
-<div id="panel-memoryagent" class="tab-panel"><h2 id="-memory--agent">💾 Memory × Agent</h2><div class="paper-card"><h3 id="8-msa-memory-sparse-attention-for-efficient-end-to-end-memory-model-scaling-to-10m">8. MSA: Memory Sparse Attention for Efficient End-to-End Memory Model Scaling to 10M+</h3>
+<div id="panel-memoryagent" class="tab-panel"><h2 id="-memory--agent">💾 Memory × Agent</h2><div class="paper-card" data-topic="💾 Memory × Agent"><h3 id="8-msa-memory-sparse-attention-for-efficient-end-to-end-memory-model-scaling-to-10m">8. MSA: Memory Sparse Attention for Efficient End-to-End Memory Model Scaling to 10M+</h3>
 <li><strong>作者</strong>: Unknown</li>
 <li><strong>机构</strong>: Unknown</li>
 <li><strong>链接</strong>: <a href="https://arxiv.org/abs/2504.01444" target="_blank">arXiv</a> | <a href="https://arxiv.org/pdf/2504.01444" target="_blank">PDF</a></li>
@@ -1888,7 +1899,7 @@ $$</div>
 
 <li><span class="wikilink">KV cache</span>: 核心优化对象</li>
 <li><span class="wikilink">RoPE</span>: 位置编码</li>
-<li><span class="wikilink">KaLMv2</span>: 主要对比方法</li></div></details></div><div class="paper-card"><h3 id="9-mem0-building-production-ready-ai-agents-with-scalable-long-term-memory">9. Mem0: Building Production-Ready AI Agents with Scalable Long-Term Memory</h3>
+<li><span class="wikilink">KaLMv2</span>: 主要对比方法</li></div></details></div><div class="paper-card" data-topic="💾 Memory × Agent"><h3 id="9-mem0-building-production-ready-ai-agents-with-scalable-long-term-memory">9. Mem0: Building Production-Ready AI Agents with Scalable Long-Term Memory</h3>
 <li><strong>作者</strong>: Unknown</li>
 <li><strong>机构</strong>: Unknown</li>
 <li><strong>链接</strong>: <a href="https://arxiv.org/abs/2504.01390" target="_blank">arXiv</a> | <a href="https://arxiv.org/pdf/2504.01390" target="_blank">PDF</a></li>
@@ -1962,7 +1973,7 @@ $$</div>
 
 <li><span class="wikilink">MemGPT</span>: 主要对比方法</li>
 <li><span class="wikilink">LangMem</span>: 记忆管理方案</li>
-<li><span class="wikilink">RAG</span>: 传统检索增强方案</li></div></details></div><div class="paper-card"><h3 id="10-memos-a-memory-os-for-ai-system">10. MemOS: A Memory OS for AI System</h3>
+<li><span class="wikilink">RAG</span>: 传统检索增强方案</li></div></details></div><div class="paper-card" data-topic="💾 Memory × Agent"><h3 id="10-memos-a-memory-os-for-ai-system">10. MemOS: A Memory OS for AI System</h3>
 <li><strong>作者</strong>: Unknown</li>
 <li><strong>机构</strong>: Unknown</li>
 <li><strong>链接</strong>: <a href="https://arxiv.org/abs/2504.01561" target="_blank">arXiv</a> | <a href="https://arxiv.org/pdf/2504.01561" target="_blank">PDF</a></li>

@@ -99,7 +99,18 @@ img { max-width: 100%; border-radius: 8px; margin: 0.5em 0; }
 /* Trends */
 .trend-row { display: flex; align-items: center; gap: 8px; margin: 6px 0; font-size: 0.85em; }
 .trend-label { width: 90px; text-align: right; color: var(--text2); white-space: nowrap;
-  overflow: hidden; text-overflow: ellipsis; flex-shrink: 0; cursor: pointer; position: relative; }
+  overflow: hidden; text-overflow: ellipsis; flex-shrink: 0; cursor: pointer; position: relative;
+  transition: color 0.2s; }
+.trend-row.active-topic .trend-label { color: var(--accent); font-weight: 600; }
+.trend-row.active-topic .trend-bar { opacity: 1; }
+.trend-row:not(.active-topic).dimmed .trend-label { opacity: 0.4; }
+.trend-row:not(.active-topic).dimmed .trend-bar { opacity: 0.3; }
+.topic-filter-bar { display: flex; align-items: center; gap: 10px; padding: 8px 14px;
+  margin-bottom: 12px; background: rgba(88,166,255,0.1); border: 1px solid var(--accent);
+  border-radius: 8px; font-size: 0.9em; animation: fadeIn 0.25s ease; }
+.topic-filter-bar .clear-filter { background: none; border: 1px solid var(--border);
+  color: var(--text2); padding: 2px 10px; border-radius: 4px; cursor: pointer; font-size: 0.85em; margin-left: auto; }
+.topic-filter-bar .clear-filter:hover { background: var(--border); color: var(--text); }
 .trend-label:hover { overflow: visible; z-index: 10; }
 .trend-label:hover::after { content: attr(data-full); position: absolute; right: 0; top: -28px;
   background: var(--surface); border: 1px solid var(--border); padding: 4px 10px;
@@ -191,7 +202,7 @@ details.paper-note .note-body h3 { font-size: 1em; }
 
 
 <div class="tab-bar"><button class="tab-btn active" data-tab="all" onclick="switchTab('all')">📋 全部<span class="tab-count">10</span></button><button class="tab-btn" data-tab="推荐系统" onclick="switchTab('推荐系统')">📈 推荐系统<span class="tab-count">2</span></button><button class="tab-btn" data-tab="agent训练与框架" onclick="switchTab('agent训练与框架')">🏗 Agent 训练与框架<span class="tab-count">2</span></button><button class="tab-btn" data-tab="对话与工具使用" onclick="switchTab('对话与工具使用')">💬 对话与工具使用<span class="tab-count">1</span></button><button class="tab-btn" data-tab="多模态agent" onclick="switchTab('多模态agent')">🎨 多模态 Agent<span class="tab-count">2</span></button><button class="tab-btn" data-tab="multiagent协作" onclick="switchTab('multiagent协作')">🤖 Multi-Agent 协作<span class="tab-count">1</span></button><button class="tab-btn" data-tab="llm基础" onclick="switchTab('llm基础')">🤖 LLM 基础<span class="tab-count">2</span></button></div>
-<div id="panel-all" class="tab-panel active"><h2 id="推荐系统">推荐系统</h2><div class="paper-card"><h3 id="1-unimixer-a-unified-architecture-for-scaling-laws-in-recommendation-systems">1. UniMixer: A Unified Architecture for Scaling Laws in Recommendation Systems</h3>
+<div id="panel-all" class="tab-panel active"><h2 id="推荐系统">推荐系统</h2><div class="paper-card" data-topic="推荐系统"><h3 id="1-unimixer-a-unified-architecture-for-scaling-laws-in-recommendation-systems">1. UniMixer: A Unified Architecture for Scaling Laws in Recommendation Systems</h3>
 <li><strong>作者</strong>: Mingming Ha, Guanchen Wang, Linxun Chen, Xuan Rao, Yuexin Shi, Tianbao Ma 等</li>
 <li><strong>机构</strong>: 快手</li>
 <li><strong>链接</strong>: <a href="https://arxiv.org/abs/2604.00590" target="_blank">arXiv</a> | <a href="https://arxiv.org/pdf/2604.00590" target="_blank">PDF</a></li>
@@ -351,7 +362,7 @@ $$</div>
 <li><span class="wikilink">HiFormer</span>: 异构注意力的代表</li>
 <li><span class="wikilink">Sinkhorn-Knopp</span>: 双随机矩阵的迭代算法</li>
 <li><span class="wikilink">MoE</span>: Sparse Per-token MoE 用于扩展模型容量</li>
-<li><span class="wikilink">AUC</span>, <span class="wikilink">UAUC</span>: 推荐系统评估指标</li></div></details></div><div class="paper-card"><h3 id="2-memrerank-preference-memory-for-personalized-product-reranking">2. MemRerank: Preference Memory for Personalized Product Reranking</h3>
+<li><span class="wikilink">AUC</span>, <span class="wikilink">UAUC</span>: 推荐系统评估指标</li></div></details></div><div class="paper-card" data-topic="推荐系统"><h3 id="2-memrerank-preference-memory-for-personalized-product-reranking">2. MemRerank: Preference Memory for Personalized Product Reranking</h3>
 <li><strong>作者</strong>: Zhiyuan Peng</li>
 <li><strong>机构</strong>: Santa Clara University</li>
 <li><strong>链接</strong>: <a href="https://arxiv.org/abs/2603.29247" target="_blank">arXiv</a> | <a href="https://arxiv.org/pdf/2603.29247" target="_blank">PDF</a></li>
@@ -439,7 +450,7 @@ $$</div>
 
 <li><span class="wikilink">GRPO</span>: 用于训练 MemAgent 的 RL 算法</li>
 <li><span class="wikilink">LLM</span>: 基座重排序模型</li></div></details>
-</div><h2 id="agent-训练与框架">Agent 训练与框架</h2><div class="paper-card"><h3 id="3-agent-lightning-train-any-ai-agents-with-reinforcement-learning">3. Agent Lightning: Train ANY AI Agents with Reinforcement Learning</h3>
+</div><h2 id="agent-训练与框架">Agent 训练与框架</h2><div class="paper-card" data-topic="Agent 训练与框架"><h3 id="3-agent-lightning-train-any-ai-agents-with-reinforcement-learning">3. Agent Lightning: Train ANY AI Agents with Reinforcement Learning</h3>
 <li><strong>作者</strong>: Xufang Luo, Yuge Zhang, Zhiyuan He, Zilong Wang 等</li>
 <li><strong>机构</strong>: Microsoft Research</li>
 <li><strong>链接</strong>: <a href="https://arxiv.org/abs/2508.03680" target="_blank">arXiv</a> | <a href="https://arxiv.org/pdf/2508.03680" target="_blank">PDF</a></li>
@@ -674,7 +685,7 @@ $$</div>
 <li><strong>核心方法</strong>: 完全解耦 agent 执行与 <span class="wikilink">RL</span> 训练。<span class="wikilink">LightningRL</span> 框架将 agent 运行时抽象为 <span class="wikilink">MDP</span>，通过 <span class="wikilink">OpenTelemetry</span> 收集 trajectory，异步送入训练管线。支持任意 agent 框架（<span class="wikilink">LangChain</span>, <span class="wikilink">AutoGen</span>, <span class="wikilink">MCP</span>）无需修改代码即可接入 RL 训练。</li>
 <li><strong>对比方法/Baselines</strong>: 对比: <span class="wikilink">GRPO</span>, <span class="wikilink">PPO</span>；评测: <span class="wikilink">MuSiQue</span>, SQL, QA benchmarks</li>
 <li><strong>借鉴意义</strong>: "执行-训练解耦"是把 RL 训练从实验室搬到生产环境的关键一步。OpenTelemetry 做 trajectory 采集的思路非常工程化，值得直接借鉴。</li>
-<li><strong>锐评</strong>: 140 upvotes，微软出品。和 OpenClaw-RL 思路相似但工程化程度更高——用 OpenTelemetry 这种工业级可观测性工具收集训练信号，这才是做框架该有的样子。但"Train ANY AI Agents"这个标题和 OpenClaw 一样在吹牛，对 long-horizon 任务的 reward 稀疏问题完全没讨论。 🔥</li></div><div class="paper-card"><h3 id="4-agentscope-10-a-developer-centric-framework-for-building-agentic-applications">4. AgentScope 1.0: A Developer-Centric Framework for Building Agentic Applications</h3>
+<li><strong>锐评</strong>: 140 upvotes，微软出品。和 OpenClaw-RL 思路相似但工程化程度更高——用 OpenTelemetry 这种工业级可观测性工具收集训练信号，这才是做框架该有的样子。但"Train ANY AI Agents"这个标题和 OpenClaw 一样在吹牛，对 long-horizon 任务的 reward 稀疏问题完全没讨论。 🔥</li></div><div class="paper-card" data-topic="Agent 训练与框架"><h3 id="4-agentscope-10-a-developer-centric-framework-for-building-agentic-applications">4. AgentScope 1.0: A Developer-Centric Framework for Building Agentic Applications</h3>
 <li><strong>作者</strong>: Dawei Gao, Zitao Li, Yuexiang Xie 等</li>
 <li><strong>机构</strong>: Alibaba Group</li>
 <li><strong>链接</strong>: <a href="https://arxiv.org/abs/2508.16279" target="_blank">arXiv</a> | <a href="https://arxiv.org/pdf/2508.16279" target="_blank">PDF</a></li>
@@ -771,7 +782,7 @@ $$</div>
 <li><span class="wikilink">ReAct</span>: 推理+行动范式</li>
 <li><span class="wikilink">LangChain</span>: 竞品框架</li>
 <li><span class="wikilink">AutoGen</span>: 微软 multi-agent 框架</li></div></details>
-</div><h2 id="对话与工具使用">对话与工具使用</h2><div class="paper-card"><h3 id="5-coalm-a-unified-conversational-agentic-language-model">5. CoALM: A Unified Conversational Agentic Language Model</h3>
+</div><h2 id="对话与工具使用">对话与工具使用</h2><div class="paper-card" data-topic="对话与工具使用"><h3 id="5-coalm-a-unified-conversational-agentic-language-model">5. CoALM: A Unified Conversational Agentic Language Model</h3>
 <li><strong>作者</strong>: Emre Can Acikgoz</li>
 <li><strong>机构</strong>: UIUC, Oumi</li>
 <li><strong>链接</strong>: <a href="https://arxiv.org/abs/2502.08820" target="_blank">arXiv</a> | <a href="https://arxiv.org/pdf/2502.08820" target="_blank">PDF</a></li>
@@ -933,7 +944,7 @@ $$</div>
 <li><strong>对比方法/Baselines</strong>: 对比: <span class="wikilink">ReAct</span>, <span class="wikilink">GPT</span>, <span class="wikilink">ToolAce</span>；评测: <span class="wikilink">MultiWOZ</span>, <span class="wikilink">BFCL</span></li>
 <li><strong>借鉴意义</strong>: 对做客服/助手类产品的团队直接有用——不用再维护两套模型分别处理对话和工具调用。统一训练策略的具体实现值得研究。</li>
 <li><strong>锐评</strong>: 问题定义精准——现有 LA 系统确实在对话和工具之间撕裂。5 个 upvotes 说明这篇被严重低估。但只在 MultiWOZ 这种老 benchmark 上验证 TOD 能力，没有在真实多轮对话场景下评测，说服力打折。 🔥</li>
-</div><h2 id="多模态-agent">多模态 Agent</h2><div class="paper-card"><h3 id="6-gems-agent-native-multimodal-generation-with-memory-and-skills">6. GEMS: Agent-Native Multimodal Generation with Memory and Skills</h3>
+</div><h2 id="多模态-agent">多模态 Agent</h2><div class="paper-card" data-topic="多模态 Agent"><h3 id="6-gems-agent-native-multimodal-generation-with-memory-and-skills">6. GEMS: Agent-Native Multimodal Generation with Memory and Skills</h3>
 <li><strong>作者</strong>: Zefeng He, Siyuan Huang, Xiaoye Qu, Yafu Li, Tong Zhu, Yu Cheng, Yang Yang</li>
 <li><strong>机构</strong>: Shanghai AI Laboratory, Nanjing University, SJTU, CUHK</li>
 <li><strong>链接</strong>: <a href="https://arxiv.org/abs/2603.28088" target="_blank">arXiv</a> | <a href="https://arxiv.org/pdf/2603.28088" target="_blank">PDF</a></li>
@@ -1096,7 +1107,7 @@ $$</div>
 <li><strong>核心方法</strong>: 三层 agent 架构做多模态生成的 inference-time scaling。<span class="wikilink">Agent Loop</span>（Planner/Decomposer/Verifier/Refiner 闭环）、<span class="wikilink">Agent Memory</span>（层次化 trajectory-level 记忆）、<span class="wikilink">Agent Skill</span>（可扩展技能集合）。6B 模型套 agent 框架超越 SOTA 大模型。</li>
 <li><strong>对比方法/Baselines</strong>: 对比: <span class="wikilink">Qwen-Image</span>, <span class="wikilink">GPT</span>；评测: <span class="wikilink">GenEval2</span>, <span class="wikilink">SpatialGenEval</span>, <span class="wikilink">DPG</span></li>
 <li><strong>借鉴意义</strong>: Memory 分层设计和 Skill 按需加载机制可直接借鉴。证明小模型+agent框架>大模型单推。</li>
-<li><strong>锐评</strong>: "Agent-Native"这个词造得精准。6B 干翻 SOTA 确实漂亮。但四个 agent 每轮迭代都调 MLLM，推理成本一个字没提。Memory 压缩细节和 scalability 需要看全文确认。 🔥</li></div><div class="paper-card"><h3 id="7-gen-searcher-reinforcing-agentic-search-for-image-generation">7. Gen-Searcher: Reinforcing Agentic Search for Image Generation</h3>
+<li><strong>锐评</strong>: "Agent-Native"这个词造得精准。6B 干翻 SOTA 确实漂亮。但四个 agent 每轮迭代都调 MLLM，推理成本一个字没提。Memory 压缩细节和 scalability 需要看全文确认。 🔥</li></div><div class="paper-card" data-topic="多模态 Agent"><h3 id="7-gen-searcher-reinforcing-agentic-search-for-image-generation">7. Gen-Searcher: Reinforcing Agentic Search for Image Generation</h3>
 <li><strong>作者</strong>: Kaituo Feng, Manyuan Zhang, Shuang Chen 等</li>
 <li><strong>机构</strong>: 未知</li>
 <li><strong>链接</strong>: <a href="https://arxiv.org/abs/2603.28767" target="_blank">arXiv</a> | <a href="https://arxiv.org/pdf/2603.28767" target="_blank">PDF</a></li>
@@ -1184,7 +1195,7 @@ $$</div>
 
 <li><span class="wikilink">RAG</span>: 检索增强生成的思路来源</li>
 <li><span class="wikilink">RL</span>: 搜索策略的训练方法</li></div></details>
-</div><h2 id="multi-agent-协作">Multi-Agent 协作</h2><div class="paper-card"><h3 id="8-multi-agent-collaboration-via-evolving-orchestration">8. Multi-Agent Collaboration via Evolving Orchestration</h3>
+</div><h2 id="multi-agent-协作">Multi-Agent 协作</h2><div class="paper-card" data-topic="Multi-Agent 协作"><h3 id="8-multi-agent-collaboration-via-evolving-orchestration">8. Multi-Agent Collaboration via Evolving Orchestration</h3>
 <li><strong>作者</strong>: Yufan Dang 等</li>
 <li><strong>机构</strong>: Tsinghua University, SJTU, Siemens, Tencent Robotics X</li>
 <li><strong>链接</strong>: <a href="https://arxiv.org/abs/2505.19591" target="_blank">arXiv</a> | <a href="https://arxiv.org/pdf/2505.19591" target="_blank">PDF</a></li>
@@ -1196,92 +1207,297 @@ $$</div>
 <li><strong>锐评</strong>: 清华+西门子+腾讯的阵容。"进化式编排"方向对，但 8 个 upvotes 说明实验结果可能没那么惊艳。在 MMLU 这种"一个 agent 就能做"的任务上评估 multi-agent 系统，benchmark 选择存疑。 👀</li>
 <details class="paper-note"><summary>📒 精读笔记: EvoOrch</summary><div class="note-body"><h1 id="evoorch-multi-agent-collaboration-via-evolving-orchestration">EvoOrch: Multi-Agent Collaboration via Evolving Orchestration</h1>
 
-<h2 id="-基本信息">📋 基本信息</h2>
-
-<li><strong>作者</strong>: Yufan Dang, Chen Qian, Xueheng Luo 等</li>
-<li><strong>机构</strong>: Tsinghua University, SJTU, Siemens, Tencent Robotics X</li>
-<li><strong>链接</strong>: <a href="https://arxiv.org/abs/2505.19591" target="_blank">arXiv</a> | <a href="https://arxiv.org/pdf/2505.19591" target="_blank">PDF</a></li>
-
-<h2 id="-研究动机与问题">🎯 研究动机与问题</h2>
-
-<p>现有 multi-agent 协作方法大多依赖<strong>静态组织结构</strong>：</p>
-<p>1. 预定义的拓扑（链式、星形、树形）无法随任务复杂度自适应</p>
-<p>2. 随着 agent 数量增长，协调开销急剧上升</p>
-<p>3. 手工设计拓扑费时费力且不通用</p>
-
-<p>核心问题：<strong>能否通过 RL 自动学习最优的 multi-agent 编排策略？</strong></p>
-
-<h2 id="-方法详解">🔧 方法详解</h2>
-
-<h3 id="puppeteer-范式">Puppeteer 范式</h3>
-
-<p>提出 "puppeteer-puppet" 范式：</p>
-<li><strong>Puppeteer（编排者）</strong>：中心化的编排 agent，动态指挥其他 agent</li>
-<li><strong>Puppets（执行者）</strong>：被编排的 agent，各有不同能力</li>
-
-<h3 id="agent-三元组抽象">Agent 三元组抽象</h3>
-
-<p>每个 agent 被抽象为三元组：</p>
-
-<div class="math-block">$$
-\text{Agent} = (\text{model}, \text{reasoning\_pattern}, \text{tools})
-$$</div>
-
-<li><strong>model</strong>: 底层 LLM（如 GPT-4, Claude）</li>
-<li><strong>reasoning_pattern</strong>: 推理模式（如 <span class="wikilink">ReAct</span>, <span class="wikilink">CoT</span>）</li>
-<li><strong>tools</strong>: 可用工具集合</li>
-
-<h3 id="rl-训练编排策略">RL 训练编排策略</h3>
-
-<p>编排器通过 <span class="wikilink">RL</span> 持续优化，学习决定 "谁在什么时候和谁协作"：</p>
-
-<div class="math-block">$$
-\pi^*(\text{agent}_t | s_t) = \arg\max_\pi \mathbb{E}\left[\sum_{t=0}^T \gamma^t r_t\right]
-$$</div>
-
-<p>其中 $s_t$ 是当前任务状态，$r_t$ 是任务完成度 reward。</p>
-
-<h3 id="涌现的推理结构">涌现的推理结构</h3>
-
-<p>分析发现，RL 优化后的编排策略涌现出<strong>更紧凑、循环式的推理结构</strong>，而非简单的链式或树形拓扑。</p>
-
-<h2 id="-实验结果">📊 实验结果</h2>
-
-<p>在 closed-domain 和 open-domain 场景下的评测：</p>
+<h2 id="基本信息">基本信息</h2>
 
 <table class="paper-table">
-<thead><tr><th>方法</th><th>MMLU</th><th>GSM</th><th>CommonGen</th></tr></thead>
+<thead><tr><th>项目</th><th>内容</th></tr></thead>
 <tbody>
-<tr><td><span class="wikilink">MacNet</span></td><td>baseline</td><td>baseline</td><td>baseline</td></tr>
-<tr><td><span class="wikilink">EvoAgent</span></td><td>moderate</td><td>moderate</td><td>moderate</td></tr>
-<tr><td><span class="wikilink">AutoGPT</span></td><td>moderate</td><td>moderate</td><td>moderate</td></tr>
-<tr><td><span class="wikilink">GPT-4</span> (single)</td><td>good</td><td>good</td><td>good</td></tr>
-<tr><td><strong>EvoOrch</strong></td><td><strong>best</strong></td><td><strong>best</strong></td><td><strong>best</strong></td></tr>
+<tr><td>标题</td><td>Multi-Agent Collaboration via Evolving Orchestration</td></tr>
+<tr><td>作者</td><td>Yufan Dang (清华, 共同一作), Chen Qian (上交, 共同一作), Xueheng Luo, Jingru Fan, Zihao Xie, Ruijie Shi, Weize Chen, Cheng Yang, Xiaoyin Che, Ye Tian, Xuantang Xiong, Lei Han, Zhiyuan Liu (通讯), Maosong Sun (通讯)</td></tr>
+<tr><td>机构</td><td>清华大学, 上海交通大学, 北邮, Siemens, Tencent Robotics X</td></tr>
+<tr><td>会议</td><td>NeurIPS 2025 (accepted)</td></tr>
+<tr><td>代码</td><td><a href="https://github.com/OpenBMB/ChatDev/tree/puppeteer" target="_blank">GitHub - ChatDev/puppeteer</a></td></tr>
 </tbody></table>
 
 
-<p>关键发现：编排式协作在计算成本更低的情况下实现了更优性能。</p>
+<div class="paper-figure"><img src="https://arxiv.org/html/2505.19591v2/x1.png" alt="Figure 1: Overview" loading="lazy"></div>
+<blockquote>
+<p>Figure 1: 框架总览。中央策略（"puppeteer"）基于任务的动态状态动态编排下一个 agent（"puppet"）。随着任务推进，orchestrator 自适应地提升有效 agent 并裁剪低效 agent。</p>
+</blockquote>
 
-<h2 id="-核心贡献">💡 核心贡献</h2>
+<h2 id="研究动机与问题">研究动机与问题</h2>
 
-<p>1. <strong>Puppeteer 范式</strong>：首次提出中心化编排 + RL 优化的 multi-agent 协作框架</p>
-<p>2. <strong>涌现式推理结构</strong>：发现 RL 优化后自动涌现紧凑循环推理模式</p>
-<p>3. <strong>计算效率</strong>：以更少计算成本超越静态拓扑方法</p>
+<h3 id="核心问题">核心问题</h3>
 
-<h2 id="-局限性与思考">🤔 局限性与思考</h2>
+<p><strong>现有 <span class="wikilink">multi-agent system</span> 的组织结构大多是静态的</strong>（如 chain、tree、DAG），在任务复杂度和 agent 数量增长时面临三大问题：</p>
 
-<p>1. <strong>Benchmark 选择存疑</strong>：在 MMLU 这种"一个 agent 就能做"的任务上评估 multi-agent 系统，不够有说服力</p>
-<p>2. <strong>中心化 vs 去中心化</strong>：Puppeteer 是单点故障，且可能成为瓶颈</p>
-<p>3. <strong>scalability</strong>：随 agent 数量增长，编排空间指数级膨胀</p>
-<p>4. <strong>8 个 upvotes</strong>：说明实验结果可能没那么惊艳</p>
+<p>1. <strong>协调开销 (coordination overhead)</strong>：agent 自主选择协作者导致通信爆炸。例如 mesh 结构的 50 节点 MAS 开发几百行代码需 10 小时</p>
+<p>2. <strong>拓扑搜索空间爆炸</strong>：可能的协作拓扑数量随 agent 数指数增长，穷举不可行</p>
+<p>3. <strong>缺乏动态适应性</strong>：静态拓扑无法根据任务进展实时调整 agent 调度，导致冗余计算和低效通信</p>
 
-<h2 id="-相关工作">📚 相关工作</h2>
+<h3 id="研究问题">研究问题</h3>
 
-<li><span class="wikilink">ReAct</span>: agent 推理模式</li>
-<li><span class="wikilink">CoT</span>: 链式思考</li>
-<li><span class="wikilink">MacNet</span>, <span class="wikilink">EvoAgent</span>, <span class="wikilink">AutoGPT</span>: 对比方法</li>
-<li><span class="wikilink">MARL</span>: 多智能体强化学习</li></div></details>
-</div><h2 id="llm-基础">LLM 基础</h2><div class="paper-card"><h3 id="9-a-survey-of-on-policy-distillation-for-large-language-models">9. A Survey of On-Policy Distillation for Large Language Models</h3>
+<blockquote>
+<p><em>Can dynamic orchestration simultaneously maximize collaborative effectiveness and computational efficiency?</em></p>
+</blockquote>
+
+<p>即：<strong>动态编排能否同时最大化协作效果和计算效率？</strong></p>
+
+<h2 id="方法详解">方法详解</h2>
+
+<h3 id="21-核心抽象">2.1 核心抽象</h3>
+
+<p><strong>Agent 定义</strong>：每个 LLM-based agent 被抽象为 $a = (m, r, t)$，其中 $m$ 为基础模型，$r$ 为推理模式（prompting strategy），$t$ 为可用外部工具集合。Agent 空间 $\mathcal{A} = \{(m, r, t)\}$ 枚举所有可能组合。</p>
+
+<p><strong>MAS 图表示</strong>：多 agent 协作被形式化为有向图 $\mathcal{G} = (\mathcal{V}, \mathcal{E})$，其中 $v \in \mathcal{V}$ 对应 agent $a \in \mathcal{A}$，有向边 $(v_i, v_j) \in \mathcal{E}$ 表示从 $a_i$ 到 $a_j$ 的信息流。该图为单源单汇结构，类似 <span class="wikilink">Graph-of-Thought</span>。</p>
+
+<h3 id="22-dynamic-orchestration动态编排">2.2 Dynamic Orchestration（动态编排）</h3>
+
+<h4 id="centralized-puppeteer集中式木偶师">Centralized Puppeteer（集中式木偶师）</h4>
+
+<p>区别于以往每个 agent 自主选择协作者的分布式方案，本文采用<strong>集中式 orchestrator</strong>：一个中央策略 $\pi$ 根据全局状态动态决定下一个激活的 agent。这种设计将 agent 选择与 agent 内部行为解耦，提升了可扩展性。</p>
+
+<h4 id="serialized-orchestration序列化编排">Serialized Orchestration（序列化编排）</h4>
+
+<p>为避免搜索指数级拓扑空间，本文将协作过程<strong>展开为序列决策</strong>：每一步 orchestrator 选择一个 agent 激活。在时间步 $t$，orchestrator 选择 agent $a_t$：</p>
+
+<div class="math-block">$$
+a_t \sim \pi(S_t, \tau) = \mathbb{P}(a \mid S_t, \tau)
+$$</div>
+
+<p>其中 $S_t$ 是全局状态（包含所有 agent 状态和累积上下文），$\tau$ 是任务描述。</p>
+
+<p>被激活的 agent $a_t$ 接收其状态并生成输出，随后系统状态更新：</p>
+
+<div class="math-block">$$
+o_t = f_{a_t}(s_t(a_t), S_t), \quad S_{t+1} = \Phi(S_t, o_t)
+$$</div>
+
+<p>该过程满足 <span class="wikilink">Markov property</span>：</p>
+
+<div class="math-block">$$
+\mathbb{P}(a_{t+1} \mid S_0, \dots, S_{t+1}, \tau) = \mathbb{P}(a_{t+1} \mid S_{t+1}, \tau)
+$$</div>
+
+<p>当满足终止条件（选择 Terminator agent 或资源耗尽）时，最终输出通过聚合函数得到：</p>
+
+<div class="math-block">$$
+o^* = F_{\mathrm{agg}}(\{o_0, o_1, \dots, o_T\}) = \Phi(S_T, o_T)
+$$</div>
+
+<p><strong>关键洞察</strong>：虽然编排过程看似序列化，但通过"折叠"可还原为有向图（agent 为节点，编排偏序关系为边），支持 cycle 和 cross-branch 连接的涌现。</p>
+
+<h3 id="23-adaptive-evolution自适应进化">2.3 Adaptive Evolution（自适应进化）</h3>
+
+<h4 id="policy-optimization">Policy Optimization</h4>
+
+<p>使用 <span class="wikilink">REINFORCE</span> 算法优化 orchestrator 策略。目标函数：</p>
+
+<div class="math-block">$$
+J(\theta) = \mathbb{E}_{\pi_\theta}\big[R(\tau)\big], \quad \nabla_\theta J(\theta) \approx \frac{1}{N} \sum_{n=1}^{N} \left( \sum_{t=1}^{T} \nabla_\theta \log \pi_\theta(a_t | S_t) \right) \cdot R(\tau)
+$$</div>
+
+<p>参数更新：$\theta \leftarrow \theta + \alpha \nabla_\theta J(\theta)$</p>
+
+<p>通过 RL 驱动的优化，orchestrator 学习抑制无效或高成本 agent，收敛到更紧凑、高效的协作结构。</p>
+
+<h4 id="reward-design">Reward Design</h4>
+
+<p>奖励函数同时考虑<strong>解决质量</strong>和<strong>计算效率</strong>：</p>
+
+<div class="math-block">$$
+R_t = \begin{cases} r - \lambda \cdot C_T, &amp; \text{if } t = T \\ \gamma \cdot R_{t+1} - \lambda \cdot C_t, &amp; \text{if } t &lt; T \end{cases}, \quad C_t = F \cdot \log\left(1 + \frac{t}{\varphi}\right)
+$$</div>
+
+<p>其中：</p>
+<li>$r \in \{0, 1\}$（闭域任务的正确性）或 $r \in [0, 1]$（开域任务的质量分）</li>
+<li>$\lambda$ 控制准确率与效率的权衡</li>
+<li>$\gamma \in (0, 1]$ 为折扣因子</li>
+<li>$C_t$ 为步级成本，$F$ 基于 FLOPs 或 token 指标，$\varphi$ 为最大步数预算</li>
+<li>对数形式的成本惩罚鼓励经济推理</li>
+
+<h3 id="实现细节">实现细节</h3>
+
+<table class="paper-table">
+<thead><tr><th>组件</th><th>设置</th></tr></thead>
+<tbody>
+<tr><td>Orchestrator 初始化</td><td>Llama-3.1-Nemotron-70B-Reward-HF</td></tr>
+<tr><td>Episode 长度</td><td>4</td></tr>
+<tr><td>并行探索数</td><td>3</td></tr>
+<tr><td>$\lambda$</td><td>0.1</td></tr>
+<tr><td>$\gamma$</td><td>0.99</td></tr>
+<tr><td>输出聚合</td><td>Majority Voting</td></tr>
+</tbody></table>
+
+
+<p><strong>Agent 配置</strong>：</p>
+<li><strong>Reasoning Agent</strong>：task decomposition、reflection、refinement、critique、modification、summarization、termination</li>
+<li><strong>Tool-use Agent</strong>：WebViewer、WikiSearch、BingSearch、arXivSearch、Code Interpreter、File Reader</li>
+
+<p><strong>Agent 子空间划分</strong>：</p>
+<li><strong>Mimas</strong>（小模型）：Qwen-2.5-7B/14B, LLaMA-3.1-8B, LLaMA-3.2-3B, Mistral-7B, Mistral-Nemo-12B</li>
+<li><strong>Titan</strong>（大模型）：GPT-4-Turbo, GPT-4o-Mini, Gemini-1.5-Pro/Flash, Claude-3-Sonnet/Haiku, Qwen-2.5-72B, LLaMA-3.1-405B</li>
+
+<h2 id="实验结果">实验结果</h2>
+
+<h3 id="数据集与指标">数据集与指标</h3>
+
+<table class="paper-table">
+<thead><tr><th>数据集</th><th>类型</th><th>任务</th><th>指标</th></tr></thead>
+<tbody>
+<tr><td>GSM-Hard</td><td>闭域</td><td>大数复杂多步算术</td><td>Accuracy</td></tr>
+<tr><td>MMLU-Pro</td><td>闭域</td><td>多学科多选推理</td><td>Accuracy</td></tr>
+<tr><td>SRDD</td><td>开域</td><td>软件需求到代码开发</td><td>完整性+可执行性+一致性</td></tr>
+<tr><td>CommonGen-Hard</td><td>开域</td><td>概念关联句子生成</td><td>语法+相关性+逻辑+概念覆盖</td></tr>
+</tbody></table>
+
+
+<h3 id="table-1-主实验结果">Table 1: 主实验结果</h3>
+
+<h4 id="mimas-子空间">Mimas 子空间</h4>
+
+<table class="paper-table">
+<thead><tr><th>方法</th><th>GSM-Hard</th><th>MMLU-Pro</th><th>SRDD</th><th>CommonGen-Hard</th><th>AVG.</th></tr></thead>
+<tbody>
+<tr><td>Llama-3.1-8B</td><td>0.0000</td><td>0.5250</td><td>0.4615</td><td>0.6992</td><td>0.4214</td></tr>
+<tr><td>Mistral-Nemo-12B</td><td>0.0350</td><td>0.4500</td><td>0.2097</td><td>0.7146</td><td>0.3523</td></tr>
+<tr><td>Qwen-2.5-14B</td><td>0.0450</td><td>0.3800</td><td>0.5891</td><td>0.5747</td><td>0.3972</td></tr>
+<tr><td>Self-Refine (8B)</td><td>0.4750</td><td>0.2600</td><td>0.5412</td><td>0.6018</td><td>0.4695</td></tr>
+<tr><td>AFlow (8B)</td><td>0.2900</td><td>0.5000</td><td>0.6362</td><td>0.7194</td><td>0.5364</td></tr>
+<tr><td>MacNet (8B)</td><td>0.0000</td><td>0.2000</td><td>0.2017</td><td><strong>0.7434</strong></td><td>0.2862</td></tr>
+<tr><td>EvoAgent (8B)</td><td>0.1250</td><td>0.5000</td><td>0.2510</td><td>0.7167</td><td>0.3981</td></tr>
+<tr><td>Puppeteer-Mono (8B) Init.</td><td>0.2467</td><td>0.4500</td><td>0.6983</td><td>0.6323</td><td>0.5068</td></tr>
+<tr><td>Puppeteer-Mono (8B) Evol.</td><td>0.4800</td><td>0.5200</td><td><strong>0.7249</strong></td><td>0.7341</td><td>0.6147</td></tr>
+<tr><td><strong>Puppeteer Init.</strong></td><td><strong>0.5600</strong></td><td>0.5700</td><td>0.6653</td><td>0.7139</td><td>0.6273</td></tr>
+<tr><td><strong>Puppeteer Evol.</strong></td><td>0.5400</td><td><strong>0.6300</strong></td><td>0.6266</td><td>0.7333</td><td><strong>0.6324</strong></td></tr>
+</tbody></table>
+
+
+<h4 id="titan-子空间">Titan 子空间</h4>
+
+<table class="paper-table">
+<thead><tr><th>方法</th><th>GSM-Hard</th><th>MMLU-Pro</th><th>SRDD</th><th>CommonGen-Hard</th><th>AVG.</th></tr></thead>
+<tbody>
+<tr><td>Llama-3.1-405B</td><td>0.1350</td><td>0.7600</td><td>0.6061</td><td>0.8116</td><td>0.5781</td></tr>
+<tr><td>GPT-4o-Mini</td><td>0.1050</td><td>0.5950</td><td>0.6822</td><td>0.6691</td><td>0.5128</td></tr>
+<tr><td>GPT-4-Turbo</td><td>0.2750</td><td>0.6800</td><td>0.6244</td><td>0.7632</td><td>0.5856</td></tr>
+<tr><td>Self-Refine (405B)</td><td>0.5250</td><td>0.6000</td><td>0.6345</td><td>0.7033</td><td>0.6157</td></tr>
+<tr><td>AFlow (405B)</td><td>0.5400</td><td>0.7500</td><td>0.6478</td><td>0.8218</td><td>0.6899</td></tr>
+<tr><td>MacNet (405B)</td><td>0.2905</td><td>0.4800</td><td>0.4228</td><td><strong>0.8817</strong></td><td>0.5187</td></tr>
+<tr><td>EvoAgent (405B)</td><td>0.4250</td><td>0.5400</td><td>0.1730</td><td>0.8599</td><td>0.4994</td></tr>
+<tr><td>Puppeteer-Mono (405B) Init.</td><td>0.5400</td><td>0.6910</td><td>0.6264</td><td>0.8111</td><td>0.6671</td></tr>
+<tr><td>Puppeteer-Mono (405B) Evol.</td><td>0.6100</td><td>0.7600</td><td><strong>0.7697</strong></td><td>0.8417</td><td>0.7453</td></tr>
+<tr><td><strong>Puppeteer Init.</strong></td><td>0.6600</td><td>0.7400</td><td>0.6191</td><td>0.7381</td><td>0.6893</td></tr>
+<tr><td><strong>Puppeteer Evol.</strong></td><td><strong>0.7000</strong></td><td><strong>0.8300</strong></td><td>0.7637</td><td>0.7987</td><td><strong>0.7731</strong></td></tr>
+</tbody></table>
+
+
+<p><strong>核心发现</strong>：</p>
+<p>1. Puppeteer (Evolved) 在所有设置下的<strong>平均分均排名第一</strong></p>
+<p>2. Titan 子空间：从 0.6893 进化到 0.7731（+12.2%）</p>
+<p>3. Mimas 子空间：从 0.6273 进化到 0.6324</p>
+<p>4. 异构 agent (Puppeteer) 通常优于同构 agent (Puppeteer-Mono)，得益于互补交互</p>
+
+<h3 id="效率分析">效率分析</h3>
+
+<div class="paper-figure"><img src="https://arxiv.org/html/2505.19591v2/x2.png" alt="Figure 2" loading="lazy"></div>
+<blockquote>
+<p>Figure 2: 训练过程中 token 消耗和 agent 数量的演化趋势（LOWESS 拟合）。</p>
+</blockquote>
+
+<div class="paper-figure"><img src="https://arxiv.org/html/2505.19591v2/x3.png" alt="Figure 3" loading="lazy"></div>
+<blockquote>
+<p>Figure 3: Titan subspace, Puppeteer-Mono on MMLU-Pro 的 token 消耗与 agent 数。</p>
+</blockquote>
+
+<p><strong>关键结论</strong>：</p>
+<li>Token 消耗在训练过程中<strong>持续下降</strong>，说明性能提升不以计算开销增加为代价</li>
+<li><strong>Titan 设置</strong>：活跃 agent 数明显减少 -- orchestrator 学会更早终止推理</li>
+<li><strong>Mimas 设置</strong>：agent 数保持稳定，但通过选择低成本 agent 降低消耗（小模型能力有限，不能过早停止）</li>
+
+<h3 id="拓扑演化分析">拓扑演化分析</h3>
+
+<div class="paper-figure"><img src="https://arxiv.org/html/2505.19591v2/x4.png" alt="Figure 4" loading="lazy"></div>
+<blockquote>
+<p>Figure 4: 无约束编排下，组织拓扑演化为一般有向图。</p>
+</blockquote>
+
+<div class="paper-figure"><img src="https://arxiv.org/html/2505.19591v2/x5.png" alt="Figure 5a" loading="lazy"></div>
+
+<div class="paper-figure"><img src="https://arxiv.org/html/2505.19591v2/x6.png" alt="Figure 5b" loading="lazy"></div>
+<blockquote>
+<p>Figure 5: 拓扑演化示例。初始阶段为多条不相交链（探索性），进化后路径更少且出现环。</p>
+</blockquote>
+
+<div class="paper-figure"><img src="https://arxiv.org/html/2505.19591v2/x7.png" alt="Figure 6a" loading="lazy"></div>
+<blockquote>
+<p>Figure 6(a): 图密度分布随训练演化。</p>
+</blockquote>
+
+<div class="paper-figure"><img src="https://arxiv.org/html/2505.19591v2/x8.png" alt="Figure 6b" loading="lazy"></div>
+<blockquote>
+<p>Figure 6(b): 环结构分布随训练演化。</p>
+</blockquote>
+
+<p><strong>两个关键涌现现象</strong>：</p>
+
+<p>1. <strong>Compaction（紧凑化）</strong>：图密度持续增加，通信集中到少数核心"hub" agent，形成紧密耦合子网络。Titan 空间尤为明显</p>
+<p>2. <strong>Cyclicality（环化）</strong>：环结构显著增多，支持中间结果再循环、相互验证和持续 refinement，类似 <span class="wikilink">Reflexion</span> 机制</p>
+
+<h3 id="超参数控制">超参数控制</h3>
+
+<div class="paper-figure"><img src="https://arxiv.org/html/2505.19591v2/x9.png" alt="Figure 7" loading="lazy"></div>
+<blockquote>
+<p>Figure 7: 拓扑约束（width W 和 depth D）对 token 消耗与准确率的影响。</p>
+</blockquote>
+
+<li>默认设置 W4D2 取得最佳权衡</li>
+<li>增加 depth 或 width 导致冗余、更高成本，甚至性能下降</li>
+<li>存在非单调关系：准确率和效率之间需要精心平衡</li>
+
+<h3 id="附录补充">附录补充</h3>
+
+<li><strong>Token Cost Analysis</strong>：Titan 空间通过缩短推理链降低 token 消耗；Mimas 空间（mono 设置）因同一基座模型难以在 token 效率上区分 agent</li>
+<li><strong>Performance-Cost Trade-off</strong>：大多数任务的 performance/cost 分数呈上升趋势</li>
+<li><strong>Embodied 环境泛化</strong>：在 ALFWorld（模拟具身环境）上验证了框架的可扩展性，agent chain 长度设为 50，单探索轨迹</li>
+
+<h2 id="核心贡献">核心贡献</h2>
+
+<p>1. <strong>Puppeteer 范式</strong>：提出集中式 orchestrator 动态编排多 agent 协作的新范式，将拓扑构建问题转化为序列决策问题</p>
+<p>2. <strong>RL 驱动的自适应进化</strong>：通过 REINFORCE 算法优化 orchestrator 策略，同时提升效果和效率</p>
+<p>3. <strong>涌现拓扑结构</strong>：揭示了训练过程中<strong>紧凑化 (compaction)</strong> 和<strong>环化 (cyclicality)</strong> 两个关键涌现现象</p>
+<p>4. <strong>跨域验证</strong>：在闭域（GSM-Hard, MMLU-Pro）和开域（SRDD, CommonGen-Hard）任务上均取得 SOTA，并扩展到具身环境</p>
+
+<h2 id="局限性与思考">局限性与思考</h2>
+
+<h3 id="作者指出的局限">作者指出的局限</h3>
+
+<p>1. <strong>粗粒度奖励</strong>：当前仅依赖最终输出和 token 使用的终端奖励，缺乏 step-level 的中间反馈。未来可引入 <span class="wikilink">Process Reward Model</span> 进行精细监督</p>
+<p>2. <strong>固定 agent/tool 集合</strong>：框架假设 agent 和 tool 是预定义的，无法在推理过程中动态增减，限制了灵活性</p>
+<p>3. <strong>偶发协调失败</strong>：agent 之间偶尔出现误协调或虚假一致 (deceptive agreement)，需要更鲁棒的交互协议</p>
+
+<h3 id="个人思考">个人思考</h3>
+
+<p>1. <strong>Orchestrator 本身的 scalability</strong>：用 70B 的 reward model 作为 orchestrator，其推理成本本身不低。当 agent 池很大时，orchestrator 的决策延迟可能成为瓶颈</p>
+<p>2. <strong>与 MCTS 系方法的比较不充分</strong>：AFlow 使用 MCTS 搜索 workflow，但实验中 AFlow 使用的搜索预算不清楚，可能存在不公平比较</p>
+<p>3. <strong>Compaction + Cyclicality 的因果性</strong>：论文观察到进化后出现紧凑环结构，但这是性能提升的<strong>原因</strong>还是<strong>结果</strong>？缺少消融实验验证</p>
+<p>4. <strong>Mono vs. Heterogeneous 的 trade-off</strong>：Puppeteer-Mono 在某些任务（如 SRDD）上反而优于 Puppeteer，说明异构不总是好的，模型间的兼容性可能很关键</p>
+<p>5. <strong>与 OpenAI o1/o3 的 test-time compute scaling 的关系</strong>：本文的"动态长度推理链"与 test-time compute scaling 的核心思想一致，但通过多 agent 而非单模型实现，可能是两种互补的路径</p>
+
+<h2 id="相关工作">相关工作</h2>
+
+<table class="paper-table">
+<thead><tr><th>方向</th><th>代表工作</th><th>与本文区别</th></tr></thead>
+<tbody>
+<tr><td>静态 MAS 拓扑</td><td>ChatDev, AgentVerse, MetaGPT</td><td>预定义 waterfall/tree 结构，不可演化</td></tr>
+<tr><td>动态 agent 网络</td><td>Dylan, GPT-Swarm, MacNet</td><td>图结构可优化但拓扑不随 task state 实时变化</td></tr>
+<tr><td>代码空间搜索</td><td>ADAS, AFlow</td><td>搜索 workflow 代码表示，非 RL 驱动</td></tr>
+<tr><td>LLM 生成 MAS</td><td>MAS-GPT</td><td>训练 LLM 按需生成 MAS 配置</td></tr>
+<tr><td>经典 MARL</td><td>ALMA, RODE, Coach-Player</td><td>非 LLM-based 但提供了 RL 编排的灵感</td></tr>
+<tr><td>单 agent 推理增强</td><td>Self-Refine, Tree-of-Thought, Reflexion</td><td>单 agent 无法利用模型异构性</td></tr>
+</tbody></table>
+</div></details>
+</div><h2 id="llm-基础">LLM 基础</h2><div class="paper-card" data-topic="LLM 基础"><h3 id="9-a-survey-of-on-policy-distillation-for-large-language-models">9. A Survey of On-Policy Distillation for Large Language Models</h3>
 <li><strong>作者</strong>: Mingyang Song, Mao Zheng</li>
 <li><strong>机构</strong>: Tencent</li>
 <li><strong>链接</strong>: <a href="https://arxiv.org/abs/2604.00626" target="_blank">arXiv</a> | <a href="https://arxiv.org/pdf/2604.00626" target="_blank">PDF</a></li>
@@ -1380,7 +1596,7 @@ $$</div>
 
 <li><span class="wikilink">GKD</span>, <span class="wikilink">DistiLLM</span>, <span class="wikilink">MiniLLM</span>, <span class="wikilink">DKL</span>: 代表方法</li>
 <li><span class="wikilink">SFT</span>, <span class="wikilink">DPO</span>, <span class="wikilink">GRPO</span>, <span class="wikilink">REINFORCE</span>: RL/训练方法</li>
-<li><span class="wikilink">KL divergence</span>: 核心数学工具</li></div></details></div><div class="paper-card"><h3 id="10-embarrassingly-simple-self-distillation-improves-code-generation">10. Embarrassingly Simple Self-Distillation Improves Code Generation</h3>
+<li><span class="wikilink">KL divergence</span>: 核心数学工具</li></div></details></div><div class="paper-card" data-topic="LLM 基础"><h3 id="10-embarrassingly-simple-self-distillation-improves-code-generation">10. Embarrassingly Simple Self-Distillation Improves Code Generation</h3>
 <li><strong>作者</strong>: Ruixiang Zhang 等</li>
 <li><strong>机构</strong>: Apple</li>
 <li><strong>链接</strong>: <a href="https://arxiv.org/abs/2604.01193" target="_blank">arXiv</a> | <a href="https://arxiv.org/pdf/2604.01193" target="_blank">PDF</a></li>
@@ -1491,7 +1707,7 @@ $$</div>
 <li><span class="wikilink">DeepSeek</span>: 对比模型</li>
 <li><span class="wikilink">LiveCodeBench</span>, <span class="wikilink">HumanEval</span>, <span class="wikilink">AIME</span>: 评测 benchmark</li></div></details>
 </div></div>
-<div id="panel-推荐系统" class="tab-panel"><h2 id="推荐系统">推荐系统</h2><div class="paper-card"><h3 id="1-unimixer-a-unified-architecture-for-scaling-laws-in-recommendation-systems">1. UniMixer: A Unified Architecture for Scaling Laws in Recommendation Systems</h3>
+<div id="panel-推荐系统" class="tab-panel"><h2 id="推荐系统">推荐系统</h2><div class="paper-card" data-topic="推荐系统"><h3 id="1-unimixer-a-unified-architecture-for-scaling-laws-in-recommendation-systems">1. UniMixer: A Unified Architecture for Scaling Laws in Recommendation Systems</h3>
 <li><strong>作者</strong>: Mingming Ha, Guanchen Wang, Linxun Chen, Xuan Rao, Yuexin Shi, Tianbao Ma 等</li>
 <li><strong>机构</strong>: 快手</li>
 <li><strong>链接</strong>: <a href="https://arxiv.org/abs/2604.00590" target="_blank">arXiv</a> | <a href="https://arxiv.org/pdf/2604.00590" target="_blank">PDF</a></li>
@@ -1651,7 +1867,7 @@ $$</div>
 <li><span class="wikilink">HiFormer</span>: 异构注意力的代表</li>
 <li><span class="wikilink">Sinkhorn-Knopp</span>: 双随机矩阵的迭代算法</li>
 <li><span class="wikilink">MoE</span>: Sparse Per-token MoE 用于扩展模型容量</li>
-<li><span class="wikilink">AUC</span>, <span class="wikilink">UAUC</span>: 推荐系统评估指标</li></div></details></div><div class="paper-card"><h3 id="2-memrerank-preference-memory-for-personalized-product-reranking">2. MemRerank: Preference Memory for Personalized Product Reranking</h3>
+<li><span class="wikilink">AUC</span>, <span class="wikilink">UAUC</span>: 推荐系统评估指标</li></div></details></div><div class="paper-card" data-topic="推荐系统"><h3 id="2-memrerank-preference-memory-for-personalized-product-reranking">2. MemRerank: Preference Memory for Personalized Product Reranking</h3>
 <li><strong>作者</strong>: Zhiyuan Peng</li>
 <li><strong>机构</strong>: Santa Clara University</li>
 <li><strong>链接</strong>: <a href="https://arxiv.org/abs/2603.29247" target="_blank">arXiv</a> | <a href="https://arxiv.org/pdf/2603.29247" target="_blank">PDF</a></li>
@@ -1740,7 +1956,7 @@ $$</div>
 <li><span class="wikilink">GRPO</span>: 用于训练 MemAgent 的 RL 算法</li>
 <li><span class="wikilink">LLM</span>: 基座重排序模型</li></div></details>
 </div></div>
-<div id="panel-agent训练与框架" class="tab-panel"><h2 id="agent-训练与框架">Agent 训练与框架</h2><div class="paper-card"><h3 id="3-agent-lightning-train-any-ai-agents-with-reinforcement-learning">3. Agent Lightning: Train ANY AI Agents with Reinforcement Learning</h3>
+<div id="panel-agent训练与框架" class="tab-panel"><h2 id="agent-训练与框架">Agent 训练与框架</h2><div class="paper-card" data-topic="Agent 训练与框架"><h3 id="3-agent-lightning-train-any-ai-agents-with-reinforcement-learning">3. Agent Lightning: Train ANY AI Agents with Reinforcement Learning</h3>
 <li><strong>作者</strong>: Xufang Luo, Yuge Zhang, Zhiyuan He, Zilong Wang 等</li>
 <li><strong>机构</strong>: Microsoft Research</li>
 <li><strong>链接</strong>: <a href="https://arxiv.org/abs/2508.03680" target="_blank">arXiv</a> | <a href="https://arxiv.org/pdf/2508.03680" target="_blank">PDF</a></li>
@@ -1975,7 +2191,7 @@ $$</div>
 <li><strong>核心方法</strong>: 完全解耦 agent 执行与 <span class="wikilink">RL</span> 训练。<span class="wikilink">LightningRL</span> 框架将 agent 运行时抽象为 <span class="wikilink">MDP</span>，通过 <span class="wikilink">OpenTelemetry</span> 收集 trajectory，异步送入训练管线。支持任意 agent 框架（<span class="wikilink">LangChain</span>, <span class="wikilink">AutoGen</span>, <span class="wikilink">MCP</span>）无需修改代码即可接入 RL 训练。</li>
 <li><strong>对比方法/Baselines</strong>: 对比: <span class="wikilink">GRPO</span>, <span class="wikilink">PPO</span>；评测: <span class="wikilink">MuSiQue</span>, SQL, QA benchmarks</li>
 <li><strong>借鉴意义</strong>: "执行-训练解耦"是把 RL 训练从实验室搬到生产环境的关键一步。OpenTelemetry 做 trajectory 采集的思路非常工程化，值得直接借鉴。</li>
-<li><strong>锐评</strong>: 140 upvotes，微软出品。和 OpenClaw-RL 思路相似但工程化程度更高——用 OpenTelemetry 这种工业级可观测性工具收集训练信号，这才是做框架该有的样子。但"Train ANY AI Agents"这个标题和 OpenClaw 一样在吹牛，对 long-horizon 任务的 reward 稀疏问题完全没讨论。 🔥</li></div><div class="paper-card"><h3 id="4-agentscope-10-a-developer-centric-framework-for-building-agentic-applications">4. AgentScope 1.0: A Developer-Centric Framework for Building Agentic Applications</h3>
+<li><strong>锐评</strong>: 140 upvotes，微软出品。和 OpenClaw-RL 思路相似但工程化程度更高——用 OpenTelemetry 这种工业级可观测性工具收集训练信号，这才是做框架该有的样子。但"Train ANY AI Agents"这个标题和 OpenClaw 一样在吹牛，对 long-horizon 任务的 reward 稀疏问题完全没讨论。 🔥</li></div><div class="paper-card" data-topic="Agent 训练与框架"><h3 id="4-agentscope-10-a-developer-centric-framework-for-building-agentic-applications">4. AgentScope 1.0: A Developer-Centric Framework for Building Agentic Applications</h3>
 <li><strong>作者</strong>: Dawei Gao, Zitao Li, Yuexiang Xie 等</li>
 <li><strong>机构</strong>: Alibaba Group</li>
 <li><strong>链接</strong>: <a href="https://arxiv.org/abs/2508.16279" target="_blank">arXiv</a> | <a href="https://arxiv.org/pdf/2508.16279" target="_blank">PDF</a></li>
@@ -2073,7 +2289,7 @@ $$</div>
 <li><span class="wikilink">LangChain</span>: 竞品框架</li>
 <li><span class="wikilink">AutoGen</span>: 微软 multi-agent 框架</li></div></details>
 </div></div>
-<div id="panel-对话与工具使用" class="tab-panel"><h2 id="对话与工具使用">对话与工具使用</h2><div class="paper-card"><h3 id="5-coalm-a-unified-conversational-agentic-language-model">5. CoALM: A Unified Conversational Agentic Language Model</h3>
+<div id="panel-对话与工具使用" class="tab-panel"><h2 id="对话与工具使用">对话与工具使用</h2><div class="paper-card" data-topic="对话与工具使用"><h3 id="5-coalm-a-unified-conversational-agentic-language-model">5. CoALM: A Unified Conversational Agentic Language Model</h3>
 <li><strong>作者</strong>: Emre Can Acikgoz</li>
 <li><strong>机构</strong>: UIUC, Oumi</li>
 <li><strong>链接</strong>: <a href="https://arxiv.org/abs/2502.08820" target="_blank">arXiv</a> | <a href="https://arxiv.org/pdf/2502.08820" target="_blank">PDF</a></li>
@@ -2236,7 +2452,7 @@ $$</div>
 <li><strong>借鉴意义</strong>: 对做客服/助手类产品的团队直接有用——不用再维护两套模型分别处理对话和工具调用。统一训练策略的具体实现值得研究。</li>
 <li><strong>锐评</strong>: 问题定义精准——现有 LA 系统确实在对话和工具之间撕裂。5 个 upvotes 说明这篇被严重低估。但只在 MultiWOZ 这种老 benchmark 上验证 TOD 能力，没有在真实多轮对话场景下评测，说服力打折。 🔥</li>
 </div></div>
-<div id="panel-多模态agent" class="tab-panel"><h2 id="多模态-agent">多模态 Agent</h2><div class="paper-card"><h3 id="6-gems-agent-native-multimodal-generation-with-memory-and-skills">6. GEMS: Agent-Native Multimodal Generation with Memory and Skills</h3>
+<div id="panel-多模态agent" class="tab-panel"><h2 id="多模态-agent">多模态 Agent</h2><div class="paper-card" data-topic="多模态 Agent"><h3 id="6-gems-agent-native-multimodal-generation-with-memory-and-skills">6. GEMS: Agent-Native Multimodal Generation with Memory and Skills</h3>
 <li><strong>作者</strong>: Zefeng He, Siyuan Huang, Xiaoye Qu, Yafu Li, Tong Zhu, Yu Cheng, Yang Yang</li>
 <li><strong>机构</strong>: Shanghai AI Laboratory, Nanjing University, SJTU, CUHK</li>
 <li><strong>链接</strong>: <a href="https://arxiv.org/abs/2603.28088" target="_blank">arXiv</a> | <a href="https://arxiv.org/pdf/2603.28088" target="_blank">PDF</a></li>
@@ -2399,7 +2615,7 @@ $$</div>
 <li><strong>核心方法</strong>: 三层 agent 架构做多模态生成的 inference-time scaling。<span class="wikilink">Agent Loop</span>（Planner/Decomposer/Verifier/Refiner 闭环）、<span class="wikilink">Agent Memory</span>（层次化 trajectory-level 记忆）、<span class="wikilink">Agent Skill</span>（可扩展技能集合）。6B 模型套 agent 框架超越 SOTA 大模型。</li>
 <li><strong>对比方法/Baselines</strong>: 对比: <span class="wikilink">Qwen-Image</span>, <span class="wikilink">GPT</span>；评测: <span class="wikilink">GenEval2</span>, <span class="wikilink">SpatialGenEval</span>, <span class="wikilink">DPG</span></li>
 <li><strong>借鉴意义</strong>: Memory 分层设计和 Skill 按需加载机制可直接借鉴。证明小模型+agent框架>大模型单推。</li>
-<li><strong>锐评</strong>: "Agent-Native"这个词造得精准。6B 干翻 SOTA 确实漂亮。但四个 agent 每轮迭代都调 MLLM，推理成本一个字没提。Memory 压缩细节和 scalability 需要看全文确认。 🔥</li></div><div class="paper-card"><h3 id="7-gen-searcher-reinforcing-agentic-search-for-image-generation">7. Gen-Searcher: Reinforcing Agentic Search for Image Generation</h3>
+<li><strong>锐评</strong>: "Agent-Native"这个词造得精准。6B 干翻 SOTA 确实漂亮。但四个 agent 每轮迭代都调 MLLM，推理成本一个字没提。Memory 压缩细节和 scalability 需要看全文确认。 🔥</li></div><div class="paper-card" data-topic="多模态 Agent"><h3 id="7-gen-searcher-reinforcing-agentic-search-for-image-generation">7. Gen-Searcher: Reinforcing Agentic Search for Image Generation</h3>
 <li><strong>作者</strong>: Kaituo Feng, Manyuan Zhang, Shuang Chen 等</li>
 <li><strong>机构</strong>: 未知</li>
 <li><strong>链接</strong>: <a href="https://arxiv.org/abs/2603.28767" target="_blank">arXiv</a> | <a href="https://arxiv.org/pdf/2603.28767" target="_blank">PDF</a></li>
@@ -2488,7 +2704,7 @@ $$</div>
 <li><span class="wikilink">RAG</span>: 检索增强生成的思路来源</li>
 <li><span class="wikilink">RL</span>: 搜索策略的训练方法</li></div></details>
 </div></div>
-<div id="panel-multiagent协作" class="tab-panel"><h2 id="multi-agent-协作">Multi-Agent 协作</h2><div class="paper-card"><h3 id="8-multi-agent-collaboration-via-evolving-orchestration">8. Multi-Agent Collaboration via Evolving Orchestration</h3>
+<div id="panel-multiagent协作" class="tab-panel"><h2 id="multi-agent-协作">Multi-Agent 协作</h2><div class="paper-card" data-topic="Multi-Agent 协作"><h3 id="8-multi-agent-collaboration-via-evolving-orchestration">8. Multi-Agent Collaboration via Evolving Orchestration</h3>
 <li><strong>作者</strong>: Yufan Dang 等</li>
 <li><strong>机构</strong>: Tsinghua University, SJTU, Siemens, Tencent Robotics X</li>
 <li><strong>链接</strong>: <a href="https://arxiv.org/abs/2505.19591" target="_blank">arXiv</a> | <a href="https://arxiv.org/pdf/2505.19591" target="_blank">PDF</a></li>
@@ -2500,93 +2716,298 @@ $$</div>
 <li><strong>锐评</strong>: 清华+西门子+腾讯的阵容。"进化式编排"方向对，但 8 个 upvotes 说明实验结果可能没那么惊艳。在 MMLU 这种"一个 agent 就能做"的任务上评估 multi-agent 系统，benchmark 选择存疑。 👀</li>
 <details class="paper-note"><summary>📒 精读笔记: EvoOrch</summary><div class="note-body"><h1 id="evoorch-multi-agent-collaboration-via-evolving-orchestration">EvoOrch: Multi-Agent Collaboration via Evolving Orchestration</h1>
 
-<h2 id="-基本信息">📋 基本信息</h2>
-
-<li><strong>作者</strong>: Yufan Dang, Chen Qian, Xueheng Luo 等</li>
-<li><strong>机构</strong>: Tsinghua University, SJTU, Siemens, Tencent Robotics X</li>
-<li><strong>链接</strong>: <a href="https://arxiv.org/abs/2505.19591" target="_blank">arXiv</a> | <a href="https://arxiv.org/pdf/2505.19591" target="_blank">PDF</a></li>
-
-<h2 id="-研究动机与问题">🎯 研究动机与问题</h2>
-
-<p>现有 multi-agent 协作方法大多依赖<strong>静态组织结构</strong>：</p>
-<p>1. 预定义的拓扑（链式、星形、树形）无法随任务复杂度自适应</p>
-<p>2. 随着 agent 数量增长，协调开销急剧上升</p>
-<p>3. 手工设计拓扑费时费力且不通用</p>
-
-<p>核心问题：<strong>能否通过 RL 自动学习最优的 multi-agent 编排策略？</strong></p>
-
-<h2 id="-方法详解">🔧 方法详解</h2>
-
-<h3 id="puppeteer-范式">Puppeteer 范式</h3>
-
-<p>提出 "puppeteer-puppet" 范式：</p>
-<li><strong>Puppeteer（编排者）</strong>：中心化的编排 agent，动态指挥其他 agent</li>
-<li><strong>Puppets（执行者）</strong>：被编排的 agent，各有不同能力</li>
-
-<h3 id="agent-三元组抽象">Agent 三元组抽象</h3>
-
-<p>每个 agent 被抽象为三元组：</p>
-
-<div class="math-block">$$
-\text{Agent} = (\text{model}, \text{reasoning\_pattern}, \text{tools})
-$$</div>
-
-<li><strong>model</strong>: 底层 LLM（如 GPT-4, Claude）</li>
-<li><strong>reasoning_pattern</strong>: 推理模式（如 <span class="wikilink">ReAct</span>, <span class="wikilink">CoT</span>）</li>
-<li><strong>tools</strong>: 可用工具集合</li>
-
-<h3 id="rl-训练编排策略">RL 训练编排策略</h3>
-
-<p>编排器通过 <span class="wikilink">RL</span> 持续优化，学习决定 "谁在什么时候和谁协作"：</p>
-
-<div class="math-block">$$
-\pi^*(\text{agent}_t | s_t) = \arg\max_\pi \mathbb{E}\left[\sum_{t=0}^T \gamma^t r_t\right]
-$$</div>
-
-<p>其中 $s_t$ 是当前任务状态，$r_t$ 是任务完成度 reward。</p>
-
-<h3 id="涌现的推理结构">涌现的推理结构</h3>
-
-<p>分析发现，RL 优化后的编排策略涌现出<strong>更紧凑、循环式的推理结构</strong>，而非简单的链式或树形拓扑。</p>
-
-<h2 id="-实验结果">📊 实验结果</h2>
-
-<p>在 closed-domain 和 open-domain 场景下的评测：</p>
+<h2 id="基本信息">基本信息</h2>
 
 <table class="paper-table">
-<thead><tr><th>方法</th><th>MMLU</th><th>GSM</th><th>CommonGen</th></tr></thead>
+<thead><tr><th>项目</th><th>内容</th></tr></thead>
 <tbody>
-<tr><td><span class="wikilink">MacNet</span></td><td>baseline</td><td>baseline</td><td>baseline</td></tr>
-<tr><td><span class="wikilink">EvoAgent</span></td><td>moderate</td><td>moderate</td><td>moderate</td></tr>
-<tr><td><span class="wikilink">AutoGPT</span></td><td>moderate</td><td>moderate</td><td>moderate</td></tr>
-<tr><td><span class="wikilink">GPT-4</span> (single)</td><td>good</td><td>good</td><td>good</td></tr>
-<tr><td><strong>EvoOrch</strong></td><td><strong>best</strong></td><td><strong>best</strong></td><td><strong>best</strong></td></tr>
+<tr><td>标题</td><td>Multi-Agent Collaboration via Evolving Orchestration</td></tr>
+<tr><td>作者</td><td>Yufan Dang (清华, 共同一作), Chen Qian (上交, 共同一作), Xueheng Luo, Jingru Fan, Zihao Xie, Ruijie Shi, Weize Chen, Cheng Yang, Xiaoyin Che, Ye Tian, Xuantang Xiong, Lei Han, Zhiyuan Liu (通讯), Maosong Sun (通讯)</td></tr>
+<tr><td>机构</td><td>清华大学, 上海交通大学, 北邮, Siemens, Tencent Robotics X</td></tr>
+<tr><td>会议</td><td>NeurIPS 2025 (accepted)</td></tr>
+<tr><td>代码</td><td><a href="https://github.com/OpenBMB/ChatDev/tree/puppeteer" target="_blank">GitHub - ChatDev/puppeteer</a></td></tr>
 </tbody></table>
 
 
-<p>关键发现：编排式协作在计算成本更低的情况下实现了更优性能。</p>
+<div class="paper-figure"><img src="https://arxiv.org/html/2505.19591v2/x1.png" alt="Figure 1: Overview" loading="lazy"></div>
+<blockquote>
+<p>Figure 1: 框架总览。中央策略（"puppeteer"）基于任务的动态状态动态编排下一个 agent（"puppet"）。随着任务推进，orchestrator 自适应地提升有效 agent 并裁剪低效 agent。</p>
+</blockquote>
 
-<h2 id="-核心贡献">💡 核心贡献</h2>
+<h2 id="研究动机与问题">研究动机与问题</h2>
 
-<p>1. <strong>Puppeteer 范式</strong>：首次提出中心化编排 + RL 优化的 multi-agent 协作框架</p>
-<p>2. <strong>涌现式推理结构</strong>：发现 RL 优化后自动涌现紧凑循环推理模式</p>
-<p>3. <strong>计算效率</strong>：以更少计算成本超越静态拓扑方法</p>
+<h3 id="核心问题">核心问题</h3>
 
-<h2 id="-局限性与思考">🤔 局限性与思考</h2>
+<p><strong>现有 <span class="wikilink">multi-agent system</span> 的组织结构大多是静态的</strong>（如 chain、tree、DAG），在任务复杂度和 agent 数量增长时面临三大问题：</p>
 
-<p>1. <strong>Benchmark 选择存疑</strong>：在 MMLU 这种"一个 agent 就能做"的任务上评估 multi-agent 系统，不够有说服力</p>
-<p>2. <strong>中心化 vs 去中心化</strong>：Puppeteer 是单点故障，且可能成为瓶颈</p>
-<p>3. <strong>scalability</strong>：随 agent 数量增长，编排空间指数级膨胀</p>
-<p>4. <strong>8 个 upvotes</strong>：说明实验结果可能没那么惊艳</p>
+<p>1. <strong>协调开销 (coordination overhead)</strong>：agent 自主选择协作者导致通信爆炸。例如 mesh 结构的 50 节点 MAS 开发几百行代码需 10 小时</p>
+<p>2. <strong>拓扑搜索空间爆炸</strong>：可能的协作拓扑数量随 agent 数指数增长，穷举不可行</p>
+<p>3. <strong>缺乏动态适应性</strong>：静态拓扑无法根据任务进展实时调整 agent 调度，导致冗余计算和低效通信</p>
 
-<h2 id="-相关工作">📚 相关工作</h2>
+<h3 id="研究问题">研究问题</h3>
 
-<li><span class="wikilink">ReAct</span>: agent 推理模式</li>
-<li><span class="wikilink">CoT</span>: 链式思考</li>
-<li><span class="wikilink">MacNet</span>, <span class="wikilink">EvoAgent</span>, <span class="wikilink">AutoGPT</span>: 对比方法</li>
-<li><span class="wikilink">MARL</span>: 多智能体强化学习</li></div></details>
+<blockquote>
+<p><em>Can dynamic orchestration simultaneously maximize collaborative effectiveness and computational efficiency?</em></p>
+</blockquote>
+
+<p>即：<strong>动态编排能否同时最大化协作效果和计算效率？</strong></p>
+
+<h2 id="方法详解">方法详解</h2>
+
+<h3 id="21-核心抽象">2.1 核心抽象</h3>
+
+<p><strong>Agent 定义</strong>：每个 LLM-based agent 被抽象为 $a = (m, r, t)$，其中 $m$ 为基础模型，$r$ 为推理模式（prompting strategy），$t$ 为可用外部工具集合。Agent 空间 $\mathcal{A} = \{(m, r, t)\}$ 枚举所有可能组合。</p>
+
+<p><strong>MAS 图表示</strong>：多 agent 协作被形式化为有向图 $\mathcal{G} = (\mathcal{V}, \mathcal{E})$，其中 $v \in \mathcal{V}$ 对应 agent $a \in \mathcal{A}$，有向边 $(v_i, v_j) \in \mathcal{E}$ 表示从 $a_i$ 到 $a_j$ 的信息流。该图为单源单汇结构，类似 <span class="wikilink">Graph-of-Thought</span>。</p>
+
+<h3 id="22-dynamic-orchestration动态编排">2.2 Dynamic Orchestration（动态编排）</h3>
+
+<h4 id="centralized-puppeteer集中式木偶师">Centralized Puppeteer（集中式木偶师）</h4>
+
+<p>区别于以往每个 agent 自主选择协作者的分布式方案，本文采用<strong>集中式 orchestrator</strong>：一个中央策略 $\pi$ 根据全局状态动态决定下一个激活的 agent。这种设计将 agent 选择与 agent 内部行为解耦，提升了可扩展性。</p>
+
+<h4 id="serialized-orchestration序列化编排">Serialized Orchestration（序列化编排）</h4>
+
+<p>为避免搜索指数级拓扑空间，本文将协作过程<strong>展开为序列决策</strong>：每一步 orchestrator 选择一个 agent 激活。在时间步 $t$，orchestrator 选择 agent $a_t$：</p>
+
+<div class="math-block">$$
+a_t \sim \pi(S_t, \tau) = \mathbb{P}(a \mid S_t, \tau)
+$$</div>
+
+<p>其中 $S_t$ 是全局状态（包含所有 agent 状态和累积上下文），$\tau$ 是任务描述。</p>
+
+<p>被激活的 agent $a_t$ 接收其状态并生成输出，随后系统状态更新：</p>
+
+<div class="math-block">$$
+o_t = f_{a_t}(s_t(a_t), S_t), \quad S_{t+1} = \Phi(S_t, o_t)
+$$</div>
+
+<p>该过程满足 <span class="wikilink">Markov property</span>：</p>
+
+<div class="math-block">$$
+\mathbb{P}(a_{t+1} \mid S_0, \dots, S_{t+1}, \tau) = \mathbb{P}(a_{t+1} \mid S_{t+1}, \tau)
+$$</div>
+
+<p>当满足终止条件（选择 Terminator agent 或资源耗尽）时，最终输出通过聚合函数得到：</p>
+
+<div class="math-block">$$
+o^* = F_{\mathrm{agg}}(\{o_0, o_1, \dots, o_T\}) = \Phi(S_T, o_T)
+$$</div>
+
+<p><strong>关键洞察</strong>：虽然编排过程看似序列化，但通过"折叠"可还原为有向图（agent 为节点，编排偏序关系为边），支持 cycle 和 cross-branch 连接的涌现。</p>
+
+<h3 id="23-adaptive-evolution自适应进化">2.3 Adaptive Evolution（自适应进化）</h3>
+
+<h4 id="policy-optimization">Policy Optimization</h4>
+
+<p>使用 <span class="wikilink">REINFORCE</span> 算法优化 orchestrator 策略。目标函数：</p>
+
+<div class="math-block">$$
+J(\theta) = \mathbb{E}_{\pi_\theta}\big[R(\tau)\big], \quad \nabla_\theta J(\theta) \approx \frac{1}{N} \sum_{n=1}^{N} \left( \sum_{t=1}^{T} \nabla_\theta \log \pi_\theta(a_t | S_t) \right) \cdot R(\tau)
+$$</div>
+
+<p>参数更新：$\theta \leftarrow \theta + \alpha \nabla_\theta J(\theta)$</p>
+
+<p>通过 RL 驱动的优化，orchestrator 学习抑制无效或高成本 agent，收敛到更紧凑、高效的协作结构。</p>
+
+<h4 id="reward-design">Reward Design</h4>
+
+<p>奖励函数同时考虑<strong>解决质量</strong>和<strong>计算效率</strong>：</p>
+
+<div class="math-block">$$
+R_t = \begin{cases} r - \lambda \cdot C_T, &amp; \text{if } t = T \\ \gamma \cdot R_{t+1} - \lambda \cdot C_t, &amp; \text{if } t &lt; T \end{cases}, \quad C_t = F \cdot \log\left(1 + \frac{t}{\varphi}\right)
+$$</div>
+
+<p>其中：</p>
+<li>$r \in \{0, 1\}$（闭域任务的正确性）或 $r \in [0, 1]$（开域任务的质量分）</li>
+<li>$\lambda$ 控制准确率与效率的权衡</li>
+<li>$\gamma \in (0, 1]$ 为折扣因子</li>
+<li>$C_t$ 为步级成本，$F$ 基于 FLOPs 或 token 指标，$\varphi$ 为最大步数预算</li>
+<li>对数形式的成本惩罚鼓励经济推理</li>
+
+<h3 id="实现细节">实现细节</h3>
+
+<table class="paper-table">
+<thead><tr><th>组件</th><th>设置</th></tr></thead>
+<tbody>
+<tr><td>Orchestrator 初始化</td><td>Llama-3.1-Nemotron-70B-Reward-HF</td></tr>
+<tr><td>Episode 长度</td><td>4</td></tr>
+<tr><td>并行探索数</td><td>3</td></tr>
+<tr><td>$\lambda$</td><td>0.1</td></tr>
+<tr><td>$\gamma$</td><td>0.99</td></tr>
+<tr><td>输出聚合</td><td>Majority Voting</td></tr>
+</tbody></table>
+
+
+<p><strong>Agent 配置</strong>：</p>
+<li><strong>Reasoning Agent</strong>：task decomposition、reflection、refinement、critique、modification、summarization、termination</li>
+<li><strong>Tool-use Agent</strong>：WebViewer、WikiSearch、BingSearch、arXivSearch、Code Interpreter、File Reader</li>
+
+<p><strong>Agent 子空间划分</strong>：</p>
+<li><strong>Mimas</strong>（小模型）：Qwen-2.5-7B/14B, LLaMA-3.1-8B, LLaMA-3.2-3B, Mistral-7B, Mistral-Nemo-12B</li>
+<li><strong>Titan</strong>（大模型）：GPT-4-Turbo, GPT-4o-Mini, Gemini-1.5-Pro/Flash, Claude-3-Sonnet/Haiku, Qwen-2.5-72B, LLaMA-3.1-405B</li>
+
+<h2 id="实验结果">实验结果</h2>
+
+<h3 id="数据集与指标">数据集与指标</h3>
+
+<table class="paper-table">
+<thead><tr><th>数据集</th><th>类型</th><th>任务</th><th>指标</th></tr></thead>
+<tbody>
+<tr><td>GSM-Hard</td><td>闭域</td><td>大数复杂多步算术</td><td>Accuracy</td></tr>
+<tr><td>MMLU-Pro</td><td>闭域</td><td>多学科多选推理</td><td>Accuracy</td></tr>
+<tr><td>SRDD</td><td>开域</td><td>软件需求到代码开发</td><td>完整性+可执行性+一致性</td></tr>
+<tr><td>CommonGen-Hard</td><td>开域</td><td>概念关联句子生成</td><td>语法+相关性+逻辑+概念覆盖</td></tr>
+</tbody></table>
+
+
+<h3 id="table-1-主实验结果">Table 1: 主实验结果</h3>
+
+<h4 id="mimas-子空间">Mimas 子空间</h4>
+
+<table class="paper-table">
+<thead><tr><th>方法</th><th>GSM-Hard</th><th>MMLU-Pro</th><th>SRDD</th><th>CommonGen-Hard</th><th>AVG.</th></tr></thead>
+<tbody>
+<tr><td>Llama-3.1-8B</td><td>0.0000</td><td>0.5250</td><td>0.4615</td><td>0.6992</td><td>0.4214</td></tr>
+<tr><td>Mistral-Nemo-12B</td><td>0.0350</td><td>0.4500</td><td>0.2097</td><td>0.7146</td><td>0.3523</td></tr>
+<tr><td>Qwen-2.5-14B</td><td>0.0450</td><td>0.3800</td><td>0.5891</td><td>0.5747</td><td>0.3972</td></tr>
+<tr><td>Self-Refine (8B)</td><td>0.4750</td><td>0.2600</td><td>0.5412</td><td>0.6018</td><td>0.4695</td></tr>
+<tr><td>AFlow (8B)</td><td>0.2900</td><td>0.5000</td><td>0.6362</td><td>0.7194</td><td>0.5364</td></tr>
+<tr><td>MacNet (8B)</td><td>0.0000</td><td>0.2000</td><td>0.2017</td><td><strong>0.7434</strong></td><td>0.2862</td></tr>
+<tr><td>EvoAgent (8B)</td><td>0.1250</td><td>0.5000</td><td>0.2510</td><td>0.7167</td><td>0.3981</td></tr>
+<tr><td>Puppeteer-Mono (8B) Init.</td><td>0.2467</td><td>0.4500</td><td>0.6983</td><td>0.6323</td><td>0.5068</td></tr>
+<tr><td>Puppeteer-Mono (8B) Evol.</td><td>0.4800</td><td>0.5200</td><td><strong>0.7249</strong></td><td>0.7341</td><td>0.6147</td></tr>
+<tr><td><strong>Puppeteer Init.</strong></td><td><strong>0.5600</strong></td><td>0.5700</td><td>0.6653</td><td>0.7139</td><td>0.6273</td></tr>
+<tr><td><strong>Puppeteer Evol.</strong></td><td>0.5400</td><td><strong>0.6300</strong></td><td>0.6266</td><td>0.7333</td><td><strong>0.6324</strong></td></tr>
+</tbody></table>
+
+
+<h4 id="titan-子空间">Titan 子空间</h4>
+
+<table class="paper-table">
+<thead><tr><th>方法</th><th>GSM-Hard</th><th>MMLU-Pro</th><th>SRDD</th><th>CommonGen-Hard</th><th>AVG.</th></tr></thead>
+<tbody>
+<tr><td>Llama-3.1-405B</td><td>0.1350</td><td>0.7600</td><td>0.6061</td><td>0.8116</td><td>0.5781</td></tr>
+<tr><td>GPT-4o-Mini</td><td>0.1050</td><td>0.5950</td><td>0.6822</td><td>0.6691</td><td>0.5128</td></tr>
+<tr><td>GPT-4-Turbo</td><td>0.2750</td><td>0.6800</td><td>0.6244</td><td>0.7632</td><td>0.5856</td></tr>
+<tr><td>Self-Refine (405B)</td><td>0.5250</td><td>0.6000</td><td>0.6345</td><td>0.7033</td><td>0.6157</td></tr>
+<tr><td>AFlow (405B)</td><td>0.5400</td><td>0.7500</td><td>0.6478</td><td>0.8218</td><td>0.6899</td></tr>
+<tr><td>MacNet (405B)</td><td>0.2905</td><td>0.4800</td><td>0.4228</td><td><strong>0.8817</strong></td><td>0.5187</td></tr>
+<tr><td>EvoAgent (405B)</td><td>0.4250</td><td>0.5400</td><td>0.1730</td><td>0.8599</td><td>0.4994</td></tr>
+<tr><td>Puppeteer-Mono (405B) Init.</td><td>0.5400</td><td>0.6910</td><td>0.6264</td><td>0.8111</td><td>0.6671</td></tr>
+<tr><td>Puppeteer-Mono (405B) Evol.</td><td>0.6100</td><td>0.7600</td><td><strong>0.7697</strong></td><td>0.8417</td><td>0.7453</td></tr>
+<tr><td><strong>Puppeteer Init.</strong></td><td>0.6600</td><td>0.7400</td><td>0.6191</td><td>0.7381</td><td>0.6893</td></tr>
+<tr><td><strong>Puppeteer Evol.</strong></td><td><strong>0.7000</strong></td><td><strong>0.8300</strong></td><td>0.7637</td><td>0.7987</td><td><strong>0.7731</strong></td></tr>
+</tbody></table>
+
+
+<p><strong>核心发现</strong>：</p>
+<p>1. Puppeteer (Evolved) 在所有设置下的<strong>平均分均排名第一</strong></p>
+<p>2. Titan 子空间：从 0.6893 进化到 0.7731（+12.2%）</p>
+<p>3. Mimas 子空间：从 0.6273 进化到 0.6324</p>
+<p>4. 异构 agent (Puppeteer) 通常优于同构 agent (Puppeteer-Mono)，得益于互补交互</p>
+
+<h3 id="效率分析">效率分析</h3>
+
+<div class="paper-figure"><img src="https://arxiv.org/html/2505.19591v2/x2.png" alt="Figure 2" loading="lazy"></div>
+<blockquote>
+<p>Figure 2: 训练过程中 token 消耗和 agent 数量的演化趋势（LOWESS 拟合）。</p>
+</blockquote>
+
+<div class="paper-figure"><img src="https://arxiv.org/html/2505.19591v2/x3.png" alt="Figure 3" loading="lazy"></div>
+<blockquote>
+<p>Figure 3: Titan subspace, Puppeteer-Mono on MMLU-Pro 的 token 消耗与 agent 数。</p>
+</blockquote>
+
+<p><strong>关键结论</strong>：</p>
+<li>Token 消耗在训练过程中<strong>持续下降</strong>，说明性能提升不以计算开销增加为代价</li>
+<li><strong>Titan 设置</strong>：活跃 agent 数明显减少 -- orchestrator 学会更早终止推理</li>
+<li><strong>Mimas 设置</strong>：agent 数保持稳定，但通过选择低成本 agent 降低消耗（小模型能力有限，不能过早停止）</li>
+
+<h3 id="拓扑演化分析">拓扑演化分析</h3>
+
+<div class="paper-figure"><img src="https://arxiv.org/html/2505.19591v2/x4.png" alt="Figure 4" loading="lazy"></div>
+<blockquote>
+<p>Figure 4: 无约束编排下，组织拓扑演化为一般有向图。</p>
+</blockquote>
+
+<div class="paper-figure"><img src="https://arxiv.org/html/2505.19591v2/x5.png" alt="Figure 5a" loading="lazy"></div>
+
+<div class="paper-figure"><img src="https://arxiv.org/html/2505.19591v2/x6.png" alt="Figure 5b" loading="lazy"></div>
+<blockquote>
+<p>Figure 5: 拓扑演化示例。初始阶段为多条不相交链（探索性），进化后路径更少且出现环。</p>
+</blockquote>
+
+<div class="paper-figure"><img src="https://arxiv.org/html/2505.19591v2/x7.png" alt="Figure 6a" loading="lazy"></div>
+<blockquote>
+<p>Figure 6(a): 图密度分布随训练演化。</p>
+</blockquote>
+
+<div class="paper-figure"><img src="https://arxiv.org/html/2505.19591v2/x8.png" alt="Figure 6b" loading="lazy"></div>
+<blockquote>
+<p>Figure 6(b): 环结构分布随训练演化。</p>
+</blockquote>
+
+<p><strong>两个关键涌现现象</strong>：</p>
+
+<p>1. <strong>Compaction（紧凑化）</strong>：图密度持续增加，通信集中到少数核心"hub" agent，形成紧密耦合子网络。Titan 空间尤为明显</p>
+<p>2. <strong>Cyclicality（环化）</strong>：环结构显著增多，支持中间结果再循环、相互验证和持续 refinement，类似 <span class="wikilink">Reflexion</span> 机制</p>
+
+<h3 id="超参数控制">超参数控制</h3>
+
+<div class="paper-figure"><img src="https://arxiv.org/html/2505.19591v2/x9.png" alt="Figure 7" loading="lazy"></div>
+<blockquote>
+<p>Figure 7: 拓扑约束（width W 和 depth D）对 token 消耗与准确率的影响。</p>
+</blockquote>
+
+<li>默认设置 W4D2 取得最佳权衡</li>
+<li>增加 depth 或 width 导致冗余、更高成本，甚至性能下降</li>
+<li>存在非单调关系：准确率和效率之间需要精心平衡</li>
+
+<h3 id="附录补充">附录补充</h3>
+
+<li><strong>Token Cost Analysis</strong>：Titan 空间通过缩短推理链降低 token 消耗；Mimas 空间（mono 设置）因同一基座模型难以在 token 效率上区分 agent</li>
+<li><strong>Performance-Cost Trade-off</strong>：大多数任务的 performance/cost 分数呈上升趋势</li>
+<li><strong>Embodied 环境泛化</strong>：在 ALFWorld（模拟具身环境）上验证了框架的可扩展性，agent chain 长度设为 50，单探索轨迹</li>
+
+<h2 id="核心贡献">核心贡献</h2>
+
+<p>1. <strong>Puppeteer 范式</strong>：提出集中式 orchestrator 动态编排多 agent 协作的新范式，将拓扑构建问题转化为序列决策问题</p>
+<p>2. <strong>RL 驱动的自适应进化</strong>：通过 REINFORCE 算法优化 orchestrator 策略，同时提升效果和效率</p>
+<p>3. <strong>涌现拓扑结构</strong>：揭示了训练过程中<strong>紧凑化 (compaction)</strong> 和<strong>环化 (cyclicality)</strong> 两个关键涌现现象</p>
+<p>4. <strong>跨域验证</strong>：在闭域（GSM-Hard, MMLU-Pro）和开域（SRDD, CommonGen-Hard）任务上均取得 SOTA，并扩展到具身环境</p>
+
+<h2 id="局限性与思考">局限性与思考</h2>
+
+<h3 id="作者指出的局限">作者指出的局限</h3>
+
+<p>1. <strong>粗粒度奖励</strong>：当前仅依赖最终输出和 token 使用的终端奖励，缺乏 step-level 的中间反馈。未来可引入 <span class="wikilink">Process Reward Model</span> 进行精细监督</p>
+<p>2. <strong>固定 agent/tool 集合</strong>：框架假设 agent 和 tool 是预定义的，无法在推理过程中动态增减，限制了灵活性</p>
+<p>3. <strong>偶发协调失败</strong>：agent 之间偶尔出现误协调或虚假一致 (deceptive agreement)，需要更鲁棒的交互协议</p>
+
+<h3 id="个人思考">个人思考</h3>
+
+<p>1. <strong>Orchestrator 本身的 scalability</strong>：用 70B 的 reward model 作为 orchestrator，其推理成本本身不低。当 agent 池很大时，orchestrator 的决策延迟可能成为瓶颈</p>
+<p>2. <strong>与 MCTS 系方法的比较不充分</strong>：AFlow 使用 MCTS 搜索 workflow，但实验中 AFlow 使用的搜索预算不清楚，可能存在不公平比较</p>
+<p>3. <strong>Compaction + Cyclicality 的因果性</strong>：论文观察到进化后出现紧凑环结构，但这是性能提升的<strong>原因</strong>还是<strong>结果</strong>？缺少消融实验验证</p>
+<p>4. <strong>Mono vs. Heterogeneous 的 trade-off</strong>：Puppeteer-Mono 在某些任务（如 SRDD）上反而优于 Puppeteer，说明异构不总是好的，模型间的兼容性可能很关键</p>
+<p>5. <strong>与 OpenAI o1/o3 的 test-time compute scaling 的关系</strong>：本文的"动态长度推理链"与 test-time compute scaling 的核心思想一致，但通过多 agent 而非单模型实现，可能是两种互补的路径</p>
+
+<h2 id="相关工作">相关工作</h2>
+
+<table class="paper-table">
+<thead><tr><th>方向</th><th>代表工作</th><th>与本文区别</th></tr></thead>
+<tbody>
+<tr><td>静态 MAS 拓扑</td><td>ChatDev, AgentVerse, MetaGPT</td><td>预定义 waterfall/tree 结构，不可演化</td></tr>
+<tr><td>动态 agent 网络</td><td>Dylan, GPT-Swarm, MacNet</td><td>图结构可优化但拓扑不随 task state 实时变化</td></tr>
+<tr><td>代码空间搜索</td><td>ADAS, AFlow</td><td>搜索 workflow 代码表示，非 RL 驱动</td></tr>
+<tr><td>LLM 生成 MAS</td><td>MAS-GPT</td><td>训练 LLM 按需生成 MAS 配置</td></tr>
+<tr><td>经典 MARL</td><td>ALMA, RODE, Coach-Player</td><td>非 LLM-based 但提供了 RL 编排的灵感</td></tr>
+<tr><td>单 agent 推理增强</td><td>Self-Refine, Tree-of-Thought, Reflexion</td><td>单 agent 无法利用模型异构性</td></tr>
+</tbody></table>
+</div></details>
 </div></div>
-<div id="panel-llm基础" class="tab-panel"><h2 id="llm-基础">LLM 基础</h2><div class="paper-card"><h3 id="9-a-survey-of-on-policy-distillation-for-large-language-models">9. A Survey of On-Policy Distillation for Large Language Models</h3>
+<div id="panel-llm基础" class="tab-panel"><h2 id="llm-基础">LLM 基础</h2><div class="paper-card" data-topic="LLM 基础"><h3 id="9-a-survey-of-on-policy-distillation-for-large-language-models">9. A Survey of On-Policy Distillation for Large Language Models</h3>
 <li><strong>作者</strong>: Mingyang Song, Mao Zheng</li>
 <li><strong>机构</strong>: Tencent</li>
 <li><strong>链接</strong>: <a href="https://arxiv.org/abs/2604.00626" target="_blank">arXiv</a> | <a href="https://arxiv.org/pdf/2604.00626" target="_blank">PDF</a></li>
@@ -2685,7 +3106,7 @@ $$</div>
 
 <li><span class="wikilink">GKD</span>, <span class="wikilink">DistiLLM</span>, <span class="wikilink">MiniLLM</span>, <span class="wikilink">DKL</span>: 代表方法</li>
 <li><span class="wikilink">SFT</span>, <span class="wikilink">DPO</span>, <span class="wikilink">GRPO</span>, <span class="wikilink">REINFORCE</span>: RL/训练方法</li>
-<li><span class="wikilink">KL divergence</span>: 核心数学工具</li></div></details></div><div class="paper-card"><h3 id="10-embarrassingly-simple-self-distillation-improves-code-generation">10. Embarrassingly Simple Self-Distillation Improves Code Generation</h3>
+<li><span class="wikilink">KL divergence</span>: 核心数学工具</li></div></details></div><div class="paper-card" data-topic="LLM 基础"><h3 id="10-embarrassingly-simple-self-distillation-improves-code-generation">10. Embarrassingly Simple Self-Distillation Improves Code Generation</h3>
 <li><strong>作者</strong>: Ruixiang Zhang 等</li>
 <li><strong>机构</strong>: Apple</li>
 <li><strong>链接</strong>: <a href="https://arxiv.org/abs/2604.01193" target="_blank">arXiv</a> | <a href="https://arxiv.org/pdf/2604.01193" target="_blank">PDF</a></li>
