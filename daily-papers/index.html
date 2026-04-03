@@ -13,7 +13,7 @@
 * { margin: 0; padding: 0; box-sizing: border-box; }
 body { font-family: -apple-system, 'Segoe UI', Helvetica, Arial, sans-serif;
   background: var(--bg); color: var(--text); line-height: 1.7;
-  max-width: 960px; margin: 0 auto; padding: 20px; }
+  max-width: 1200px; margin: 0 auto; padding: 20px; }
 a { color: var(--accent); text-decoration: none; }
 a:hover { text-decoration: underline; }
 h1 { font-size: 1.8em; margin: 1em 0 0.5em; border-bottom: 1px solid var(--border); padding-bottom: 0.3em; }
@@ -39,16 +39,7 @@ img { max-width: 100%; border-radius: 8px; margin: 0.5em 0; }
 .nav a { padding: 6px 14px; background: var(--surface); border-radius: 6px;
   border: 1px solid var(--border); font-size: 0.9em; }
 .nav a:hover, .nav a.active { background: var(--accent); color: var(--bg); text-decoration: none; }
-.day-card { background: var(--surface); border: 1px solid var(--border);
-  border-radius: 10px; padding: 20px; margin: 12px 0; transition: border-color 0.2s; }
-.day-card:hover { border-color: var(--accent); }
-.day-card h3 { margin-top: 0; }
-.day-card .meta { color: var(--text2); font-size: 0.9em; margin-bottom: 0.5em; }
-.day-card .summary { color: var(--text); }
-.header { text-align: center; margin: 2em 0 1em; }
-.header h1 { border: none; font-size: 2em; }
-.header p { color: var(--text2); }
-.badge { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 0.8em; }
+.badge { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 0.8em; margin-right: 4px; }
 .badge-fire { background: rgba(248,81,73,0.2); color: var(--fire); }
 .badge-look { background: rgba(88,166,255,0.2); color: var(--accent); }
 .badge-skip { background: rgba(139,148,158,0.2); color: var(--text2); }
@@ -76,9 +67,84 @@ img { max-width: 100%; border-radius: 8px; margin: 0.5em 0; }
 .paper-card h3 { margin-top: 0; font-size: 1.1em; }
 .paper-card .paper-figure { margin: 12px 0; }
 .paper-card .paper-figure img { max-height: 280px; object-fit: contain; }
-@media (max-width: 600px) { body { padding: 12px; } h1 { font-size: 1.4em; }
-  .tab-btn { padding: 8px 14px; font-size: 0.85em; } .paper-card { padding: 14px 16px; } }
+/* ── Dashboard (index) ──────────────────────────────────── */
+.dashboard { display: grid; grid-template-columns: 300px 1fr; gap: 24px; margin-top: 1em; }
+.sidebar { display: flex; flex-direction: column; gap: 20px; }
+.main-content { min-height: 400px; }
+.panel { background: var(--surface); border: 1px solid var(--border);
+  border-radius: 12px; padding: 16px 20px; }
+.panel h3 { font-size: 1em; margin: 0 0 12px; color: var(--accent); border: none; }
+/* Calendar */
+.cal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+.cal-header span { font-size: 1em; font-weight: 600; }
+.cal-header button { background: none; border: 1px solid var(--border); color: var(--text2);
+  border-radius: 6px; padding: 4px 10px; cursor: pointer; font-size: 0.9em; }
+.cal-header button:hover { background: var(--border); color: var(--text); }
+.cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 2px; text-align: center; }
+.cal-dow { font-size: 0.75em; color: var(--text2); padding: 4px 0; font-weight: 600; }
+.cal-day { position: relative; padding: 6px 0; font-size: 0.85em; border-radius: 6px;
+  cursor: default; color: var(--text2); }
+.cal-day.has-data { color: var(--text); cursor: pointer; font-weight: 500; }
+.cal-day.has-data:hover { background: var(--border); }
+.cal-day.selected { background: var(--accent); color: var(--bg); font-weight: 700; }
+.cal-day .cal-dot { position: absolute; bottom: 2px; left: 50%; transform: translateX(-50%);
+  width: 5px; height: 5px; border-radius: 50%; }
+.cal-dot.fire { background: var(--fire); }
+.cal-dot.look { background: var(--accent); }
+/* Trends */
+.trend-row { display: flex; align-items: center; gap: 8px; margin: 6px 0; font-size: 0.85em; }
+.trend-label { width: 90px; text-align: right; color: var(--text2); white-space: nowrap;
+  overflow: hidden; text-overflow: ellipsis; flex-shrink: 0; }
+.trend-bar-bg { flex: 1; height: 16px; background: var(--bg); border-radius: 4px; overflow: hidden; }
+.trend-bar { height: 100%; border-radius: 4px; transition: width 0.4s ease; min-width: 2px; }
+.trend-bar.fire { background: var(--fire); }
+.trend-bar.accent { background: var(--accent); }
+.trend-bar.green { background: var(--green); }
+.trend-count { width: 24px; font-size: 0.8em; color: var(--text2); }
+/* Quality timeline */
+.qt-row { display: flex; align-items: center; gap: 6px; margin: 4px 0; font-size: 0.8em; cursor: pointer; }
+.qt-row:hover { opacity: 0.8; }
+.qt-row.selected { font-weight: 700; }
+.qt-date { width: 50px; color: var(--text2); text-align: right; flex-shrink: 0; }
+.qt-dots { display: flex; gap: 3px; }
+.qt-dot { width: 10px; height: 10px; border-radius: 50%; }
+.qt-dot.fire { background: var(--fire); }
+.qt-dot.look { background: var(--accent); }
+.qt-dot.skip { background: var(--border); }
+/* Day detail in main area */
+.day-hero { margin-bottom: 20px; }
+.day-hero h2 { font-size: 1.5em; margin: 0 0 8px; color: var(--text); border: none; }
+.day-hero .badges { margin: 8px 0; }
+.day-hero .summary { color: var(--text2); font-size: 0.95em; line-height: 1.6; margin: 12px 0; }
+.day-topics { display: flex; flex-wrap: wrap; gap: 8px; margin: 12px 0; }
+.topic-chip { background: var(--surface); border: 1px solid var(--border);
+  padding: 4px 12px; border-radius: 20px; font-size: 0.8em; color: var(--text2); }
+.view-detail { display: inline-block; margin-top: 16px; padding: 10px 24px;
+  background: var(--accent); color: var(--bg); border-radius: 8px;
+  font-weight: 600; font-size: 0.95em; }
+.view-detail:hover { text-decoration: none; opacity: 0.9; }
+.no-data { color: var(--text2); text-align: center; padding: 60px 20px; font-size: 1.1em; }
+.day-card { background: var(--surface); border: 1px solid var(--border);
+  border-radius: 10px; padding: 20px; margin: 12px 0; transition: border-color 0.2s; }
+.day-card:hover { border-color: var(--accent); }
+.day-card h3 { margin-top: 0; }
+.day-card .meta { color: var(--text2); font-size: 0.9em; margin-bottom: 0.5em; }
+.day-card .summary { color: var(--text); }
+.header { text-align: center; margin: 1em 0; }
+.header h1 { border: none; font-size: 2em; margin: 0; }
+.header p { color: var(--text2); }
+@media (max-width: 768px) {
+  .dashboard { grid-template-columns: 1fr; }
+  .sidebar { order: 2; }
+  .main-content { order: 1; }
+  body { max-width: 100%; padding: 12px; }
+  h1 { font-size: 1.4em; }
+  .tab-btn { padding: 8px 14px; font-size: 0.85em; }
+  .paper-card { padding: 14px 16px; }
+}
 </style>
+
+<script>const DAYS_DATA = [{"date": "2026-04-03", "weekday": "周五", "summary": "今天 arXiv 被 agent 和 multi-agent 的论文淹没了——仿佛全世界都在造&quot;AI 自己干活&quot;的轮子。质量参差不齐：有几篇在 RL for agent、memory 架构上有实质贡献，但也有不少是把 GPT-4 套个壳就发论文的典型操作。推荐系统方向有一篇 multi-agent video recommendation 的 survey 值得关注。", "counts": {"must": 2, "look": 5, "skip": 3}, "topicCounts": {"🤖 Agent × Tool Use": 3, "📊 推荐系统": 1, "🧠 Agent × Reinforcement Learning": 2, "🔍 RAG × RL": 1, "💾 Memory × Agent": 3}}, {"date": "2026-04-02", "weekday": "周四", "summary": "推荐系统终于迎来了自己的 scaling law 统一架构（UniMixer），而 Agent 赛道继续高歌猛进——从训练框架到对话系统到多模态生成全线开花。今天的亮点是工业界和学术界同时发力：快手的 UniMixer 把三条推荐 scaling 路线统一了，微软的 Agent Lightning 拿下 140 upvotes 靠的是真正解耦了 agent 执行和 RL 训练。质量两极分化依旧：头部论文有扎实的工程和实验，尾部的金融 multi-agent 们还在用 GPT 套壳讲故事。", "counts": {"must": 4, "look": 4, "skip": 2}, "topicCounts": {"推荐系统": 2, "Agent 训练与框架": 2, "对话与工具使用": 1, "多模态 Agent": 2, "Multi-Agent 协作": 1, "LLM 基础": 2}}];</script>
 </head>
 <body>
 
@@ -87,25 +153,154 @@ img { max-width: 100%; border-radius: 8px; margin: 0.5em 0; }
   <h1>📚 每日论文推荐</h1>
   <p>共 2 天记录</p>
 </div>
-
-<a href="2026-04-03.html" style="text-decoration:none;color:inherit;">
-<div class="day-card">
-  <div class="meta">2026-04-03 周五</div>
-  <h3><span class="badge badge-fire">🔥 必读 2</span> <span class="badge badge-look">👀 值得看 5</span> <span class="badge badge-skip">💤 可跳过 3</span></h3>
-  <div class="summary">今天 arXiv 被 agent 和 multi-agent 的论文淹没了——仿佛全世界都在造"AI 自己干活"的轮子。质量参差不齐：有几篇在 RL for agent、memory 架构上有实质贡献，但也有不少是把 GPT-4 套个壳就发论文的典型操作。推荐系统方向有一篇 multi-agent video recommendation 的 survey 值得关注。</div>
+<div class="dashboard">
+  <div class="sidebar">
+    <div class="panel">
+      <div class="cal-header">
+        <button onclick="prevMonth()">◀</button>
+        <span id="cal-month"></span>
+        <button onclick="nextMonth()">▶</button>
+      </div>
+      <div class="cal-grid" id="cal-grid">
+        <div class="cal-dow">一</div><div class="cal-dow">二</div><div class="cal-dow">三</div>
+        <div class="cal-dow">四</div><div class="cal-dow">五</div><div class="cal-dow">六</div>
+        <div class="cal-dow">日</div>
+      </div>
+    </div>
+    <div class="panel">
+      <h3>📊 主题趋势</h3>
+      <div id="topic-trends"></div>
+    </div>
+    <div class="panel">
+      <h3>🔥 质量分布</h3>
+      <div id="quality-timeline"></div>
+    </div>
+  </div>
+  <div class="main-content" id="main-content">
+    <div class="no-data">选择日期查看论文推荐</div>
+  </div>
 </div>
-</a>
-<a href="2026-04-02.html" style="text-decoration:none;color:inherit;">
-<div class="day-card">
-  <div class="meta">2026-04-02 周四</div>
-  <h3><span class="badge badge-fire">🔥 必读 4</span> <span class="badge badge-look">👀 值得看 4</span> <span class="badge badge-skip">💤 可跳过 2</span></h3>
-  <div class="summary">推荐系统终于迎来了自己的 scaling law 统一架构（UniMixer），而 Agent 赛道继续高歌猛进——从训练框架到对话系统到多模态生成全线开花。今天的亮点是工业界和学术界同时发力：快手的 UniMixer 把三条推荐 scaling 路线统一了，微软的 Agent Lightning 拿下 140 upvotes 靠的是真正解耦了 agent 执行和 RL 训练。质量两极分化依旧：头部论文有扎实的工程和实验，尾部的金融 multi-agent 们还在用 GPT 套壳讲故事。</div>
-</div>
-</a>
 
 <footer style="text-align:center;color:var(--text2);margin:3em 0 1em;font-size:0.85em;">
   Generated by daily-papers-web · Powered by Claude Code
 </footer>
+
+<script>
+var curYear, curMonth;
+function pad(n){ return n<10?'0'+n:''+n; }
+function renderCalendar(y,m){
+  curYear=y; curMonth=m;
+  var el=document.getElementById('cal-grid');
+  document.getElementById('cal-month').textContent=y+'-'+pad(m);
+  var first=new Date(y,m-1,1), last=new Date(y,m,0);
+  var startDow=(first.getDay()+6)%7;
+  var html='';
+  for(var i=0;i<startDow;i++) html+='<div class="cal-day"></div>';
+  var dateSet={};
+  DAYS_DATA.forEach(function(d){ dateSet[d.date]=d; });
+  for(var d=1;d<=last.getDate();d++){
+    var ds=y+'-'+pad(m)+'-'+pad(d);
+    var day=dateSet[ds];
+    var cls='cal-day';
+    if(day) cls+=' has-data';
+    var sel=document.getElementById('main-content');
+    if(sel && sel.dataset.date===ds) cls+=' selected';
+    var dot='';
+    if(day && day.counts.must>0) dot='<span class="cal-dot fire"></span>';
+    else if(day && day.counts.look>0) dot='<span class="cal-dot look"></span>';
+    var click=day?'onclick="selectDate(\''+ds+'\')"':'';
+    html+='<div class="'+cls+'" '+click+'>'+d+dot+'</div>';
+  }
+  el.innerHTML=html;
+}
+function prevMonth(){ curMonth--; if(curMonth<1){curMonth=12;curYear--;} renderCalendar(curYear,curMonth); }
+function nextMonth(){ curMonth++; if(curMonth>12){curMonth=1;curYear++;} renderCalendar(curYear,curMonth); }
+function selectDate(ds){
+  var day=null;
+  DAYS_DATA.forEach(function(d){ if(d.date===ds) day=d; });
+  var el=document.getElementById('main-content');
+  if(!day){ el.innerHTML='<div class="no-data">该日期无推荐数据</div>'; return; }
+  el.dataset.date=ds;
+  var badges='';
+  if(day.counts.must) badges+='<span class="badge badge-fire">\ud83d\udd25 必读 '+day.counts.must+'</span> ';
+  if(day.counts.look) badges+='<span class="badge badge-look">\ud83d\udc40 值得看 '+day.counts.look+'</span> ';
+  if(day.counts.skip) badges+='<span class="badge badge-skip">\ud83d\udca4 可跳过 '+day.counts.skip+'</span>';
+  var topics='';
+  if(day.topicCounts){
+    var keys=Object.keys(day.topicCounts);
+    keys.forEach(function(k){ topics+='<span class="topic-chip">'+k+' ('+day.topicCounts[k]+')</span>'; });
+  }
+  var total=day.counts.must+day.counts.look+day.counts.skip;
+  el.innerHTML='<div class="day-hero">'+
+    '<h2>'+ds+' '+day.weekday+'</h2>'+
+    '<div class="badges">'+badges+'</div>'+
+    '<div class="summary">'+day.summary+'</div>'+
+    '<div class="day-topics">'+topics+'</div>'+
+    '<div style="margin-top:8px;color:var(--text2);font-size:0.9em;">共 '+total+' 篇论文</div>'+
+    '<a href="'+ds+'.html" class="view-detail">查看详情 \u2192</a>'+
+    '</div>';
+  // update calendar selection
+  var parts=ds.split('-');
+  var sy=parseInt(parts[0]),sm=parseInt(parts[1]);
+  if(sy!==curYear||sm!==curMonth) renderCalendar(sy,sm);
+  else{
+    document.querySelectorAll('.cal-day').forEach(function(d){d.classList.remove('selected');});
+    document.querySelectorAll('.cal-day.has-data').forEach(function(d){
+      if(d.textContent.trim()===''+parseInt(parts[2])) d.classList.add('selected');
+    });
+  }
+  // update quality timeline selection
+  document.querySelectorAll('.qt-row').forEach(function(r){
+    r.classList.toggle('selected',r.dataset.date===ds);
+  });
+  history.replaceState(null,'','#'+ds);
+}
+function renderTrends(){
+  var agg={};
+  DAYS_DATA.forEach(function(d){
+    if(!d.topicCounts) return;
+    Object.keys(d.topicCounts).forEach(function(k){
+      agg[k]=(agg[k]||0)+d.topicCounts[k];
+    });
+  });
+  var sorted=Object.entries(agg).sort(function(a,b){return b[1]-a[1];}).slice(0,8);
+  var max=sorted.length?sorted[0][1]:1;
+  var el=document.getElementById('topic-trends');
+  var html='';
+  sorted.forEach(function(e){
+    var pct=Math.round(e[1]/max*100);
+    html+='<div class="trend-row">'+
+      '<span class="trend-label">'+e[0]+'</span>'+
+      '<div class="trend-bar-bg"><div class="trend-bar accent" style="width:'+pct+'%"></div></div>'+
+      '<span class="trend-count">'+e[1]+'</span></div>';
+  });
+  el.innerHTML=html;
+}
+function renderQuality(){
+  var el=document.getElementById('quality-timeline');
+  var html='';
+  DAYS_DATA.forEach(function(d){
+    var short=d.date.slice(5);
+    var dots='';
+    for(var i=0;i<d.counts.must;i++) dots+='<span class="qt-dot fire"></span>';
+    for(var i=0;i<d.counts.look;i++) dots+='<span class="qt-dot look"></span>';
+    for(var i=0;i<d.counts.skip;i++) dots+='<span class="qt-dot skip"></span>';
+    html+='<div class="qt-row" data-date="'+d.date+'" onclick="selectDate(\''+d.date+'\')">'
+      +'<span class="qt-date">'+short+'</span>'
+      +'<div class="qt-dots">'+dots+'</div></div>';
+  });
+  el.innerHTML=html;
+}
+document.addEventListener('DOMContentLoaded',function(){
+  renderTrends();
+  renderQuality();
+  var hash=location.hash.slice(1);
+  var initDate=hash||DAYS_DATA[0].date;
+  var parts=initDate.split('-');
+  renderCalendar(parseInt(parts[0]),parseInt(parts[1]));
+  selectDate(initDate);
+});
+</script>
 
 </body>
 </html>
