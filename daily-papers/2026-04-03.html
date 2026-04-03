@@ -4,6 +4,10 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>2026-04-03 论文推荐</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.21/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.21/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.21/dist/contrib/auto-render.min.js"
+  onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}]});"></script>
 <style>
 :root {
   --bg: #0d1117; --surface: #161b22; --border: #30363d;
@@ -357,7 +361,94 @@ details.paper-note .note-body h3 { font-size: 1em; }
 <li><strong>核心方法</strong>: <span class="wikilink">AgentScope</span> 是一个面向开发者的 multi-agent 框架，支持 <span class="wikilink">MCP</span> 协议、<span class="wikilink">ReAct</span> 模式、分布式部署。核心抽象包括 <span class="wikilink">MsgHub</span>（消息总线）、<span class="wikilink">StateModule</span>（状态管理）、Non-Invasive Monitoring（基于 <span class="wikilink">OpenTelemetry</span>）。</li>
 <li><strong>对比方法/Baselines</strong>: <span class="wikilink">LangChain</span>, <span class="wikilink">AutoGen</span>, <span class="wikilink">CAMEL</span></li>
 <li><strong>借鉴意义</strong>: 如果你要部署大规模 multi-agent 系统，这个框架的工程设计值得参考——特别是分布式和监控部分。</li>
-<li><strong>锐评</strong>: 阿里出品，工程质量有保障，但框架类论文的通病是——demo 很美，实际用起来全是坑。MCP 支持是加分项。和 LangChain 的对比不够 fair，只挑了对方弱的场景。👀</li></div><div class="paper-card"><h3 id="3-agent-lightning-train-any-ai-agents-with-reinforcement-learning">3. Agent Lightning: Train ANY AI Agents with Reinforcement Learning</h3>
+<li><strong>锐评</strong>: 阿里出品，工程质量有保障，但框架类论文的通病是——demo 很美，实际用起来全是坑。MCP 支持是加分项。和 LangChain 的对比不够 fair，只挑了对方弱的场景。👀</li>
+<details class="paper-note"><summary>📒 精读笔记: AgentScope</summary><div class="note-body"><h1 id="agentscope-10">AgentScope 1.0</h1>
+
+<h2 id="-基本信息">📋 基本信息</h2>
+
+<li><strong>作者</strong>: Dawei Gao, Zitao Li, Yuexiang Xie 等</li>
+<li><strong>机构</strong>: Alibaba Group</li>
+<li><strong>链接</strong>: <a href="https://arxiv.org/abs/2508.16279" target="_blank">arXiv</a> | <a href="https://arxiv.org/pdf/2508.16279" target="_blank">PDF</a></li>
+
+<h2 id="-研究动机与问题">🎯 研究动机与问题</h2>
+
+<p>现有 multi-agent 框架（如 <span class="wikilink">LangChain</span>, <span class="wikilink">AutoGen</span>）在以下方面存在不足：</p>
+<p>1. <strong>工具集成侵入性强</strong>：需要大量修改已有代码</p>
+<p>2. <strong>可观测性差</strong>：大规模部署时难以监控和调试</p>
+<p>3. <strong>长期记忆缺失</strong>：agent 无法保持跨会话的上下文</p>
+<p>4. <strong>分布式支持弱</strong>：难以扩展到大规模 multi-agent 场景</p>
+
+<h2 id="-方法详解">🔧 方法详解</h2>
+
+<h3 id="核心架构">核心架构</h3>
+
+<p>AgentScope 1.0 的核心抽象：</p>
+
+<p>1. <strong><span class="wikilink">MsgHub</span>（消息总线）</strong>：agent 间消息传递的统一接口，支持广播和点对点通信</p>
+<p>2. <strong>StateModule（状态管理）</strong>：统一管理 agent 状态，支持序列化和恢复</p>
+<p>3. <strong>Non-Invasive Monitoring</strong>：基于 <span class="wikilink">OpenTelemetry</span> 的无侵入式监控</p>
+
+<h3 id="mcp-原生支持">MCP 原生支持</h3>
+
+<p>原生集成 <span class="wikilink">MCP</span>（Model Context Protocol）协议：</p>
+<li>Agent 可通过 MCP 协议访问外部工具和数据源</li>
+<li>工具集成不需要修改 agent 代码（non-invasive）</li>
+<li>支持 MCP server 的自动发现和注册</li>
+
+<h3 id="分层记忆系统">分层记忆系统</h3>
+
+<li><strong><span class="wikilink">InMemoryMemory</span></strong>：短期工作记忆，存储当前会话上下文</li>
+<li><strong><span class="wikilink">LongTermMemoryBase</span></strong>：长期记忆，支持跨会话信息持久化</li>
+<li>记忆检索支持语义搜索和结构化查询</li>
+
+<h3 id="react-agent-内置实现">ReAct Agent 内置实现</h3>
+
+<p>内置 <span class="wikilink">ReAct</span> 范式的 agent 实现：</p>
+<li>Thought → Action → Observation 循环</li>
+<li>支持自定义 tool 注册</li>
+<li>内置错误处理和重试机制</li>
+
+<h3 id="分布式调度">分布式调度</h3>
+
+<li>基于 <span class="wikilink">gRPC</span> 的分布式通信</li>
+<li>支持 agent 在多节点间调度</li>
+<li>MsgHub 支持分布式消息广播</li>
+
+<h2 id="-实验结果">📊 实验结果</h2>
+
+<table class="paper-table">
+<thead><tr><th>框架</th><th>MCP支持</th><th>可观测性</th><th>长期记忆</th><th>分布式</th></tr></thead>
+<tbody>
+<tr><td>LangChain</td><td>部分</td><td>弱</td><td>第三方</td><td>弱</td></tr>
+<tr><td>AutoGen</td><td>无</td><td>弱</td><td>无</td><td>部分</td></tr>
+<tr><td>CAMEL</td><td>无</td><td>无</td><td>无</td><td>无</td></tr>
+<tr><td><strong>AgentScope 1.0</strong></td><td><strong>原生</strong></td><td><strong>OpenTelemetry</strong></td><td><strong>内置</strong></td><td><strong>原生</strong></td></tr>
+</tbody></table>
+
+
+<p>61 upvotes 说明社区认可度较高。</p>
+
+<h2 id="-核心贡献">💡 核心贡献</h2>
+
+<p>1. <strong>MCP 原生集成</strong>：首个原生支持 MCP 协议的 multi-agent 框架</p>
+<p>2. <strong>OpenTelemetry 可观测性</strong>：无侵入式监控，适合生产环境</p>
+<p>3. <strong>分层记忆系统</strong>：短期 + 长期记忆，支持跨会话持久化</p>
+<p>4. <strong>大规模部署经验</strong>：阿里内部大规模 multi-agent 部署验证</p>
+
+<h2 id="-局限性与思考">🤔 局限性与思考</h2>
+
+<p>1. <strong>框架评估困难</strong>：benchmark 上的数字不代表实际开发体验</p>
+<p>2. <strong>与 LangChain 对比不够 fair</strong>：只挑了对方弱的场景</p>
+<p>3. <strong>学习曲线</strong>：抽象层较多，新手上手成本可能较高</p>
+<p>4. <strong>MCP 生态尚未成熟</strong>：MCP 协议本身还在快速迭代</p>
+
+<h2 id="-相关工作">📚 相关工作</h2>
+
+<li><span class="wikilink">MCP</span>: Model Context Protocol，agent 工具集成标准</li>
+<li><span class="wikilink">OpenTelemetry</span>: 可观测性标准</li>
+<li><span class="wikilink">ReAct</span>: 推理+行动范式</li>
+<li><span class="wikilink">LangChain</span>: 竞品框架</li>
+<li><span class="wikilink">AutoGen</span>: 微软 multi-agent 框架</li></div></details></div><div class="paper-card"><h3 id="3-agent-lightning-train-any-ai-agents-with-reinforcement-learning">3. Agent Lightning: Train ANY AI Agents with Reinforcement Learning</h3>
 <li><strong>作者</strong>: Yixiu Liu et al.</li>
 <li><strong>机构</strong>: Unknown</li>
 <li><strong>链接</strong>: <a href="https://arxiv.org/abs/2504.01553" target="_blank">arXiv</a> | <a href="https://arxiv.org/pdf/2504.01553" target="_blank">PDF</a></li>
@@ -601,6 +692,70 @@ details.paper-note .note-body h3 { font-size: 1em; }
 <li><strong>对比方法/Baselines</strong>: 传统单 agent 推荐, <span class="wikilink">MARS</span>, <span class="wikilink">TKGPT</span></li>
 <li><strong>借鉴意义</strong>: 直接相关。如果你在做推荐系统 + LLM agent 的结合，这篇 survey 是很好的 roadmap。</li>
 <li><strong>锐评</strong>: Survey 类论文看的是覆盖面和组织能力。multi-agent 做推荐确实是一个正在升温的方向，但现有工作大多还停留在"用 LLM 模拟用户"的阶段，离 production-ready 差十万八千里。这篇能不能把问题讲清楚比结论重要。👀</li>
+<details class="paper-note"><summary>📒 精读笔记: MAVRS</summary><div class="note-body"><h1 id="mavrs-multi-agent-video-recommenders">MAVRS: Multi-Agent Video Recommenders</h1>
+
+<h2 id="-基本信息">📋 基本信息</h2>
+
+<li><strong>作者</strong>: 未知</li>
+<li><strong>机构</strong>: 未知</li>
+<li><strong>来源</strong>: arXiv 关键词检索</li>
+
+<h2 id="-研究动机与问题">🎯 研究动机与问题</h2>
+
+<p>Multi-agent 在视频推荐系统中的应用是一个正在升温的研究方向。本 survey 系统梳理了：</p>
+
+<p>1. <strong>Multi-agent 视频推荐系统（MAVRS）</strong> 的架构模式演化</p>
+<p>2. <strong><span class="wikilink">MARL</span>（多智能体强化学习）</strong> 在推荐中的应用路径</p>
+<p>3. 从单 agent 推荐到 multi-agent 协作推荐的演进脉络</p>
+
+<h2 id="-方法详解">🔧 方法详解</h2>
+
+<h3 id="架构模式分类">架构模式分类</h3>
+
+<p>Survey 梳理了 MAVRS 的主要架构模式：</p>
+
+<p>1. <strong>Centralized</strong>: 中心化调度，统一 reward</p>
+<p>2. <strong>Decentralized</strong>: 去中心化，各 agent 独立优化</p>
+<p>3. <strong>Hybrid</strong>: 混合模式，全局协调 + 局部自治</p>
+
+<h3 id="marl-在推荐中的演化">MARL 在推荐中的演化</h3>
+
+<p>$$</p>
+<p>\pi^*_i(a_i | s, a_{-i}) = \arg\max_{\pi_i} \mathbb{E}\left[\sum_{t=0}^\infty \gamma^t r_i(s_t, a_t)\right]</p>
+<p>$$</p>
+
+<li>早期：单 agent 做排序/推荐</li>
+<li>中期：用 LLM 模拟用户做交互</li>
+<li>当前：multi-agent 协作做推荐全链路</li>
+
+<h3 id="核心对比">核心对比</h3>
+
+<table class="paper-table">
+<thead><tr><th>方法</th><th>类型</th><th>特点</th></tr></thead>
+<tbody>
+<tr><td>传统单 agent</td><td>Centralized</td><td>简单但无法建模多目标</td></tr>
+<tr><td><span class="wikilink">MARS</span></td><td>Decentralized</td><td>多目标优化</td></tr>
+<tr><td><span class="wikilink">TKGPT</span></td><td>LLM-based</td><td>用 LLM 模拟用户</td></tr>
+<tr><td>MAVRS</td><td>Hybrid</td><td>全链路协作</td></tr>
+</tbody></table>
+
+
+<h2 id="-核心贡献">💡 核心贡献</h2>
+
+<p>1. <strong>系统梳理</strong>：首个聚焦 multi-agent 视频推荐的 survey</p>
+<p>2. <strong>架构分类</strong>：提供了清晰的 MAVRS 架构分类体系</p>
+<p>3. <strong>Roadmap</strong>：为 multi-agent + 推荐的研究方向提供了路线图</p>
+
+<h2 id="-局限性与思考">🤔 局限性与思考</h2>
+
+<p>1. <strong>现有工作不成熟</strong>：大多停留在"用 LLM 模拟用户"阶段，离 production-ready 差距很大</p>
+<p>2. <strong>Survey 价值取决于组织能力</strong>：能不能把问题讲清楚比结论重要</p>
+<p>3. <strong>方向认可</strong>：学术界开始正式关注推荐系统 + agent 的交叉方向</p>
+
+<h2 id="-相关工作">📚 相关工作</h2>
+
+<li><span class="wikilink">MARL</span>: 多智能体强化学习</li>
+<li><span class="wikilink">MARS</span>: 多智能体推荐系统</li></div></details>
 </div><h2 id="-agent--reinforcement-learning">🧠 Agent × Reinforcement Learning</h2><div class="paper-card"><h3 id="5-skill0-in-context-agentic-reinforcement-learning-for-skill-internalization">5. SKILL0: In-Context Agentic Reinforcement Learning for Skill Internalization</h3>
 <li><strong>作者</strong>: Unknown</li>
 <li><strong>机构</strong>: Unknown</li>
@@ -620,6 +775,62 @@ details.paper-note .note-body h3 { font-size: 1em; }
 <li><strong>对比方法/Baselines</strong>: <span class="wikilink">JustRL</span>, <span class="wikilink">BRUMO</span>, <span class="wikilink">DeepSeek</span>-R1</li>
 <li><strong>借鉴意义</strong>: Scaling law 的研究对理解 RL 训练效率有基础价值。如果你在训练 reasoning model，这个 task-scaling 的视角可以帮你省算力。</li>
 <li><strong>锐评</strong>: 又一篇 scaling law 论文，但这次角度确实新——不是模型 scale，而是 task scale。实验在数学推理上做的，能否推广到 agent 任务？论文标题说 "efficient reasoning" 但本质上是在说 "怎么更便宜地做 RL"。诚实点没坏处。👀</li>
+<details class="paper-note"><summary>📒 精读笔记: BCR</summary><div class="note-body"><h1 id="bcr-batched-contextual-reinforcement">BCR: Batched Contextual Reinforcement</h1>
+
+<h2 id="-基本信息">📋 基本信息</h2>
+
+<li><strong>来源</strong>: arXiv 关键词检索</li>
+
+<h2 id="-研究动机与问题">🎯 研究动机与问题</h2>
+
+<p>传统 RL 训练 reasoning model 的计算开销巨大。BCR 提出了一个新视角：不是 model scale，而是 <strong>task scale</strong>。</p>
+
+<p>核心问题：<strong>通过批量上下文任务训练，能否用更少的计算量达到同等推理能力？</strong></p>
+
+<h2 id="-方法详解">🔧 方法详解</h2>
+
+<h3 id="task-scaling-law">Task-Scaling Law</h3>
+
+<p>BCR 发现了 task-scaling law：</p>
+
+<p>$$</p>
+<p>\text{Performance} \propto f(\text{num\_tasks}^\alpha \cdot \text{compute}^\beta)</p>
+<p>$$</p>
+
+<p>通过增加训练任务的多样性（而非模型参数），可以更高效地提升推理能力。</p>
+
+<h3 id="方法">方法</h3>
+
+<p>基于 <span class="wikilink">GRPO</span>，在数学推理 benchmark 上验证。关键改进：将多个上下文任务批量化训练，让模型同时从多个任务中学习。</p>
+
+<h2 id="-实验结果">📊 实验结果</h2>
+
+<table class="paper-table">
+<thead><tr><th>方法</th><th>MATH-500</th><th>AIME</th></tr></thead>
+<tbody>
+<tr><td><span class="wikilink">JustRL</span></td><td>baseline</td><td>baseline</td></tr>
+<tr><td><span class="wikilink">BRUMO</span></td><td>moderate</td><td>moderate</td></tr>
+<tr><td><span class="wikilink">DeepSeek</span>-R1</td><td>good</td><td>good</td></tr>
+<tr><td><strong>BCR</strong></td><td><strong>competitive</strong></td><td><strong>competitive</strong></td></tr>
+</tbody></table>
+
+
+<p>BCR 以更少计算量达到可比性能。</p>
+
+<h2 id="-核心贡献">💡 核心贡献</h2>
+
+<p>1. <strong>Task-scaling law</strong>：首次提出任务维度的 scaling law</p>
+<p>2. <strong>计算效率</strong>：更便宜地做 RL 训练</p>
+
+<h2 id="-局限性与思考">🤔 局限性与思考</h2>
+
+<p>1. 只在数学推理上验证，能否推广到 agent 任务存疑</p>
+<p>2. 标题说 "efficient reasoning" 但本质是 "怎么更便宜地做 RL"</p>
+
+<h2 id="-相关工作">📚 相关工作</h2>
+
+<li><span class="wikilink">GRPO</span>: 基础 RL 算法</li>
+<li><span class="wikilink">DeepSeek</span>: 对比模型</li></div></details>
 </div><h2 id="-rag--rl">🔍 RAG × RL</h2><div class="paper-card"><h3 id="7-optimizing-rag-rerankers-with-llm-feedback-via-reinforcement-learning">7. Optimizing RAG Rerankers with LLM Feedback via Reinforcement Learning</h3>
 <li><strong>作者</strong>: Unknown</li>
 <li><strong>机构</strong>: Unknown</li>
@@ -630,6 +841,62 @@ details.paper-note .note-body h3 { font-size: 1em; }
 <li><strong>对比方法/Baselines</strong>: <span class="wikilink">RankZephyr</span>, <span class="wikilink">DRAGIN</span>, <span class="wikilink">SFT</span> baseline</li>
 <li><strong>借鉴意义</strong>: reranker 是推荐系统和 RAG 共享的核心组件。用 RL + LLM feedback 优化 reranker 的思路可以直接迁移到推荐场景的精排。</li>
 <li><strong>锐评</strong>: 思路不复杂但实用：与其 SFT 训练 reranker，不如用 RL 让下游 reader 的效果做 reward。问题是 LLM feedback 本身的成本——你用一个大模型的输出训另一个小模型，成本核算过吗？👀</li>
+<details class="paper-note"><summary>📒 精读笔记: RRPO</summary><div class="note-body"><h1 id="rrpo-optimizing-rag-rerankers-with-rl">RRPO: Optimizing RAG Rerankers with RL</h1>
+
+<h2 id="-基本信息">📋 基本信息</h2>
+
+<li><strong>来源</strong>: arXiv 关键词检索</li>
+
+<h2 id="-研究动机与问题">🎯 研究动机与问题</h2>
+
+<p><span class="wikilink">RAG</span> 系统中 reranker 的训练通常使用 SFT，但 SFT 的训练目标与下游 reader 的效果不直接对齐。</p>
+
+<p>核心思路：<strong>用 RL + LLM feedback 让下游 reader 的效果作为 reward 来训练 reranker</strong>。</p>
+
+<h2 id="-方法详解">🔧 方法详解</h2>
+
+<h3 id="rrpo-框架">RRPO 框架</h3>
+
+<p>$$</p>
+<p>R = \text{ReaderQuality}(\text{Reranker}(\text{docs}, q), q)</p>
+<p>$$</p>
+
+<p>1. Reranker 对检索到的文档重新排序</p>
+<p>2. Reader（LLM）基于排序后的文档生成答案</p>
+<p>3. 答案质量作为 reward 反馈给 reranker</p>
+<p>4. 使用 <span class="wikilink">RL</span> 优化 reranker 的排序策略</p>
+
+<h3 id="基础检索器">基础检索器</h3>
+
+<p>使用 <span class="wikilink">GTE</span> 作为基础检索器，RRPO 作用在精排阶段。</p>
+
+<h2 id="-实验结果">📊 实验结果</h2>
+
+<table class="paper-table">
+<thead><tr><th>方法</th><th>HotpotQA</th><th>AmbigNQ</th></tr></thead>
+<tbody>
+<tr><td><span class="wikilink">RankZephyr</span></td><td>baseline</td><td>baseline</td></tr>
+<tr><td><span class="wikilink">DRAGIN</span></td><td>moderate</td><td>moderate</td></tr>
+<tr><td>SFT baseline</td><td>moderate</td><td>moderate</td></tr>
+<tr><td><strong>RRPO</strong></td><td><strong>best</strong></td><td><strong>best</strong></td></tr>
+</tbody></table>
+
+
+<h2 id="-核心贡献">💡 核心贡献</h2>
+
+<p>1. <strong>RL 优化 reranker</strong>：以下游 reader 效果为 reward</p>
+<p>2. <strong>端到端优化</strong>：reranker 和 reader 的目标直接对齐</p>
+
+<h2 id="-局限性与思考">🤔 局限性与思考</h2>
+
+<p>1. LLM feedback 的成本：用大模型输出训小模型，成本核算需要考虑</p>
+<p>2. Reranker 是推荐系统和 RAG 共享的核心组件，可迁移到推荐精排</p>
+
+<h2 id="-相关工作">📚 相关工作</h2>
+
+<li><span class="wikilink">RAG</span>: 检索增强生成</li>
+<li><span class="wikilink">GTE</span>: 基础检索器</li>
+<li><span class="wikilink">RL</span>: 训练方法</li></div></details>
 </div><h2 id="-memory--agent">💾 Memory × Agent</h2><div class="paper-card"><h3 id="8-msa-memory-sparse-attention-for-efficient-end-to-end-memory-model-scaling-to-10m">8. MSA: Memory Sparse Attention for Efficient End-to-End Memory Model Scaling to 10M+</h3>
 <li><strong>作者</strong>: Unknown</li>
 <li><strong>机构</strong>: Unknown</li>
@@ -639,7 +906,63 @@ details.paper-note .note-body h3 { font-size: 1em; }
 <li><strong>核心方法</strong>: <span class="wikilink">MSA</span>（Memory Sparse Attention）通过稀疏注意力机制将端到端 memory model 扩展到 10M+ token。结合 <span class="wikilink">KV cache</span> 优化和 <span class="wikilink">RoPE</span> 位置编码。在 <span class="wikilink">NIAH</span>、<span class="wikilink">HotpotQA</span>、<span class="wikilink">NarrativeQA</span> 等长文本任务上评测。</li>
 <li><strong>对比方法/Baselines</strong>: <span class="wikilink">KaLMv2</span>, <span class="wikilink">MemAgent</span>, <span class="wikilink">RWKV</span></li>
 <li><strong>借鉴意义</strong>: 长上下文 memory 是 agent 系统的基础能力。如果你在做需要超长历史的推荐 agent，这个稀疏注意力方案值得了解。</li>
-<li><strong>锐评</strong>: 10M token 的 memory 听起来很唬人，但实际 benchmark 上比 KaLMv2 提升有限。"Sparse" attention 在这个领域已经被做烂了，novelty 在哪？工程味太重，学术贡献偏弱。💤</li></div><div class="paper-card"><h3 id="9-mem0-building-production-ready-ai-agents-with-scalable-long-term-memory">9. Mem0: Building Production-Ready AI Agents with Scalable Long-Term Memory</h3>
+<li><strong>锐评</strong>: 10M token 的 memory 听起来很唬人，但实际 benchmark 上比 KaLMv2 提升有限。"Sparse" attention 在这个领域已经被做烂了，novelty 在哪？工程味太重，学术贡献偏弱。💤</li>
+<details class="paper-note"><summary>📒 精读笔记: MSA</summary><div class="note-body"><h1 id="msa-memory-sparse-attention">MSA: Memory Sparse Attention</h1>
+
+<h2 id="-基本信息">📋 基本信息</h2>
+
+<li><strong>来源</strong>: HF Trending，⬆️ 44</li>
+
+<h2 id="-研究动机与问题">🎯 研究动机与问题</h2>
+
+<p>端到端 memory model 在处理超长上下文时面临计算和内存瓶颈。MSA 提出通过稀疏注意力机制将 memory model 扩展到 <strong>10M+ token</strong>。</p>
+
+<h2 id="-方法详解">🔧 方法详解</h2>
+
+<h3 id="核心方法">核心方法</h3>
+
+<p>MSA 结合三个技术：</p>
+
+<p>1. <strong>稀疏注意力</strong>：不对所有 token 计算注意力，选择性地关注重要 token</p>
+<p>2. <strong><span class="wikilink">KV cache</span> 优化</strong>：高效管理超长序列的 KV cache</p>
+<p>3. <strong><span class="wikilink">RoPE</span> 位置编码</strong>：适配超长序列的位置编码</p>
+
+<p>$$</p>
+<p>\text{Attention}(Q, K, V) = \text{softmax}\left(\frac{Q K_{\text{sparse}}^\top}{\sqrt{d}}\right) V_{\text{sparse}}</p>
+<p>$$</p>
+
+<p>其中 $K_{\text{sparse}}, V_{\text{sparse}}$ 是经过稀疏选择后的 key-value 子集。</p>
+
+<h2 id="-实验结果">📊 实验结果</h2>
+
+<table class="paper-table">
+<thead><tr><th>方法</th><th>NIAH</th><th>HotpotQA</th><th>NarrativeQA</th></tr></thead>
+<tbody>
+<tr><td><span class="wikilink">KaLMv2</span></td><td>good</td><td>good</td><td>good</td></tr>
+<tr><td><span class="wikilink">MemAgent</span></td><td>moderate</td><td>moderate</td><td>moderate</td></tr>
+<tr><td><span class="wikilink">RWKV</span></td><td>moderate</td><td>moderate</td><td>moderate</td></tr>
+<tr><td><strong>MSA</strong></td><td><strong>modest gain</strong></td><td><strong>modest gain</strong></td><td><strong>modest gain</strong></td></tr>
+</tbody></table>
+
+
+<p>10M token 的 memory 但实际提升有限。</p>
+
+<h2 id="-核心贡献">💡 核心贡献</h2>
+
+<p>1. 将端到端 memory model 扩展到 10M+ token</p>
+<p>2. 稀疏注意力 + KV cache 优化的结合方案</p>
+
+<h2 id="-局限性与思考">🤔 局限性与思考</h2>
+
+<p>1. "Sparse attention" 在长上下文领域已经被做烂了，novelty 有限</p>
+<p>2. 比 KaLMv2 提升有限</p>
+<p>3. 工程味重，学术贡献偏弱</p>
+
+<h2 id="-相关工作">📚 相关工作</h2>
+
+<li><span class="wikilink">KV cache</span>: 核心优化对象</li>
+<li><span class="wikilink">RoPE</span>: 位置编码</li>
+<li><span class="wikilink">KaLMv2</span>: 主要对比方法</li></div></details></div><div class="paper-card"><h3 id="9-mem0-building-production-ready-ai-agents-with-scalable-long-term-memory">9. Mem0: Building Production-Ready AI Agents with Scalable Long-Term Memory</h3>
 <li><strong>作者</strong>: Unknown</li>
 <li><strong>机构</strong>: Unknown</li>
 <li><strong>链接</strong>: <a href="https://arxiv.org/abs/2504.01390" target="_blank">arXiv</a> | <a href="https://arxiv.org/pdf/2504.01390" target="_blank">PDF</a></li>
@@ -648,7 +971,72 @@ details.paper-note .note-body h3 { font-size: 1em; }
 <li><strong>核心方法</strong>: <span class="wikilink">Mem0</span> 提供一个可扩展的 agent 长期记忆系统，支持 ADD/UPDATE/DELETE/CORRECT 操作。与 <span class="wikilink">RAG</span> 对比，强调结构化记忆管理。在 <span class="wikilink">LOCOMO</span> benchmark 上评测。</li>
 <li><strong>对比方法/Baselines</strong>: <span class="wikilink">MemGPT</span>, <span class="wikilink">LangMem</span>, <span class="wikilink">ReadAgent</span>, Full-Context</li>
 <li><strong>借鉴意义</strong>: Agent memory 管理是个实际问题，Mem0 的 CRUD 抽象比较工程友好。</li>
-<li><strong>锐评</strong>: 50 个 upvote 主要因为开源项目本身的热度。论文本身就是把已有产品写成 paper 的操作——技术深度有限，"production-ready" 这词用得太轻巧。和 MemGPT 的对比只在一个 benchmark 上做，不够 convincing。💤</li></div><div class="paper-card"><h3 id="10-memos-a-memory-os-for-ai-system">10. MemOS: A Memory OS for AI System</h3>
+<li><strong>锐评</strong>: 50 个 upvote 主要因为开源项目本身的热度。论文本身就是把已有产品写成 paper 的操作——技术深度有限，"production-ready" 这词用得太轻巧。和 MemGPT 的对比只在一个 benchmark 上做，不够 convincing。💤</li>
+<details class="paper-note"><summary>📒 精读笔记: Mem0</summary><div class="note-body"><h1 id="mem0-scalable-long-term-memory-for-ai-agents">Mem0: Scalable Long-Term Memory for AI Agents</h1>
+
+<h2 id="-基本信息">📋 基本信息</h2>
+
+<li><strong>来源</strong>: HF Trending，⬆️ 50</li>
+
+<h2 id="-研究动机与问题">🎯 研究动机与问题</h2>
+
+<p>AI agent 需要长期记忆来维持跨会话的上下文，但现有方案（如简单 RAG）缺乏结构化的记忆管理。</p>
+
+<h2 id="-方法详解">🔧 方法详解</h2>
+
+<h3 id="crud-记忆管理">CRUD 记忆管理</h3>
+
+<p>Mem0 提供四个核心操作：</p>
+
+<li><strong>ADD</strong>：添加新记忆</li>
+<li><strong>UPDATE</strong>：更新已有记忆</li>
+<li><strong>DELETE</strong>：删除过时记忆</li>
+<li><strong>CORRECT</strong>：纠正错误记忆</li>
+
+<h3 id="与-rag-的区别">与 RAG 的区别</h3>
+
+<table class="paper-table">
+<thead><tr><th>特性</th><th>RAG</th><th>Mem0</th></tr></thead>
+<tbody>
+<tr><td>存储方式</td><td>文档块</td><td>结构化记忆</td></tr>
+<tr><td>管理</td><td>静态索引</td><td>CRUD 动态管理</td></tr>
+<tr><td>更新</td><td>重建索引</td><td>增量更新</td></tr>
+<tr><td>冲突处理</td><td>无</td><td>CORRECT 操作</td></tr>
+</tbody></table>
+
+
+<h2 id="-实验结果">📊 实验结果</h2>
+
+<p>在 <span class="wikilink">LOCOMO</span> benchmark 上的评测：</p>
+
+<table class="paper-table">
+<thead><tr><th>方法</th><th>性能</th></tr></thead>
+<tbody>
+<tr><td>Full-Context</td><td>upper bound</td></tr>
+<tr><td><span class="wikilink">MemGPT</span></td><td>moderate</td></tr>
+<tr><td><span class="wikilink">LangMem</span></td><td>moderate</td></tr>
+<tr><td><span class="wikilink">ReadAgent</span></td><td>moderate</td></tr>
+<tr><td><strong>Mem0</strong></td><td><strong>competitive</strong></td></tr>
+</tbody></table>
+
+
+<h2 id="-核心贡献">💡 核心贡献</h2>
+
+<p>1. <strong>CRUD 抽象</strong>：工程友好的记忆管理接口</p>
+<p>2. <strong>Production-ready</strong>：面向生产环境的设计</p>
+
+<h2 id="-局限性与思考">🤔 局限性与思考</h2>
+
+<p>1. 50 个 upvote 主要因为开源项目热度，论文本身技术深度有限</p>
+<p>2. "Production-ready" 用词太轻巧</p>
+<p>3. 只在一个 benchmark 上对比，不够 convincing</p>
+<p>4. 本质是把已有产品写成 paper</p>
+
+<h2 id="-相关工作">📚 相关工作</h2>
+
+<li><span class="wikilink">MemGPT</span>: 主要对比方法</li>
+<li><span class="wikilink">LangMem</span>: 记忆管理方案</li>
+<li><span class="wikilink">RAG</span>: 传统检索增强方案</li></div></details></div><div class="paper-card"><h3 id="10-memos-a-memory-os-for-ai-system">10. MemOS: A Memory OS for AI System</h3>
 <li><strong>作者</strong>: Unknown</li>
 <li><strong>机构</strong>: Unknown</li>
 <li><strong>链接</strong>: <a href="https://arxiv.org/abs/2504.01561" target="_blank">arXiv</a> | <a href="https://arxiv.org/pdf/2504.01561" target="_blank">PDF</a></li>
@@ -658,6 +1046,69 @@ details.paper-note .note-body h3 { font-size: 1em; }
 <li><strong>对比方法/Baselines</strong>: <span class="wikilink">RAG</span>, <span class="wikilink">MemGPT</span>, traditional KV cache</li>
 <li><strong>借鉴意义</strong>: 概念框架有参考价值，但落地需要验证。</li>
 <li><strong>锐评</strong>: 166 个 upvote，概念很宏大——"Memory Operating System"。但论文读完你会发现，这就是一个 memory management 的 wrapper，离真正的 "OS" 差了十个抽象层。MemScheduler 说白了就是个优先级队列。概念大于实质的典型。💤</li>
+<details class="paper-note"><summary>📒 精读笔记: MemOS</summary><div class="note-body"><h1 id="memos-a-memory-operating-system-for-ai">MemOS: A Memory Operating System for AI</h1>
+
+<h2 id="-基本信息">📋 基本信息</h2>
+
+<li><strong>来源</strong>: HF Trending，⬆️ 166</li>
+
+<h2 id="-研究动机与问题">🎯 研究动机与问题</h2>
+
+<p>AI 系统的记忆管理日益复杂，需要一个操作系统级别的抽象来统一管理不同类型的记忆。</p>
+
+<h2 id="-方法详解">🔧 方法详解</h2>
+
+<h3 id="核心模块">核心模块</h3>
+
+<p>MemOS 包含三个核心模块：</p>
+
+<p>1. <strong><span class="wikilink">MemScheduler</span></strong>：记忆调度器，决定何时加载/卸载记忆</p>
+<p>2. <strong><span class="wikilink">MemCube</span></strong>：记忆容器，封装不同类型的记忆单元</p>
+<p>3. <strong><span class="wikilink">MemStore</span></strong>：记忆存储层，支持持久化</p>
+
+<h3 id="架构">架构</h3>
+
+<p>$$</p>
+<p>\text{MemOS} = \text{MemScheduler} + \text{MemCube} + \text{MemStore}</p>
+<p>$$</p>
+
+<li>MemScheduler 负责记忆生命周期管理</li>
+<li>MemCube 封装 <span class="wikilink">KV cache</span>、向量记忆、结构化记忆等</li>
+<li>MemStore 提供持久化和检索能力</li>
+
+<h3 id="对比">对比</h3>
+
+<table class="paper-table">
+<thead><tr><th>特性</th><th>RAG</th><th>MemGPT</th><th>MemOS</th></tr></thead>
+<tbody>
+<tr><td>记忆类型</td><td>文档</td><td>Context + 外部</td><td>多类型统一</td></tr>
+<tr><td>调度</td><td>无</td><td>简单</td><td>MemScheduler</td></tr>
+<tr><td>生命周期</td><td>无</td><td>部分</td><td>完整</td></tr>
+<tr><td>KV cache</td><td>无</td><td>无</td><td>集成</td></tr>
+</tbody></table>
+
+
+<h2 id="-实验结果">📊 实验结果</h2>
+
+<p>166 个 upvotes 表明社区对概念框架的高关注度。</p>
+
+<h2 id="-核心贡献">💡 核心贡献</h2>
+
+<p>1. <strong>OS 级抽象</strong>：将 agent memory 提升到操作系统层级</p>
+<p>2. <strong>统一管理</strong>：支持 KV cache、向量记忆、结构化记忆等多种类型</p>
+
+<h2 id="-局限性与思考">🤔 局限性与思考</h2>
+
+<p>1. <strong>概念大于实质</strong>：MemScheduler 说白了就是个优先级队列</p>
+<p>2. 离真正的 "OS" 差了十个抽象层</p>
+<p>3. 166 upvotes 但学术贡献偏弱</p>
+<p>4. wrapper 性质明显，核心创新不足</p>
+
+<h2 id="-相关工作">📚 相关工作</h2>
+
+<li><span class="wikilink">MemGPT</span>: 早期 agent memory 系统</li>
+<li><span class="wikilink">RAG</span>: 传统检索方案</li>
+<li><span class="wikilink">KV cache</span>: 核心管理对象</li></div></details>
 </div></div>
 <div id="panel-agenttooluse" class="tab-panel"><h2 id="-agent--tool-use">🤖 Agent × Tool Use</h2><div class="paper-card"><h3 id="1-can-a-single-model-master-both-multi-turn-conversations-and-tool-use-calm-a-unified-conversational-agentic-language-model">1. Can a Single Model Master Both Multi-turn Conversations and Tool Use? CALM: A Unified Conversational Agentic Language Model</h3>
 <li><strong>作者</strong>: Emre Can Acikgoz et al.</li>
@@ -831,7 +1282,94 @@ details.paper-note .note-body h3 { font-size: 1em; }
 <li><strong>核心方法</strong>: <span class="wikilink">AgentScope</span> 是一个面向开发者的 multi-agent 框架，支持 <span class="wikilink">MCP</span> 协议、<span class="wikilink">ReAct</span> 模式、分布式部署。核心抽象包括 <span class="wikilink">MsgHub</span>（消息总线）、<span class="wikilink">StateModule</span>（状态管理）、Non-Invasive Monitoring（基于 <span class="wikilink">OpenTelemetry</span>）。</li>
 <li><strong>对比方法/Baselines</strong>: <span class="wikilink">LangChain</span>, <span class="wikilink">AutoGen</span>, <span class="wikilink">CAMEL</span></li>
 <li><strong>借鉴意义</strong>: 如果你要部署大规模 multi-agent 系统，这个框架的工程设计值得参考——特别是分布式和监控部分。</li>
-<li><strong>锐评</strong>: 阿里出品，工程质量有保障，但框架类论文的通病是——demo 很美，实际用起来全是坑。MCP 支持是加分项。和 LangChain 的对比不够 fair，只挑了对方弱的场景。👀</li></div><div class="paper-card"><h3 id="3-agent-lightning-train-any-ai-agents-with-reinforcement-learning">3. Agent Lightning: Train ANY AI Agents with Reinforcement Learning</h3>
+<li><strong>锐评</strong>: 阿里出品，工程质量有保障，但框架类论文的通病是——demo 很美，实际用起来全是坑。MCP 支持是加分项。和 LangChain 的对比不够 fair，只挑了对方弱的场景。👀</li>
+<details class="paper-note"><summary>📒 精读笔记: AgentScope</summary><div class="note-body"><h1 id="agentscope-10">AgentScope 1.0</h1>
+
+<h2 id="-基本信息">📋 基本信息</h2>
+
+<li><strong>作者</strong>: Dawei Gao, Zitao Li, Yuexiang Xie 等</li>
+<li><strong>机构</strong>: Alibaba Group</li>
+<li><strong>链接</strong>: <a href="https://arxiv.org/abs/2508.16279" target="_blank">arXiv</a> | <a href="https://arxiv.org/pdf/2508.16279" target="_blank">PDF</a></li>
+
+<h2 id="-研究动机与问题">🎯 研究动机与问题</h2>
+
+<p>现有 multi-agent 框架（如 <span class="wikilink">LangChain</span>, <span class="wikilink">AutoGen</span>）在以下方面存在不足：</p>
+<p>1. <strong>工具集成侵入性强</strong>：需要大量修改已有代码</p>
+<p>2. <strong>可观测性差</strong>：大规模部署时难以监控和调试</p>
+<p>3. <strong>长期记忆缺失</strong>：agent 无法保持跨会话的上下文</p>
+<p>4. <strong>分布式支持弱</strong>：难以扩展到大规模 multi-agent 场景</p>
+
+<h2 id="-方法详解">🔧 方法详解</h2>
+
+<h3 id="核心架构">核心架构</h3>
+
+<p>AgentScope 1.0 的核心抽象：</p>
+
+<p>1. <strong><span class="wikilink">MsgHub</span>（消息总线）</strong>：agent 间消息传递的统一接口，支持广播和点对点通信</p>
+<p>2. <strong>StateModule（状态管理）</strong>：统一管理 agent 状态，支持序列化和恢复</p>
+<p>3. <strong>Non-Invasive Monitoring</strong>：基于 <span class="wikilink">OpenTelemetry</span> 的无侵入式监控</p>
+
+<h3 id="mcp-原生支持">MCP 原生支持</h3>
+
+<p>原生集成 <span class="wikilink">MCP</span>（Model Context Protocol）协议：</p>
+<li>Agent 可通过 MCP 协议访问外部工具和数据源</li>
+<li>工具集成不需要修改 agent 代码（non-invasive）</li>
+<li>支持 MCP server 的自动发现和注册</li>
+
+<h3 id="分层记忆系统">分层记忆系统</h3>
+
+<li><strong><span class="wikilink">InMemoryMemory</span></strong>：短期工作记忆，存储当前会话上下文</li>
+<li><strong><span class="wikilink">LongTermMemoryBase</span></strong>：长期记忆，支持跨会话信息持久化</li>
+<li>记忆检索支持语义搜索和结构化查询</li>
+
+<h3 id="react-agent-内置实现">ReAct Agent 内置实现</h3>
+
+<p>内置 <span class="wikilink">ReAct</span> 范式的 agent 实现：</p>
+<li>Thought → Action → Observation 循环</li>
+<li>支持自定义 tool 注册</li>
+<li>内置错误处理和重试机制</li>
+
+<h3 id="分布式调度">分布式调度</h3>
+
+<li>基于 <span class="wikilink">gRPC</span> 的分布式通信</li>
+<li>支持 agent 在多节点间调度</li>
+<li>MsgHub 支持分布式消息广播</li>
+
+<h2 id="-实验结果">📊 实验结果</h2>
+
+<table class="paper-table">
+<thead><tr><th>框架</th><th>MCP支持</th><th>可观测性</th><th>长期记忆</th><th>分布式</th></tr></thead>
+<tbody>
+<tr><td>LangChain</td><td>部分</td><td>弱</td><td>第三方</td><td>弱</td></tr>
+<tr><td>AutoGen</td><td>无</td><td>弱</td><td>无</td><td>部分</td></tr>
+<tr><td>CAMEL</td><td>无</td><td>无</td><td>无</td><td>无</td></tr>
+<tr><td><strong>AgentScope 1.0</strong></td><td><strong>原生</strong></td><td><strong>OpenTelemetry</strong></td><td><strong>内置</strong></td><td><strong>原生</strong></td></tr>
+</tbody></table>
+
+
+<p>61 upvotes 说明社区认可度较高。</p>
+
+<h2 id="-核心贡献">💡 核心贡献</h2>
+
+<p>1. <strong>MCP 原生集成</strong>：首个原生支持 MCP 协议的 multi-agent 框架</p>
+<p>2. <strong>OpenTelemetry 可观测性</strong>：无侵入式监控，适合生产环境</p>
+<p>3. <strong>分层记忆系统</strong>：短期 + 长期记忆，支持跨会话持久化</p>
+<p>4. <strong>大规模部署经验</strong>：阿里内部大规模 multi-agent 部署验证</p>
+
+<h2 id="-局限性与思考">🤔 局限性与思考</h2>
+
+<p>1. <strong>框架评估困难</strong>：benchmark 上的数字不代表实际开发体验</p>
+<p>2. <strong>与 LangChain 对比不够 fair</strong>：只挑了对方弱的场景</p>
+<p>3. <strong>学习曲线</strong>：抽象层较多，新手上手成本可能较高</p>
+<p>4. <strong>MCP 生态尚未成熟</strong>：MCP 协议本身还在快速迭代</p>
+
+<h2 id="-相关工作">📚 相关工作</h2>
+
+<li><span class="wikilink">MCP</span>: Model Context Protocol，agent 工具集成标准</li>
+<li><span class="wikilink">OpenTelemetry</span>: 可观测性标准</li>
+<li><span class="wikilink">ReAct</span>: 推理+行动范式</li>
+<li><span class="wikilink">LangChain</span>: 竞品框架</li>
+<li><span class="wikilink">AutoGen</span>: 微软 multi-agent 框架</li></div></details></div><div class="paper-card"><h3 id="3-agent-lightning-train-any-ai-agents-with-reinforcement-learning">3. Agent Lightning: Train ANY AI Agents with Reinforcement Learning</h3>
 <li><strong>作者</strong>: Yixiu Liu et al.</li>
 <li><strong>机构</strong>: Unknown</li>
 <li><strong>链接</strong>: <a href="https://arxiv.org/abs/2504.01553" target="_blank">arXiv</a> | <a href="https://arxiv.org/pdf/2504.01553" target="_blank">PDF</a></li>
@@ -1076,6 +1614,70 @@ details.paper-note .note-body h3 { font-size: 1em; }
 <li><strong>对比方法/Baselines</strong>: 传统单 agent 推荐, <span class="wikilink">MARS</span>, <span class="wikilink">TKGPT</span></li>
 <li><strong>借鉴意义</strong>: 直接相关。如果你在做推荐系统 + LLM agent 的结合，这篇 survey 是很好的 roadmap。</li>
 <li><strong>锐评</strong>: Survey 类论文看的是覆盖面和组织能力。multi-agent 做推荐确实是一个正在升温的方向，但现有工作大多还停留在"用 LLM 模拟用户"的阶段，离 production-ready 差十万八千里。这篇能不能把问题讲清楚比结论重要。👀</li>
+<details class="paper-note"><summary>📒 精读笔记: MAVRS</summary><div class="note-body"><h1 id="mavrs-multi-agent-video-recommenders">MAVRS: Multi-Agent Video Recommenders</h1>
+
+<h2 id="-基本信息">📋 基本信息</h2>
+
+<li><strong>作者</strong>: 未知</li>
+<li><strong>机构</strong>: 未知</li>
+<li><strong>来源</strong>: arXiv 关键词检索</li>
+
+<h2 id="-研究动机与问题">🎯 研究动机与问题</h2>
+
+<p>Multi-agent 在视频推荐系统中的应用是一个正在升温的研究方向。本 survey 系统梳理了：</p>
+
+<p>1. <strong>Multi-agent 视频推荐系统（MAVRS）</strong> 的架构模式演化</p>
+<p>2. <strong><span class="wikilink">MARL</span>（多智能体强化学习）</strong> 在推荐中的应用路径</p>
+<p>3. 从单 agent 推荐到 multi-agent 协作推荐的演进脉络</p>
+
+<h2 id="-方法详解">🔧 方法详解</h2>
+
+<h3 id="架构模式分类">架构模式分类</h3>
+
+<p>Survey 梳理了 MAVRS 的主要架构模式：</p>
+
+<p>1. <strong>Centralized</strong>: 中心化调度，统一 reward</p>
+<p>2. <strong>Decentralized</strong>: 去中心化，各 agent 独立优化</p>
+<p>3. <strong>Hybrid</strong>: 混合模式，全局协调 + 局部自治</p>
+
+<h3 id="marl-在推荐中的演化">MARL 在推荐中的演化</h3>
+
+<p>$$</p>
+<p>\pi^*_i(a_i | s, a_{-i}) = \arg\max_{\pi_i} \mathbb{E}\left[\sum_{t=0}^\infty \gamma^t r_i(s_t, a_t)\right]</p>
+<p>$$</p>
+
+<li>早期：单 agent 做排序/推荐</li>
+<li>中期：用 LLM 模拟用户做交互</li>
+<li>当前：multi-agent 协作做推荐全链路</li>
+
+<h3 id="核心对比">核心对比</h3>
+
+<table class="paper-table">
+<thead><tr><th>方法</th><th>类型</th><th>特点</th></tr></thead>
+<tbody>
+<tr><td>传统单 agent</td><td>Centralized</td><td>简单但无法建模多目标</td></tr>
+<tr><td><span class="wikilink">MARS</span></td><td>Decentralized</td><td>多目标优化</td></tr>
+<tr><td><span class="wikilink">TKGPT</span></td><td>LLM-based</td><td>用 LLM 模拟用户</td></tr>
+<tr><td>MAVRS</td><td>Hybrid</td><td>全链路协作</td></tr>
+</tbody></table>
+
+
+<h2 id="-核心贡献">💡 核心贡献</h2>
+
+<p>1. <strong>系统梳理</strong>：首个聚焦 multi-agent 视频推荐的 survey</p>
+<p>2. <strong>架构分类</strong>：提供了清晰的 MAVRS 架构分类体系</p>
+<p>3. <strong>Roadmap</strong>：为 multi-agent + 推荐的研究方向提供了路线图</p>
+
+<h2 id="-局限性与思考">🤔 局限性与思考</h2>
+
+<p>1. <strong>现有工作不成熟</strong>：大多停留在"用 LLM 模拟用户"阶段，离 production-ready 差距很大</p>
+<p>2. <strong>Survey 价值取决于组织能力</strong>：能不能把问题讲清楚比结论重要</p>
+<p>3. <strong>方向认可</strong>：学术界开始正式关注推荐系统 + agent 的交叉方向</p>
+
+<h2 id="-相关工作">📚 相关工作</h2>
+
+<li><span class="wikilink">MARL</span>: 多智能体强化学习</li>
+<li><span class="wikilink">MARS</span>: 多智能体推荐系统</li></div></details>
 </div></div>
 <div id="panel-agentreinforcementlearning" class="tab-panel"><h2 id="-agent--reinforcement-learning">🧠 Agent × Reinforcement Learning</h2><div class="paper-card"><h3 id="5-skill0-in-context-agentic-reinforcement-learning-for-skill-internalization">5. SKILL0: In-Context Agentic Reinforcement Learning for Skill Internalization</h3>
 <li><strong>作者</strong>: Unknown</li>
@@ -1096,6 +1698,62 @@ details.paper-note .note-body h3 { font-size: 1em; }
 <li><strong>对比方法/Baselines</strong>: <span class="wikilink">JustRL</span>, <span class="wikilink">BRUMO</span>, <span class="wikilink">DeepSeek</span>-R1</li>
 <li><strong>借鉴意义</strong>: Scaling law 的研究对理解 RL 训练效率有基础价值。如果你在训练 reasoning model，这个 task-scaling 的视角可以帮你省算力。</li>
 <li><strong>锐评</strong>: 又一篇 scaling law 论文，但这次角度确实新——不是模型 scale，而是 task scale。实验在数学推理上做的，能否推广到 agent 任务？论文标题说 "efficient reasoning" 但本质上是在说 "怎么更便宜地做 RL"。诚实点没坏处。👀</li>
+<details class="paper-note"><summary>📒 精读笔记: BCR</summary><div class="note-body"><h1 id="bcr-batched-contextual-reinforcement">BCR: Batched Contextual Reinforcement</h1>
+
+<h2 id="-基本信息">📋 基本信息</h2>
+
+<li><strong>来源</strong>: arXiv 关键词检索</li>
+
+<h2 id="-研究动机与问题">🎯 研究动机与问题</h2>
+
+<p>传统 RL 训练 reasoning model 的计算开销巨大。BCR 提出了一个新视角：不是 model scale，而是 <strong>task scale</strong>。</p>
+
+<p>核心问题：<strong>通过批量上下文任务训练，能否用更少的计算量达到同等推理能力？</strong></p>
+
+<h2 id="-方法详解">🔧 方法详解</h2>
+
+<h3 id="task-scaling-law">Task-Scaling Law</h3>
+
+<p>BCR 发现了 task-scaling law：</p>
+
+<p>$$</p>
+<p>\text{Performance} \propto f(\text{num\_tasks}^\alpha \cdot \text{compute}^\beta)</p>
+<p>$$</p>
+
+<p>通过增加训练任务的多样性（而非模型参数），可以更高效地提升推理能力。</p>
+
+<h3 id="方法">方法</h3>
+
+<p>基于 <span class="wikilink">GRPO</span>，在数学推理 benchmark 上验证。关键改进：将多个上下文任务批量化训练，让模型同时从多个任务中学习。</p>
+
+<h2 id="-实验结果">📊 实验结果</h2>
+
+<table class="paper-table">
+<thead><tr><th>方法</th><th>MATH-500</th><th>AIME</th></tr></thead>
+<tbody>
+<tr><td><span class="wikilink">JustRL</span></td><td>baseline</td><td>baseline</td></tr>
+<tr><td><span class="wikilink">BRUMO</span></td><td>moderate</td><td>moderate</td></tr>
+<tr><td><span class="wikilink">DeepSeek</span>-R1</td><td>good</td><td>good</td></tr>
+<tr><td><strong>BCR</strong></td><td><strong>competitive</strong></td><td><strong>competitive</strong></td></tr>
+</tbody></table>
+
+
+<p>BCR 以更少计算量达到可比性能。</p>
+
+<h2 id="-核心贡献">💡 核心贡献</h2>
+
+<p>1. <strong>Task-scaling law</strong>：首次提出任务维度的 scaling law</p>
+<p>2. <strong>计算效率</strong>：更便宜地做 RL 训练</p>
+
+<h2 id="-局限性与思考">🤔 局限性与思考</h2>
+
+<p>1. 只在数学推理上验证，能否推广到 agent 任务存疑</p>
+<p>2. 标题说 "efficient reasoning" 但本质是 "怎么更便宜地做 RL"</p>
+
+<h2 id="-相关工作">📚 相关工作</h2>
+
+<li><span class="wikilink">GRPO</span>: 基础 RL 算法</li>
+<li><span class="wikilink">DeepSeek</span>: 对比模型</li></div></details>
 </div></div>
 <div id="panel-ragrl" class="tab-panel"><h2 id="-rag--rl">🔍 RAG × RL</h2><div class="paper-card"><h3 id="7-optimizing-rag-rerankers-with-llm-feedback-via-reinforcement-learning">7. Optimizing RAG Rerankers with LLM Feedback via Reinforcement Learning</h3>
 <li><strong>作者</strong>: Unknown</li>
@@ -1107,6 +1765,62 @@ details.paper-note .note-body h3 { font-size: 1em; }
 <li><strong>对比方法/Baselines</strong>: <span class="wikilink">RankZephyr</span>, <span class="wikilink">DRAGIN</span>, <span class="wikilink">SFT</span> baseline</li>
 <li><strong>借鉴意义</strong>: reranker 是推荐系统和 RAG 共享的核心组件。用 RL + LLM feedback 优化 reranker 的思路可以直接迁移到推荐场景的精排。</li>
 <li><strong>锐评</strong>: 思路不复杂但实用：与其 SFT 训练 reranker，不如用 RL 让下游 reader 的效果做 reward。问题是 LLM feedback 本身的成本——你用一个大模型的输出训另一个小模型，成本核算过吗？👀</li>
+<details class="paper-note"><summary>📒 精读笔记: RRPO</summary><div class="note-body"><h1 id="rrpo-optimizing-rag-rerankers-with-rl">RRPO: Optimizing RAG Rerankers with RL</h1>
+
+<h2 id="-基本信息">📋 基本信息</h2>
+
+<li><strong>来源</strong>: arXiv 关键词检索</li>
+
+<h2 id="-研究动机与问题">🎯 研究动机与问题</h2>
+
+<p><span class="wikilink">RAG</span> 系统中 reranker 的训练通常使用 SFT，但 SFT 的训练目标与下游 reader 的效果不直接对齐。</p>
+
+<p>核心思路：<strong>用 RL + LLM feedback 让下游 reader 的效果作为 reward 来训练 reranker</strong>。</p>
+
+<h2 id="-方法详解">🔧 方法详解</h2>
+
+<h3 id="rrpo-框架">RRPO 框架</h3>
+
+<p>$$</p>
+<p>R = \text{ReaderQuality}(\text{Reranker}(\text{docs}, q), q)</p>
+<p>$$</p>
+
+<p>1. Reranker 对检索到的文档重新排序</p>
+<p>2. Reader（LLM）基于排序后的文档生成答案</p>
+<p>3. 答案质量作为 reward 反馈给 reranker</p>
+<p>4. 使用 <span class="wikilink">RL</span> 优化 reranker 的排序策略</p>
+
+<h3 id="基础检索器">基础检索器</h3>
+
+<p>使用 <span class="wikilink">GTE</span> 作为基础检索器，RRPO 作用在精排阶段。</p>
+
+<h2 id="-实验结果">📊 实验结果</h2>
+
+<table class="paper-table">
+<thead><tr><th>方法</th><th>HotpotQA</th><th>AmbigNQ</th></tr></thead>
+<tbody>
+<tr><td><span class="wikilink">RankZephyr</span></td><td>baseline</td><td>baseline</td></tr>
+<tr><td><span class="wikilink">DRAGIN</span></td><td>moderate</td><td>moderate</td></tr>
+<tr><td>SFT baseline</td><td>moderate</td><td>moderate</td></tr>
+<tr><td><strong>RRPO</strong></td><td><strong>best</strong></td><td><strong>best</strong></td></tr>
+</tbody></table>
+
+
+<h2 id="-核心贡献">💡 核心贡献</h2>
+
+<p>1. <strong>RL 优化 reranker</strong>：以下游 reader 效果为 reward</p>
+<p>2. <strong>端到端优化</strong>：reranker 和 reader 的目标直接对齐</p>
+
+<h2 id="-局限性与思考">🤔 局限性与思考</h2>
+
+<p>1. LLM feedback 的成本：用大模型输出训小模型，成本核算需要考虑</p>
+<p>2. Reranker 是推荐系统和 RAG 共享的核心组件，可迁移到推荐精排</p>
+
+<h2 id="-相关工作">📚 相关工作</h2>
+
+<li><span class="wikilink">RAG</span>: 检索增强生成</li>
+<li><span class="wikilink">GTE</span>: 基础检索器</li>
+<li><span class="wikilink">RL</span>: 训练方法</li></div></details>
 </div></div>
 <div id="panel-memoryagent" class="tab-panel"><h2 id="-memory--agent">💾 Memory × Agent</h2><div class="paper-card"><h3 id="8-msa-memory-sparse-attention-for-efficient-end-to-end-memory-model-scaling-to-10m">8. MSA: Memory Sparse Attention for Efficient End-to-End Memory Model Scaling to 10M+</h3>
 <li><strong>作者</strong>: Unknown</li>
@@ -1117,7 +1831,63 @@ details.paper-note .note-body h3 { font-size: 1em; }
 <li><strong>核心方法</strong>: <span class="wikilink">MSA</span>（Memory Sparse Attention）通过稀疏注意力机制将端到端 memory model 扩展到 10M+ token。结合 <span class="wikilink">KV cache</span> 优化和 <span class="wikilink">RoPE</span> 位置编码。在 <span class="wikilink">NIAH</span>、<span class="wikilink">HotpotQA</span>、<span class="wikilink">NarrativeQA</span> 等长文本任务上评测。</li>
 <li><strong>对比方法/Baselines</strong>: <span class="wikilink">KaLMv2</span>, <span class="wikilink">MemAgent</span>, <span class="wikilink">RWKV</span></li>
 <li><strong>借鉴意义</strong>: 长上下文 memory 是 agent 系统的基础能力。如果你在做需要超长历史的推荐 agent，这个稀疏注意力方案值得了解。</li>
-<li><strong>锐评</strong>: 10M token 的 memory 听起来很唬人，但实际 benchmark 上比 KaLMv2 提升有限。"Sparse" attention 在这个领域已经被做烂了，novelty 在哪？工程味太重，学术贡献偏弱。💤</li></div><div class="paper-card"><h3 id="9-mem0-building-production-ready-ai-agents-with-scalable-long-term-memory">9. Mem0: Building Production-Ready AI Agents with Scalable Long-Term Memory</h3>
+<li><strong>锐评</strong>: 10M token 的 memory 听起来很唬人，但实际 benchmark 上比 KaLMv2 提升有限。"Sparse" attention 在这个领域已经被做烂了，novelty 在哪？工程味太重，学术贡献偏弱。💤</li>
+<details class="paper-note"><summary>📒 精读笔记: MSA</summary><div class="note-body"><h1 id="msa-memory-sparse-attention">MSA: Memory Sparse Attention</h1>
+
+<h2 id="-基本信息">📋 基本信息</h2>
+
+<li><strong>来源</strong>: HF Trending，⬆️ 44</li>
+
+<h2 id="-研究动机与问题">🎯 研究动机与问题</h2>
+
+<p>端到端 memory model 在处理超长上下文时面临计算和内存瓶颈。MSA 提出通过稀疏注意力机制将 memory model 扩展到 <strong>10M+ token</strong>。</p>
+
+<h2 id="-方法详解">🔧 方法详解</h2>
+
+<h3 id="核心方法">核心方法</h3>
+
+<p>MSA 结合三个技术：</p>
+
+<p>1. <strong>稀疏注意力</strong>：不对所有 token 计算注意力，选择性地关注重要 token</p>
+<p>2. <strong><span class="wikilink">KV cache</span> 优化</strong>：高效管理超长序列的 KV cache</p>
+<p>3. <strong><span class="wikilink">RoPE</span> 位置编码</strong>：适配超长序列的位置编码</p>
+
+<p>$$</p>
+<p>\text{Attention}(Q, K, V) = \text{softmax}\left(\frac{Q K_{\text{sparse}}^\top}{\sqrt{d}}\right) V_{\text{sparse}}</p>
+<p>$$</p>
+
+<p>其中 $K_{\text{sparse}}, V_{\text{sparse}}$ 是经过稀疏选择后的 key-value 子集。</p>
+
+<h2 id="-实验结果">📊 实验结果</h2>
+
+<table class="paper-table">
+<thead><tr><th>方法</th><th>NIAH</th><th>HotpotQA</th><th>NarrativeQA</th></tr></thead>
+<tbody>
+<tr><td><span class="wikilink">KaLMv2</span></td><td>good</td><td>good</td><td>good</td></tr>
+<tr><td><span class="wikilink">MemAgent</span></td><td>moderate</td><td>moderate</td><td>moderate</td></tr>
+<tr><td><span class="wikilink">RWKV</span></td><td>moderate</td><td>moderate</td><td>moderate</td></tr>
+<tr><td><strong>MSA</strong></td><td><strong>modest gain</strong></td><td><strong>modest gain</strong></td><td><strong>modest gain</strong></td></tr>
+</tbody></table>
+
+
+<p>10M token 的 memory 但实际提升有限。</p>
+
+<h2 id="-核心贡献">💡 核心贡献</h2>
+
+<p>1. 将端到端 memory model 扩展到 10M+ token</p>
+<p>2. 稀疏注意力 + KV cache 优化的结合方案</p>
+
+<h2 id="-局限性与思考">🤔 局限性与思考</h2>
+
+<p>1. "Sparse attention" 在长上下文领域已经被做烂了，novelty 有限</p>
+<p>2. 比 KaLMv2 提升有限</p>
+<p>3. 工程味重，学术贡献偏弱</p>
+
+<h2 id="-相关工作">📚 相关工作</h2>
+
+<li><span class="wikilink">KV cache</span>: 核心优化对象</li>
+<li><span class="wikilink">RoPE</span>: 位置编码</li>
+<li><span class="wikilink">KaLMv2</span>: 主要对比方法</li></div></details></div><div class="paper-card"><h3 id="9-mem0-building-production-ready-ai-agents-with-scalable-long-term-memory">9. Mem0: Building Production-Ready AI Agents with Scalable Long-Term Memory</h3>
 <li><strong>作者</strong>: Unknown</li>
 <li><strong>机构</strong>: Unknown</li>
 <li><strong>链接</strong>: <a href="https://arxiv.org/abs/2504.01390" target="_blank">arXiv</a> | <a href="https://arxiv.org/pdf/2504.01390" target="_blank">PDF</a></li>
@@ -1126,7 +1896,72 @@ details.paper-note .note-body h3 { font-size: 1em; }
 <li><strong>核心方法</strong>: <span class="wikilink">Mem0</span> 提供一个可扩展的 agent 长期记忆系统，支持 ADD/UPDATE/DELETE/CORRECT 操作。与 <span class="wikilink">RAG</span> 对比，强调结构化记忆管理。在 <span class="wikilink">LOCOMO</span> benchmark 上评测。</li>
 <li><strong>对比方法/Baselines</strong>: <span class="wikilink">MemGPT</span>, <span class="wikilink">LangMem</span>, <span class="wikilink">ReadAgent</span>, Full-Context</li>
 <li><strong>借鉴意义</strong>: Agent memory 管理是个实际问题，Mem0 的 CRUD 抽象比较工程友好。</li>
-<li><strong>锐评</strong>: 50 个 upvote 主要因为开源项目本身的热度。论文本身就是把已有产品写成 paper 的操作——技术深度有限，"production-ready" 这词用得太轻巧。和 MemGPT 的对比只在一个 benchmark 上做，不够 convincing。💤</li></div><div class="paper-card"><h3 id="10-memos-a-memory-os-for-ai-system">10. MemOS: A Memory OS for AI System</h3>
+<li><strong>锐评</strong>: 50 个 upvote 主要因为开源项目本身的热度。论文本身就是把已有产品写成 paper 的操作——技术深度有限，"production-ready" 这词用得太轻巧。和 MemGPT 的对比只在一个 benchmark 上做，不够 convincing。💤</li>
+<details class="paper-note"><summary>📒 精读笔记: Mem0</summary><div class="note-body"><h1 id="mem0-scalable-long-term-memory-for-ai-agents">Mem0: Scalable Long-Term Memory for AI Agents</h1>
+
+<h2 id="-基本信息">📋 基本信息</h2>
+
+<li><strong>来源</strong>: HF Trending，⬆️ 50</li>
+
+<h2 id="-研究动机与问题">🎯 研究动机与问题</h2>
+
+<p>AI agent 需要长期记忆来维持跨会话的上下文，但现有方案（如简单 RAG）缺乏结构化的记忆管理。</p>
+
+<h2 id="-方法详解">🔧 方法详解</h2>
+
+<h3 id="crud-记忆管理">CRUD 记忆管理</h3>
+
+<p>Mem0 提供四个核心操作：</p>
+
+<li><strong>ADD</strong>：添加新记忆</li>
+<li><strong>UPDATE</strong>：更新已有记忆</li>
+<li><strong>DELETE</strong>：删除过时记忆</li>
+<li><strong>CORRECT</strong>：纠正错误记忆</li>
+
+<h3 id="与-rag-的区别">与 RAG 的区别</h3>
+
+<table class="paper-table">
+<thead><tr><th>特性</th><th>RAG</th><th>Mem0</th></tr></thead>
+<tbody>
+<tr><td>存储方式</td><td>文档块</td><td>结构化记忆</td></tr>
+<tr><td>管理</td><td>静态索引</td><td>CRUD 动态管理</td></tr>
+<tr><td>更新</td><td>重建索引</td><td>增量更新</td></tr>
+<tr><td>冲突处理</td><td>无</td><td>CORRECT 操作</td></tr>
+</tbody></table>
+
+
+<h2 id="-实验结果">📊 实验结果</h2>
+
+<p>在 <span class="wikilink">LOCOMO</span> benchmark 上的评测：</p>
+
+<table class="paper-table">
+<thead><tr><th>方法</th><th>性能</th></tr></thead>
+<tbody>
+<tr><td>Full-Context</td><td>upper bound</td></tr>
+<tr><td><span class="wikilink">MemGPT</span></td><td>moderate</td></tr>
+<tr><td><span class="wikilink">LangMem</span></td><td>moderate</td></tr>
+<tr><td><span class="wikilink">ReadAgent</span></td><td>moderate</td></tr>
+<tr><td><strong>Mem0</strong></td><td><strong>competitive</strong></td></tr>
+</tbody></table>
+
+
+<h2 id="-核心贡献">💡 核心贡献</h2>
+
+<p>1. <strong>CRUD 抽象</strong>：工程友好的记忆管理接口</p>
+<p>2. <strong>Production-ready</strong>：面向生产环境的设计</p>
+
+<h2 id="-局限性与思考">🤔 局限性与思考</h2>
+
+<p>1. 50 个 upvote 主要因为开源项目热度，论文本身技术深度有限</p>
+<p>2. "Production-ready" 用词太轻巧</p>
+<p>3. 只在一个 benchmark 上对比，不够 convincing</p>
+<p>4. 本质是把已有产品写成 paper</p>
+
+<h2 id="-相关工作">📚 相关工作</h2>
+
+<li><span class="wikilink">MemGPT</span>: 主要对比方法</li>
+<li><span class="wikilink">LangMem</span>: 记忆管理方案</li>
+<li><span class="wikilink">RAG</span>: 传统检索增强方案</li></div></details></div><div class="paper-card"><h3 id="10-memos-a-memory-os-for-ai-system">10. MemOS: A Memory OS for AI System</h3>
 <li><strong>作者</strong>: Unknown</li>
 <li><strong>机构</strong>: Unknown</li>
 <li><strong>链接</strong>: <a href="https://arxiv.org/abs/2504.01561" target="_blank">arXiv</a> | <a href="https://arxiv.org/pdf/2504.01561" target="_blank">PDF</a></li>
@@ -1136,6 +1971,69 @@ details.paper-note .note-body h3 { font-size: 1em; }
 <li><strong>对比方法/Baselines</strong>: <span class="wikilink">RAG</span>, <span class="wikilink">MemGPT</span>, traditional KV cache</li>
 <li><strong>借鉴意义</strong>: 概念框架有参考价值，但落地需要验证。</li>
 <li><strong>锐评</strong>: 166 个 upvote，概念很宏大——"Memory Operating System"。但论文读完你会发现，这就是一个 memory management 的 wrapper，离真正的 "OS" 差了十个抽象层。MemScheduler 说白了就是个优先级队列。概念大于实质的典型。💤</li>
+<details class="paper-note"><summary>📒 精读笔记: MemOS</summary><div class="note-body"><h1 id="memos-a-memory-operating-system-for-ai">MemOS: A Memory Operating System for AI</h1>
+
+<h2 id="-基本信息">📋 基本信息</h2>
+
+<li><strong>来源</strong>: HF Trending，⬆️ 166</li>
+
+<h2 id="-研究动机与问题">🎯 研究动机与问题</h2>
+
+<p>AI 系统的记忆管理日益复杂，需要一个操作系统级别的抽象来统一管理不同类型的记忆。</p>
+
+<h2 id="-方法详解">🔧 方法详解</h2>
+
+<h3 id="核心模块">核心模块</h3>
+
+<p>MemOS 包含三个核心模块：</p>
+
+<p>1. <strong><span class="wikilink">MemScheduler</span></strong>：记忆调度器，决定何时加载/卸载记忆</p>
+<p>2. <strong><span class="wikilink">MemCube</span></strong>：记忆容器，封装不同类型的记忆单元</p>
+<p>3. <strong><span class="wikilink">MemStore</span></strong>：记忆存储层，支持持久化</p>
+
+<h3 id="架构">架构</h3>
+
+<p>$$</p>
+<p>\text{MemOS} = \text{MemScheduler} + \text{MemCube} + \text{MemStore}</p>
+<p>$$</p>
+
+<li>MemScheduler 负责记忆生命周期管理</li>
+<li>MemCube 封装 <span class="wikilink">KV cache</span>、向量记忆、结构化记忆等</li>
+<li>MemStore 提供持久化和检索能力</li>
+
+<h3 id="对比">对比</h3>
+
+<table class="paper-table">
+<thead><tr><th>特性</th><th>RAG</th><th>MemGPT</th><th>MemOS</th></tr></thead>
+<tbody>
+<tr><td>记忆类型</td><td>文档</td><td>Context + 外部</td><td>多类型统一</td></tr>
+<tr><td>调度</td><td>无</td><td>简单</td><td>MemScheduler</td></tr>
+<tr><td>生命周期</td><td>无</td><td>部分</td><td>完整</td></tr>
+<tr><td>KV cache</td><td>无</td><td>无</td><td>集成</td></tr>
+</tbody></table>
+
+
+<h2 id="-实验结果">📊 实验结果</h2>
+
+<p>166 个 upvotes 表明社区对概念框架的高关注度。</p>
+
+<h2 id="-核心贡献">💡 核心贡献</h2>
+
+<p>1. <strong>OS 级抽象</strong>：将 agent memory 提升到操作系统层级</p>
+<p>2. <strong>统一管理</strong>：支持 KV cache、向量记忆、结构化记忆等多种类型</p>
+
+<h2 id="-局限性与思考">🤔 局限性与思考</h2>
+
+<p>1. <strong>概念大于实质</strong>：MemScheduler 说白了就是个优先级队列</p>
+<p>2. 离真正的 "OS" 差了十个抽象层</p>
+<p>3. 166 upvotes 但学术贡献偏弱</p>
+<p>4. wrapper 性质明显，核心创新不足</p>
+
+<h2 id="-相关工作">📚 相关工作</h2>
+
+<li><span class="wikilink">MemGPT</span>: 早期 agent memory 系统</li>
+<li><span class="wikilink">RAG</span>: 传统检索方案</li>
+<li><span class="wikilink">KV cache</span>: 核心管理对象</li></div></details>
 </div></div>
 <hr>
 <h2 id="被排除的论文">被排除的论文</h2>
@@ -1184,6 +2082,14 @@ document.addEventListener('DOMContentLoaded', function() {
   var hash = location.hash.slice(1);
   var target = hash && document.querySelector('[data-tab="'+hash+'"]');
   if (target) switchTab(hash);
+  // Re-render KaTeX inside <details> when opened
+  document.querySelectorAll('details.paper-note').forEach(function(d) {
+    d.addEventListener('toggle', function() {
+      if (d.open && typeof renderMathInElement === 'function') {
+        renderMathInElement(d, {delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}]});
+      }
+    });
+  });
 });
 </script>
 
