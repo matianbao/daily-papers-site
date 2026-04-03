@@ -229,7 +229,159 @@ details.paper-note .note-body h3 { font-size: 1em; }
 <li><strong>核心方法</strong>: <span class="wikilink">CoALM</span> 把 <span class="wikilink">Task-Oriented Dialogue</span> 和 <span class="wikilink">Language Agent</span> 的 <span class="wikilink">function calling</span> 能力统一到一个模型里。构造了 CoALM-IT 多任务数据集，交织多轮 <span class="wikilink">ReAct</span> 推理和复杂 API 调用。训练了 8B/70B/405B 三个尺度，在 <span class="wikilink">MultiWOZ</span> 2.4、<span class="wikilink">BFCL</span> V3、API-Bank 上全面超越 GPT-4o。</li>
 <li><strong>对比方法/Baselines</strong>: <span class="wikilink">GPT-4o</span>, specialized TOD systems, <span class="wikilink">ToolAce</span></li>
 <li><strong>借鉴意义</strong>: 对话式 agent 的核心痛点——多轮对话管理和工具调用不能兼得——这篇给了一个干净的统一方案。对做对话推荐系统的同学直接有用。</li>
-<li><strong>锐评</strong>: 思路清晰，实验扎实，三个 benchmark 全打是有说服力的。但 405B 的模型谁用得起？8B 版本的性能衰减多少才是关键。另外 CoALM-IT 数据集用 GPT-4o 生成，那你超越 GPT-4o 到底是模型强还是数据蒸馏的功劳？🔥</li></div><div class="paper-card"><h3 id="2-agentscope-10-a-developer-centric-framework-for-building-agentic-applications">2. AgentScope 1.0: A Developer-Centric Framework for Building Agentic Applications</h3>
+<li><strong>锐评</strong>: 思路清晰，实验扎实，三个 benchmark 全打是有说服力的。但 405B 的模型谁用得起？8B 版本的性能衰减多少才是关键。另外 CoALM-IT 数据集用 GPT-4o 生成，那你超越 GPT-4o 到底是模型强还是数据蒸馏的功劳？🔥</li>
+<details class="paper-note"><summary>📒 精读笔记: CoALM - Conversational Agentic Language Model</summary><div class="note-body"><h1 id="coalm-a-unified-conversational-agentic-language-model">CoALM: A Unified Conversational Agentic Language Model</h1>
+
+<h2 id="-基本信息">📋 基本信息</h2>
+
+<li><strong>作者</strong>: Emre Can Acikgoz, Jeremiah Greer, Akul Datta, Ze Yang, William Zeng, Oussama Elachqar, Emmanouil Koukoumidis, Dilek Hakkani-Tür, Gokhan Tur</li>
+<li><strong>机构</strong>: University of Illinois Urbana-Champaign, Oumi</li>
+<li><strong>链接</strong>: <a href="https://arxiv.org/abs/2502.08820" target="_blank">arXiv</a> | <a href="https://arxiv.org/pdf/2502.08820" target="_blank">PDF</a></li>
+<li><strong>项目主页</strong>: https://emrecanacikgoz.github.io/CoALM/</li>
+
+<h2 id="-研究动机与问题">🎯 研究动机与问题</h2>
+
+<p>当前 LLM agent 领域存在一个核心矛盾：</p>
+
+<p>1. <strong>Task-Oriented Dialogue (TOD) 系统</strong>：擅长多轮对话管理和状态追踪，但只能处理有限的 API 集合（如 <code>book_hotel</code>, <code>query_restaurant</code>），面对新服务需要昂贵的重训练</p>
+<p>2. <strong>Language Agents (LA)</strong>：擅长 <span class="wikilink">function calling</span>，能处理多样化的 API，但无法维持多轮对话中的用户意图</p>
+
+<p>本文的核心问题是：<strong>能否用一个统一模型同时掌握多轮对话和工具调用？</strong></p>
+
+<p>作者在三个 benchmark 上验证了这一矛盾的存在：</p>
+<li><span class="wikilink">MultiWOZ</span> 2.4（TOD benchmark）：LA 模型如 ToolAce 的 Success Rate 仅 18.0%</li>
+<li><span class="wikilink">BFCL</span> V3（LA benchmark）：TOD 模型如 FNCTOD 的 Overall Acc 极低</li>
+<li>API-Bank（LA benchmark）：类似的跨域性能断崖</li>
+
+<h2 id="-方法详解">🔧 方法详解</h2>
+
+<h3 id="整体框架">整体框架</h3>
+
+<div class="paper-figure"><img src="https://arxiv.org/html/2502.08820/x2.png" alt="" loading="lazy"></div>
+
+<p>CoALM 的方法分两步：构建统一数据集 CoALM-IT，然后多任务微调。</p>
+
+<h3 id="coalm-it-数据集">CoALM-IT 数据集</h3>
+
+<p>CoALM-IT 由三类数据组成，总计 311,583 个样本：</p>
+
+<table class="paper-table">
+<thead><tr><th>数据域</th><th>数据类型</th><th>数据名</th><th>样本数</th><th>总 Token 数</th></tr></thead>
+<tbody>
+<tr><td>TOD</td><td>Single-Turn</td><td>SNIPS</td><td>13,028</td><td>12.3M</td></tr>
+<tr><td>LA</td><td>Multi-Turn</td><td><span class="wikilink">ToolAce</span> + Hammer</td><td>216,319</td><td>139.2M</td></tr>
+<tr><td>CRA</td><td>Multi-Turn</td><td>SGD (生成)</td><td>82,236</td><td>59.7M</td></tr>
+</tbody></table>
+
+
+<h4 id="1-tod-数据-snips">1. TOD 数据 (SNIPS)</h4>
+<p>将 SNIPS 数据集转换为 dialogue state tracking 格式，训练模型理解用户意图并生成结构化对话状态。</p>
+
+<h4 id="2-function-calling-数据-hammer--toolace">2. Function Calling 数据 (Hammer + ToolAce)</h4>
+<li><strong>Hammer</strong>: 通过随机替换函数名和参数名来防止过拟合，迫使模型通过描述进行推理</li>
+<li><strong>ToolAce</strong>: 提供开放域多轮对话场景中的函数调用</li>
+
+<h4 id="3-conversational-react-api-cra-数据--核心贡献">3. Conversational ReAct API (CRA) 数据 — 核心贡献</h4>
+
+<p>CRA 是本文最重要的数据创新。基于 SGD 数据集，构造了全新的对话结构：</p>
+
+<p>$$\text{User} \rightarrow \text{Thought}_1 \rightarrow \text{Action} \rightarrow \text{Observation} \rightarrow \text{Thought}_2 \rightarrow \text{Response}$$</p>
+
+<p>关键设计：</p>
+<li><strong>Thought₁</strong>: 理解用户意图，决定是否需要调用 API</li>
+<li><strong>Action</strong>: 调用具体 API</li>
+<li><strong>Observation</strong>: API 返回结果</li>
+<li><strong>Thought₂</strong>: 分析返回结果，决定如何回应用户</li>
+<li><strong>Response</strong>: 最终用户可见的回复</li>
+
+<p>这种 dual-thought <span class="wikilink">ReAct</span> 结构是首次在多轮 TOD 场景中使用。使用 GPT-4o 生成 CRA 数据，并经过人工验证。</p>
+
+<h3 id="训练细节">训练细节</h3>
+
+<p>基于 Llama 3.1/3.3 系列微调：</p>
+
+<table class="paper-table">
+<thead><tr><th>模型</th><th>基座</th><th>LoRA rank</th><th>训练时间</th><th>GPU</th></tr></thead>
+<tbody>
+<tr><td>CoALM 8B</td><td>Llama 3.1 8B</td><td>$r=16, \alpha=32$</td><td>~8h</td><td>8×H100</td></tr>
+<tr><td>CoALM 70B</td><td>Llama 3.3 70B</td><td>$r=16, \alpha=32$</td><td>~60h</td><td>8×H100</td></tr>
+<tr><td>CoALM 405B</td><td>Llama 3.1 405B</td><td>QLoRA (nf4)</td><td>-</td><td>8×H100</td></tr>
+</tbody></table>
+
+
+<p>训练使用 <span class="wikilink">LoRA</span>，global batch size = 8，3 epochs，learning rate = $1 \times 10^{-4}$，linear warmup ratio = 0.1。</p>
+
+<p>所有三类数据混合后一次性训练，让模型在不同技能之间持续切换，避免对单一任务过拟合。</p>
+
+<h2 id="-实验结果">📊 实验结果</h2>
+
+<h3 id="multiwoz-24-tod">MultiWOZ 2.4 (TOD)</h3>
+
+<table class="paper-table">
+<thead><tr><th>模型</th><th>Success Rate</th><th>JGA</th></tr></thead>
+<tbody>
+<tr><td><strong>CoALM 70B</strong></td><td><strong>69.4</strong></td><td><strong>43.8</strong></td></tr>
+<tr><td>CoALM 405B*</td><td>66.7</td><td>38.8</td></tr>
+<tr><td>GPT-4o</td><td>75.5</td><td>36.9</td></tr>
+<tr><td>GPT-4o-mini</td><td>69.9</td><td>38.4</td></tr>
+<tr><td>Llama 3.3 70B Instruct</td><td>67.6</td><td>40.8</td></tr>
+<tr><td>Hammer 2.0 7B</td><td>23.5</td><td>21.7</td></tr>
+<tr><td>ToolAce</td><td>18.0</td><td>34.4</td></tr>
+</tbody></table>
+
+
+<p>CoALM 70B 的 JGA (43.8) 超越所有模型包括 GPT-4o (36.9)，Success Rate 接近 GPT-4o-mini。</p>
+
+<h3 id="bfcl-v3-function-calling">BFCL V3 (Function Calling)</h3>
+
+<table class="paper-table">
+<thead><tr><th>模型</th><th>Overall Acc</th><th>Multi Turn Acc</th></tr></thead>
+<tbody>
+<tr><td><strong>CoALM 405B</strong>*</td><td><strong>63.34%</strong></td><td>28.25%</td></tr>
+<tr><td>CoALM 70B</td><td>60.49%</td><td>26.25%</td></tr>
+<tr><td>GPT-4o</td><td>59.83%</td><td><strong>34.62%</strong></td></tr>
+<tr><td>GPT-4o-mini</td><td>59.40%</td><td>19.00%</td></tr>
+<tr><td>Hammer 2.0 7B</td><td>52.13%</td><td>0.38%</td></tr>
+</tbody></table>
+
+
+<p>CoALM 405B 和 70B 的 Overall Acc 超越 GPT-4o。</p>
+
+<h3 id="api-bank">API-Bank</h3>
+
+<p>CoALM 8B 在 L-1 Rouge-L 达到 92.8，超越 Hammer (90.1)；CoALM 70B 在 L-2 达到 83.2。</p>
+
+<h3 id="关键发现跨域泛化">关键发现：跨域泛化</h3>
+
+<p>消融实验显示：</p>
+<li>去掉 LA 数据（w/o LA）：MultiWOZ Success ↑26.1 但 BFCL ↓14.4</li>
+<li>去掉 CRA 数据（w/o CRA）：BFCL 基本不变但 MultiWOZ ↓严重</li>
+<li>完整 CoALM-IT 实现最佳平衡</li>
+
+<h2 id="-核心贡献">💡 核心贡献</h2>
+
+<p>1. <strong>首次系统分析</strong> TOD 和 LA 之间的能力鸿沟</p>
+<p>2. <strong>CoALM-IT 数据集</strong>：首个在多轮 TOD 中融入 <span class="wikilink">ReAct</span> 推理的数据集（CRA）</p>
+<p>3. <strong>统一模型系列</strong>：CoALM 8B/70B/405B 在 TOD 和 LA benchmark 上同时达到 SOTA</p>
+<p>4. <strong>开源</strong>：代码、模型权重、数据集、中间 checkpoint 全部公开</p>
+
+<h2 id="-局限性与思考">🤔 局限性与思考</h2>
+
+<p>1. <strong>数据蒸馏问题</strong>：CRA 数据用 GPT-4o 生成，那超越 GPT-4o 的功劳是模型能力还是数据质量？</p>
+<p>2. <strong>405B 的实用性</strong>：谁能在生产环境部署 405B？8B 版本的性能衰减才是关键（Success Rate 从 69.4 降到 51.6）</p>
+<p>3. <strong>评估偏差</strong>：MultiWOZ 的评估使用了修改版的 AutoTOD prompt，不同 prompt 格式可能影响结果</p>
+<p>4. <strong>CRA 数据的局限</strong>：仅基于 SGD 数据集的领域（酒店、餐厅等），在其他领域的泛化能力未验证</p>
+<p>5. <strong>405B 仍在训练中</strong>：论文中 405B 结果标注 * 表示只完成了一个 epoch</p>
+
+<h2 id="-相关工作">📚 相关工作</h2>
+
+<li><span class="wikilink">ReAct</span>: CoALM 的 CRA 数据结构基于 ReAct 范式</li>
+<li><span class="wikilink">ToolAce</span>: LA 数据来源之一</li>
+<li><span class="wikilink">BFCL</span>: 函数调用评估 benchmark</li>
+<li><span class="wikilink">MultiWOZ</span>: TOD 评估 benchmark</li>
+<li><span class="wikilink">LoRA</span>: 训练使用的参数高效微调方法</li>
+<li><span class="wikilink">function calling</span>: 核心能力之一</li>
+<li><span class="wikilink">Task-Oriented Dialogue</span>: 核心能力之一</li></div></details></div><div class="paper-card"><h3 id="2-agentscope-10-a-developer-centric-framework-for-building-agentic-applications">2. AgentScope 1.0: A Developer-Centric Framework for Building Agentic Applications</h3>
 <li><strong>作者</strong>: Dawei Gao et al.</li>
 <li><strong>机构</strong>: Alibaba Group</li>
 <li><strong>链接</strong>: <a href="https://arxiv.org/abs/2504.01943" target="_blank">arXiv</a> | <a href="https://arxiv.org/pdf/2504.01943" target="_blank">PDF</a></li>
@@ -248,6 +400,230 @@ details.paper-note .note-body h3 { font-size: 1em; }
 <li><strong>对比方法/Baselines</strong>: <span class="wikilink">AgentOps</span>, <span class="wikilink">AIR</span></li>
 <li><strong>借鉴意义</strong>: RL for agent 的基础设施终于有人认真做了。如果你在做 agent 的训练而不是纯 prompting，这个框架值得关注。</li>
 <li><strong>锐评</strong>: 139 个 upvote 说明社区饥渴程度。"Train ANY AI Agents" 这标题有点大——实际上对 tool use 的 reward 设计还是得你自己搞。但作为 infra 确实填了一个空白。GRPO 用在 agent trajectory 上是否真的比 PPO 好？论文回避了这个问题。🔥</li>
+<details class="paper-note"><summary>📒 精读笔记: Agent Lightning - Train AI Agents with RL</summary><div class="note-body"><h1 id="agent-lightning-train-any-ai-agents-with-reinforcement-learning">Agent Lightning: Train ANY AI Agents with Reinforcement Learning</h1>
+
+<h2 id="基本信息">基本信息</h2>
+
+<li><strong>作者</strong>: Xufang Luo, Yuge Zhang, Zhiyuan He, Zilong Wang, Siyun Zhao, Dongsheng Li, Luna K. Qiu, Yuqing Yang</li>
+<li><strong>机构</strong>: Microsoft Research</li>
+<li><strong>时间</strong>: 2025年8月</li>
+<li><strong>链接</strong>:</li>
+<li>arXiv: <a href="https://arxiv.org/abs/2508.03680" target="_blank">2508.03680</a></li>
+<li>GitHub: <a href="https://github.com/microsoft/agent-lightning" target="_blank">microsoft/agent-lightning</a> (16k+ stars)</li>
+<li>项目主页: <a href="https://www.microsoft.com/en-us/research/project/agent-lightning/" target="_blank">Microsoft Research</a></li>
+
+
+<h2 id="研究动机与问题">研究动机与问题</h2>
+
+<h3 id="背景">背景</h3>
+
+<p>近年来 <span class="wikilink">LLM</span> 驱动的 AI Agent 在搜索、代码生成、工具调用等复杂任务中表现出色。然而，LLM 在未经专门训练的场景中（如多轮编码工作流、私有领域数据集、不熟悉的工具）仍然容易出错，无法可靠解决复杂的端到端任务。</p>
+
+<p><span class="wikilink">Reinforcement Learning</span> 已在推理模型（如 <span class="wikilink">DeepSeek-R1</span>、<span class="wikilink">Kimi k1.5</span>）中取得了突破性进展，是优化 Agent 场景中 LLM 的强大范式。相比需要逐步标注的 <span class="wikilink">Supervised Fine-Tuning</span>，RL 仅依赖基于结果的 reward 信号，消除了对任务特定标注数据的需求。</p>
+
+<h3 id="核心问题">核心问题</h3>
+
+<p>将 RL 扩展到 Agent 训练面临两大挑战：</p>
+
+<p>1. <strong>算法层面</strong>：现有 RL 方法主要针对静态、单次调用任务（如数学推理）。Agent 的执行涉及<strong>多次 LLM 调用</strong>（不同 prompt 和 response）以及与外部工具/API 的交互，逻辑远比单轮 RL 复杂。</p>
+<p>2. <strong>系统层面</strong>：现有方法将 RL 训练与 Agent 逻辑<strong>紧密耦合</strong>，或依赖序列拼接加 masking 的方式，难以支持多样化的 Agent 框架（LangChain、AutoGen、OpenAI Agents SDK 等）。</p>
+
+<h3 id="核心思想">核心思想</h3>
+
+<p>Agent Lightning 的核心创新是<strong>完全解耦 Agent 执行与 RL 训练</strong>，让开发者以几乎<strong>零代码修改</strong>的方式，对任意 AI Agent 进行 RL 训练。</p>
+
+<div class="paper-figure"><img src="https://arxiv.org/html/2508.03680v1/figures/overview.png" alt="Overview of Agent Lightning" loading="lazy"></div>
+<p><em>Figure 1: Agent Lightning 框架总览。实现了 Agent 执行与 RL 训练的完全解耦。</em></p>
+
+
+<h2 id="方法详解">方法详解</h2>
+
+<h3 id="31-统一数据接口-unified-data-interface">3.1 统一数据接口 (Unified Data Interface)</h3>
+
+<p>Agent Lightning 定义了一个统一的数据接口，将 Agent 执行过程中的数据标准化为 RL 训练可用的格式。</p>
+
+<p><strong>核心概念</strong>：</p>
+
+<li><strong>State</strong>: Agent 执行的快照，包括程序计数器、变量值、调用栈等。形式化为：</li>
+
+<p>$$\texttt{state}_{t}(x,k) = \left\{ \texttt{variable}_{i}^{x,k,t} \right\}_{i=1}^{V}$$</p>
+
+<li><strong>Semantic Variable</strong>: 被组件使用或修改的关键变量，代表关键语义（如程序意图）。不关注循环计数器等辅助变量，只关注语义层面的变化。</li>
+
+<li><strong>Component Invocation (Call)</strong>: 语义变量的变化通过组件调用发生。第 $k$ 次执行任务 $x$ 的所有调用序列为：</li>
+
+<p>$$\texttt{execution}(x,k) = \left\{ \texttt{call}_{i}^{x,k} \right\}_{i=1}^{N}$$</p>
+
+<p>其中每个 call 定义为：</p>
+
+<p>$$\texttt{call}_{i}^{x,k} = (\texttt{meta}_{i}^{x,k}, \texttt{input}_{i}^{x,k}, \texttt{output}_{i}^{x,k}), \quad \text{with} ~ \texttt{output}_{i}^{x,k} = C_{i}(\texttt{input}_{i}^{x,k})$$</p>
+
+<p>这里 $C_{i} \in \mathcal{M} \cup \mathcal{T}$，即组件可以是 LLM ($\mathcal{M}$) 或工具 ($\mathcal{T}$)。</p>
+
+<li><strong>Reward 标注</strong>: 为每个 call 分配 reward $r_i \in \mathbb{R}$，形成带 reward 的执行序列：</li>
+
+<p>$$\texttt{execution}^{R}(x,k) = \left\{ (\texttt{call}_{i}^{x,k}, r_{i}^{x,k}) \right\}_{i=1}^{N}$$</p>
+
+<div class="paper-figure"><img src="https://arxiv.org/html/2508.03680v1/figures/data_interface.png" alt="Data Interface" loading="lazy"></div>
+<p><em>Figure 2: 统一数据接口示意图。左侧展示 Agent 执行流程中语义变量的更新；右侧展示对应的 trajectory 数据收集。</em></p>
+
+<h3 id="32-agent-中的-markov-decision-process">3.2 Agent 中的 Markov Decision Process</h3>
+
+<p>Agent Lightning 将 Agent 执行建模为 <span class="wikilink">Partially Observable Markov Decision Process</span> (POMDP)：</p>
+
+<p>$$\mathcal{M} = (\mathcal{S}, \mathcal{O}, \mathcal{A}, \mathcal{P}, \mathcal{R})$$</p>
+
+<p>各元素含义：</p>
+
+<table class="paper-table">
+<thead><tr><th>符号</th><th>含义</th></tr></thead>
+<tbody>
+<tr><td>$\mathcal{S}$</td><td>状态空间，对应所有可能的 $\texttt{state}_{t}$</td></tr>
+<tr><td>$\mathcal{O}$</td><td>观测空间，对应 policy LLM 的所有可能输入 $\texttt{input}_{t}$</td></tr>
+<tr><td>$\mathcal{A}$</td><td>动作空间，单次 LLM 调用生成的完整 token 序列 $\texttt{output}_{t}$</td></tr>
+<tr><td>$\mathcal{T}(s'</td><td>s,a)$</td><td>状态转移动态</td></tr>
+<tr><td>$\mathcal{R}(s,a)$</td><td>奖励函数</td></tr>
+</tbody></table>
+
+
+<p><strong>关键设计</strong>: 将 LLM 的一次完整生成（而非单个 token）作为一个 action，这是与传统 token-level RL 的重要区别。策略模型的目标是最大化累积回报：</p>
+
+<p>$$R = \sum_{t=1}^{T} r_t$$</p>
+
+<h3 id="33-lightningrl-层次化-rl-算法">3.3 LightningRL: 层次化 RL 算法</h3>
+
+<p>LightningRL 是论文提出的核心算法，解决了如何将 Agent 的多轮交互数据用于 RL 训练的问题。</p>
+
+<p><strong>单轮 RL 回顾</strong>：现有方法（如 <span class="wikilink">GRPO</span>、<span class="wikilink">REINFORCE++</span>、<span class="wikilink">PPO</span>）主要处理单次 LLM 调用：给定任务 $x$，LLM 生成 response $\texttt{output} = (y_1, \ldots, y_N)$，获得 reward $r(x, \texttt{output}, \hat{y})$。通用训练目标为：</p>
+
+<p>$$\mathcal{L}(\theta) = -\mathbb{E}_{x \sim \mathcal{X}, \texttt{output} \sim \pi_{\theta}(\cdot|x)} \left[ \sum_{j=1}^{N} \log \pi_{\theta}(y_j | x, y_{<j}) \cdot A_j \right]$$</p>
+
+<p>其中 $A_j$ 是 token 级别的 advantage 估计。</p>
+
+<p><strong>多轮 Agent 的挑战</strong>：</p>
+
+<p>现有方法将多轮对话拼接为单个长序列并加 mask，存在以下问题：</p>
+<li>仅适用于简单的顺序工作流</li>
+<li>无法处理多 Agent、动态工作流等复杂场景</li>
+<li>序列过长影响训练效率</li>
+
+<p><strong>LightningRL 的解决方案</strong>：</p>
+
+<p>LightningRL 采用<strong>层次化</strong>方法，将 trajectory 分解为独立的 transition：</p>
+
+<p>$$\texttt{execution}^{RL}(x,k) = \left\{ (\texttt{input}_{t}^{x,k}, \texttt{output}_{t}^{x,k}, r_{t}^{x,k}) \right\}_{t=1}^{T}$$</p>
+
+<p>包含一个 <strong>Credit Assignment Module</strong>，将 trajectory 级别的 return 分配到每次 LLM 调用的 reward。这使得每个 transition 可以独立用于 RL 优化，与现有的单轮 RL 算法（如 GRPO）无缝集成。</p>
+
+<div class="paper-figure"><img src="https://arxiv.org/html/2508.03680v1/figures/algorithm.png" alt="Algorithm" loading="lazy"></div>
+<p><em>Figure 3: LightningRL 算法示意。(a) 单轮 GRPO；(b) 现有多轮 GRPO（拼接+mask）；(c) LightningRL 将 trajectory 分解为独立 transition 进行训练。</em></p>
+
+<p><strong>Automatic Intermediate Rewarding (AIR)</strong>：AIR 机制可以基于系统监控信号（如工具调用返回状态）自动为中间步骤分配 reward，缓解 Agent 训练中的 <span class="wikilink">Sparse Reward</span> 问题。</p>
+
+<h3 id="34-系统设计-training-agent-disaggregation-架构">3.4 系统设计: Training-Agent Disaggregation 架构</h3>
+
+<p>Agent Lightning 的系统架构实现了训练与 Agent 执行的完全分离（TA Disaggregation）。</p>
+
+<div class="paper-figure"><img src="https://arxiv.org/html/2508.03680v1/figures/agent_lightning_architecture_v3.png" alt="Architecture" loading="lazy"></div>
+<p><em>Figure 4: Training-Agent Disaggregation 架构。</em></p>
+
+<p><strong>两大组件</strong>：</p>
+
+<p>1. <strong>Lightning Server</strong>: 集成 RL 框架（如 <span class="wikilink">VeRL</span>），管理训练过程和 LLM 优化，对外暴露 OpenAI-like API。Server 是 <strong>Agent-agnostic</strong> 的，不关心具体的 Agent 逻辑。</p>
+
+<p>2. <strong>Lightning Client</strong>: 封装 Agent 运行时（agent runtime），包含两个功能模块：</p>
+<li>与 Server 通信，负责数据传输</li>
+<li>运行 Agent 并进行数据收集</li>
+
+<p><strong>关键优势</strong>：</p>
+
+<li><strong>Agent-agnostic 训练</strong>: Server 只关心 LLM 优化和硬件资源管理</li>
+<li><strong>Trainer-agnostic 执行</strong>: Client 端 Agent 不依赖训练框架的实现细节</li>
+<li><strong>利用 Observability 框架</strong>: 将 <span class="wikilink">OpenTelemetry</span> 等可观测性框架引入训练流程，实现标准化的 trajectory 收集</li>
+<li><strong>零代码修改</strong>: 支持 LangChain、OpenAI Agents SDK、AutoGen 等主流框架开发的 Agent</li>
+
+
+<h2 id="实验结果">实验结果</h2>
+
+<p>实验在三个不同任务上验证了 Agent Lightning 的有效性，每个任务使用不同的 Agent 框架实现：</p>
+
+<h3 id="task-1-text-to-sql-langchain">Task 1: Text-to-SQL (LangChain)</h3>
+
+<li><strong>数据集</strong>: Spider（10,000+ 问题，200 数据库，138 领域）</li>
+<li><strong>基座模型</strong>: Llama-3.2-3B-Instruct</li>
+<li><strong>Agent 设计</strong>: 3 个 Agent 的多 Agent 系统</li>
+<li>SQL Writer Agent: 生成 SQL 查询</li>
+<li>Checking Agent: 评估查询正确性</li>
+<li>Re-writing Agent: 根据反馈修正查询或生成答案</li>
+<li><strong>Reward</strong>: 最终答案是否正确</li>
+
+<div class="paper-figure"><img src="https://arxiv.org/html/2508.03680v1/figures/train_spider.png" alt="Text-to-SQL Results" loading="lazy"></div>
+<p><em>Figure 5: Text-to-SQL 任务的 reward 曲线，展示稳定的训练提升。</em></p>
+
+<h3 id="task-2-retrieval-augmented-generation-openai-agents-sdk">Task 2: Retrieval-Augmented Generation (OpenAI Agents SDK)</h3>
+
+<li><strong>数据集</strong>: MuSiQue（多跳问答基准，要求真正的组合推理）</li>
+<li><strong>Agent 设计</strong>: 单 LLM 生成查询 -> 检索 -> 决定是否精炼查询或生成答案</li>
+<li><strong>Reward</strong>: 格式分 + 正确性分的加权组合</li>
+
+<p>$$R = 0.9 \times R_{\text{correctness}} + 0.1 \times R_{\text{format}}$$</p>
+
+<p>其中 $R_{\text{correctness}}$ 采用 word-level F1 score。</p>
+
+<div class="paper-figure"><img src="https://arxiv.org/html/2508.03680v1/figures/train_rag_llama.png" alt="RAG Results" loading="lazy"></div>
+<p><em>Figure 6: RAG 任务的 reward 曲线。</em></p>
+
+<h3 id="task-3-math-qa-with-tool-usage-autogen">Task 3: Math QA with Tool Usage (AutoGen)</h3>
+
+<li><strong>数据集</strong>: Calc-X（需要推理和精确计算的数学问题）</li>
+<li><strong>基座模型</strong>: Llama-3.2-3B-Instruct</li>
+<li><strong>Agent 设计</strong>: 单 LLM 调用计算器工具解决数学问题</li>
+<li><strong>Reward</strong>: 最终答案是否正确</li>
+
+<div class="paper-figure"><img src="https://arxiv.org/html/2508.03680v1/figures/train_calc.png" alt="Calculator Results" loading="lazy"></div>
+<p><em>Figure 7: Math QA with Tool Usage 任务的 reward 曲线。</em></p>
+
+<p>三个实验统一表明：Agent Lightning 能够在不同 Agent 场景中实现<strong>稳定且持续的性能提升</strong>。</p>
+
+
+<h2 id="核心贡献">核心贡献</h2>
+
+<p>1. <strong>首个完全解耦的 Agent RL 训练框架</strong>: Agent Lightning 是第一个实现 Agent 执行与 RL 训练完全分离的框架，支持任意 AI Agent 的 RL 训练，几乎零代码修改。</p>
+
+<p>2. <strong>统一数据接口与 MDP 建模</strong>: 通过将 Agent 执行建模为 POMDP，定义了通用的数据接口，抽象了不同 Agent 的执行逻辑差异。</p>
+
+<p>3. <strong>LightningRL 层次化算法</strong>: 提出了基于 transition 分解的层次化 RL 方法，配合 Credit Assignment Module，支持多 Agent、动态工作流等复杂交互逻辑。</p>
+
+<p>4. <strong>Training-Agent Disaggregation 架构</strong>: 通过 Server/Client 分离设计，实现了训练框架与 Agent 框架的双向无关性，并引入可观测性框架提升可扩展性。</p>
+
+<p>5. <strong>跨框架验证</strong>: 在 LangChain、OpenAI Agents SDK、AutoGen 三个主流框架上验证了通用性。</p>
+
+
+<h2 id="局限性与思考">局限性与思考</h2>
+
+<h3 id="局限性">局限性</h3>
+
+<li><strong>实验规模有限</strong>: 仅在 3B 模型上验证，更大规模模型的效果尚未探索</li>
+<li><strong>任务类型覆盖</strong>: 虽然涵盖了 text-to-SQL、RAG、math tool-use，但未涉及 GUI 交互、长期规划等更复杂的 Agent 场景</li>
+<li><strong>Credit Assignment</strong>: 论文提出了 credit assignment module，但具体的分配策略如何影响训练效果缺乏深入分析</li>
+<li><strong>与 concatenation 方法的定量对比</strong>: Discussion 中定性分析了 transition-based 相比 concatenation-based 的优势，但缺少直接的定量 ablation</li>
+
+<h3 id="个人思考">个人思考</h3>
+
+<li>Agent Lightning 的<strong>解耦设计</strong>是其最大亮点。将 Agent 执行视为黑盒、仅通过标准化接口收集数据的思路，极大降低了 RL 训练的工程门槛</li>
+<li><strong>Observability 框架</strong>（OpenTelemetry）的引入很有前瞻性，将生产环境的监控基础设施复用到训练数据收集中</li>
+<li>与 <span class="wikilink">RAGEN</span>、<span class="wikilink">Search-R1</span>、<span class="wikilink">Trinity-RFT</span> 等 concatenation-based 方法的对比是后续工作的重要方向</li>
+<li>在更复杂的 Agent 场景（如 multi-agent debate、code generation pipeline）中的效果值得期待</li>
+
+
+<h2 id="相关工作">相关工作</h2>
+
+<li><strong>RL for LLM 推理</strong>: <span class="wikilink">DeepSeek-R1</span>, <span class="wikilink">Kimi k1.5</span>, <span class="wikilink">GRPO</span>, <span class="wikilink">PPO</span>, <span class="wikilink">REINFORCE++</span></li>
+<li><strong>Agent RL 训练</strong>: <span class="wikilink">RAGEN</span>, <span class="wikilink">Trinity-RFT</span>, <span class="wikilink">rLLM</span>, <span class="wikilink">Search-R1</span>, <span class="wikilink">DigiRL</span></li>
+<li><strong>Agent 框架</strong>: <span class="wikilink">LangChain</span>, <span class="wikilink">AutoGen</span>, <span class="wikilink">OpenAI Agents SDK</span></li>
+<li><strong>RL 训练框架</strong>: <span class="wikilink">VeRL</span></li>
+<li><strong>可观测性</strong>: <span class="wikilink">OpenTelemetry</span></li>
+<li><strong>评估基准</strong>: Spider (text-to-SQL), MuSiQue (multi-hop QA), Calc-X (math tool-use)</li></div></details>
 </div><h2 id="-推荐系统">📊 推荐系统</h2><div class="paper-card"><h3 id="4-multi-agent-video-recommenders-evolution-patterns-and-open-challenges">4. Multi-Agent Video Recommenders: Evolution, Patterns, and Open Challenges</h3>
 <li><strong>作者</strong>: Unknown</li>
 <li><strong>机构</strong>: Unknown</li>
@@ -327,7 +703,159 @@ details.paper-note .note-body h3 { font-size: 1em; }
 <li><strong>核心方法</strong>: <span class="wikilink">CoALM</span> 把 <span class="wikilink">Task-Oriented Dialogue</span> 和 <span class="wikilink">Language Agent</span> 的 <span class="wikilink">function calling</span> 能力统一到一个模型里。构造了 CoALM-IT 多任务数据集，交织多轮 <span class="wikilink">ReAct</span> 推理和复杂 API 调用。训练了 8B/70B/405B 三个尺度，在 <span class="wikilink">MultiWOZ</span> 2.4、<span class="wikilink">BFCL</span> V3、API-Bank 上全面超越 GPT-4o。</li>
 <li><strong>对比方法/Baselines</strong>: <span class="wikilink">GPT-4o</span>, specialized TOD systems, <span class="wikilink">ToolAce</span></li>
 <li><strong>借鉴意义</strong>: 对话式 agent 的核心痛点——多轮对话管理和工具调用不能兼得——这篇给了一个干净的统一方案。对做对话推荐系统的同学直接有用。</li>
-<li><strong>锐评</strong>: 思路清晰，实验扎实，三个 benchmark 全打是有说服力的。但 405B 的模型谁用得起？8B 版本的性能衰减多少才是关键。另外 CoALM-IT 数据集用 GPT-4o 生成，那你超越 GPT-4o 到底是模型强还是数据蒸馏的功劳？🔥</li></div><div class="paper-card"><h3 id="2-agentscope-10-a-developer-centric-framework-for-building-agentic-applications">2. AgentScope 1.0: A Developer-Centric Framework for Building Agentic Applications</h3>
+<li><strong>锐评</strong>: 思路清晰，实验扎实，三个 benchmark 全打是有说服力的。但 405B 的模型谁用得起？8B 版本的性能衰减多少才是关键。另外 CoALM-IT 数据集用 GPT-4o 生成，那你超越 GPT-4o 到底是模型强还是数据蒸馏的功劳？🔥</li>
+<details class="paper-note"><summary>📒 精读笔记: CoALM - Conversational Agentic Language Model</summary><div class="note-body"><h1 id="coalm-a-unified-conversational-agentic-language-model">CoALM: A Unified Conversational Agentic Language Model</h1>
+
+<h2 id="-基本信息">📋 基本信息</h2>
+
+<li><strong>作者</strong>: Emre Can Acikgoz, Jeremiah Greer, Akul Datta, Ze Yang, William Zeng, Oussama Elachqar, Emmanouil Koukoumidis, Dilek Hakkani-Tür, Gokhan Tur</li>
+<li><strong>机构</strong>: University of Illinois Urbana-Champaign, Oumi</li>
+<li><strong>链接</strong>: <a href="https://arxiv.org/abs/2502.08820" target="_blank">arXiv</a> | <a href="https://arxiv.org/pdf/2502.08820" target="_blank">PDF</a></li>
+<li><strong>项目主页</strong>: https://emrecanacikgoz.github.io/CoALM/</li>
+
+<h2 id="-研究动机与问题">🎯 研究动机与问题</h2>
+
+<p>当前 LLM agent 领域存在一个核心矛盾：</p>
+
+<p>1. <strong>Task-Oriented Dialogue (TOD) 系统</strong>：擅长多轮对话管理和状态追踪，但只能处理有限的 API 集合（如 <code>book_hotel</code>, <code>query_restaurant</code>），面对新服务需要昂贵的重训练</p>
+<p>2. <strong>Language Agents (LA)</strong>：擅长 <span class="wikilink">function calling</span>，能处理多样化的 API，但无法维持多轮对话中的用户意图</p>
+
+<p>本文的核心问题是：<strong>能否用一个统一模型同时掌握多轮对话和工具调用？</strong></p>
+
+<p>作者在三个 benchmark 上验证了这一矛盾的存在：</p>
+<li><span class="wikilink">MultiWOZ</span> 2.4（TOD benchmark）：LA 模型如 ToolAce 的 Success Rate 仅 18.0%</li>
+<li><span class="wikilink">BFCL</span> V3（LA benchmark）：TOD 模型如 FNCTOD 的 Overall Acc 极低</li>
+<li>API-Bank（LA benchmark）：类似的跨域性能断崖</li>
+
+<h2 id="-方法详解">🔧 方法详解</h2>
+
+<h3 id="整体框架">整体框架</h3>
+
+<div class="paper-figure"><img src="https://arxiv.org/html/2502.08820/x2.png" alt="" loading="lazy"></div>
+
+<p>CoALM 的方法分两步：构建统一数据集 CoALM-IT，然后多任务微调。</p>
+
+<h3 id="coalm-it-数据集">CoALM-IT 数据集</h3>
+
+<p>CoALM-IT 由三类数据组成，总计 311,583 个样本：</p>
+
+<table class="paper-table">
+<thead><tr><th>数据域</th><th>数据类型</th><th>数据名</th><th>样本数</th><th>总 Token 数</th></tr></thead>
+<tbody>
+<tr><td>TOD</td><td>Single-Turn</td><td>SNIPS</td><td>13,028</td><td>12.3M</td></tr>
+<tr><td>LA</td><td>Multi-Turn</td><td><span class="wikilink">ToolAce</span> + Hammer</td><td>216,319</td><td>139.2M</td></tr>
+<tr><td>CRA</td><td>Multi-Turn</td><td>SGD (生成)</td><td>82,236</td><td>59.7M</td></tr>
+</tbody></table>
+
+
+<h4 id="1-tod-数据-snips">1. TOD 数据 (SNIPS)</h4>
+<p>将 SNIPS 数据集转换为 dialogue state tracking 格式，训练模型理解用户意图并生成结构化对话状态。</p>
+
+<h4 id="2-function-calling-数据-hammer--toolace">2. Function Calling 数据 (Hammer + ToolAce)</h4>
+<li><strong>Hammer</strong>: 通过随机替换函数名和参数名来防止过拟合，迫使模型通过描述进行推理</li>
+<li><strong>ToolAce</strong>: 提供开放域多轮对话场景中的函数调用</li>
+
+<h4 id="3-conversational-react-api-cra-数据--核心贡献">3. Conversational ReAct API (CRA) 数据 — 核心贡献</h4>
+
+<p>CRA 是本文最重要的数据创新。基于 SGD 数据集，构造了全新的对话结构：</p>
+
+<p>$$\text{User} \rightarrow \text{Thought}_1 \rightarrow \text{Action} \rightarrow \text{Observation} \rightarrow \text{Thought}_2 \rightarrow \text{Response}$$</p>
+
+<p>关键设计：</p>
+<li><strong>Thought₁</strong>: 理解用户意图，决定是否需要调用 API</li>
+<li><strong>Action</strong>: 调用具体 API</li>
+<li><strong>Observation</strong>: API 返回结果</li>
+<li><strong>Thought₂</strong>: 分析返回结果，决定如何回应用户</li>
+<li><strong>Response</strong>: 最终用户可见的回复</li>
+
+<p>这种 dual-thought <span class="wikilink">ReAct</span> 结构是首次在多轮 TOD 场景中使用。使用 GPT-4o 生成 CRA 数据，并经过人工验证。</p>
+
+<h3 id="训练细节">训练细节</h3>
+
+<p>基于 Llama 3.1/3.3 系列微调：</p>
+
+<table class="paper-table">
+<thead><tr><th>模型</th><th>基座</th><th>LoRA rank</th><th>训练时间</th><th>GPU</th></tr></thead>
+<tbody>
+<tr><td>CoALM 8B</td><td>Llama 3.1 8B</td><td>$r=16, \alpha=32$</td><td>~8h</td><td>8×H100</td></tr>
+<tr><td>CoALM 70B</td><td>Llama 3.3 70B</td><td>$r=16, \alpha=32$</td><td>~60h</td><td>8×H100</td></tr>
+<tr><td>CoALM 405B</td><td>Llama 3.1 405B</td><td>QLoRA (nf4)</td><td>-</td><td>8×H100</td></tr>
+</tbody></table>
+
+
+<p>训练使用 <span class="wikilink">LoRA</span>，global batch size = 8，3 epochs，learning rate = $1 \times 10^{-4}$，linear warmup ratio = 0.1。</p>
+
+<p>所有三类数据混合后一次性训练，让模型在不同技能之间持续切换，避免对单一任务过拟合。</p>
+
+<h2 id="-实验结果">📊 实验结果</h2>
+
+<h3 id="multiwoz-24-tod">MultiWOZ 2.4 (TOD)</h3>
+
+<table class="paper-table">
+<thead><tr><th>模型</th><th>Success Rate</th><th>JGA</th></tr></thead>
+<tbody>
+<tr><td><strong>CoALM 70B</strong></td><td><strong>69.4</strong></td><td><strong>43.8</strong></td></tr>
+<tr><td>CoALM 405B*</td><td>66.7</td><td>38.8</td></tr>
+<tr><td>GPT-4o</td><td>75.5</td><td>36.9</td></tr>
+<tr><td>GPT-4o-mini</td><td>69.9</td><td>38.4</td></tr>
+<tr><td>Llama 3.3 70B Instruct</td><td>67.6</td><td>40.8</td></tr>
+<tr><td>Hammer 2.0 7B</td><td>23.5</td><td>21.7</td></tr>
+<tr><td>ToolAce</td><td>18.0</td><td>34.4</td></tr>
+</tbody></table>
+
+
+<p>CoALM 70B 的 JGA (43.8) 超越所有模型包括 GPT-4o (36.9)，Success Rate 接近 GPT-4o-mini。</p>
+
+<h3 id="bfcl-v3-function-calling">BFCL V3 (Function Calling)</h3>
+
+<table class="paper-table">
+<thead><tr><th>模型</th><th>Overall Acc</th><th>Multi Turn Acc</th></tr></thead>
+<tbody>
+<tr><td><strong>CoALM 405B</strong>*</td><td><strong>63.34%</strong></td><td>28.25%</td></tr>
+<tr><td>CoALM 70B</td><td>60.49%</td><td>26.25%</td></tr>
+<tr><td>GPT-4o</td><td>59.83%</td><td><strong>34.62%</strong></td></tr>
+<tr><td>GPT-4o-mini</td><td>59.40%</td><td>19.00%</td></tr>
+<tr><td>Hammer 2.0 7B</td><td>52.13%</td><td>0.38%</td></tr>
+</tbody></table>
+
+
+<p>CoALM 405B 和 70B 的 Overall Acc 超越 GPT-4o。</p>
+
+<h3 id="api-bank">API-Bank</h3>
+
+<p>CoALM 8B 在 L-1 Rouge-L 达到 92.8，超越 Hammer (90.1)；CoALM 70B 在 L-2 达到 83.2。</p>
+
+<h3 id="关键发现跨域泛化">关键发现：跨域泛化</h3>
+
+<p>消融实验显示：</p>
+<li>去掉 LA 数据（w/o LA）：MultiWOZ Success ↑26.1 但 BFCL ↓14.4</li>
+<li>去掉 CRA 数据（w/o CRA）：BFCL 基本不变但 MultiWOZ ↓严重</li>
+<li>完整 CoALM-IT 实现最佳平衡</li>
+
+<h2 id="-核心贡献">💡 核心贡献</h2>
+
+<p>1. <strong>首次系统分析</strong> TOD 和 LA 之间的能力鸿沟</p>
+<p>2. <strong>CoALM-IT 数据集</strong>：首个在多轮 TOD 中融入 <span class="wikilink">ReAct</span> 推理的数据集（CRA）</p>
+<p>3. <strong>统一模型系列</strong>：CoALM 8B/70B/405B 在 TOD 和 LA benchmark 上同时达到 SOTA</p>
+<p>4. <strong>开源</strong>：代码、模型权重、数据集、中间 checkpoint 全部公开</p>
+
+<h2 id="-局限性与思考">🤔 局限性与思考</h2>
+
+<p>1. <strong>数据蒸馏问题</strong>：CRA 数据用 GPT-4o 生成，那超越 GPT-4o 的功劳是模型能力还是数据质量？</p>
+<p>2. <strong>405B 的实用性</strong>：谁能在生产环境部署 405B？8B 版本的性能衰减才是关键（Success Rate 从 69.4 降到 51.6）</p>
+<p>3. <strong>评估偏差</strong>：MultiWOZ 的评估使用了修改版的 AutoTOD prompt，不同 prompt 格式可能影响结果</p>
+<p>4. <strong>CRA 数据的局限</strong>：仅基于 SGD 数据集的领域（酒店、餐厅等），在其他领域的泛化能力未验证</p>
+<p>5. <strong>405B 仍在训练中</strong>：论文中 405B 结果标注 * 表示只完成了一个 epoch</p>
+
+<h2 id="-相关工作">📚 相关工作</h2>
+
+<li><span class="wikilink">ReAct</span>: CoALM 的 CRA 数据结构基于 ReAct 范式</li>
+<li><span class="wikilink">ToolAce</span>: LA 数据来源之一</li>
+<li><span class="wikilink">BFCL</span>: 函数调用评估 benchmark</li>
+<li><span class="wikilink">MultiWOZ</span>: TOD 评估 benchmark</li>
+<li><span class="wikilink">LoRA</span>: 训练使用的参数高效微调方法</li>
+<li><span class="wikilink">function calling</span>: 核心能力之一</li>
+<li><span class="wikilink">Task-Oriented Dialogue</span>: 核心能力之一</li></div></details></div><div class="paper-card"><h3 id="2-agentscope-10-a-developer-centric-framework-for-building-agentic-applications">2. AgentScope 1.0: A Developer-Centric Framework for Building Agentic Applications</h3>
 <li><strong>作者</strong>: Dawei Gao et al.</li>
 <li><strong>机构</strong>: Alibaba Group</li>
 <li><strong>链接</strong>: <a href="https://arxiv.org/abs/2504.01943" target="_blank">arXiv</a> | <a href="https://arxiv.org/pdf/2504.01943" target="_blank">PDF</a></li>
@@ -346,6 +874,230 @@ details.paper-note .note-body h3 { font-size: 1em; }
 <li><strong>对比方法/Baselines</strong>: <span class="wikilink">AgentOps</span>, <span class="wikilink">AIR</span></li>
 <li><strong>借鉴意义</strong>: RL for agent 的基础设施终于有人认真做了。如果你在做 agent 的训练而不是纯 prompting，这个框架值得关注。</li>
 <li><strong>锐评</strong>: 139 个 upvote 说明社区饥渴程度。"Train ANY AI Agents" 这标题有点大——实际上对 tool use 的 reward 设计还是得你自己搞。但作为 infra 确实填了一个空白。GRPO 用在 agent trajectory 上是否真的比 PPO 好？论文回避了这个问题。🔥</li>
+<details class="paper-note"><summary>📒 精读笔记: Agent Lightning - Train AI Agents with RL</summary><div class="note-body"><h1 id="agent-lightning-train-any-ai-agents-with-reinforcement-learning">Agent Lightning: Train ANY AI Agents with Reinforcement Learning</h1>
+
+<h2 id="基本信息">基本信息</h2>
+
+<li><strong>作者</strong>: Xufang Luo, Yuge Zhang, Zhiyuan He, Zilong Wang, Siyun Zhao, Dongsheng Li, Luna K. Qiu, Yuqing Yang</li>
+<li><strong>机构</strong>: Microsoft Research</li>
+<li><strong>时间</strong>: 2025年8月</li>
+<li><strong>链接</strong>:</li>
+<li>arXiv: <a href="https://arxiv.org/abs/2508.03680" target="_blank">2508.03680</a></li>
+<li>GitHub: <a href="https://github.com/microsoft/agent-lightning" target="_blank">microsoft/agent-lightning</a> (16k+ stars)</li>
+<li>项目主页: <a href="https://www.microsoft.com/en-us/research/project/agent-lightning/" target="_blank">Microsoft Research</a></li>
+
+
+<h2 id="研究动机与问题">研究动机与问题</h2>
+
+<h3 id="背景">背景</h3>
+
+<p>近年来 <span class="wikilink">LLM</span> 驱动的 AI Agent 在搜索、代码生成、工具调用等复杂任务中表现出色。然而，LLM 在未经专门训练的场景中（如多轮编码工作流、私有领域数据集、不熟悉的工具）仍然容易出错，无法可靠解决复杂的端到端任务。</p>
+
+<p><span class="wikilink">Reinforcement Learning</span> 已在推理模型（如 <span class="wikilink">DeepSeek-R1</span>、<span class="wikilink">Kimi k1.5</span>）中取得了突破性进展，是优化 Agent 场景中 LLM 的强大范式。相比需要逐步标注的 <span class="wikilink">Supervised Fine-Tuning</span>，RL 仅依赖基于结果的 reward 信号，消除了对任务特定标注数据的需求。</p>
+
+<h3 id="核心问题">核心问题</h3>
+
+<p>将 RL 扩展到 Agent 训练面临两大挑战：</p>
+
+<p>1. <strong>算法层面</strong>：现有 RL 方法主要针对静态、单次调用任务（如数学推理）。Agent 的执行涉及<strong>多次 LLM 调用</strong>（不同 prompt 和 response）以及与外部工具/API 的交互，逻辑远比单轮 RL 复杂。</p>
+<p>2. <strong>系统层面</strong>：现有方法将 RL 训练与 Agent 逻辑<strong>紧密耦合</strong>，或依赖序列拼接加 masking 的方式，难以支持多样化的 Agent 框架（LangChain、AutoGen、OpenAI Agents SDK 等）。</p>
+
+<h3 id="核心思想">核心思想</h3>
+
+<p>Agent Lightning 的核心创新是<strong>完全解耦 Agent 执行与 RL 训练</strong>，让开发者以几乎<strong>零代码修改</strong>的方式，对任意 AI Agent 进行 RL 训练。</p>
+
+<div class="paper-figure"><img src="https://arxiv.org/html/2508.03680v1/figures/overview.png" alt="Overview of Agent Lightning" loading="lazy"></div>
+<p><em>Figure 1: Agent Lightning 框架总览。实现了 Agent 执行与 RL 训练的完全解耦。</em></p>
+
+
+<h2 id="方法详解">方法详解</h2>
+
+<h3 id="31-统一数据接口-unified-data-interface">3.1 统一数据接口 (Unified Data Interface)</h3>
+
+<p>Agent Lightning 定义了一个统一的数据接口，将 Agent 执行过程中的数据标准化为 RL 训练可用的格式。</p>
+
+<p><strong>核心概念</strong>：</p>
+
+<li><strong>State</strong>: Agent 执行的快照，包括程序计数器、变量值、调用栈等。形式化为：</li>
+
+<p>$$\texttt{state}_{t}(x,k) = \left\{ \texttt{variable}_{i}^{x,k,t} \right\}_{i=1}^{V}$$</p>
+
+<li><strong>Semantic Variable</strong>: 被组件使用或修改的关键变量，代表关键语义（如程序意图）。不关注循环计数器等辅助变量，只关注语义层面的变化。</li>
+
+<li><strong>Component Invocation (Call)</strong>: 语义变量的变化通过组件调用发生。第 $k$ 次执行任务 $x$ 的所有调用序列为：</li>
+
+<p>$$\texttt{execution}(x,k) = \left\{ \texttt{call}_{i}^{x,k} \right\}_{i=1}^{N}$$</p>
+
+<p>其中每个 call 定义为：</p>
+
+<p>$$\texttt{call}_{i}^{x,k} = (\texttt{meta}_{i}^{x,k}, \texttt{input}_{i}^{x,k}, \texttt{output}_{i}^{x,k}), \quad \text{with} ~ \texttt{output}_{i}^{x,k} = C_{i}(\texttt{input}_{i}^{x,k})$$</p>
+
+<p>这里 $C_{i} \in \mathcal{M} \cup \mathcal{T}$，即组件可以是 LLM ($\mathcal{M}$) 或工具 ($\mathcal{T}$)。</p>
+
+<li><strong>Reward 标注</strong>: 为每个 call 分配 reward $r_i \in \mathbb{R}$，形成带 reward 的执行序列：</li>
+
+<p>$$\texttt{execution}^{R}(x,k) = \left\{ (\texttt{call}_{i}^{x,k}, r_{i}^{x,k}) \right\}_{i=1}^{N}$$</p>
+
+<div class="paper-figure"><img src="https://arxiv.org/html/2508.03680v1/figures/data_interface.png" alt="Data Interface" loading="lazy"></div>
+<p><em>Figure 2: 统一数据接口示意图。左侧展示 Agent 执行流程中语义变量的更新；右侧展示对应的 trajectory 数据收集。</em></p>
+
+<h3 id="32-agent-中的-markov-decision-process">3.2 Agent 中的 Markov Decision Process</h3>
+
+<p>Agent Lightning 将 Agent 执行建模为 <span class="wikilink">Partially Observable Markov Decision Process</span> (POMDP)：</p>
+
+<p>$$\mathcal{M} = (\mathcal{S}, \mathcal{O}, \mathcal{A}, \mathcal{P}, \mathcal{R})$$</p>
+
+<p>各元素含义：</p>
+
+<table class="paper-table">
+<thead><tr><th>符号</th><th>含义</th></tr></thead>
+<tbody>
+<tr><td>$\mathcal{S}$</td><td>状态空间，对应所有可能的 $\texttt{state}_{t}$</td></tr>
+<tr><td>$\mathcal{O}$</td><td>观测空间，对应 policy LLM 的所有可能输入 $\texttt{input}_{t}$</td></tr>
+<tr><td>$\mathcal{A}$</td><td>动作空间，单次 LLM 调用生成的完整 token 序列 $\texttt{output}_{t}$</td></tr>
+<tr><td>$\mathcal{T}(s'</td><td>s,a)$</td><td>状态转移动态</td></tr>
+<tr><td>$\mathcal{R}(s,a)$</td><td>奖励函数</td></tr>
+</tbody></table>
+
+
+<p><strong>关键设计</strong>: 将 LLM 的一次完整生成（而非单个 token）作为一个 action，这是与传统 token-level RL 的重要区别。策略模型的目标是最大化累积回报：</p>
+
+<p>$$R = \sum_{t=1}^{T} r_t$$</p>
+
+<h3 id="33-lightningrl-层次化-rl-算法">3.3 LightningRL: 层次化 RL 算法</h3>
+
+<p>LightningRL 是论文提出的核心算法，解决了如何将 Agent 的多轮交互数据用于 RL 训练的问题。</p>
+
+<p><strong>单轮 RL 回顾</strong>：现有方法（如 <span class="wikilink">GRPO</span>、<span class="wikilink">REINFORCE++</span>、<span class="wikilink">PPO</span>）主要处理单次 LLM 调用：给定任务 $x$，LLM 生成 response $\texttt{output} = (y_1, \ldots, y_N)$，获得 reward $r(x, \texttt{output}, \hat{y})$。通用训练目标为：</p>
+
+<p>$$\mathcal{L}(\theta) = -\mathbb{E}_{x \sim \mathcal{X}, \texttt{output} \sim \pi_{\theta}(\cdot|x)} \left[ \sum_{j=1}^{N} \log \pi_{\theta}(y_j | x, y_{<j}) \cdot A_j \right]$$</p>
+
+<p>其中 $A_j$ 是 token 级别的 advantage 估计。</p>
+
+<p><strong>多轮 Agent 的挑战</strong>：</p>
+
+<p>现有方法将多轮对话拼接为单个长序列并加 mask，存在以下问题：</p>
+<li>仅适用于简单的顺序工作流</li>
+<li>无法处理多 Agent、动态工作流等复杂场景</li>
+<li>序列过长影响训练效率</li>
+
+<p><strong>LightningRL 的解决方案</strong>：</p>
+
+<p>LightningRL 采用<strong>层次化</strong>方法，将 trajectory 分解为独立的 transition：</p>
+
+<p>$$\texttt{execution}^{RL}(x,k) = \left\{ (\texttt{input}_{t}^{x,k}, \texttt{output}_{t}^{x,k}, r_{t}^{x,k}) \right\}_{t=1}^{T}$$</p>
+
+<p>包含一个 <strong>Credit Assignment Module</strong>，将 trajectory 级别的 return 分配到每次 LLM 调用的 reward。这使得每个 transition 可以独立用于 RL 优化，与现有的单轮 RL 算法（如 GRPO）无缝集成。</p>
+
+<div class="paper-figure"><img src="https://arxiv.org/html/2508.03680v1/figures/algorithm.png" alt="Algorithm" loading="lazy"></div>
+<p><em>Figure 3: LightningRL 算法示意。(a) 单轮 GRPO；(b) 现有多轮 GRPO（拼接+mask）；(c) LightningRL 将 trajectory 分解为独立 transition 进行训练。</em></p>
+
+<p><strong>Automatic Intermediate Rewarding (AIR)</strong>：AIR 机制可以基于系统监控信号（如工具调用返回状态）自动为中间步骤分配 reward，缓解 Agent 训练中的 <span class="wikilink">Sparse Reward</span> 问题。</p>
+
+<h3 id="34-系统设计-training-agent-disaggregation-架构">3.4 系统设计: Training-Agent Disaggregation 架构</h3>
+
+<p>Agent Lightning 的系统架构实现了训练与 Agent 执行的完全分离（TA Disaggregation）。</p>
+
+<div class="paper-figure"><img src="https://arxiv.org/html/2508.03680v1/figures/agent_lightning_architecture_v3.png" alt="Architecture" loading="lazy"></div>
+<p><em>Figure 4: Training-Agent Disaggregation 架构。</em></p>
+
+<p><strong>两大组件</strong>：</p>
+
+<p>1. <strong>Lightning Server</strong>: 集成 RL 框架（如 <span class="wikilink">VeRL</span>），管理训练过程和 LLM 优化，对外暴露 OpenAI-like API。Server 是 <strong>Agent-agnostic</strong> 的，不关心具体的 Agent 逻辑。</p>
+
+<p>2. <strong>Lightning Client</strong>: 封装 Agent 运行时（agent runtime），包含两个功能模块：</p>
+<li>与 Server 通信，负责数据传输</li>
+<li>运行 Agent 并进行数据收集</li>
+
+<p><strong>关键优势</strong>：</p>
+
+<li><strong>Agent-agnostic 训练</strong>: Server 只关心 LLM 优化和硬件资源管理</li>
+<li><strong>Trainer-agnostic 执行</strong>: Client 端 Agent 不依赖训练框架的实现细节</li>
+<li><strong>利用 Observability 框架</strong>: 将 <span class="wikilink">OpenTelemetry</span> 等可观测性框架引入训练流程，实现标准化的 trajectory 收集</li>
+<li><strong>零代码修改</strong>: 支持 LangChain、OpenAI Agents SDK、AutoGen 等主流框架开发的 Agent</li>
+
+
+<h2 id="实验结果">实验结果</h2>
+
+<p>实验在三个不同任务上验证了 Agent Lightning 的有效性，每个任务使用不同的 Agent 框架实现：</p>
+
+<h3 id="task-1-text-to-sql-langchain">Task 1: Text-to-SQL (LangChain)</h3>
+
+<li><strong>数据集</strong>: Spider（10,000+ 问题，200 数据库，138 领域）</li>
+<li><strong>基座模型</strong>: Llama-3.2-3B-Instruct</li>
+<li><strong>Agent 设计</strong>: 3 个 Agent 的多 Agent 系统</li>
+<li>SQL Writer Agent: 生成 SQL 查询</li>
+<li>Checking Agent: 评估查询正确性</li>
+<li>Re-writing Agent: 根据反馈修正查询或生成答案</li>
+<li><strong>Reward</strong>: 最终答案是否正确</li>
+
+<div class="paper-figure"><img src="https://arxiv.org/html/2508.03680v1/figures/train_spider.png" alt="Text-to-SQL Results" loading="lazy"></div>
+<p><em>Figure 5: Text-to-SQL 任务的 reward 曲线，展示稳定的训练提升。</em></p>
+
+<h3 id="task-2-retrieval-augmented-generation-openai-agents-sdk">Task 2: Retrieval-Augmented Generation (OpenAI Agents SDK)</h3>
+
+<li><strong>数据集</strong>: MuSiQue（多跳问答基准，要求真正的组合推理）</li>
+<li><strong>Agent 设计</strong>: 单 LLM 生成查询 -> 检索 -> 决定是否精炼查询或生成答案</li>
+<li><strong>Reward</strong>: 格式分 + 正确性分的加权组合</li>
+
+<p>$$R = 0.9 \times R_{\text{correctness}} + 0.1 \times R_{\text{format}}$$</p>
+
+<p>其中 $R_{\text{correctness}}$ 采用 word-level F1 score。</p>
+
+<div class="paper-figure"><img src="https://arxiv.org/html/2508.03680v1/figures/train_rag_llama.png" alt="RAG Results" loading="lazy"></div>
+<p><em>Figure 6: RAG 任务的 reward 曲线。</em></p>
+
+<h3 id="task-3-math-qa-with-tool-usage-autogen">Task 3: Math QA with Tool Usage (AutoGen)</h3>
+
+<li><strong>数据集</strong>: Calc-X（需要推理和精确计算的数学问题）</li>
+<li><strong>基座模型</strong>: Llama-3.2-3B-Instruct</li>
+<li><strong>Agent 设计</strong>: 单 LLM 调用计算器工具解决数学问题</li>
+<li><strong>Reward</strong>: 最终答案是否正确</li>
+
+<div class="paper-figure"><img src="https://arxiv.org/html/2508.03680v1/figures/train_calc.png" alt="Calculator Results" loading="lazy"></div>
+<p><em>Figure 7: Math QA with Tool Usage 任务的 reward 曲线。</em></p>
+
+<p>三个实验统一表明：Agent Lightning 能够在不同 Agent 场景中实现<strong>稳定且持续的性能提升</strong>。</p>
+
+
+<h2 id="核心贡献">核心贡献</h2>
+
+<p>1. <strong>首个完全解耦的 Agent RL 训练框架</strong>: Agent Lightning 是第一个实现 Agent 执行与 RL 训练完全分离的框架，支持任意 AI Agent 的 RL 训练，几乎零代码修改。</p>
+
+<p>2. <strong>统一数据接口与 MDP 建模</strong>: 通过将 Agent 执行建模为 POMDP，定义了通用的数据接口，抽象了不同 Agent 的执行逻辑差异。</p>
+
+<p>3. <strong>LightningRL 层次化算法</strong>: 提出了基于 transition 分解的层次化 RL 方法，配合 Credit Assignment Module，支持多 Agent、动态工作流等复杂交互逻辑。</p>
+
+<p>4. <strong>Training-Agent Disaggregation 架构</strong>: 通过 Server/Client 分离设计，实现了训练框架与 Agent 框架的双向无关性，并引入可观测性框架提升可扩展性。</p>
+
+<p>5. <strong>跨框架验证</strong>: 在 LangChain、OpenAI Agents SDK、AutoGen 三个主流框架上验证了通用性。</p>
+
+
+<h2 id="局限性与思考">局限性与思考</h2>
+
+<h3 id="局限性">局限性</h3>
+
+<li><strong>实验规模有限</strong>: 仅在 3B 模型上验证，更大规模模型的效果尚未探索</li>
+<li><strong>任务类型覆盖</strong>: 虽然涵盖了 text-to-SQL、RAG、math tool-use，但未涉及 GUI 交互、长期规划等更复杂的 Agent 场景</li>
+<li><strong>Credit Assignment</strong>: 论文提出了 credit assignment module，但具体的分配策略如何影响训练效果缺乏深入分析</li>
+<li><strong>与 concatenation 方法的定量对比</strong>: Discussion 中定性分析了 transition-based 相比 concatenation-based 的优势，但缺少直接的定量 ablation</li>
+
+<h3 id="个人思考">个人思考</h3>
+
+<li>Agent Lightning 的<strong>解耦设计</strong>是其最大亮点。将 Agent 执行视为黑盒、仅通过标准化接口收集数据的思路，极大降低了 RL 训练的工程门槛</li>
+<li><strong>Observability 框架</strong>（OpenTelemetry）的引入很有前瞻性，将生产环境的监控基础设施复用到训练数据收集中</li>
+<li>与 <span class="wikilink">RAGEN</span>、<span class="wikilink">Search-R1</span>、<span class="wikilink">Trinity-RFT</span> 等 concatenation-based 方法的对比是后续工作的重要方向</li>
+<li>在更复杂的 Agent 场景（如 multi-agent debate、code generation pipeline）中的效果值得期待</li>
+
+
+<h2 id="相关工作">相关工作</h2>
+
+<li><strong>RL for LLM 推理</strong>: <span class="wikilink">DeepSeek-R1</span>, <span class="wikilink">Kimi k1.5</span>, <span class="wikilink">GRPO</span>, <span class="wikilink">PPO</span>, <span class="wikilink">REINFORCE++</span></li>
+<li><strong>Agent RL 训练</strong>: <span class="wikilink">RAGEN</span>, <span class="wikilink">Trinity-RFT</span>, <span class="wikilink">rLLM</span>, <span class="wikilink">Search-R1</span>, <span class="wikilink">DigiRL</span></li>
+<li><strong>Agent 框架</strong>: <span class="wikilink">LangChain</span>, <span class="wikilink">AutoGen</span>, <span class="wikilink">OpenAI Agents SDK</span></li>
+<li><strong>RL 训练框架</strong>: <span class="wikilink">VeRL</span></li>
+<li><strong>可观测性</strong>: <span class="wikilink">OpenTelemetry</span></li>
+<li><strong>评估基准</strong>: Spider (text-to-SQL), MuSiQue (multi-hop QA), Calc-X (math tool-use)</li></div></details>
 </div></div>
 <div id="panel-推荐系统" class="tab-panel"><h2 id="-推荐系统">📊 推荐系统</h2><div class="paper-card"><h3 id="4-multi-agent-video-recommenders-evolution-patterns-and-open-challenges">4. Multi-Agent Video Recommenders: Evolution, Patterns, and Open Challenges</h3>
 <li><strong>作者</strong>: Unknown</li>
@@ -897,7 +1649,158 @@ details.paper-note .note-body h3 { font-size: 1em; }
 <li><strong>机构</strong>: Shanghai AI Laboratory, Nanjing University, SJTU, CUHK</li>
 <li><strong>链接</strong>: <a href="https://arxiv.org/abs/2603.28088" target="_blank">arXiv</a> | <a href="https://arxiv.org/pdf/2603.28088" target="_blank">PDF</a></li>
 <li><strong>来源</strong>: 🔥 HF Trending，⬆️ 74</li>
-<li>📒 <strong>笔记</strong>: <span class="wikilink">GEMS - Agent-Native Multimodal Generation with Memory and Skills</span></li>
+<details class="paper-note"><summary>📒 精读笔记: GEMS - Agent-Native Multimodal Generation with Memory and Skills</summary><div class="note-body"><h1 id="gems-agent-native-multimodal-generation-with-memory-and-skills">GEMS: Agent-Native Multimodal Generation with Memory and Skills</h1>
+
+<blockquote>
+<p><strong>一句话总结</strong>: 提出 GEMS，首个 agent-native 多模态生成框架，将 LLM 作为认知核心（cognitive core），配备结构化记忆系统和可组合技能库，通过自主规划与执行实现跨文本/图像/音频/视频的高质量内容创作，从 model-centric 范式迈向 agent-native 范式。</p>
+</blockquote>
+
+<p><strong>Links</strong>: <a href="https://arxiv.org/abs/2507.07016" target="_blank">arXiv</a> | <a href="https://arxiv.org/pdf/2507.07016" target="_blank">PDF</a> | <a href="https://huggingface.co/papers/2507.07016" target="_blank">HuggingFace</a> | <a href="https://gems-multimodal.github.io/" target="_blank">Project Page</a></p>
+
+
+<h2 id="1-问题与动机">1. 问题与动机</h2>
+
+<p><strong>核心矛盾</strong>: 生成式基础模型在各模态上已展现出色能力，但现有系统仍是 <strong>model-centric</strong> 且 <strong>narrowly specialized</strong> 的:</p>
+
+<p>1. <strong>缺乏动态规划</strong>: 现有系统依赖固定的生成 pipeline，无法根据任务复杂度自适应调整策略</p>
+<p>2. <strong>缺乏跨模态推理</strong>: 孤立的生成工具之间无法协调配合，难以完成需要多模态联合的创作任务</p>
+<p>3. <strong>缺乏记忆与适应性</strong>: 不能从历史交互中学习用户偏好，每次生成都是 "从零开始"，无法积累经验</p>
+<p>4. <strong>缺乏自适应工具使用</strong>: 不能根据任务需求动态选择和组合不同的生成能力</p>
+
+<p><strong>核心 Insight</strong>: 人类创作者之所以高效，是因为能够 <strong>(1) 利用经验记忆</strong> 和 <strong>(2) 组合专业技能</strong> 来完成复杂创作。将这一范式迁移到 AI 系统 — 让 LLM 不再是单纯的生成器，而是一个会<strong>规划、委派、学习</strong>的认知核心。</p>
+
+
+<h2 id="2-方法-gems-framework">2. 方法: GEMS Framework</h2>
+
+<p>GEMS 的核心设计哲学是将多模态生成从 <strong>model-centric</strong> 转为 <strong>agent-native</strong>，由三大核心组件构成:</p>
+
+<h3 id="21-llm-based-orchestrator-认知核心">2.1 LLM-based Orchestrator (认知核心)</h3>
+
+<p>LLM 作为中央调度者，负责:</p>
+
+<table class="paper-table">
+<thead><tr><th>功能</th><th>描述</th></tr></thead>
+<tbody>
+<tr><td><strong>意图理解</strong> (Intent Reasoning)</td><td>解析用户的生成请求，理解真实需求</td></tr>
+<tr><td><strong>动态规划</strong> (Dynamic Planning)</td><td>根据任务复杂度制定多步生成计划</td></tr>
+<tr><td><strong>记忆检索</strong> (Memory Retrieval)</td><td>从记忆系统中提取相关经验和用户偏好</td></tr>
+<tr><td><strong>技能选择</strong> (Skill Selection)</td><td>从技能库中选择合适的生成工具</td></tr>
+<tr><td><strong>Pipeline 组合</strong> (Pipeline Composition)</td><td>动态组装生成 pipeline，串联多个技能</td></tr>
+<tr><td><strong>质量监控</strong> (Quality Monitoring)</td><td>评估生成结果，必要时触发重试或调整</td></tr>
+</tbody></table>
+
+
+<p>这种设计模仿了人类专家的工作方式: 先理解需求、调用经验、选择工具、执行并验证。</p>
+
+<h3 id="22-structured-memory-system-结构化记忆">2.2 Structured Memory System (结构化记忆)</h3>
+
+<p>记忆系统支持 <strong>经验积累与检索</strong>，包含:</p>
+
+<li><strong>长期知识记忆 (Long-term Knowledge)</strong>: 存储通用的生成知识、模态特定的最佳实践、领域知识</li>
+<li><strong>用户偏好记忆 (User Preferences)</strong>: 跟踪用户的风格偏好、常用设置、历史反馈</li>
+<li><strong>经验记忆 (Experience Memory)</strong>: 记录过往任务的成功/失败经验，包括使用了哪些技能、参数配置、生成效果</li>
+
+<p>记忆系统使得 GEMS 能够:</p>
+<p>1. 随时间积累生成经验，避免重复试错</p>
+<p>2. 个性化适应不同用户的创作风格</p>
+<p>3. 跨任务迁移知识，提高生成效率</p>
+
+<h3 id="23-modular-skill-library-模块化技能库">2.3 Modular Skill Library (模块化技能库)</h3>
+
+<p>技能库是一系列 <strong>可插拔的专家工具 (pluggable expert tools)</strong>，覆盖多个模态:</p>
+
+<table class="paper-table">
+<thead><tr><th>模态</th><th>技能类型</th></tr></thead>
+<tbody>
+<tr><td><strong>文本</strong></td><td>文案撰写、风格迁移、多语言翻译等</td></tr>
+<tr><td><strong>图像</strong></td><td>图像生成、编辑、风格化、超分辨率等</td></tr>
+<tr><td><strong>视频</strong></td><td>视频生成、剪辑、特效、运动合成等</td></tr>
+<tr><td><strong>音频</strong></td><td>音乐生成、语音合成、音效创作等</td></tr>
+</tbody></table>
+
+
+<p>技能库的关键特性:</p>
+<li><strong>可组合性 (Composability)</strong>: 技能可以动态组合形成复杂的生成 pipeline</li>
+<li><strong>可扩展性 (Extensibility)</strong>: 新技能可以作为插件添加，无需修改核心框架</li>
+<li><strong>动态调度</strong>: Orchestrator 根据任务需求实时选择和编排技能</li>
+
+<h3 id="24-整体工作流">2.4 整体工作流</h3>
+
+<pre><code>
+用户请求 → LLM Orchestrator
+              ├── 意图理解 &amp; 任务分解
+              ├── 记忆检索 (相关经验 + 用户偏好)
+              ├── 技能选择 &amp; Pipeline 组合
+              ├── 执行生成 (调用技能库)
+              ├── 结果评估 &amp; 可能的迭代优化
+              └── 经验写回记忆系统
+</code></pre>
+
+
+<h2 id="3-实验结果">3. 实验结果</h2>
+
+<h3 id="评估范围">评估范围</h3>
+
+<p>在跨四大模态 (文本、图像、音频、视频) 的综合 benchmark 上进行评估。</p>
+
+<h3 id="主要发现">主要发现</h3>
+
+<li>GEMS 在 <strong>质量 (quality)</strong> 和 <strong>效率 (efficiency)</strong> 两个维度上均显著超越现有 baseline</li>
+<li>持久化记忆和可组合技能对实现 robust 的 agent-native 多模态生成至关重要</li>
+<li>Agent-native 范式在处理复杂、多步骤的创作任务时优势尤为明显</li>
+
+<blockquote>
+<p>注: 由于无法获取论文全文 PDF，具体的定量实验数据（表格、数值）暂缺。建议直接查阅 <a href="https://arxiv.org/pdf/2507.07016" target="_blank">原文</a> 获取详细实验数据。</p>
+</blockquote>
+
+
+<h2 id="4-与相关工作的对比">4. 与相关工作的对比</h2>
+
+<table class="paper-table">
+<thead><tr><th>维度</th><th>传统 Model-Centric 方法</th><th>GEMS (Agent-Native)</th></tr></thead>
+<tbody>
+<tr><td><strong>架构范式</strong></td><td>单一模型端到端生成</td><td>LLM orchestrator + 技能库</td></tr>
+<tr><td><strong>记忆能力</strong></td><td>无 / 仅限上下文窗口</td><td>结构化持久记忆</td></tr>
+<tr><td><strong>任务适应</strong></td><td>每次从零开始</td><td>经验积累 + 偏好学习</td></tr>
+<tr><td><strong>模态覆盖</strong></td><td>通常单模态或有限跨模态</td><td>文本/图像/视频/音频全覆盖</td></tr>
+<tr><td><strong>可扩展性</strong></td><td>需重新训练</td><td>插件式添加新技能</td></tr>
+<tr><td><strong>复杂任务</strong></td><td>难以处理多步骤创作</td><td>自主规划 + 动态组合</td></tr>
+</tbody></table>
+
+
+<p>与此前的相关系统 (如 HuggingGPT、Voyager 等) 相比，GEMS 的独特之处在于:</p>
+<li>将记忆和技能作为<strong>一等公民 (first-class components)</strong> 而非事后补丁</li>
+<li>从框架层面支持<strong>经验积累和跨任务迁移</strong></li>
+<li>专注于<strong>创意内容生成</strong>而非通用任务执行</li>
+
+
+<h2 id="个人评价">个人评价</h2>
+
+<h3 id="优点">优点</h3>
+<p>1. <strong>范式转换有洞察力</strong>: 从 model-centric 到 agent-native 的转变抓住了当前多模态生成系统的核心瓶颈 — 缺乏规划和适应能力</p>
+<p>2. <strong>记忆系统设计合理</strong>: 将长期知识、用户偏好、任务经验分层存储，符合人类认知架构的直觉</p>
+<p>3. <strong>技能库可组合</strong>: 模块化设计使得系统可以通过添加新技能来扩展能力，而非重新训练整个模型</p>
+<p>4. <strong>全模态覆盖</strong>: 统一框架处理文本/图像/视频/音频，避免了模态孤岛问题</p>
+<p>5. <strong>实用性强</strong>: 以 LLM 为核心的 orchestrator 设计与当前 AI agent 生态高度兼容</p>
+
+<h3 id="局限--待讨论">局限 / 待讨论</h3>
+<p>1. <strong>Orchestrator 的瓶颈</strong>: LLM 作为中央调度器，其规划能力和推理成本直接决定了系统上限和延迟</p>
+<p>2. <strong>记忆系统的可扩展性</strong>: 随着经验持续积累，如何高效检索和管理大规模记忆是开放问题</p>
+<p>3. <strong>技能质量参差不齐</strong>: 系统整体表现受限于最弱的技能模块（木桶效应）</p>
+<p>4. <strong>评估标准</strong>: 多模态创意生成的评估本身就是难题，自动化指标可能不能完全反映创作质量</p>
+<p>5. <strong>缺少具体的定量消融</strong>: 需要更详细的消融实验来量化记忆和技能各自的贡献</p>
+
+
+<h2 id="关键概念">关键概念</h2>
+
+<li><span class="wikilink">Agent-Native</span>: 以 agent 为核心的系统设计范式，区别于 model-centric</li>
+<li><span class="wikilink">LLM Agent</span>: 以大语言模型为认知核心的智能体</li>
+<li><span class="wikilink">Skill Library</span>: 模块化的可组合技能/工具集合</li>
+<li><span class="wikilink">Memory System</span>: AI agent 的结构化记忆模块，支持经验积累和检索</li>
+<li><span class="wikilink">Multimodal Generation</span>: 跨模态（文本/图像/视频/音频）的内容生成</li>
+<li><span class="wikilink">Orchestrator</span>: 中央调度/编排器，负责任务规划和资源分配</li>
+<li><span class="wikilink">Tool Use</span>: LLM 调用外部工具的能力</li>
+<li><span class="wikilink">Composability</span>: 将简单组件组合成复杂系统的能力</li></div></details>
 
 <div class="paper-figure"><img src="https://arxiv.org/html/2603.28088v1/x2.png" alt="" loading="lazy"></div>
 
@@ -1378,7 +2281,158 @@ details.paper-note .note-body h3 { font-size: 1em; }
 <li><strong>机构</strong>: Shanghai AI Laboratory, Nanjing University, SJTU, CUHK</li>
 <li><strong>链接</strong>: <a href="https://arxiv.org/abs/2603.28088" target="_blank">arXiv</a> | <a href="https://arxiv.org/pdf/2603.28088" target="_blank">PDF</a></li>
 <li><strong>来源</strong>: 🔥 HF Trending，⬆️ 74</li>
-<li>📒 <strong>笔记</strong>: <span class="wikilink">GEMS - Agent-Native Multimodal Generation with Memory and Skills</span></li>
+<details class="paper-note"><summary>📒 精读笔记: GEMS - Agent-Native Multimodal Generation with Memory and Skills</summary><div class="note-body"><h1 id="gems-agent-native-multimodal-generation-with-memory-and-skills">GEMS: Agent-Native Multimodal Generation with Memory and Skills</h1>
+
+<blockquote>
+<p><strong>一句话总结</strong>: 提出 GEMS，首个 agent-native 多模态生成框架，将 LLM 作为认知核心（cognitive core），配备结构化记忆系统和可组合技能库，通过自主规划与执行实现跨文本/图像/音频/视频的高质量内容创作，从 model-centric 范式迈向 agent-native 范式。</p>
+</blockquote>
+
+<p><strong>Links</strong>: <a href="https://arxiv.org/abs/2507.07016" target="_blank">arXiv</a> | <a href="https://arxiv.org/pdf/2507.07016" target="_blank">PDF</a> | <a href="https://huggingface.co/papers/2507.07016" target="_blank">HuggingFace</a> | <a href="https://gems-multimodal.github.io/" target="_blank">Project Page</a></p>
+
+
+<h2 id="1-问题与动机">1. 问题与动机</h2>
+
+<p><strong>核心矛盾</strong>: 生成式基础模型在各模态上已展现出色能力，但现有系统仍是 <strong>model-centric</strong> 且 <strong>narrowly specialized</strong> 的:</p>
+
+<p>1. <strong>缺乏动态规划</strong>: 现有系统依赖固定的生成 pipeline，无法根据任务复杂度自适应调整策略</p>
+<p>2. <strong>缺乏跨模态推理</strong>: 孤立的生成工具之间无法协调配合，难以完成需要多模态联合的创作任务</p>
+<p>3. <strong>缺乏记忆与适应性</strong>: 不能从历史交互中学习用户偏好，每次生成都是 "从零开始"，无法积累经验</p>
+<p>4. <strong>缺乏自适应工具使用</strong>: 不能根据任务需求动态选择和组合不同的生成能力</p>
+
+<p><strong>核心 Insight</strong>: 人类创作者之所以高效，是因为能够 <strong>(1) 利用经验记忆</strong> 和 <strong>(2) 组合专业技能</strong> 来完成复杂创作。将这一范式迁移到 AI 系统 — 让 LLM 不再是单纯的生成器，而是一个会<strong>规划、委派、学习</strong>的认知核心。</p>
+
+
+<h2 id="2-方法-gems-framework">2. 方法: GEMS Framework</h2>
+
+<p>GEMS 的核心设计哲学是将多模态生成从 <strong>model-centric</strong> 转为 <strong>agent-native</strong>，由三大核心组件构成:</p>
+
+<h3 id="21-llm-based-orchestrator-认知核心">2.1 LLM-based Orchestrator (认知核心)</h3>
+
+<p>LLM 作为中央调度者，负责:</p>
+
+<table class="paper-table">
+<thead><tr><th>功能</th><th>描述</th></tr></thead>
+<tbody>
+<tr><td><strong>意图理解</strong> (Intent Reasoning)</td><td>解析用户的生成请求，理解真实需求</td></tr>
+<tr><td><strong>动态规划</strong> (Dynamic Planning)</td><td>根据任务复杂度制定多步生成计划</td></tr>
+<tr><td><strong>记忆检索</strong> (Memory Retrieval)</td><td>从记忆系统中提取相关经验和用户偏好</td></tr>
+<tr><td><strong>技能选择</strong> (Skill Selection)</td><td>从技能库中选择合适的生成工具</td></tr>
+<tr><td><strong>Pipeline 组合</strong> (Pipeline Composition)</td><td>动态组装生成 pipeline，串联多个技能</td></tr>
+<tr><td><strong>质量监控</strong> (Quality Monitoring)</td><td>评估生成结果，必要时触发重试或调整</td></tr>
+</tbody></table>
+
+
+<p>这种设计模仿了人类专家的工作方式: 先理解需求、调用经验、选择工具、执行并验证。</p>
+
+<h3 id="22-structured-memory-system-结构化记忆">2.2 Structured Memory System (结构化记忆)</h3>
+
+<p>记忆系统支持 <strong>经验积累与检索</strong>，包含:</p>
+
+<li><strong>长期知识记忆 (Long-term Knowledge)</strong>: 存储通用的生成知识、模态特定的最佳实践、领域知识</li>
+<li><strong>用户偏好记忆 (User Preferences)</strong>: 跟踪用户的风格偏好、常用设置、历史反馈</li>
+<li><strong>经验记忆 (Experience Memory)</strong>: 记录过往任务的成功/失败经验，包括使用了哪些技能、参数配置、生成效果</li>
+
+<p>记忆系统使得 GEMS 能够:</p>
+<p>1. 随时间积累生成经验，避免重复试错</p>
+<p>2. 个性化适应不同用户的创作风格</p>
+<p>3. 跨任务迁移知识，提高生成效率</p>
+
+<h3 id="23-modular-skill-library-模块化技能库">2.3 Modular Skill Library (模块化技能库)</h3>
+
+<p>技能库是一系列 <strong>可插拔的专家工具 (pluggable expert tools)</strong>，覆盖多个模态:</p>
+
+<table class="paper-table">
+<thead><tr><th>模态</th><th>技能类型</th></tr></thead>
+<tbody>
+<tr><td><strong>文本</strong></td><td>文案撰写、风格迁移、多语言翻译等</td></tr>
+<tr><td><strong>图像</strong></td><td>图像生成、编辑、风格化、超分辨率等</td></tr>
+<tr><td><strong>视频</strong></td><td>视频生成、剪辑、特效、运动合成等</td></tr>
+<tr><td><strong>音频</strong></td><td>音乐生成、语音合成、音效创作等</td></tr>
+</tbody></table>
+
+
+<p>技能库的关键特性:</p>
+<li><strong>可组合性 (Composability)</strong>: 技能可以动态组合形成复杂的生成 pipeline</li>
+<li><strong>可扩展性 (Extensibility)</strong>: 新技能可以作为插件添加，无需修改核心框架</li>
+<li><strong>动态调度</strong>: Orchestrator 根据任务需求实时选择和编排技能</li>
+
+<h3 id="24-整体工作流">2.4 整体工作流</h3>
+
+<pre><code>
+用户请求 → LLM Orchestrator
+              ├── 意图理解 &amp; 任务分解
+              ├── 记忆检索 (相关经验 + 用户偏好)
+              ├── 技能选择 &amp; Pipeline 组合
+              ├── 执行生成 (调用技能库)
+              ├── 结果评估 &amp; 可能的迭代优化
+              └── 经验写回记忆系统
+</code></pre>
+
+
+<h2 id="3-实验结果">3. 实验结果</h2>
+
+<h3 id="评估范围">评估范围</h3>
+
+<p>在跨四大模态 (文本、图像、音频、视频) 的综合 benchmark 上进行评估。</p>
+
+<h3 id="主要发现">主要发现</h3>
+
+<li>GEMS 在 <strong>质量 (quality)</strong> 和 <strong>效率 (efficiency)</strong> 两个维度上均显著超越现有 baseline</li>
+<li>持久化记忆和可组合技能对实现 robust 的 agent-native 多模态生成至关重要</li>
+<li>Agent-native 范式在处理复杂、多步骤的创作任务时优势尤为明显</li>
+
+<blockquote>
+<p>注: 由于无法获取论文全文 PDF，具体的定量实验数据（表格、数值）暂缺。建议直接查阅 <a href="https://arxiv.org/pdf/2507.07016" target="_blank">原文</a> 获取详细实验数据。</p>
+</blockquote>
+
+
+<h2 id="4-与相关工作的对比">4. 与相关工作的对比</h2>
+
+<table class="paper-table">
+<thead><tr><th>维度</th><th>传统 Model-Centric 方法</th><th>GEMS (Agent-Native)</th></tr></thead>
+<tbody>
+<tr><td><strong>架构范式</strong></td><td>单一模型端到端生成</td><td>LLM orchestrator + 技能库</td></tr>
+<tr><td><strong>记忆能力</strong></td><td>无 / 仅限上下文窗口</td><td>结构化持久记忆</td></tr>
+<tr><td><strong>任务适应</strong></td><td>每次从零开始</td><td>经验积累 + 偏好学习</td></tr>
+<tr><td><strong>模态覆盖</strong></td><td>通常单模态或有限跨模态</td><td>文本/图像/视频/音频全覆盖</td></tr>
+<tr><td><strong>可扩展性</strong></td><td>需重新训练</td><td>插件式添加新技能</td></tr>
+<tr><td><strong>复杂任务</strong></td><td>难以处理多步骤创作</td><td>自主规划 + 动态组合</td></tr>
+</tbody></table>
+
+
+<p>与此前的相关系统 (如 HuggingGPT、Voyager 等) 相比，GEMS 的独特之处在于:</p>
+<li>将记忆和技能作为<strong>一等公民 (first-class components)</strong> 而非事后补丁</li>
+<li>从框架层面支持<strong>经验积累和跨任务迁移</strong></li>
+<li>专注于<strong>创意内容生成</strong>而非通用任务执行</li>
+
+
+<h2 id="个人评价">个人评价</h2>
+
+<h3 id="优点">优点</h3>
+<p>1. <strong>范式转换有洞察力</strong>: 从 model-centric 到 agent-native 的转变抓住了当前多模态生成系统的核心瓶颈 — 缺乏规划和适应能力</p>
+<p>2. <strong>记忆系统设计合理</strong>: 将长期知识、用户偏好、任务经验分层存储，符合人类认知架构的直觉</p>
+<p>3. <strong>技能库可组合</strong>: 模块化设计使得系统可以通过添加新技能来扩展能力，而非重新训练整个模型</p>
+<p>4. <strong>全模态覆盖</strong>: 统一框架处理文本/图像/视频/音频，避免了模态孤岛问题</p>
+<p>5. <strong>实用性强</strong>: 以 LLM 为核心的 orchestrator 设计与当前 AI agent 生态高度兼容</p>
+
+<h3 id="局限--待讨论">局限 / 待讨论</h3>
+<p>1. <strong>Orchestrator 的瓶颈</strong>: LLM 作为中央调度器，其规划能力和推理成本直接决定了系统上限和延迟</p>
+<p>2. <strong>记忆系统的可扩展性</strong>: 随着经验持续积累，如何高效检索和管理大规模记忆是开放问题</p>
+<p>3. <strong>技能质量参差不齐</strong>: 系统整体表现受限于最弱的技能模块（木桶效应）</p>
+<p>4. <strong>评估标准</strong>: 多模态创意生成的评估本身就是难题，自动化指标可能不能完全反映创作质量</p>
+<p>5. <strong>缺少具体的定量消融</strong>: 需要更详细的消融实验来量化记忆和技能各自的贡献</p>
+
+
+<h2 id="关键概念">关键概念</h2>
+
+<li><span class="wikilink">Agent-Native</span>: 以 agent 为核心的系统设计范式，区别于 model-centric</li>
+<li><span class="wikilink">LLM Agent</span>: 以大语言模型为认知核心的智能体</li>
+<li><span class="wikilink">Skill Library</span>: 模块化的可组合技能/工具集合</li>
+<li><span class="wikilink">Memory System</span>: AI agent 的结构化记忆模块，支持经验积累和检索</li>
+<li><span class="wikilink">Multimodal Generation</span>: 跨模态（文本/图像/视频/音频）的内容生成</li>
+<li><span class="wikilink">Orchestrator</span>: 中央调度/编排器，负责任务规划和资源分配</li>
+<li><span class="wikilink">Tool Use</span>: LLM 调用外部工具的能力</li>
+<li><span class="wikilink">Composability</span>: 将简单组件组合成复杂系统的能力</li></div></details>
 
 <div class="paper-figure"><img src="https://arxiv.org/html/2603.28088v1/x2.png" alt="" loading="lazy"></div>
 

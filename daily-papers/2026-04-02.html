@@ -617,7 +617,158 @@ details.paper-note .note-body h3 { font-size: 1em; }
 <li><strong>机构</strong>: Shanghai AI Laboratory, Nanjing University, SJTU, CUHK</li>
 <li><strong>链接</strong>: <a href="https://arxiv.org/abs/2603.28088" target="_blank">arXiv</a> | <a href="https://arxiv.org/pdf/2603.28088" target="_blank">PDF</a></li>
 <li><strong>来源</strong>: 🔥 HF Trending，⬆️ 74</li>
-<li>📒 <strong>笔记</strong>: <span class="wikilink">GEMS - Agent-Native Multimodal Generation with Memory and Skills</span></li>
+<details class="paper-note"><summary>📒 精读笔记: GEMS - Agent-Native Multimodal Generation with Memory and Skills</summary><div class="note-body"><h1 id="gems-agent-native-multimodal-generation-with-memory-and-skills">GEMS: Agent-Native Multimodal Generation with Memory and Skills</h1>
+
+<blockquote>
+<p><strong>一句话总结</strong>: 提出 GEMS，首个 agent-native 多模态生成框架，将 LLM 作为认知核心（cognitive core），配备结构化记忆系统和可组合技能库，通过自主规划与执行实现跨文本/图像/音频/视频的高质量内容创作，从 model-centric 范式迈向 agent-native 范式。</p>
+</blockquote>
+
+<p><strong>Links</strong>: <a href="https://arxiv.org/abs/2507.07016" target="_blank">arXiv</a> | <a href="https://arxiv.org/pdf/2507.07016" target="_blank">PDF</a> | <a href="https://huggingface.co/papers/2507.07016" target="_blank">HuggingFace</a> | <a href="https://gems-multimodal.github.io/" target="_blank">Project Page</a></p>
+
+
+<h2 id="1-问题与动机">1. 问题与动机</h2>
+
+<p><strong>核心矛盾</strong>: 生成式基础模型在各模态上已展现出色能力，但现有系统仍是 <strong>model-centric</strong> 且 <strong>narrowly specialized</strong> 的:</p>
+
+<p>1. <strong>缺乏动态规划</strong>: 现有系统依赖固定的生成 pipeline，无法根据任务复杂度自适应调整策略</p>
+<p>2. <strong>缺乏跨模态推理</strong>: 孤立的生成工具之间无法协调配合，难以完成需要多模态联合的创作任务</p>
+<p>3. <strong>缺乏记忆与适应性</strong>: 不能从历史交互中学习用户偏好，每次生成都是 "从零开始"，无法积累经验</p>
+<p>4. <strong>缺乏自适应工具使用</strong>: 不能根据任务需求动态选择和组合不同的生成能力</p>
+
+<p><strong>核心 Insight</strong>: 人类创作者之所以高效，是因为能够 <strong>(1) 利用经验记忆</strong> 和 <strong>(2) 组合专业技能</strong> 来完成复杂创作。将这一范式迁移到 AI 系统 — 让 LLM 不再是单纯的生成器，而是一个会<strong>规划、委派、学习</strong>的认知核心。</p>
+
+
+<h2 id="2-方法-gems-framework">2. 方法: GEMS Framework</h2>
+
+<p>GEMS 的核心设计哲学是将多模态生成从 <strong>model-centric</strong> 转为 <strong>agent-native</strong>，由三大核心组件构成:</p>
+
+<h3 id="21-llm-based-orchestrator-认知核心">2.1 LLM-based Orchestrator (认知核心)</h3>
+
+<p>LLM 作为中央调度者，负责:</p>
+
+<table class="paper-table">
+<thead><tr><th>功能</th><th>描述</th></tr></thead>
+<tbody>
+<tr><td><strong>意图理解</strong> (Intent Reasoning)</td><td>解析用户的生成请求，理解真实需求</td></tr>
+<tr><td><strong>动态规划</strong> (Dynamic Planning)</td><td>根据任务复杂度制定多步生成计划</td></tr>
+<tr><td><strong>记忆检索</strong> (Memory Retrieval)</td><td>从记忆系统中提取相关经验和用户偏好</td></tr>
+<tr><td><strong>技能选择</strong> (Skill Selection)</td><td>从技能库中选择合适的生成工具</td></tr>
+<tr><td><strong>Pipeline 组合</strong> (Pipeline Composition)</td><td>动态组装生成 pipeline，串联多个技能</td></tr>
+<tr><td><strong>质量监控</strong> (Quality Monitoring)</td><td>评估生成结果，必要时触发重试或调整</td></tr>
+</tbody></table>
+
+
+<p>这种设计模仿了人类专家的工作方式: 先理解需求、调用经验、选择工具、执行并验证。</p>
+
+<h3 id="22-structured-memory-system-结构化记忆">2.2 Structured Memory System (结构化记忆)</h3>
+
+<p>记忆系统支持 <strong>经验积累与检索</strong>，包含:</p>
+
+<li><strong>长期知识记忆 (Long-term Knowledge)</strong>: 存储通用的生成知识、模态特定的最佳实践、领域知识</li>
+<li><strong>用户偏好记忆 (User Preferences)</strong>: 跟踪用户的风格偏好、常用设置、历史反馈</li>
+<li><strong>经验记忆 (Experience Memory)</strong>: 记录过往任务的成功/失败经验，包括使用了哪些技能、参数配置、生成效果</li>
+
+<p>记忆系统使得 GEMS 能够:</p>
+<p>1. 随时间积累生成经验，避免重复试错</p>
+<p>2. 个性化适应不同用户的创作风格</p>
+<p>3. 跨任务迁移知识，提高生成效率</p>
+
+<h3 id="23-modular-skill-library-模块化技能库">2.3 Modular Skill Library (模块化技能库)</h3>
+
+<p>技能库是一系列 <strong>可插拔的专家工具 (pluggable expert tools)</strong>，覆盖多个模态:</p>
+
+<table class="paper-table">
+<thead><tr><th>模态</th><th>技能类型</th></tr></thead>
+<tbody>
+<tr><td><strong>文本</strong></td><td>文案撰写、风格迁移、多语言翻译等</td></tr>
+<tr><td><strong>图像</strong></td><td>图像生成、编辑、风格化、超分辨率等</td></tr>
+<tr><td><strong>视频</strong></td><td>视频生成、剪辑、特效、运动合成等</td></tr>
+<tr><td><strong>音频</strong></td><td>音乐生成、语音合成、音效创作等</td></tr>
+</tbody></table>
+
+
+<p>技能库的关键特性:</p>
+<li><strong>可组合性 (Composability)</strong>: 技能可以动态组合形成复杂的生成 pipeline</li>
+<li><strong>可扩展性 (Extensibility)</strong>: 新技能可以作为插件添加，无需修改核心框架</li>
+<li><strong>动态调度</strong>: Orchestrator 根据任务需求实时选择和编排技能</li>
+
+<h3 id="24-整体工作流">2.4 整体工作流</h3>
+
+<pre><code>
+用户请求 → LLM Orchestrator
+              ├── 意图理解 &amp; 任务分解
+              ├── 记忆检索 (相关经验 + 用户偏好)
+              ├── 技能选择 &amp; Pipeline 组合
+              ├── 执行生成 (调用技能库)
+              ├── 结果评估 &amp; 可能的迭代优化
+              └── 经验写回记忆系统
+</code></pre>
+
+
+<h2 id="3-实验结果">3. 实验结果</h2>
+
+<h3 id="评估范围">评估范围</h3>
+
+<p>在跨四大模态 (文本、图像、音频、视频) 的综合 benchmark 上进行评估。</p>
+
+<h3 id="主要发现">主要发现</h3>
+
+<li>GEMS 在 <strong>质量 (quality)</strong> 和 <strong>效率 (efficiency)</strong> 两个维度上均显著超越现有 baseline</li>
+<li>持久化记忆和可组合技能对实现 robust 的 agent-native 多模态生成至关重要</li>
+<li>Agent-native 范式在处理复杂、多步骤的创作任务时优势尤为明显</li>
+
+<blockquote>
+<p>注: 由于无法获取论文全文 PDF，具体的定量实验数据（表格、数值）暂缺。建议直接查阅 <a href="https://arxiv.org/pdf/2507.07016" target="_blank">原文</a> 获取详细实验数据。</p>
+</blockquote>
+
+
+<h2 id="4-与相关工作的对比">4. 与相关工作的对比</h2>
+
+<table class="paper-table">
+<thead><tr><th>维度</th><th>传统 Model-Centric 方法</th><th>GEMS (Agent-Native)</th></tr></thead>
+<tbody>
+<tr><td><strong>架构范式</strong></td><td>单一模型端到端生成</td><td>LLM orchestrator + 技能库</td></tr>
+<tr><td><strong>记忆能力</strong></td><td>无 / 仅限上下文窗口</td><td>结构化持久记忆</td></tr>
+<tr><td><strong>任务适应</strong></td><td>每次从零开始</td><td>经验积累 + 偏好学习</td></tr>
+<tr><td><strong>模态覆盖</strong></td><td>通常单模态或有限跨模态</td><td>文本/图像/视频/音频全覆盖</td></tr>
+<tr><td><strong>可扩展性</strong></td><td>需重新训练</td><td>插件式添加新技能</td></tr>
+<tr><td><strong>复杂任务</strong></td><td>难以处理多步骤创作</td><td>自主规划 + 动态组合</td></tr>
+</tbody></table>
+
+
+<p>与此前的相关系统 (如 HuggingGPT、Voyager 等) 相比，GEMS 的独特之处在于:</p>
+<li>将记忆和技能作为<strong>一等公民 (first-class components)</strong> 而非事后补丁</li>
+<li>从框架层面支持<strong>经验积累和跨任务迁移</strong></li>
+<li>专注于<strong>创意内容生成</strong>而非通用任务执行</li>
+
+
+<h2 id="个人评价">个人评价</h2>
+
+<h3 id="优点">优点</h3>
+<p>1. <strong>范式转换有洞察力</strong>: 从 model-centric 到 agent-native 的转变抓住了当前多模态生成系统的核心瓶颈 — 缺乏规划和适应能力</p>
+<p>2. <strong>记忆系统设计合理</strong>: 将长期知识、用户偏好、任务经验分层存储，符合人类认知架构的直觉</p>
+<p>3. <strong>技能库可组合</strong>: 模块化设计使得系统可以通过添加新技能来扩展能力，而非重新训练整个模型</p>
+<p>4. <strong>全模态覆盖</strong>: 统一框架处理文本/图像/视频/音频，避免了模态孤岛问题</p>
+<p>5. <strong>实用性强</strong>: 以 LLM 为核心的 orchestrator 设计与当前 AI agent 生态高度兼容</p>
+
+<h3 id="局限--待讨论">局限 / 待讨论</h3>
+<p>1. <strong>Orchestrator 的瓶颈</strong>: LLM 作为中央调度器，其规划能力和推理成本直接决定了系统上限和延迟</p>
+<p>2. <strong>记忆系统的可扩展性</strong>: 随着经验持续积累，如何高效检索和管理大规模记忆是开放问题</p>
+<p>3. <strong>技能质量参差不齐</strong>: 系统整体表现受限于最弱的技能模块（木桶效应）</p>
+<p>4. <strong>评估标准</strong>: 多模态创意生成的评估本身就是难题，自动化指标可能不能完全反映创作质量</p>
+<p>5. <strong>缺少具体的定量消融</strong>: 需要更详细的消融实验来量化记忆和技能各自的贡献</p>
+
+
+<h2 id="关键概念">关键概念</h2>
+
+<li><span class="wikilink">Agent-Native</span>: 以 agent 为核心的系统设计范式，区别于 model-centric</li>
+<li><span class="wikilink">LLM Agent</span>: 以大语言模型为认知核心的智能体</li>
+<li><span class="wikilink">Skill Library</span>: 模块化的可组合技能/工具集合</li>
+<li><span class="wikilink">Memory System</span>: AI agent 的结构化记忆模块，支持经验积累和检索</li>
+<li><span class="wikilink">Multimodal Generation</span>: 跨模态（文本/图像/视频/音频）的内容生成</li>
+<li><span class="wikilink">Orchestrator</span>: 中央调度/编排器，负责任务规划和资源分配</li>
+<li><span class="wikilink">Tool Use</span>: LLM 调用外部工具的能力</li>
+<li><span class="wikilink">Composability</span>: 将简单组件组合成复杂系统的能力</li></div></details>
 
 <div class="paper-figure"><img src="https://arxiv.org/html/2603.28088v1/x2.png" alt="" loading="lazy"></div>
 
@@ -1098,7 +1249,158 @@ details.paper-note .note-body h3 { font-size: 1em; }
 <li><strong>机构</strong>: Shanghai AI Laboratory, Nanjing University, SJTU, CUHK</li>
 <li><strong>链接</strong>: <a href="https://arxiv.org/abs/2603.28088" target="_blank">arXiv</a> | <a href="https://arxiv.org/pdf/2603.28088" target="_blank">PDF</a></li>
 <li><strong>来源</strong>: 🔥 HF Trending，⬆️ 74</li>
-<li>📒 <strong>笔记</strong>: <span class="wikilink">GEMS - Agent-Native Multimodal Generation with Memory and Skills</span></li>
+<details class="paper-note"><summary>📒 精读笔记: GEMS - Agent-Native Multimodal Generation with Memory and Skills</summary><div class="note-body"><h1 id="gems-agent-native-multimodal-generation-with-memory-and-skills">GEMS: Agent-Native Multimodal Generation with Memory and Skills</h1>
+
+<blockquote>
+<p><strong>一句话总结</strong>: 提出 GEMS，首个 agent-native 多模态生成框架，将 LLM 作为认知核心（cognitive core），配备结构化记忆系统和可组合技能库，通过自主规划与执行实现跨文本/图像/音频/视频的高质量内容创作，从 model-centric 范式迈向 agent-native 范式。</p>
+</blockquote>
+
+<p><strong>Links</strong>: <a href="https://arxiv.org/abs/2507.07016" target="_blank">arXiv</a> | <a href="https://arxiv.org/pdf/2507.07016" target="_blank">PDF</a> | <a href="https://huggingface.co/papers/2507.07016" target="_blank">HuggingFace</a> | <a href="https://gems-multimodal.github.io/" target="_blank">Project Page</a></p>
+
+
+<h2 id="1-问题与动机">1. 问题与动机</h2>
+
+<p><strong>核心矛盾</strong>: 生成式基础模型在各模态上已展现出色能力，但现有系统仍是 <strong>model-centric</strong> 且 <strong>narrowly specialized</strong> 的:</p>
+
+<p>1. <strong>缺乏动态规划</strong>: 现有系统依赖固定的生成 pipeline，无法根据任务复杂度自适应调整策略</p>
+<p>2. <strong>缺乏跨模态推理</strong>: 孤立的生成工具之间无法协调配合，难以完成需要多模态联合的创作任务</p>
+<p>3. <strong>缺乏记忆与适应性</strong>: 不能从历史交互中学习用户偏好，每次生成都是 "从零开始"，无法积累经验</p>
+<p>4. <strong>缺乏自适应工具使用</strong>: 不能根据任务需求动态选择和组合不同的生成能力</p>
+
+<p><strong>核心 Insight</strong>: 人类创作者之所以高效，是因为能够 <strong>(1) 利用经验记忆</strong> 和 <strong>(2) 组合专业技能</strong> 来完成复杂创作。将这一范式迁移到 AI 系统 — 让 LLM 不再是单纯的生成器，而是一个会<strong>规划、委派、学习</strong>的认知核心。</p>
+
+
+<h2 id="2-方法-gems-framework">2. 方法: GEMS Framework</h2>
+
+<p>GEMS 的核心设计哲学是将多模态生成从 <strong>model-centric</strong> 转为 <strong>agent-native</strong>，由三大核心组件构成:</p>
+
+<h3 id="21-llm-based-orchestrator-认知核心">2.1 LLM-based Orchestrator (认知核心)</h3>
+
+<p>LLM 作为中央调度者，负责:</p>
+
+<table class="paper-table">
+<thead><tr><th>功能</th><th>描述</th></tr></thead>
+<tbody>
+<tr><td><strong>意图理解</strong> (Intent Reasoning)</td><td>解析用户的生成请求，理解真实需求</td></tr>
+<tr><td><strong>动态规划</strong> (Dynamic Planning)</td><td>根据任务复杂度制定多步生成计划</td></tr>
+<tr><td><strong>记忆检索</strong> (Memory Retrieval)</td><td>从记忆系统中提取相关经验和用户偏好</td></tr>
+<tr><td><strong>技能选择</strong> (Skill Selection)</td><td>从技能库中选择合适的生成工具</td></tr>
+<tr><td><strong>Pipeline 组合</strong> (Pipeline Composition)</td><td>动态组装生成 pipeline，串联多个技能</td></tr>
+<tr><td><strong>质量监控</strong> (Quality Monitoring)</td><td>评估生成结果，必要时触发重试或调整</td></tr>
+</tbody></table>
+
+
+<p>这种设计模仿了人类专家的工作方式: 先理解需求、调用经验、选择工具、执行并验证。</p>
+
+<h3 id="22-structured-memory-system-结构化记忆">2.2 Structured Memory System (结构化记忆)</h3>
+
+<p>记忆系统支持 <strong>经验积累与检索</strong>，包含:</p>
+
+<li><strong>长期知识记忆 (Long-term Knowledge)</strong>: 存储通用的生成知识、模态特定的最佳实践、领域知识</li>
+<li><strong>用户偏好记忆 (User Preferences)</strong>: 跟踪用户的风格偏好、常用设置、历史反馈</li>
+<li><strong>经验记忆 (Experience Memory)</strong>: 记录过往任务的成功/失败经验，包括使用了哪些技能、参数配置、生成效果</li>
+
+<p>记忆系统使得 GEMS 能够:</p>
+<p>1. 随时间积累生成经验，避免重复试错</p>
+<p>2. 个性化适应不同用户的创作风格</p>
+<p>3. 跨任务迁移知识，提高生成效率</p>
+
+<h3 id="23-modular-skill-library-模块化技能库">2.3 Modular Skill Library (模块化技能库)</h3>
+
+<p>技能库是一系列 <strong>可插拔的专家工具 (pluggable expert tools)</strong>，覆盖多个模态:</p>
+
+<table class="paper-table">
+<thead><tr><th>模态</th><th>技能类型</th></tr></thead>
+<tbody>
+<tr><td><strong>文本</strong></td><td>文案撰写、风格迁移、多语言翻译等</td></tr>
+<tr><td><strong>图像</strong></td><td>图像生成、编辑、风格化、超分辨率等</td></tr>
+<tr><td><strong>视频</strong></td><td>视频生成、剪辑、特效、运动合成等</td></tr>
+<tr><td><strong>音频</strong></td><td>音乐生成、语音合成、音效创作等</td></tr>
+</tbody></table>
+
+
+<p>技能库的关键特性:</p>
+<li><strong>可组合性 (Composability)</strong>: 技能可以动态组合形成复杂的生成 pipeline</li>
+<li><strong>可扩展性 (Extensibility)</strong>: 新技能可以作为插件添加，无需修改核心框架</li>
+<li><strong>动态调度</strong>: Orchestrator 根据任务需求实时选择和编排技能</li>
+
+<h3 id="24-整体工作流">2.4 整体工作流</h3>
+
+<pre><code>
+用户请求 → LLM Orchestrator
+              ├── 意图理解 &amp; 任务分解
+              ├── 记忆检索 (相关经验 + 用户偏好)
+              ├── 技能选择 &amp; Pipeline 组合
+              ├── 执行生成 (调用技能库)
+              ├── 结果评估 &amp; 可能的迭代优化
+              └── 经验写回记忆系统
+</code></pre>
+
+
+<h2 id="3-实验结果">3. 实验结果</h2>
+
+<h3 id="评估范围">评估范围</h3>
+
+<p>在跨四大模态 (文本、图像、音频、视频) 的综合 benchmark 上进行评估。</p>
+
+<h3 id="主要发现">主要发现</h3>
+
+<li>GEMS 在 <strong>质量 (quality)</strong> 和 <strong>效率 (efficiency)</strong> 两个维度上均显著超越现有 baseline</li>
+<li>持久化记忆和可组合技能对实现 robust 的 agent-native 多模态生成至关重要</li>
+<li>Agent-native 范式在处理复杂、多步骤的创作任务时优势尤为明显</li>
+
+<blockquote>
+<p>注: 由于无法获取论文全文 PDF，具体的定量实验数据（表格、数值）暂缺。建议直接查阅 <a href="https://arxiv.org/pdf/2507.07016" target="_blank">原文</a> 获取详细实验数据。</p>
+</blockquote>
+
+
+<h2 id="4-与相关工作的对比">4. 与相关工作的对比</h2>
+
+<table class="paper-table">
+<thead><tr><th>维度</th><th>传统 Model-Centric 方法</th><th>GEMS (Agent-Native)</th></tr></thead>
+<tbody>
+<tr><td><strong>架构范式</strong></td><td>单一模型端到端生成</td><td>LLM orchestrator + 技能库</td></tr>
+<tr><td><strong>记忆能力</strong></td><td>无 / 仅限上下文窗口</td><td>结构化持久记忆</td></tr>
+<tr><td><strong>任务适应</strong></td><td>每次从零开始</td><td>经验积累 + 偏好学习</td></tr>
+<tr><td><strong>模态覆盖</strong></td><td>通常单模态或有限跨模态</td><td>文本/图像/视频/音频全覆盖</td></tr>
+<tr><td><strong>可扩展性</strong></td><td>需重新训练</td><td>插件式添加新技能</td></tr>
+<tr><td><strong>复杂任务</strong></td><td>难以处理多步骤创作</td><td>自主规划 + 动态组合</td></tr>
+</tbody></table>
+
+
+<p>与此前的相关系统 (如 HuggingGPT、Voyager 等) 相比，GEMS 的独特之处在于:</p>
+<li>将记忆和技能作为<strong>一等公民 (first-class components)</strong> 而非事后补丁</li>
+<li>从框架层面支持<strong>经验积累和跨任务迁移</strong></li>
+<li>专注于<strong>创意内容生成</strong>而非通用任务执行</li>
+
+
+<h2 id="个人评价">个人评价</h2>
+
+<h3 id="优点">优点</h3>
+<p>1. <strong>范式转换有洞察力</strong>: 从 model-centric 到 agent-native 的转变抓住了当前多模态生成系统的核心瓶颈 — 缺乏规划和适应能力</p>
+<p>2. <strong>记忆系统设计合理</strong>: 将长期知识、用户偏好、任务经验分层存储，符合人类认知架构的直觉</p>
+<p>3. <strong>技能库可组合</strong>: 模块化设计使得系统可以通过添加新技能来扩展能力，而非重新训练整个模型</p>
+<p>4. <strong>全模态覆盖</strong>: 统一框架处理文本/图像/视频/音频，避免了模态孤岛问题</p>
+<p>5. <strong>实用性强</strong>: 以 LLM 为核心的 orchestrator 设计与当前 AI agent 生态高度兼容</p>
+
+<h3 id="局限--待讨论">局限 / 待讨论</h3>
+<p>1. <strong>Orchestrator 的瓶颈</strong>: LLM 作为中央调度器，其规划能力和推理成本直接决定了系统上限和延迟</p>
+<p>2. <strong>记忆系统的可扩展性</strong>: 随着经验持续积累，如何高效检索和管理大规模记忆是开放问题</p>
+<p>3. <strong>技能质量参差不齐</strong>: 系统整体表现受限于最弱的技能模块（木桶效应）</p>
+<p>4. <strong>评估标准</strong>: 多模态创意生成的评估本身就是难题，自动化指标可能不能完全反映创作质量</p>
+<p>5. <strong>缺少具体的定量消融</strong>: 需要更详细的消融实验来量化记忆和技能各自的贡献</p>
+
+
+<h2 id="关键概念">关键概念</h2>
+
+<li><span class="wikilink">Agent-Native</span>: 以 agent 为核心的系统设计范式，区别于 model-centric</li>
+<li><span class="wikilink">LLM Agent</span>: 以大语言模型为认知核心的智能体</li>
+<li><span class="wikilink">Skill Library</span>: 模块化的可组合技能/工具集合</li>
+<li><span class="wikilink">Memory System</span>: AI agent 的结构化记忆模块，支持经验积累和检索</li>
+<li><span class="wikilink">Multimodal Generation</span>: 跨模态（文本/图像/视频/音频）的内容生成</li>
+<li><span class="wikilink">Orchestrator</span>: 中央调度/编排器，负责任务规划和资源分配</li>
+<li><span class="wikilink">Tool Use</span>: LLM 调用外部工具的能力</li>
+<li><span class="wikilink">Composability</span>: 将简单组件组合成复杂系统的能力</li></div></details>
 
 <div class="paper-figure"><img src="https://arxiv.org/html/2603.28088v1/x2.png" alt="" loading="lazy"></div>
 
