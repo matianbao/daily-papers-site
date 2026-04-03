@@ -95,7 +95,12 @@ img { max-width: 100%; border-radius: 8px; margin: 0.5em 0; }
 /* Trends */
 .trend-row { display: flex; align-items: center; gap: 8px; margin: 6px 0; font-size: 0.85em; }
 .trend-label { width: 90px; text-align: right; color: var(--text2); white-space: nowrap;
-  overflow: hidden; text-overflow: ellipsis; flex-shrink: 0; }
+  overflow: hidden; text-overflow: ellipsis; flex-shrink: 0; cursor: pointer; position: relative; }
+.trend-label:hover { overflow: visible; z-index: 10; }
+.trend-label:hover::after { content: attr(data-full); position: absolute; right: 0; top: -28px;
+  background: var(--surface); border: 1px solid var(--border); padding: 4px 10px;
+  border-radius: 6px; white-space: nowrap; font-size: 0.85em; color: var(--text);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.4); z-index: 20; }
 .trend-bar-bg { flex: 1; height: 16px; background: var(--bg); border-radius: 4px; overflow: hidden; }
 .trend-bar { height: 100%; border-radius: 4px; transition: width 0.4s ease; min-width: 2px; }
 .trend-bar.fire { background: var(--fire); }

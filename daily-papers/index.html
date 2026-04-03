@@ -95,7 +95,12 @@ img { max-width: 100%; border-radius: 8px; margin: 0.5em 0; }
 /* Trends */
 .trend-row { display: flex; align-items: center; gap: 8px; margin: 6px 0; font-size: 0.85em; }
 .trend-label { width: 90px; text-align: right; color: var(--text2); white-space: nowrap;
-  overflow: hidden; text-overflow: ellipsis; flex-shrink: 0; }
+  overflow: hidden; text-overflow: ellipsis; flex-shrink: 0; cursor: pointer; position: relative; }
+.trend-label:hover { overflow: visible; z-index: 10; }
+.trend-label:hover::after { content: attr(data-full); position: absolute; right: 0; top: -28px;
+  background: var(--surface); border: 1px solid var(--border); padding: 4px 10px;
+  border-radius: 6px; white-space: nowrap; font-size: 0.85em; color: var(--text);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.4); z-index: 20; }
 .trend-bar-bg { flex: 1; height: 16px; background: var(--bg); border-radius: 4px; overflow: hidden; }
 .trend-bar { height: 100%; border-radius: 4px; transition: width 0.4s ease; min-width: 2px; }
 .trend-bar.fire { background: var(--fire); }
@@ -751,9 +756,19 @@ function selectDate(ds){
   var content=document.getElementById('content-'+ds);
   if(content){
     el.innerHTML='<div class="day-hero"><h2>'+ds+' '+day.weekday+'</h2></div>'+content.innerHTML;
-    // Re-init tabs inside the new content
-    var firstTab=el.querySelector('.tab-btn');
-    if(firstTab) firstTab.click();
+    // Fix duplicate IDs: prefix all panel/tab IDs inside main-content
+    el.querySelectorAll('[id^="panel-"]').forEach(function(p){
+      p.id='mc-'+p.id;
+    });
+    el.querySelectorAll('.tab-btn[data-tab]').forEach(function(b){
+      var tab=b.getAttribute('data-tab');
+      b.setAttribute('onclick',"switchTabIn('mc-panel-"+tab+"','main-content')");
+    });
+    // Show the "all" panel by default
+    var allPanel=el.querySelector('[id="mc-panel-all"]');
+    if(allPanel) allPanel.classList.add('active');
+    var allBtn=el.querySelector('.tab-btn[data-tab="all"]');
+    if(allBtn) allBtn.classList.add('active');
   } else {
     el.innerHTML='<div class="no-data">该日期无推荐数据</div>';
   }
@@ -773,6 +788,18 @@ function selectDate(ds){
   });
   history.replaceState(null,'','#'+ds);
 }
+function switchTabIn(panelId, containerId){
+  var container=document.getElementById(containerId);
+  container.querySelectorAll('.tab-btn').forEach(function(b){b.classList.remove('active');});
+  container.querySelectorAll('.tab-panel').forEach(function(p){p.classList.remove('active');});
+  var panel=document.getElementById(panelId);
+  if(panel) panel.classList.add('active');
+  // activate the corresponding button
+  var tabName=panelId.replace('mc-panel-','');
+  container.querySelectorAll('.tab-btn').forEach(function(b){
+    if(b.getAttribute('data-tab')===tabName) b.classList.add('active');
+  });
+}
 function renderTrends(){
   var agg={};
   DAYS_DATA.forEach(function(d){
@@ -788,7 +815,7 @@ function renderTrends(){
   sorted.forEach(function(e){
     var pct=Math.round(e[1]/max*100);
     html+='<div class="trend-row">'+
-      '<span class="trend-label">'+e[0]+'</span>'+
+      '<span class="trend-label" data-full="'+e[0]+'" title="'+e[0]+'">'+e[0]+'</span>'+
       '<div class="trend-bar-bg"><div class="trend-bar accent" style="width:'+pct+'%"></div></div>'+
       '<span class="trend-count">'+e[1]+'</span></div>';
   });
