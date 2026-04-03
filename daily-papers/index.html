@@ -5333,17 +5333,24 @@ function filterByTopic(topic){
   var html='<div class="topic-page">';
   html+='<div class="topic-filter-bar"><span>🔍 主题: <strong>'+topic+'</strong></span>'
     +'<button class="clear-filter" onclick="clearTopicFilter()">✕ 返回</button></div>';
+  var globalIdx=0;
   DAYS_DATA.forEach(function(d){
     var content=document.getElementById('content-'+d.date);
     if(!content) return;
-    // Find matching paper cards in this day's hidden content
-    var cards=content.querySelectorAll('.paper-card[data-topic="'+topic+'"]');
+    // Only search in panel-all to avoid duplicates from per-topic panels
+    var allPanel=content.querySelector('[id="panel-all"]');
+    var searchRoot=allPanel||content;
+    var cards=searchRoot.querySelectorAll('.paper-card[data-topic="'+topic+'"]');
     if(cards.length===0) return;
     totalCount+=cards.length;
     html+='<div class="topic-date-group">';
     html+='<h3 class="topic-date-header">📅 '+d.date+' '+d.weekday+'<span class="topic-date-count">'+cards.length+' 篇</span></h3>';
     cards.forEach(function(card){
-      html+='<div class="paper-card" data-topic="'+topic+'">'+card.innerHTML+'</div>';
+      globalIdx++;
+      // Clone innerHTML and renumber the first h3 heading
+      var cardHtml=card.innerHTML;
+      cardHtml=cardHtml.replace(/<h3([^>]*)>\s*\d+\.\s*/, '<h3$1>'+globalIdx+'. ');
+      html+='<div class="paper-card" data-topic="'+topic+'">'+cardHtml+'</div>';
     });
     html+='</div>';
   });
