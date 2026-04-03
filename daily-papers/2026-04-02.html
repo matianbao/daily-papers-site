@@ -69,7 +69,8 @@ img { max-width: 100%; border-radius: 8px; margin: 0.5em 0; }
 .paper-card .paper-figure img { max-height: 280px; object-fit: contain; }
 /* ── Dashboard (index) ──────────────────────────────────── */
 .dashboard { display: grid; grid-template-columns: 300px 1fr; gap: 24px; margin-top: 1em; }
-.sidebar { display: flex; flex-direction: column; gap: 20px; }
+.sidebar { display: flex; flex-direction: column; gap: 20px;
+  position: sticky; top: 20px; align-self: start; max-height: calc(100vh - 40px); overflow-y: auto; }
 .main-content { min-height: 400px; }
 .panel { background: var(--surface); border: 1px solid var(--border);
   border-radius: 12px; padding: 16px 20px; }
