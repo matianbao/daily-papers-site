@@ -130,6 +130,19 @@ img { max-width: 100%; border-radius: 8px; margin: 0.5em 0; }
   font-weight: 600; font-size: 0.95em; }
 .view-detail:hover { text-decoration: none; opacity: 0.9; }
 .no-data { color: var(--text2); text-align: center; padding: 60px 20px; font-size: 1.1em; }
+/* ── Collapsible notes ──────────────────────────────────── */
+details.paper-note { margin: 12px 0; border: 1px solid var(--border); border-radius: 8px;
+  background: var(--surface); }
+details.paper-note summary { padding: 10px 16px; cursor: pointer; font-weight: 600;
+  font-size: 0.95em; color: var(--accent); list-style: none; display: flex; align-items: center; gap: 8px; }
+details.paper-note summary::-webkit-details-marker { display: none; }
+details.paper-note summary::before { content: '▶'; font-size: 0.7em; transition: transform 0.2s; }
+details.paper-note[open] summary::before { transform: rotate(90deg); }
+details.paper-note .note-body { padding: 0 20px 16px; border-top: 1px solid var(--border);
+  max-height: 600px; overflow-y: auto; }
+details.paper-note .note-body h1 { display: none; }
+details.paper-note .note-body h2 { font-size: 1.1em; margin: 1em 0 0.3em; }
+details.paper-note .note-body h3 { font-size: 1em; }
 .day-card { background: var(--surface); border: 1px solid var(--border);
   border-radius: 10px; padding: 20px; margin: 12px 0; transition: border-color 0.2s; }
 .day-card:hover { border-color: var(--accent); }
