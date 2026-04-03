@@ -183,8 +183,7 @@ img { max-width: 100%; border-radius: 8px; margin: 0.5em 0; }
 <li><strong>核心方法</strong>: <span class="wikilink">CoALM</span> 把 <span class="wikilink">Task-Oriented Dialogue</span> 和 <span class="wikilink">Language Agent</span> 的 <span class="wikilink">function calling</span> 能力统一到一个模型里。构造了 CoALM-IT 多任务数据集，交织多轮 <span class="wikilink">ReAct</span> 推理和复杂 API 调用。训练了 8B/70B/405B 三个尺度，在 <span class="wikilink">MultiWOZ</span> 2.4、<span class="wikilink">BFCL</span> V3、API-Bank 上全面超越 GPT-4o。</li>
 <li><strong>对比方法/Baselines</strong>: <span class="wikilink">GPT-4o</span>, specialized TOD systems, <span class="wikilink">ToolAce</span></li>
 <li><strong>借鉴意义</strong>: 对话式 agent 的核心痛点——多轮对话管理和工具调用不能兼得——这篇给了一个干净的统一方案。对做对话推荐系统的同学直接有用。</li>
-<li><strong>锐评</strong>: 思路清晰，实验扎实，三个 benchmark 全打是有说服力的。但 405B 的模型谁用得起？8B 版本的性能衰减多少才是关键。另外 CoALM-IT 数据集用 GPT-4o 生成，那你超越 GPT-4o 到底是模型强还是数据蒸馏的功劳？🔥</li>
-<li>💡 <strong>想精读？</strong> 运行：<code>读一下 CALM: A Unified Conversational Agentic Language Model</code></li></div><div class="paper-card"><h3 id="2-agentscope-10-a-developer-centric-framework-for-building-agentic-applications">2. AgentScope 1.0: A Developer-Centric Framework for Building Agentic Applications</h3>
+<li><strong>锐评</strong>: 思路清晰，实验扎实，三个 benchmark 全打是有说服力的。但 405B 的模型谁用得起？8B 版本的性能衰减多少才是关键。另外 CoALM-IT 数据集用 GPT-4o 生成，那你超越 GPT-4o 到底是模型强还是数据蒸馏的功劳？🔥</li></div><div class="paper-card"><h3 id="2-agentscope-10-a-developer-centric-framework-for-building-agentic-applications">2. AgentScope 1.0: A Developer-Centric Framework for Building Agentic Applications</h3>
 <li><strong>作者</strong>: Dawei Gao et al.</li>
 <li><strong>机构</strong>: Alibaba Group</li>
 <li><strong>链接</strong>: <a href="https://arxiv.org/abs/2504.01943" target="_blank">arXiv</a> | <a href="https://arxiv.org/pdf/2504.01943" target="_blank">PDF</a></li>
@@ -193,8 +192,7 @@ img { max-width: 100%; border-radius: 8px; margin: 0.5em 0; }
 <li><strong>核心方法</strong>: <span class="wikilink">AgentScope</span> 是一个面向开发者的 multi-agent 框架，支持 <span class="wikilink">MCP</span> 协议、<span class="wikilink">ReAct</span> 模式、分布式部署。核心抽象包括 <span class="wikilink">MsgHub</span>（消息总线）、<span class="wikilink">StateModule</span>（状态管理）、Non-Invasive Monitoring（基于 <span class="wikilink">OpenTelemetry</span>）。</li>
 <li><strong>对比方法/Baselines</strong>: <span class="wikilink">LangChain</span>, <span class="wikilink">AutoGen</span>, <span class="wikilink">CAMEL</span></li>
 <li><strong>借鉴意义</strong>: 如果你要部署大规模 multi-agent 系统，这个框架的工程设计值得参考——特别是分布式和监控部分。</li>
-<li><strong>锐评</strong>: 阿里出品，工程质量有保障，但框架类论文的通病是——demo 很美，实际用起来全是坑。MCP 支持是加分项。和 LangChain 的对比不够 fair，只挑了对方弱的场景。👀</li>
-<li>💡 <strong>想精读？</strong> 运行：<code>读一下 AgentScope 1.0</code></li></div><div class="paper-card"><h3 id="3-agent-lightning-train-any-ai-agents-with-reinforcement-learning">3. Agent Lightning: Train ANY AI Agents with Reinforcement Learning</h3>
+<li><strong>锐评</strong>: 阿里出品，工程质量有保障，但框架类论文的通病是——demo 很美，实际用起来全是坑。MCP 支持是加分项。和 LangChain 的对比不够 fair，只挑了对方弱的场景。👀</li></div><div class="paper-card"><h3 id="3-agent-lightning-train-any-ai-agents-with-reinforcement-learning">3. Agent Lightning: Train ANY AI Agents with Reinforcement Learning</h3>
 <li><strong>作者</strong>: Yixiu Liu et al.</li>
 <li><strong>机构</strong>: Unknown</li>
 <li><strong>链接</strong>: <a href="https://arxiv.org/abs/2504.01553" target="_blank">arXiv</a> | <a href="https://arxiv.org/pdf/2504.01553" target="_blank">PDF</a></li>
@@ -214,7 +212,6 @@ img { max-width: 100%; border-radius: 8px; margin: 0.5em 0; }
 <li><strong>对比方法/Baselines</strong>: 传统单 agent 推荐, <span class="wikilink">MARS</span>, <span class="wikilink">TKGPT</span></li>
 <li><strong>借鉴意义</strong>: 直接相关。如果你在做推荐系统 + LLM agent 的结合，这篇 survey 是很好的 roadmap。</li>
 <li><strong>锐评</strong>: Survey 类论文看的是覆盖面和组织能力。multi-agent 做推荐确实是一个正在升温的方向，但现有工作大多还停留在"用 LLM 模拟用户"的阶段，离 production-ready 差十万八千里。这篇能不能把问题讲清楚比结论重要。👀</li>
-<li>💡 <strong>想精读？</strong> 运行：<code>读一下 Multi-Agent Video Recommenders</code></li>
 </div><h2 id="-agent--reinforcement-learning">🧠 Agent × Reinforcement Learning</h2><div class="paper-card"><h3 id="5-skill0-in-context-agentic-reinforcement-learning-for-skill-internalization">5. SKILL0: In-Context Agentic Reinforcement Learning for Skill Internalization</h3>
 <li><strong>作者</strong>: Unknown</li>
 <li><strong>机构</strong>: Unknown</li>
@@ -224,8 +221,7 @@ img { max-width: 100%; border-radius: 8px; margin: 0.5em 0; }
 <li><strong>核心方法</strong>: <span class="wikilink">SKILL0</span> 提出 <span class="wikilink">ICRL</span>（In-Context Reinforcement Learning），让 agent 在上下文中通过 <span class="wikilink">RL</span> 学习技能并内化。使用 <span class="wikilink">SkillBank</span> 存储可复用技能，<span class="wikilink">GRPO</span> 优化。与 <span class="wikilink">ExpeL</span>、<span class="wikilink">MemRL</span> 等 memory-augmented RL 方法对比。</li>
 <li><strong>对比方法/Baselines</strong>: <span class="wikilink">ExpeL</span>, <span class="wikilink">MemRL</span>, <span class="wikilink">ZeroSearch</span>, <span class="wikilink">SimpleMem</span></li>
 <li><strong>借鉴意义</strong>: 把 RL 和 in-context learning 结合的思路对 agent 长期学习有启发。SkillBank 的设计可以借鉴到推荐系统的 agent 策略复用。</li>
-<li><strong>锐评</strong>: 概念很性感——agent 自己学技能然后记住。但 "skill internalization" 说白了就是把 few-shot examples 用 RL 选出来。在 HotpotQA 上的提升是否能迁移到更复杂的 agent 场景？存疑。👀</li>
-<li>💡 <strong>想精读？</strong> 运行：<code>读一下 SKILL0</code></li></div><div class="paper-card"><h3 id="6-batched-contextual-reinforcement-a-task-scaling-law-for-efficient-reasoning">6. Batched Contextual Reinforcement: A Task-Scaling Law for Efficient Reasoning</h3>
+<li><strong>锐评</strong>: 概念很性感——agent 自己学技能然后记住。但 "skill internalization" 说白了就是把 few-shot examples 用 RL 选出来。在 HotpotQA 上的提升是否能迁移到更复杂的 agent 场景？存疑。👀</li></div><div class="paper-card"><h3 id="6-batched-contextual-reinforcement-a-task-scaling-law-for-efficient-reasoning">6. Batched Contextual Reinforcement: A Task-Scaling Law for Efficient Reasoning</h3>
 <li><strong>作者</strong>: Unknown</li>
 <li><strong>机构</strong>: Unknown</li>
 <li><strong>链接</strong>: <a href="https://arxiv.org/abs/2504.01478" target="_blank">arXiv</a> | <a href="https://arxiv.org/pdf/2504.01478" target="_blank">PDF</a></li>
@@ -245,7 +241,6 @@ img { max-width: 100%; border-radius: 8px; margin: 0.5em 0; }
 <li><strong>对比方法/Baselines</strong>: <span class="wikilink">RankZephyr</span>, <span class="wikilink">DRAGIN</span>, <span class="wikilink">SFT</span> baseline</li>
 <li><strong>借鉴意义</strong>: reranker 是推荐系统和 RAG 共享的核心组件。用 RL + LLM feedback 优化 reranker 的思路可以直接迁移到推荐场景的精排。</li>
 <li><strong>锐评</strong>: 思路不复杂但实用：与其 SFT 训练 reranker，不如用 RL 让下游 reader 的效果做 reward。问题是 LLM feedback 本身的成本——你用一个大模型的输出训另一个小模型，成本核算过吗？👀</li>
-<li>💡 <strong>想精读？</strong> 运行：<code>读一下 Optimizing RAG Rerankers with LLM Feedback</code></li>
 </div><h2 id="-memory--agent">💾 Memory × Agent</h2><div class="paper-card"><h3 id="8-msa-memory-sparse-attention-for-efficient-end-to-end-memory-model-scaling-to-10m">8. MSA: Memory Sparse Attention for Efficient End-to-End Memory Model Scaling to 10M+</h3>
 <li><strong>作者</strong>: Unknown</li>
 <li><strong>机构</strong>: Unknown</li>
@@ -286,8 +281,7 @@ img { max-width: 100%; border-radius: 8px; margin: 0.5em 0; }
 <li><strong>核心方法</strong>: <span class="wikilink">CoALM</span> 把 <span class="wikilink">Task-Oriented Dialogue</span> 和 <span class="wikilink">Language Agent</span> 的 <span class="wikilink">function calling</span> 能力统一到一个模型里。构造了 CoALM-IT 多任务数据集，交织多轮 <span class="wikilink">ReAct</span> 推理和复杂 API 调用。训练了 8B/70B/405B 三个尺度，在 <span class="wikilink">MultiWOZ</span> 2.4、<span class="wikilink">BFCL</span> V3、API-Bank 上全面超越 GPT-4o。</li>
 <li><strong>对比方法/Baselines</strong>: <span class="wikilink">GPT-4o</span>, specialized TOD systems, <span class="wikilink">ToolAce</span></li>
 <li><strong>借鉴意义</strong>: 对话式 agent 的核心痛点——多轮对话管理和工具调用不能兼得——这篇给了一个干净的统一方案。对做对话推荐系统的同学直接有用。</li>
-<li><strong>锐评</strong>: 思路清晰，实验扎实，三个 benchmark 全打是有说服力的。但 405B 的模型谁用得起？8B 版本的性能衰减多少才是关键。另外 CoALM-IT 数据集用 GPT-4o 生成，那你超越 GPT-4o 到底是模型强还是数据蒸馏的功劳？🔥</li>
-<li>💡 <strong>想精读？</strong> 运行：<code>读一下 CALM: A Unified Conversational Agentic Language Model</code></li></div><div class="paper-card"><h3 id="2-agentscope-10-a-developer-centric-framework-for-building-agentic-applications">2. AgentScope 1.0: A Developer-Centric Framework for Building Agentic Applications</h3>
+<li><strong>锐评</strong>: 思路清晰，实验扎实，三个 benchmark 全打是有说服力的。但 405B 的模型谁用得起？8B 版本的性能衰减多少才是关键。另外 CoALM-IT 数据集用 GPT-4o 生成，那你超越 GPT-4o 到底是模型强还是数据蒸馏的功劳？🔥</li></div><div class="paper-card"><h3 id="2-agentscope-10-a-developer-centric-framework-for-building-agentic-applications">2. AgentScope 1.0: A Developer-Centric Framework for Building Agentic Applications</h3>
 <li><strong>作者</strong>: Dawei Gao et al.</li>
 <li><strong>机构</strong>: Alibaba Group</li>
 <li><strong>链接</strong>: <a href="https://arxiv.org/abs/2504.01943" target="_blank">arXiv</a> | <a href="https://arxiv.org/pdf/2504.01943" target="_blank">PDF</a></li>
@@ -296,8 +290,7 @@ img { max-width: 100%; border-radius: 8px; margin: 0.5em 0; }
 <li><strong>核心方法</strong>: <span class="wikilink">AgentScope</span> 是一个面向开发者的 multi-agent 框架，支持 <span class="wikilink">MCP</span> 协议、<span class="wikilink">ReAct</span> 模式、分布式部署。核心抽象包括 <span class="wikilink">MsgHub</span>（消息总线）、<span class="wikilink">StateModule</span>（状态管理）、Non-Invasive Monitoring（基于 <span class="wikilink">OpenTelemetry</span>）。</li>
 <li><strong>对比方法/Baselines</strong>: <span class="wikilink">LangChain</span>, <span class="wikilink">AutoGen</span>, <span class="wikilink">CAMEL</span></li>
 <li><strong>借鉴意义</strong>: 如果你要部署大规模 multi-agent 系统，这个框架的工程设计值得参考——特别是分布式和监控部分。</li>
-<li><strong>锐评</strong>: 阿里出品，工程质量有保障，但框架类论文的通病是——demo 很美，实际用起来全是坑。MCP 支持是加分项。和 LangChain 的对比不够 fair，只挑了对方弱的场景。👀</li>
-<li>💡 <strong>想精读？</strong> 运行：<code>读一下 AgentScope 1.0</code></li></div><div class="paper-card"><h3 id="3-agent-lightning-train-any-ai-agents-with-reinforcement-learning">3. Agent Lightning: Train ANY AI Agents with Reinforcement Learning</h3>
+<li><strong>锐评</strong>: 阿里出品，工程质量有保障，但框架类论文的通病是——demo 很美，实际用起来全是坑。MCP 支持是加分项。和 LangChain 的对比不够 fair，只挑了对方弱的场景。👀</li></div><div class="paper-card"><h3 id="3-agent-lightning-train-any-ai-agents-with-reinforcement-learning">3. Agent Lightning: Train ANY AI Agents with Reinforcement Learning</h3>
 <li><strong>作者</strong>: Yixiu Liu et al.</li>
 <li><strong>机构</strong>: Unknown</li>
 <li><strong>链接</strong>: <a href="https://arxiv.org/abs/2504.01553" target="_blank">arXiv</a> | <a href="https://arxiv.org/pdf/2504.01553" target="_blank">PDF</a></li>
@@ -318,7 +311,6 @@ img { max-width: 100%; border-radius: 8px; margin: 0.5em 0; }
 <li><strong>对比方法/Baselines</strong>: 传统单 agent 推荐, <span class="wikilink">MARS</span>, <span class="wikilink">TKGPT</span></li>
 <li><strong>借鉴意义</strong>: 直接相关。如果你在做推荐系统 + LLM agent 的结合，这篇 survey 是很好的 roadmap。</li>
 <li><strong>锐评</strong>: Survey 类论文看的是覆盖面和组织能力。multi-agent 做推荐确实是一个正在升温的方向，但现有工作大多还停留在"用 LLM 模拟用户"的阶段，离 production-ready 差十万八千里。这篇能不能把问题讲清楚比结论重要。👀</li>
-<li>💡 <strong>想精读？</strong> 运行：<code>读一下 Multi-Agent Video Recommenders</code></li>
 </div></div>
 <div id="panel-agentreinforcementlearning" class="tab-panel"><h2 id="-agent--reinforcement-learning">🧠 Agent × Reinforcement Learning</h2><div class="paper-card"><h3 id="5-skill0-in-context-agentic-reinforcement-learning-for-skill-internalization">5. SKILL0: In-Context Agentic Reinforcement Learning for Skill Internalization</h3>
 <li><strong>作者</strong>: Unknown</li>
@@ -329,8 +321,7 @@ img { max-width: 100%; border-radius: 8px; margin: 0.5em 0; }
 <li><strong>核心方法</strong>: <span class="wikilink">SKILL0</span> 提出 <span class="wikilink">ICRL</span>（In-Context Reinforcement Learning），让 agent 在上下文中通过 <span class="wikilink">RL</span> 学习技能并内化。使用 <span class="wikilink">SkillBank</span> 存储可复用技能，<span class="wikilink">GRPO</span> 优化。与 <span class="wikilink">ExpeL</span>、<span class="wikilink">MemRL</span> 等 memory-augmented RL 方法对比。</li>
 <li><strong>对比方法/Baselines</strong>: <span class="wikilink">ExpeL</span>, <span class="wikilink">MemRL</span>, <span class="wikilink">ZeroSearch</span>, <span class="wikilink">SimpleMem</span></li>
 <li><strong>借鉴意义</strong>: 把 RL 和 in-context learning 结合的思路对 agent 长期学习有启发。SkillBank 的设计可以借鉴到推荐系统的 agent 策略复用。</li>
-<li><strong>锐评</strong>: 概念很性感——agent 自己学技能然后记住。但 "skill internalization" 说白了就是把 few-shot examples 用 RL 选出来。在 HotpotQA 上的提升是否能迁移到更复杂的 agent 场景？存疑。👀</li>
-<li>💡 <strong>想精读？</strong> 运行：<code>读一下 SKILL0</code></li></div><div class="paper-card"><h3 id="6-batched-contextual-reinforcement-a-task-scaling-law-for-efficient-reasoning">6. Batched Contextual Reinforcement: A Task-Scaling Law for Efficient Reasoning</h3>
+<li><strong>锐评</strong>: 概念很性感——agent 自己学技能然后记住。但 "skill internalization" 说白了就是把 few-shot examples 用 RL 选出来。在 HotpotQA 上的提升是否能迁移到更复杂的 agent 场景？存疑。👀</li></div><div class="paper-card"><h3 id="6-batched-contextual-reinforcement-a-task-scaling-law-for-efficient-reasoning">6. Batched Contextual Reinforcement: A Task-Scaling Law for Efficient Reasoning</h3>
 <li><strong>作者</strong>: Unknown</li>
 <li><strong>机构</strong>: Unknown</li>
 <li><strong>链接</strong>: <a href="https://arxiv.org/abs/2504.01478" target="_blank">arXiv</a> | <a href="https://arxiv.org/pdf/2504.01478" target="_blank">PDF</a></li>
@@ -351,7 +342,6 @@ img { max-width: 100%; border-radius: 8px; margin: 0.5em 0; }
 <li><strong>对比方法/Baselines</strong>: <span class="wikilink">RankZephyr</span>, <span class="wikilink">DRAGIN</span>, <span class="wikilink">SFT</span> baseline</li>
 <li><strong>借鉴意义</strong>: reranker 是推荐系统和 RAG 共享的核心组件。用 RL + LLM feedback 优化 reranker 的思路可以直接迁移到推荐场景的精排。</li>
 <li><strong>锐评</strong>: 思路不复杂但实用：与其 SFT 训练 reranker，不如用 RL 让下游 reader 的效果做 reward。问题是 LLM feedback 本身的成本——你用一个大模型的输出训另一个小模型，成本核算过吗？👀</li>
-<li>💡 <strong>想精读？</strong> 运行：<code>读一下 Optimizing RAG Rerankers with LLM Feedback</code></li>
 </div></div>
 <div id="panel-memoryagent" class="tab-panel"><h2 id="-memory--agent">💾 Memory × Agent</h2><div class="paper-card"><h3 id="8-msa-memory-sparse-attention-for-efficient-end-to-end-memory-model-scaling-to-10m">8. MSA: Memory Sparse Attention for Efficient End-to-End Memory Model Scaling to 10M+</h3>
 <li><strong>作者</strong>: Unknown</li>
