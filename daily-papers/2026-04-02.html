@@ -135,6 +135,7 @@ img { max-width: 100%; border-radius: 8px; margin: 0.5em 0; }
 .view-detail:hover { text-decoration: none; opacity: 0.9; }
 .no-data { color: var(--text2); text-align: center; padding: 60px 20px; font-size: 1.1em; }
 /* ── Collapsible notes ──────────────────────────────────── */
+.math-block { margin: 0.8em 0; text-align: center; overflow-x: auto; }
 details.paper-note { margin: 12px 0; border: 1px solid var(--border); border-radius: 8px;
   background: var(--surface); }
 details.paper-note summary { padding: 10px 16px; cursor: pointer; font-weight: 600;
@@ -232,33 +233,33 @@ details.paper-note .note-body h3 { font-size: 1em; }
 
 <p>给定输入 $X = [\boldsymbol{x}_1; \dots; \boldsymbol{x}_T] \in \mathbb{R}^{T \times D}$，异构注意力使用 token-specific 的 QKV 投影：</p>
 
-<p>$$</p>
-<p>Q_h = \begin{bmatrix} \boldsymbol{x}_1 W^{1h}_Q \\ \vdots \\ \boldsymbol{x}_T W^{Th}_Q \end{bmatrix}, \quad K_h = \begin{bmatrix} \boldsymbol{x}_1 W^{1h}_K \\ \vdots \\ \boldsymbol{x}_T W^{Th}_K \end{bmatrix}, \quad V_h = \begin{bmatrix} \boldsymbol{x}_1 W^{1h}_V \\ \vdots \\ \boldsymbol{x}_T W^{Th}_V \end{bmatrix}</p>
-<p>$$</p>
+<div class="math-block">$$
+Q_h = \begin{bmatrix} \boldsymbol{x}_1 W^{1h}_Q \\ \vdots \\ \boldsymbol{x}_T W^{Th}_Q \end{bmatrix}, \quad K_h = \begin{bmatrix} \boldsymbol{x}_1 W^{1h}_K \\ \vdots \\ \boldsymbol{x}_T W^{Th}_K \end{bmatrix}, \quad V_h = \begin{bmatrix} \boldsymbol{x}_1 W^{1h}_V \\ \vdots \\ \boldsymbol{x}_T W^{Th}_V \end{bmatrix}
+$$</div>
 
-<p>$$</p>
-<p>O_h = \text{softmax}\Big(\frac{Q_h K_h^\top}{\sqrt{d}}\Big) V_h</p>
-<p>$$</p>
+<div class="math-block">$$
+O_h = \text{softmax}\Big(\frac{Q_h K_h^\top}{\sqrt{d}}\Big) V_h
+$$</div>
 
 <h4 id="tokenmixer">TokenMixer</h4>
 
 <p>TokenMixer 通过无参数的 split-head + concat 操作实现特征混合：</p>
 
-<p>$$</p>
-<p>[\boldsymbol{x}_t^{(1)} | \boldsymbol{x}_t^{(2)} | \dots | \boldsymbol{x}_t^{(H)}] = \text{SplitHead}(\boldsymbol{x}_t)</p>
-<p>$$</p>
+<div class="math-block">$$
+[\boldsymbol{x}_t^{(1)} | \boldsymbol{x}_t^{(2)} | \dots | \boldsymbol{x}_t^{(H)}] = \text{SplitHead}(\boldsymbol{x}_t)
+$$</div>
 
-<p>$$</p>
-<p>\boldsymbol{s}^h = \text{concat}(\boldsymbol{x}_1^{(h)}, \boldsymbol{x}_2^{(h)}, \dots, \boldsymbol{x}_T^{(h)}) \in \mathbb{R}^{TD/H}</p>
-<p>$$</p>
+<div class="math-block">$$
+\boldsymbol{s}^h = \text{concat}(\boldsymbol{x}_1^{(h)}, \boldsymbol{x}_2^{(h)}, \dots, \boldsymbol{x}_T^{(h)}) \in \mathbb{R}^{TD/H}
+$$</div>
 
 <p>约束：$H$ 必须等于 $T$（head 数 = token 数）</p>
 
 <h4 id="wukong-fm-based">Wukong (FM-based)</h4>
 
-<p>$$</p>
-<p>\text{FMB}(X) = \text{reshape}(\text{MLP}(\text{LN}(\text{flatten}(\text{FM}(X))))), \quad \text{FM}(X) = XX^\top Y</p>
-<p>$$</p>
+<div class="math-block">$$
+\text{FMB}(X) = \text{reshape}(\text{MLP}(\text{LN}(\text{flatten}(\text{FM}(X))))), \quad \text{FM}(X) = XX^\top Y
+$$</div>
 
 <p>其中 $Y \in \mathbb{R}^{T \times r}$ 用于降低交互矩阵 $XX^\top$ 的存储开销。</p>
 
@@ -268,9 +269,9 @@ details.paper-note .note-body h3 { font-size: 1em; }
 
 <p>TokenMixer 的 mixing 操作等价于一个置换矩阵 $P$ 作用在 flatten 后的输入上：</p>
 
-<p>$$</p>
-<p>\text{flatten}(S) = P \cdot \text{flatten}(X)</p>
-<p>$$</p>
+<div class="math-block">$$
+\text{flatten}(S) = P \cdot \text{flatten}(X)
+$$</div>
 
 <p>其中 $P$ 是一个 <span class="wikilink">双随机矩阵</span>（doubly stochastic matrix），满足行列和均为 1。</p>
 
@@ -278,9 +279,9 @@ details.paper-note .note-body h3 { font-size: 1em; }
 
 <p>将 TokenMixer 的固定置换矩阵推广为可学习的参数化混合矩阵，同时引入 <span class="wikilink">Sinkhorn-Knopp</span> 算法约束其保持双随机性质：</p>
 
-<p>$$</p>
-<p>\text{UniMixing}(X) = \text{reshape}(\sigma(P) \cdot \text{flatten}(X))</p>
-<p>$$</p>
+<div class="math-block">$$
+\text{UniMixing}(X) = \text{reshape}(\sigma(P) \cdot \text{flatten}(X))
+$$</div>
 
 <p>关键改进：</p>
 <li><strong>移除 $H = T$ 约束</strong>：head 数不再需要等于 token 数</li>
@@ -295,9 +296,9 @@ details.paper-note .note-body h3 { font-size: 1em; }
 
 <h3 id="siamesenorm">SiameseNorm</h3>
 
-<p>$$</p>
-<p>\text{SiameseNorm}(\boldsymbol{x}) = \gamma \cdot \frac{\boldsymbol{x} - \mu}{\sigma + \epsilon} + \beta</p>
-<p>$$</p>
+<div class="math-block">$$
+\text{SiameseNorm}(\boldsymbol{x}) = \gamma \cdot \frac{\boldsymbol{x} - \mu}{\sigma + \epsilon} + \beta
+$$</div>
 
 <p>使用孪生归一化控制参数膨胀，其中 $\gamma$ 和 $\beta$ 在不同 head 间共享。</p>
 
@@ -390,9 +391,9 @@ details.paper-note .note-body h3 { font-size: 1em; }
 
 <p>MemAgent 将噪声、冗长的购买记录压缩为简洁的偏好信号：</p>
 
-<p>$$</p>
-<p>\text{Memory} = \text{MemAgent}(\text{PurchaseHistory})</p>
-<p>$$</p>
+<div class="math-block">$$
+\text{Memory} = \text{MemAgent}(\text{PurchaseHistory})
+$$</div>
 
 <p>关键设计：偏好记忆是 <strong>query-independent</strong> 的，不依赖当前查询，一次提取可复用于多次排序。</p>
 
@@ -489,23 +490,23 @@ details.paper-note .note-body h3 { font-size: 1em; }
 
 <li><strong>State</strong>: Agent 执行的快照，包括程序计数器、变量值、调用栈等。形式化为：</li>
 
-<p>$$\texttt{state}_{t}(x,k) = \left\{ \texttt{variable}_{i}^{x,k,t} \right\}_{i=1}^{V}$$</p>
+<div class="math-block">$$\texttt{state}_{t}(x,k) = \left\{ \texttt{variable}_{i}^{x,k,t} \right\}_{i=1}^{V}$$</div>
 
 <li><strong>Semantic Variable</strong>: 被组件使用或修改的关键变量，代表关键语义（如程序意图）。不关注循环计数器等辅助变量，只关注语义层面的变化。</li>
 
 <li><strong>Component Invocation (Call)</strong>: 语义变量的变化通过组件调用发生。第 $k$ 次执行任务 $x$ 的所有调用序列为：</li>
 
-<p>$$\texttt{execution}(x,k) = \left\{ \texttt{call}_{i}^{x,k} \right\}_{i=1}^{N}$$</p>
+<div class="math-block">$$\texttt{execution}(x,k) = \left\{ \texttt{call}_{i}^{x,k} \right\}_{i=1}^{N}$$</div>
 
 <p>其中每个 call 定义为：</p>
 
-<p>$$\texttt{call}_{i}^{x,k} = (\texttt{meta}_{i}^{x,k}, \texttt{input}_{i}^{x,k}, \texttt{output}_{i}^{x,k}), \quad \text{with} ~ \texttt{output}_{i}^{x,k} = C_{i}(\texttt{input}_{i}^{x,k})$$</p>
+<div class="math-block">$$\texttt{call}_{i}^{x,k} = (\texttt{meta}_{i}^{x,k}, \texttt{input}_{i}^{x,k}, \texttt{output}_{i}^{x,k}), \quad \text{with} ~ \texttt{output}_{i}^{x,k} = C_{i}(\texttt{input}_{i}^{x,k})$$</div>
 
 <p>这里 $C_{i} \in \mathcal{M} \cup \mathcal{T}$，即组件可以是 LLM ($\mathcal{M}$) 或工具 ($\mathcal{T}$)。</p>
 
 <li><strong>Reward 标注</strong>: 为每个 call 分配 reward $r_i \in \mathbb{R}$，形成带 reward 的执行序列：</li>
 
-<p>$$\texttt{execution}^{R}(x,k) = \left\{ (\texttt{call}_{i}^{x,k}, r_{i}^{x,k}) \right\}_{i=1}^{N}$$</p>
+<div class="math-block">$$\texttt{execution}^{R}(x,k) = \left\{ (\texttt{call}_{i}^{x,k}, r_{i}^{x,k}) \right\}_{i=1}^{N}$$</div>
 
 <div class="paper-figure"><img src="https://arxiv.org/html/2508.03680v1/figures/data_interface.png" alt="Data Interface" loading="lazy"></div>
 <p><em>Figure 2: 统一数据接口示意图。左侧展示 Agent 执行流程中语义变量的更新；右侧展示对应的 trajectory 数据收集。</em></p>
@@ -514,7 +515,7 @@ details.paper-note .note-body h3 { font-size: 1em; }
 
 <p>Agent Lightning 将 Agent 执行建模为 <span class="wikilink">Partially Observable Markov Decision Process</span> (POMDP)：</p>
 
-<p>$$\mathcal{M} = (\mathcal{S}, \mathcal{O}, \mathcal{A}, \mathcal{P}, \mathcal{R})$$</p>
+<div class="math-block">$$\mathcal{M} = (\mathcal{S}, \mathcal{O}, \mathcal{A}, \mathcal{P}, \mathcal{R})$$</div>
 
 <p>各元素含义：</p>
 
@@ -531,7 +532,7 @@ details.paper-note .note-body h3 { font-size: 1em; }
 
 <p><strong>关键设计</strong>: 将 LLM 的一次完整生成（而非单个 token）作为一个 action，这是与传统 token-level RL 的重要区别。策略模型的目标是最大化累积回报：</p>
 
-<p>$$R = \sum_{t=1}^{T} r_t$$</p>
+<div class="math-block">$$R = \sum_{t=1}^{T} r_t$$</div>
 
 <h3 id="33-lightningrl-层次化-rl-算法">3.3 LightningRL: 层次化 RL 算法</h3>
 
@@ -539,7 +540,7 @@ details.paper-note .note-body h3 { font-size: 1em; }
 
 <p><strong>单轮 RL 回顾</strong>：现有方法（如 <span class="wikilink">GRPO</span>、<span class="wikilink">REINFORCE++</span>、<span class="wikilink">PPO</span>）主要处理单次 LLM 调用：给定任务 $x$，LLM 生成 response $\texttt{output} = (y_1, \ldots, y_N)$，获得 reward $r(x, \texttt{output}, \hat{y})$。通用训练目标为：</p>
 
-<p>$$\mathcal{L}(\theta) = -\mathbb{E}_{x \sim \mathcal{X}, \texttt{output} \sim \pi_{\theta}(\cdot|x)} \left[ \sum_{j=1}^{N} \log \pi_{\theta}(y_j | x, y_{<j}) \cdot A_j \right]$$</p>
+<div class="math-block">$$\mathcal{L}(\theta) = -\mathbb{E}_{x \sim \mathcal{X}, \texttt{output} \sim \pi_{\theta}(\cdot|x)} \left[ \sum_{j=1}^{N} \log \pi_{\theta}(y_j | x, y_{&lt;j}) \cdot A_j \right]$$</div>
 
 <p>其中 $A_j$ 是 token 级别的 advantage 估计。</p>
 
@@ -554,7 +555,7 @@ details.paper-note .note-body h3 { font-size: 1em; }
 
 <p>LightningRL 采用<strong>层次化</strong>方法，将 trajectory 分解为独立的 transition：</p>
 
-<p>$$\texttt{execution}^{RL}(x,k) = \left\{ (\texttt{input}_{t}^{x,k}, \texttt{output}_{t}^{x,k}, r_{t}^{x,k}) \right\}_{t=1}^{T}$$</p>
+<div class="math-block">$$\texttt{execution}^{RL}(x,k) = \left\{ (\texttt{input}_{t}^{x,k}, \texttt{output}_{t}^{x,k}, r_{t}^{x,k}) \right\}_{t=1}^{T}$$</div>
 
 <p>包含一个 <strong>Credit Assignment Module</strong>，将 trajectory 级别的 return 分配到每次 LLM 调用的 reward。这使得每个 transition 可以独立用于 RL 优化，与现有的单轮 RL 算法（如 GRPO）无缝集成。</p>
 
@@ -609,7 +610,7 @@ details.paper-note .note-body h3 { font-size: 1em; }
 <li><strong>Agent 设计</strong>: 单 LLM 生成查询 -> 检索 -> 决定是否精炼查询或生成答案</li>
 <li><strong>Reward</strong>: 格式分 + 正确性分的加权组合</li>
 
-<p>$$R = 0.9 \times R_{\text{correctness}} + 0.1 \times R_{\text{format}}$$</p>
+<div class="math-block">$$R = 0.9 \times R_{\text{correctness}} + 0.1 \times R_{\text{format}}$$</div>
 
 <p>其中 $R_{\text{correctness}}$ 采用 word-level F1 score。</p>
 
@@ -830,7 +831,7 @@ details.paper-note .note-body h3 { font-size: 1em; }
 
 <p>CRA 是本文最重要的数据创新。基于 SGD 数据集，构造了全新的对话结构：</p>
 
-<p>$$\text{User} \rightarrow \text{Thought}_1 \rightarrow \text{Action} \rightarrow \text{Observation} \rightarrow \text{Thought}_2 \rightarrow \text{Response}$$</p>
+<div class="math-block">$$\text{User} \rightarrow \text{Thought}_1 \rightarrow \text{Action} \rightarrow \text{Observation} \rightarrow \text{Thought}_2 \rightarrow \text{Response}$$</div>
 
 <p>关键设计：</p>
 <li><strong>Thought₁</strong>: 理解用户意图，决定是否需要调用 API</li>
@@ -1144,9 +1145,9 @@ details.paper-note .note-body h3 { font-size: 1em; }
 
 <h3 id="双-reward-机制">双 Reward 机制</h3>
 
-<p>$$</p>
-<p>R = \alpha \cdot R_{\text{text}} + \beta \cdot R_{\text{image}}</p>
-<p>$$</p>
+<div class="math-block">$$
+R = \alpha \cdot R_{\text{text}} + \beta \cdot R_{\text{image}}
+$$</div>
 
 <li>$R_{\text{text}}$：文本 reward，评估搜索到的文本知识的相关性</li>
 <li>$R_{\text{image}}$：图像 reward，评估最终生成图像的质量和准确性</li>
@@ -1222,9 +1223,9 @@ details.paper-note .note-body h3 { font-size: 1em; }
 
 <p>每个 agent 被抽象为三元组：</p>
 
-<p>$$</p>
-<p>\text{Agent} = (\text{model}, \text{reasoning\_pattern}, \text{tools})</p>
-<p>$$</p>
+<div class="math-block">$$
+\text{Agent} = (\text{model}, \text{reasoning\_pattern}, \text{tools})
+$$</div>
 
 <li><strong>model</strong>: 底层 LLM（如 GPT-4, Claude）</li>
 <li><strong>reasoning_pattern</strong>: 推理模式（如 <span class="wikilink">ReAct</span>, <span class="wikilink">CoT</span>）</li>
@@ -1234,9 +1235,9 @@ details.paper-note .note-body h3 { font-size: 1em; }
 
 <p>编排器通过 <span class="wikilink">RL</span> 持续优化，学习决定 "谁在什么时候和谁协作"：</p>
 
-<p>$$</p>
-<p>\pi^*(\text{agent}_t | s_t) = \arg\max_\pi \mathbb{E}\left[\sum_{t=0}^T \gamma^t r_t\right]</p>
-<p>$$</p>
+<div class="math-block">$$
+\pi^*(\text{agent}_t | s_t) = \arg\max_\pi \mathbb{E}\left[\sum_{t=0}^T \gamma^t r_t\right]
+$$</div>
 
 <p>其中 $s_t$ 是当前任务状态，$r_t$ 是任务完成度 reward。</p>
 
@@ -1316,9 +1317,9 @@ details.paper-note .note-body h3 { font-size: 1em; }
 
 <p>将所有 OPD 方法统一到 $f$-divergence 框架下：</p>
 
-<p>$$</p>
-<p>D_f(p \| q) = \mathbb{E}_{x \sim q}\left[f\left(\frac{p(x)}{q(x)}\right)\right]</p>
-<p>$$</p>
+<div class="math-block">$$
+D_f(p \| q) = \mathbb{E}_{x \sim q}\left[f\left(\frac{p(x)}{q(x)}\right)\right]
+$$</div>
 
 <p>不同方法对应不同的 $f$ 函数选择：</p>
 <li><strong>KL divergence</strong> ($f(t) = t\log t$): <span class="wikilink">GKD</span></li>
@@ -1417,9 +1418,9 @@ details.paper-note .note-body h3 { font-size: 1em; }
 <p>2. <strong>不做任何过滤/验证</strong></p>
 <p>3. <strong>标准 SFT 微调</strong>：直接在采样结果上做监督微调</p>
 
-<p>$$</p>
-<p>\mathcal{L}_{\text{SSD}} = -\mathbb{E}_{x \sim p_\theta}\left[\log p_\theta(x)\right]</p>
-<p>$$</p>
+<div class="math-block">$$
+\mathcal{L}_{\text{SSD}} = -\mathbb{E}_{x \sim p_\theta}\left[\log p_\theta(x)\right]
+$$</div>
 
 <p>核心发现：<strong>不筛选、不验证、直接蒸馏</strong>——反直觉地有效。</p>
 
@@ -1432,9 +1433,9 @@ details.paper-note .note-body h3 { font-size: 1em; }
 
 <p>SSD 以上下文依赖的方式重塑 token 分布：</p>
 
-<p>$$</p>
-<p>p'_\theta(x_t | x_{<t}) = \begin{cases} \text{suppress tail} & \text{precision matters} \\ \text{preserve diversity} & \text{exploration matters} \end{cases}</p>
-<p>$$</p>
+<div class="math-block">$$
+p&#x27;_\theta(x_t | x_{&lt;t}) = \begin{cases} \text{suppress tail} &amp; \text{precision matters} \\ \text{preserve diversity} &amp; \text{exploration matters} \end{cases}
+$$</div>
 
 <li>在需要精确的地方，抑制 distractor tails</li>
 <li>在需要探索的地方，保留有用的多样性</li>
@@ -1532,33 +1533,33 @@ details.paper-note .note-body h3 { font-size: 1em; }
 
 <p>给定输入 $X = [\boldsymbol{x}_1; \dots; \boldsymbol{x}_T] \in \mathbb{R}^{T \times D}$，异构注意力使用 token-specific 的 QKV 投影：</p>
 
-<p>$$</p>
-<p>Q_h = \begin{bmatrix} \boldsymbol{x}_1 W^{1h}_Q \\ \vdots \\ \boldsymbol{x}_T W^{Th}_Q \end{bmatrix}, \quad K_h = \begin{bmatrix} \boldsymbol{x}_1 W^{1h}_K \\ \vdots \\ \boldsymbol{x}_T W^{Th}_K \end{bmatrix}, \quad V_h = \begin{bmatrix} \boldsymbol{x}_1 W^{1h}_V \\ \vdots \\ \boldsymbol{x}_T W^{Th}_V \end{bmatrix}</p>
-<p>$$</p>
+<div class="math-block">$$
+Q_h = \begin{bmatrix} \boldsymbol{x}_1 W^{1h}_Q \\ \vdots \\ \boldsymbol{x}_T W^{Th}_Q \end{bmatrix}, \quad K_h = \begin{bmatrix} \boldsymbol{x}_1 W^{1h}_K \\ \vdots \\ \boldsymbol{x}_T W^{Th}_K \end{bmatrix}, \quad V_h = \begin{bmatrix} \boldsymbol{x}_1 W^{1h}_V \\ \vdots \\ \boldsymbol{x}_T W^{Th}_V \end{bmatrix}
+$$</div>
 
-<p>$$</p>
-<p>O_h = \text{softmax}\Big(\frac{Q_h K_h^\top}{\sqrt{d}}\Big) V_h</p>
-<p>$$</p>
+<div class="math-block">$$
+O_h = \text{softmax}\Big(\frac{Q_h K_h^\top}{\sqrt{d}}\Big) V_h
+$$</div>
 
 <h4 id="tokenmixer">TokenMixer</h4>
 
 <p>TokenMixer 通过无参数的 split-head + concat 操作实现特征混合：</p>
 
-<p>$$</p>
-<p>[\boldsymbol{x}_t^{(1)} | \boldsymbol{x}_t^{(2)} | \dots | \boldsymbol{x}_t^{(H)}] = \text{SplitHead}(\boldsymbol{x}_t)</p>
-<p>$$</p>
+<div class="math-block">$$
+[\boldsymbol{x}_t^{(1)} | \boldsymbol{x}_t^{(2)} | \dots | \boldsymbol{x}_t^{(H)}] = \text{SplitHead}(\boldsymbol{x}_t)
+$$</div>
 
-<p>$$</p>
-<p>\boldsymbol{s}^h = \text{concat}(\boldsymbol{x}_1^{(h)}, \boldsymbol{x}_2^{(h)}, \dots, \boldsymbol{x}_T^{(h)}) \in \mathbb{R}^{TD/H}</p>
-<p>$$</p>
+<div class="math-block">$$
+\boldsymbol{s}^h = \text{concat}(\boldsymbol{x}_1^{(h)}, \boldsymbol{x}_2^{(h)}, \dots, \boldsymbol{x}_T^{(h)}) \in \mathbb{R}^{TD/H}
+$$</div>
 
 <p>约束：$H$ 必须等于 $T$（head 数 = token 数）</p>
 
 <h4 id="wukong-fm-based">Wukong (FM-based)</h4>
 
-<p>$$</p>
-<p>\text{FMB}(X) = \text{reshape}(\text{MLP}(\text{LN}(\text{flatten}(\text{FM}(X))))), \quad \text{FM}(X) = XX^\top Y</p>
-<p>$$</p>
+<div class="math-block">$$
+\text{FMB}(X) = \text{reshape}(\text{MLP}(\text{LN}(\text{flatten}(\text{FM}(X))))), \quad \text{FM}(X) = XX^\top Y
+$$</div>
 
 <p>其中 $Y \in \mathbb{R}^{T \times r}$ 用于降低交互矩阵 $XX^\top$ 的存储开销。</p>
 
@@ -1568,9 +1569,9 @@ details.paper-note .note-body h3 { font-size: 1em; }
 
 <p>TokenMixer 的 mixing 操作等价于一个置换矩阵 $P$ 作用在 flatten 后的输入上：</p>
 
-<p>$$</p>
-<p>\text{flatten}(S) = P \cdot \text{flatten}(X)</p>
-<p>$$</p>
+<div class="math-block">$$
+\text{flatten}(S) = P \cdot \text{flatten}(X)
+$$</div>
 
 <p>其中 $P$ 是一个 <span class="wikilink">双随机矩阵</span>（doubly stochastic matrix），满足行列和均为 1。</p>
 
@@ -1578,9 +1579,9 @@ details.paper-note .note-body h3 { font-size: 1em; }
 
 <p>将 TokenMixer 的固定置换矩阵推广为可学习的参数化混合矩阵，同时引入 <span class="wikilink">Sinkhorn-Knopp</span> 算法约束其保持双随机性质：</p>
 
-<p>$$</p>
-<p>\text{UniMixing}(X) = \text{reshape}(\sigma(P) \cdot \text{flatten}(X))</p>
-<p>$$</p>
+<div class="math-block">$$
+\text{UniMixing}(X) = \text{reshape}(\sigma(P) \cdot \text{flatten}(X))
+$$</div>
 
 <p>关键改进：</p>
 <li><strong>移除 $H = T$ 约束</strong>：head 数不再需要等于 token 数</li>
@@ -1595,9 +1596,9 @@ details.paper-note .note-body h3 { font-size: 1em; }
 
 <h3 id="siamesenorm">SiameseNorm</h3>
 
-<p>$$</p>
-<p>\text{SiameseNorm}(\boldsymbol{x}) = \gamma \cdot \frac{\boldsymbol{x} - \mu}{\sigma + \epsilon} + \beta</p>
-<p>$$</p>
+<div class="math-block">$$
+\text{SiameseNorm}(\boldsymbol{x}) = \gamma \cdot \frac{\boldsymbol{x} - \mu}{\sigma + \epsilon} + \beta
+$$</div>
 
 <p>使用孪生归一化控制参数膨胀，其中 $\gamma$ 和 $\beta$ 在不同 head 间共享。</p>
 
@@ -1690,9 +1691,9 @@ details.paper-note .note-body h3 { font-size: 1em; }
 
 <p>MemAgent 将噪声、冗长的购买记录压缩为简洁的偏好信号：</p>
 
-<p>$$</p>
-<p>\text{Memory} = \text{MemAgent}(\text{PurchaseHistory})</p>
-<p>$$</p>
+<div class="math-block">$$
+\text{Memory} = \text{MemAgent}(\text{PurchaseHistory})
+$$</div>
 
 <p>关键设计：偏好记忆是 <strong>query-independent</strong> 的，不依赖当前查询，一次提取可复用于多次排序。</p>
 
@@ -1790,23 +1791,23 @@ details.paper-note .note-body h3 { font-size: 1em; }
 
 <li><strong>State</strong>: Agent 执行的快照，包括程序计数器、变量值、调用栈等。形式化为：</li>
 
-<p>$$\texttt{state}_{t}(x,k) = \left\{ \texttt{variable}_{i}^{x,k,t} \right\}_{i=1}^{V}$$</p>
+<div class="math-block">$$\texttt{state}_{t}(x,k) = \left\{ \texttt{variable}_{i}^{x,k,t} \right\}_{i=1}^{V}$$</div>
 
 <li><strong>Semantic Variable</strong>: 被组件使用或修改的关键变量，代表关键语义（如程序意图）。不关注循环计数器等辅助变量，只关注语义层面的变化。</li>
 
 <li><strong>Component Invocation (Call)</strong>: 语义变量的变化通过组件调用发生。第 $k$ 次执行任务 $x$ 的所有调用序列为：</li>
 
-<p>$$\texttt{execution}(x,k) = \left\{ \texttt{call}_{i}^{x,k} \right\}_{i=1}^{N}$$</p>
+<div class="math-block">$$\texttt{execution}(x,k) = \left\{ \texttt{call}_{i}^{x,k} \right\}_{i=1}^{N}$$</div>
 
 <p>其中每个 call 定义为：</p>
 
-<p>$$\texttt{call}_{i}^{x,k} = (\texttt{meta}_{i}^{x,k}, \texttt{input}_{i}^{x,k}, \texttt{output}_{i}^{x,k}), \quad \text{with} ~ \texttt{output}_{i}^{x,k} = C_{i}(\texttt{input}_{i}^{x,k})$$</p>
+<div class="math-block">$$\texttt{call}_{i}^{x,k} = (\texttt{meta}_{i}^{x,k}, \texttt{input}_{i}^{x,k}, \texttt{output}_{i}^{x,k}), \quad \text{with} ~ \texttt{output}_{i}^{x,k} = C_{i}(\texttt{input}_{i}^{x,k})$$</div>
 
 <p>这里 $C_{i} \in \mathcal{M} \cup \mathcal{T}$，即组件可以是 LLM ($\mathcal{M}$) 或工具 ($\mathcal{T}$)。</p>
 
 <li><strong>Reward 标注</strong>: 为每个 call 分配 reward $r_i \in \mathbb{R}$，形成带 reward 的执行序列：</li>
 
-<p>$$\texttt{execution}^{R}(x,k) = \left\{ (\texttt{call}_{i}^{x,k}, r_{i}^{x,k}) \right\}_{i=1}^{N}$$</p>
+<div class="math-block">$$\texttt{execution}^{R}(x,k) = \left\{ (\texttt{call}_{i}^{x,k}, r_{i}^{x,k}) \right\}_{i=1}^{N}$$</div>
 
 <div class="paper-figure"><img src="https://arxiv.org/html/2508.03680v1/figures/data_interface.png" alt="Data Interface" loading="lazy"></div>
 <p><em>Figure 2: 统一数据接口示意图。左侧展示 Agent 执行流程中语义变量的更新；右侧展示对应的 trajectory 数据收集。</em></p>
@@ -1815,7 +1816,7 @@ details.paper-note .note-body h3 { font-size: 1em; }
 
 <p>Agent Lightning 将 Agent 执行建模为 <span class="wikilink">Partially Observable Markov Decision Process</span> (POMDP)：</p>
 
-<p>$$\mathcal{M} = (\mathcal{S}, \mathcal{O}, \mathcal{A}, \mathcal{P}, \mathcal{R})$$</p>
+<div class="math-block">$$\mathcal{M} = (\mathcal{S}, \mathcal{O}, \mathcal{A}, \mathcal{P}, \mathcal{R})$$</div>
 
 <p>各元素含义：</p>
 
@@ -1832,7 +1833,7 @@ details.paper-note .note-body h3 { font-size: 1em; }
 
 <p><strong>关键设计</strong>: 将 LLM 的一次完整生成（而非单个 token）作为一个 action，这是与传统 token-level RL 的重要区别。策略模型的目标是最大化累积回报：</p>
 
-<p>$$R = \sum_{t=1}^{T} r_t$$</p>
+<div class="math-block">$$R = \sum_{t=1}^{T} r_t$$</div>
 
 <h3 id="33-lightningrl-层次化-rl-算法">3.3 LightningRL: 层次化 RL 算法</h3>
 
@@ -1840,7 +1841,7 @@ details.paper-note .note-body h3 { font-size: 1em; }
 
 <p><strong>单轮 RL 回顾</strong>：现有方法（如 <span class="wikilink">GRPO</span>、<span class="wikilink">REINFORCE++</span>、<span class="wikilink">PPO</span>）主要处理单次 LLM 调用：给定任务 $x$，LLM 生成 response $\texttt{output} = (y_1, \ldots, y_N)$，获得 reward $r(x, \texttt{output}, \hat{y})$。通用训练目标为：</p>
 
-<p>$$\mathcal{L}(\theta) = -\mathbb{E}_{x \sim \mathcal{X}, \texttt{output} \sim \pi_{\theta}(\cdot|x)} \left[ \sum_{j=1}^{N} \log \pi_{\theta}(y_j | x, y_{<j}) \cdot A_j \right]$$</p>
+<div class="math-block">$$\mathcal{L}(\theta) = -\mathbb{E}_{x \sim \mathcal{X}, \texttt{output} \sim \pi_{\theta}(\cdot|x)} \left[ \sum_{j=1}^{N} \log \pi_{\theta}(y_j | x, y_{&lt;j}) \cdot A_j \right]$$</div>
 
 <p>其中 $A_j$ 是 token 级别的 advantage 估计。</p>
 
@@ -1855,7 +1856,7 @@ details.paper-note .note-body h3 { font-size: 1em; }
 
 <p>LightningRL 采用<strong>层次化</strong>方法，将 trajectory 分解为独立的 transition：</p>
 
-<p>$$\texttt{execution}^{RL}(x,k) = \left\{ (\texttt{input}_{t}^{x,k}, \texttt{output}_{t}^{x,k}, r_{t}^{x,k}) \right\}_{t=1}^{T}$$</p>
+<div class="math-block">$$\texttt{execution}^{RL}(x,k) = \left\{ (\texttt{input}_{t}^{x,k}, \texttt{output}_{t}^{x,k}, r_{t}^{x,k}) \right\}_{t=1}^{T}$$</div>
 
 <p>包含一个 <strong>Credit Assignment Module</strong>，将 trajectory 级别的 return 分配到每次 LLM 调用的 reward。这使得每个 transition 可以独立用于 RL 优化，与现有的单轮 RL 算法（如 GRPO）无缝集成。</p>
 
@@ -1910,7 +1911,7 @@ details.paper-note .note-body h3 { font-size: 1em; }
 <li><strong>Agent 设计</strong>: 单 LLM 生成查询 -> 检索 -> 决定是否精炼查询或生成答案</li>
 <li><strong>Reward</strong>: 格式分 + 正确性分的加权组合</li>
 
-<p>$$R = 0.9 \times R_{\text{correctness}} + 0.1 \times R_{\text{format}}$$</p>
+<div class="math-block">$$R = 0.9 \times R_{\text{correctness}} + 0.1 \times R_{\text{format}}$$</div>
 
 <p>其中 $R_{\text{correctness}}$ 采用 word-level F1 score。</p>
 
@@ -2132,7 +2133,7 @@ details.paper-note .note-body h3 { font-size: 1em; }
 
 <p>CRA 是本文最重要的数据创新。基于 SGD 数据集，构造了全新的对话结构：</p>
 
-<p>$$\text{User} \rightarrow \text{Thought}_1 \rightarrow \text{Action} \rightarrow \text{Observation} \rightarrow \text{Thought}_2 \rightarrow \text{Response}$$</p>
+<div class="math-block">$$\text{User} \rightarrow \text{Thought}_1 \rightarrow \text{Action} \rightarrow \text{Observation} \rightarrow \text{Thought}_2 \rightarrow \text{Response}$$</div>
 
 <p>关键设计：</p>
 <li><strong>Thought₁</strong>: 理解用户意图，决定是否需要调用 API</li>
@@ -2447,9 +2448,9 @@ details.paper-note .note-body h3 { font-size: 1em; }
 
 <h3 id="双-reward-机制">双 Reward 机制</h3>
 
-<p>$$</p>
-<p>R = \alpha \cdot R_{\text{text}} + \beta \cdot R_{\text{image}}</p>
-<p>$$</p>
+<div class="math-block">$$
+R = \alpha \cdot R_{\text{text}} + \beta \cdot R_{\text{image}}
+$$</div>
 
 <li>$R_{\text{text}}$：文本 reward，评估搜索到的文本知识的相关性</li>
 <li>$R_{\text{image}}$：图像 reward，评估最终生成图像的质量和准确性</li>
@@ -2526,9 +2527,9 @@ details.paper-note .note-body h3 { font-size: 1em; }
 
 <p>每个 agent 被抽象为三元组：</p>
 
-<p>$$</p>
-<p>\text{Agent} = (\text{model}, \text{reasoning\_pattern}, \text{tools})</p>
-<p>$$</p>
+<div class="math-block">$$
+\text{Agent} = (\text{model}, \text{reasoning\_pattern}, \text{tools})
+$$</div>
 
 <li><strong>model</strong>: 底层 LLM（如 GPT-4, Claude）</li>
 <li><strong>reasoning_pattern</strong>: 推理模式（如 <span class="wikilink">ReAct</span>, <span class="wikilink">CoT</span>）</li>
@@ -2538,9 +2539,9 @@ details.paper-note .note-body h3 { font-size: 1em; }
 
 <p>编排器通过 <span class="wikilink">RL</span> 持续优化，学习决定 "谁在什么时候和谁协作"：</p>
 
-<p>$$</p>
-<p>\pi^*(\text{agent}_t | s_t) = \arg\max_\pi \mathbb{E}\left[\sum_{t=0}^T \gamma^t r_t\right]</p>
-<p>$$</p>
+<div class="math-block">$$
+\pi^*(\text{agent}_t | s_t) = \arg\max_\pi \mathbb{E}\left[\sum_{t=0}^T \gamma^t r_t\right]
+$$</div>
 
 <p>其中 $s_t$ 是当前任务状态，$r_t$ 是任务完成度 reward。</p>
 
@@ -2621,9 +2622,9 @@ details.paper-note .note-body h3 { font-size: 1em; }
 
 <p>将所有 OPD 方法统一到 $f$-divergence 框架下：</p>
 
-<p>$$</p>
-<p>D_f(p \| q) = \mathbb{E}_{x \sim q}\left[f\left(\frac{p(x)}{q(x)}\right)\right]</p>
-<p>$$</p>
+<div class="math-block">$$
+D_f(p \| q) = \mathbb{E}_{x \sim q}\left[f\left(\frac{p(x)}{q(x)}\right)\right]
+$$</div>
 
 <p>不同方法对应不同的 $f$ 函数选择：</p>
 <li><strong>KL divergence</strong> ($f(t) = t\log t$): <span class="wikilink">GKD</span></li>
@@ -2722,9 +2723,9 @@ details.paper-note .note-body h3 { font-size: 1em; }
 <p>2. <strong>不做任何过滤/验证</strong></p>
 <p>3. <strong>标准 SFT 微调</strong>：直接在采样结果上做监督微调</p>
 
-<p>$$</p>
-<p>\mathcal{L}_{\text{SSD}} = -\mathbb{E}_{x \sim p_\theta}\left[\log p_\theta(x)\right]</p>
-<p>$$</p>
+<div class="math-block">$$
+\mathcal{L}_{\text{SSD}} = -\mathbb{E}_{x \sim p_\theta}\left[\log p_\theta(x)\right]
+$$</div>
 
 <p>核心发现：<strong>不筛选、不验证、直接蒸馏</strong>——反直觉地有效。</p>
 
@@ -2737,9 +2738,9 @@ details.paper-note .note-body h3 { font-size: 1em; }
 
 <p>SSD 以上下文依赖的方式重塑 token 分布：</p>
 
-<p>$$</p>
-<p>p'_\theta(x_t | x_{<t}) = \begin{cases} \text{suppress tail} & \text{precision matters} \\ \text{preserve diversity} & \text{exploration matters} \end{cases}</p>
-<p>$$</p>
+<div class="math-block">$$
+p&#x27;_\theta(x_t | x_{&lt;t}) = \begin{cases} \text{suppress tail} &amp; \text{precision matters} \\ \text{preserve diversity} &amp; \text{exploration matters} \end{cases}
+$$</div>
 
 <li>在需要精确的地方，抑制 distractor tails</li>
 <li>在需要探索的地方，保留有用的多样性</li>

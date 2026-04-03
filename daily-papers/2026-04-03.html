@@ -135,6 +135,7 @@ img { max-width: 100%; border-radius: 8px; margin: 0.5em 0; }
 .view-detail:hover { text-decoration: none; opacity: 0.9; }
 .no-data { color: var(--text2); text-align: center; padding: 60px 20px; font-size: 1.1em; }
 /* ── Collapsible notes ──────────────────────────────────── */
+.math-block { margin: 0.8em 0; text-align: center; overflow-x: auto; }
 details.paper-note { margin: 12px 0; border: 1px solid var(--border); border-radius: 8px;
   background: var(--surface); }
 details.paper-note summary { padding: 10px 16px; cursor: pointer; font-weight: 600;
@@ -256,7 +257,7 @@ details.paper-note .note-body h3 { font-size: 1em; }
 
 <p>CRA 是本文最重要的数据创新。基于 SGD 数据集，构造了全新的对话结构：</p>
 
-<p>$$\text{User} \rightarrow \text{Thought}_1 \rightarrow \text{Action} \rightarrow \text{Observation} \rightarrow \text{Thought}_2 \rightarrow \text{Response}$$</p>
+<div class="math-block">$$\text{User} \rightarrow \text{Thought}_1 \rightarrow \text{Action} \rightarrow \text{Observation} \rightarrow \text{Thought}_2 \rightarrow \text{Response}$$</div>
 
 <p>关键设计：</p>
 <li><strong>Thought₁</strong>: 理解用户意图，决定是否需要调用 API</li>
@@ -504,23 +505,23 @@ details.paper-note .note-body h3 { font-size: 1em; }
 
 <li><strong>State</strong>: Agent 执行的快照，包括程序计数器、变量值、调用栈等。形式化为：</li>
 
-<p>$$\texttt{state}_{t}(x,k) = \left\{ \texttt{variable}_{i}^{x,k,t} \right\}_{i=1}^{V}$$</p>
+<div class="math-block">$$\texttt{state}_{t}(x,k) = \left\{ \texttt{variable}_{i}^{x,k,t} \right\}_{i=1}^{V}$$</div>
 
 <li><strong>Semantic Variable</strong>: 被组件使用或修改的关键变量，代表关键语义（如程序意图）。不关注循环计数器等辅助变量，只关注语义层面的变化。</li>
 
 <li><strong>Component Invocation (Call)</strong>: 语义变量的变化通过组件调用发生。第 $k$ 次执行任务 $x$ 的所有调用序列为：</li>
 
-<p>$$\texttt{execution}(x,k) = \left\{ \texttt{call}_{i}^{x,k} \right\}_{i=1}^{N}$$</p>
+<div class="math-block">$$\texttt{execution}(x,k) = \left\{ \texttt{call}_{i}^{x,k} \right\}_{i=1}^{N}$$</div>
 
 <p>其中每个 call 定义为：</p>
 
-<p>$$\texttt{call}_{i}^{x,k} = (\texttt{meta}_{i}^{x,k}, \texttt{input}_{i}^{x,k}, \texttt{output}_{i}^{x,k}), \quad \text{with} ~ \texttt{output}_{i}^{x,k} = C_{i}(\texttt{input}_{i}^{x,k})$$</p>
+<div class="math-block">$$\texttt{call}_{i}^{x,k} = (\texttt{meta}_{i}^{x,k}, \texttt{input}_{i}^{x,k}, \texttt{output}_{i}^{x,k}), \quad \text{with} ~ \texttt{output}_{i}^{x,k} = C_{i}(\texttt{input}_{i}^{x,k})$$</div>
 
 <p>这里 $C_{i} \in \mathcal{M} \cup \mathcal{T}$，即组件可以是 LLM ($\mathcal{M}$) 或工具 ($\mathcal{T}$)。</p>
 
 <li><strong>Reward 标注</strong>: 为每个 call 分配 reward $r_i \in \mathbb{R}$，形成带 reward 的执行序列：</li>
 
-<p>$$\texttt{execution}^{R}(x,k) = \left\{ (\texttt{call}_{i}^{x,k}, r_{i}^{x,k}) \right\}_{i=1}^{N}$$</p>
+<div class="math-block">$$\texttt{execution}^{R}(x,k) = \left\{ (\texttt{call}_{i}^{x,k}, r_{i}^{x,k}) \right\}_{i=1}^{N}$$</div>
 
 <div class="paper-figure"><img src="https://arxiv.org/html/2508.03680v1/figures/data_interface.png" alt="Data Interface" loading="lazy"></div>
 <p><em>Figure 2: 统一数据接口示意图。左侧展示 Agent 执行流程中语义变量的更新；右侧展示对应的 trajectory 数据收集。</em></p>
@@ -529,7 +530,7 @@ details.paper-note .note-body h3 { font-size: 1em; }
 
 <p>Agent Lightning 将 Agent 执行建模为 <span class="wikilink">Partially Observable Markov Decision Process</span> (POMDP)：</p>
 
-<p>$$\mathcal{M} = (\mathcal{S}, \mathcal{O}, \mathcal{A}, \mathcal{P}, \mathcal{R})$$</p>
+<div class="math-block">$$\mathcal{M} = (\mathcal{S}, \mathcal{O}, \mathcal{A}, \mathcal{P}, \mathcal{R})$$</div>
 
 <p>各元素含义：</p>
 
@@ -546,7 +547,7 @@ details.paper-note .note-body h3 { font-size: 1em; }
 
 <p><strong>关键设计</strong>: 将 LLM 的一次完整生成（而非单个 token）作为一个 action，这是与传统 token-level RL 的重要区别。策略模型的目标是最大化累积回报：</p>
 
-<p>$$R = \sum_{t=1}^{T} r_t$$</p>
+<div class="math-block">$$R = \sum_{t=1}^{T} r_t$$</div>
 
 <h3 id="33-lightningrl-层次化-rl-算法">3.3 LightningRL: 层次化 RL 算法</h3>
 
@@ -554,7 +555,7 @@ details.paper-note .note-body h3 { font-size: 1em; }
 
 <p><strong>单轮 RL 回顾</strong>：现有方法（如 <span class="wikilink">GRPO</span>、<span class="wikilink">REINFORCE++</span>、<span class="wikilink">PPO</span>）主要处理单次 LLM 调用：给定任务 $x$，LLM 生成 response $\texttt{output} = (y_1, \ldots, y_N)$，获得 reward $r(x, \texttt{output}, \hat{y})$。通用训练目标为：</p>
 
-<p>$$\mathcal{L}(\theta) = -\mathbb{E}_{x \sim \mathcal{X}, \texttt{output} \sim \pi_{\theta}(\cdot|x)} \left[ \sum_{j=1}^{N} \log \pi_{\theta}(y_j | x, y_{<j}) \cdot A_j \right]$$</p>
+<div class="math-block">$$\mathcal{L}(\theta) = -\mathbb{E}_{x \sim \mathcal{X}, \texttt{output} \sim \pi_{\theta}(\cdot|x)} \left[ \sum_{j=1}^{N} \log \pi_{\theta}(y_j | x, y_{&lt;j}) \cdot A_j \right]$$</div>
 
 <p>其中 $A_j$ 是 token 级别的 advantage 估计。</p>
 
@@ -569,7 +570,7 @@ details.paper-note .note-body h3 { font-size: 1em; }
 
 <p>LightningRL 采用<strong>层次化</strong>方法，将 trajectory 分解为独立的 transition：</p>
 
-<p>$$\texttt{execution}^{RL}(x,k) = \left\{ (\texttt{input}_{t}^{x,k}, \texttt{output}_{t}^{x,k}, r_{t}^{x,k}) \right\}_{t=1}^{T}$$</p>
+<div class="math-block">$$\texttt{execution}^{RL}(x,k) = \left\{ (\texttt{input}_{t}^{x,k}, \texttt{output}_{t}^{x,k}, r_{t}^{x,k}) \right\}_{t=1}^{T}$$</div>
 
 <p>包含一个 <strong>Credit Assignment Module</strong>，将 trajectory 级别的 return 分配到每次 LLM 调用的 reward。这使得每个 transition 可以独立用于 RL 优化，与现有的单轮 RL 算法（如 GRPO）无缝集成。</p>
 
@@ -624,7 +625,7 @@ details.paper-note .note-body h3 { font-size: 1em; }
 <li><strong>Agent 设计</strong>: 单 LLM 生成查询 -> 检索 -> 决定是否精炼查询或生成答案</li>
 <li><strong>Reward</strong>: 格式分 + 正确性分的加权组合</li>
 
-<p>$$R = 0.9 \times R_{\text{correctness}} + 0.1 \times R_{\text{format}}$$</p>
+<div class="math-block">$$R = 0.9 \times R_{\text{correctness}} + 0.1 \times R_{\text{format}}$$</div>
 
 <p>其中 $R_{\text{correctness}}$ 采用 word-level F1 score。</p>
 
@@ -720,9 +721,9 @@ details.paper-note .note-body h3 { font-size: 1em; }
 
 <h3 id="marl-在推荐中的演化">MARL 在推荐中的演化</h3>
 
-<p>$$</p>
-<p>\pi^*_i(a_i | s, a_{-i}) = \arg\max_{\pi_i} \mathbb{E}\left[\sum_{t=0}^\infty \gamma^t r_i(s_t, a_t)\right]</p>
-<p>$$</p>
+<div class="math-block">$$
+\pi^*_i(a_i | s, a_{-i}) = \arg\max_{\pi_i} \mathbb{E}\left[\sum_{t=0}^\infty \gamma^t r_i(s_t, a_t)\right]
+$$</div>
 
 <li>早期：单 agent 做排序/推荐</li>
 <li>中期：用 LLM 模拟用户做交互</li>
@@ -793,9 +794,9 @@ details.paper-note .note-body h3 { font-size: 1em; }
 
 <p>BCR 发现了 task-scaling law：</p>
 
-<p>$$</p>
-<p>\text{Performance} \propto f(\text{num\_tasks}^\alpha \cdot \text{compute}^\beta)</p>
-<p>$$</p>
+<div class="math-block">$$
+\text{Performance} \propto f(\text{num\_tasks}^\alpha \cdot \text{compute}^\beta)
+$$</div>
 
 <p>通过增加训练任务的多样性（而非模型参数），可以更高效地提升推理能力。</p>
 
@@ -857,9 +858,9 @@ details.paper-note .note-body h3 { font-size: 1em; }
 
 <h3 id="rrpo-框架">RRPO 框架</h3>
 
-<p>$$</p>
-<p>R = \text{ReaderQuality}(\text{Reranker}(\text{docs}, q), q)</p>
-<p>$$</p>
+<div class="math-block">$$
+R = \text{ReaderQuality}(\text{Reranker}(\text{docs}, q), q)
+$$</div>
 
 <p>1. Reranker 对检索到的文档重新排序</p>
 <p>2. Reader（LLM）基于排序后的文档生成答案</p>
@@ -927,9 +928,9 @@ details.paper-note .note-body h3 { font-size: 1em; }
 <p>2. <strong><span class="wikilink">KV cache</span> 优化</strong>：高效管理超长序列的 KV cache</p>
 <p>3. <strong><span class="wikilink">RoPE</span> 位置编码</strong>：适配超长序列的位置编码</p>
 
-<p>$$</p>
-<p>\text{Attention}(Q, K, V) = \text{softmax}\left(\frac{Q K_{\text{sparse}}^\top}{\sqrt{d}}\right) V_{\text{sparse}}</p>
-<p>$$</p>
+<div class="math-block">$$
+\text{Attention}(Q, K, V) = \text{softmax}\left(\frac{Q K_{\text{sparse}}^\top}{\sqrt{d}}\right) V_{\text{sparse}}
+$$</div>
 
 <p>其中 $K_{\text{sparse}}, V_{\text{sparse}}$ 是经过稀疏选择后的 key-value 子集。</p>
 
@@ -1068,9 +1069,9 @@ details.paper-note .note-body h3 { font-size: 1em; }
 
 <h3 id="架构">架构</h3>
 
-<p>$$</p>
-<p>\text{MemOS} = \text{MemScheduler} + \text{MemCube} + \text{MemStore}</p>
-<p>$$</p>
+<div class="math-block">$$
+\text{MemOS} = \text{MemScheduler} + \text{MemCube} + \text{MemStore}
+$$</div>
 
 <li>MemScheduler 负责记忆生命周期管理</li>
 <li>MemCube 封装 <span class="wikilink">KV cache</span>、向量记忆、结构化记忆等</li>
@@ -1177,7 +1178,7 @@ details.paper-note .note-body h3 { font-size: 1em; }
 
 <p>CRA 是本文最重要的数据创新。基于 SGD 数据集，构造了全新的对话结构：</p>
 
-<p>$$\text{User} \rightarrow \text{Thought}_1 \rightarrow \text{Action} \rightarrow \text{Observation} \rightarrow \text{Thought}_2 \rightarrow \text{Response}$$</p>
+<div class="math-block">$$\text{User} \rightarrow \text{Thought}_1 \rightarrow \text{Action} \rightarrow \text{Observation} \rightarrow \text{Thought}_2 \rightarrow \text{Response}$$</div>
 
 <p>关键设计：</p>
 <li><strong>Thought₁</strong>: 理解用户意图，决定是否需要调用 API</li>
@@ -1425,23 +1426,23 @@ details.paper-note .note-body h3 { font-size: 1em; }
 
 <li><strong>State</strong>: Agent 执行的快照，包括程序计数器、变量值、调用栈等。形式化为：</li>
 
-<p>$$\texttt{state}_{t}(x,k) = \left\{ \texttt{variable}_{i}^{x,k,t} \right\}_{i=1}^{V}$$</p>
+<div class="math-block">$$\texttt{state}_{t}(x,k) = \left\{ \texttt{variable}_{i}^{x,k,t} \right\}_{i=1}^{V}$$</div>
 
 <li><strong>Semantic Variable</strong>: 被组件使用或修改的关键变量，代表关键语义（如程序意图）。不关注循环计数器等辅助变量，只关注语义层面的变化。</li>
 
 <li><strong>Component Invocation (Call)</strong>: 语义变量的变化通过组件调用发生。第 $k$ 次执行任务 $x$ 的所有调用序列为：</li>
 
-<p>$$\texttt{execution}(x,k) = \left\{ \texttt{call}_{i}^{x,k} \right\}_{i=1}^{N}$$</p>
+<div class="math-block">$$\texttt{execution}(x,k) = \left\{ \texttt{call}_{i}^{x,k} \right\}_{i=1}^{N}$$</div>
 
 <p>其中每个 call 定义为：</p>
 
-<p>$$\texttt{call}_{i}^{x,k} = (\texttt{meta}_{i}^{x,k}, \texttt{input}_{i}^{x,k}, \texttt{output}_{i}^{x,k}), \quad \text{with} ~ \texttt{output}_{i}^{x,k} = C_{i}(\texttt{input}_{i}^{x,k})$$</p>
+<div class="math-block">$$\texttt{call}_{i}^{x,k} = (\texttt{meta}_{i}^{x,k}, \texttt{input}_{i}^{x,k}, \texttt{output}_{i}^{x,k}), \quad \text{with} ~ \texttt{output}_{i}^{x,k} = C_{i}(\texttt{input}_{i}^{x,k})$$</div>
 
 <p>这里 $C_{i} \in \mathcal{M} \cup \mathcal{T}$，即组件可以是 LLM ($\mathcal{M}$) 或工具 ($\mathcal{T}$)。</p>
 
 <li><strong>Reward 标注</strong>: 为每个 call 分配 reward $r_i \in \mathbb{R}$，形成带 reward 的执行序列：</li>
 
-<p>$$\texttt{execution}^{R}(x,k) = \left\{ (\texttt{call}_{i}^{x,k}, r_{i}^{x,k}) \right\}_{i=1}^{N}$$</p>
+<div class="math-block">$$\texttt{execution}^{R}(x,k) = \left\{ (\texttt{call}_{i}^{x,k}, r_{i}^{x,k}) \right\}_{i=1}^{N}$$</div>
 
 <div class="paper-figure"><img src="https://arxiv.org/html/2508.03680v1/figures/data_interface.png" alt="Data Interface" loading="lazy"></div>
 <p><em>Figure 2: 统一数据接口示意图。左侧展示 Agent 执行流程中语义变量的更新；右侧展示对应的 trajectory 数据收集。</em></p>
@@ -1450,7 +1451,7 @@ details.paper-note .note-body h3 { font-size: 1em; }
 
 <p>Agent Lightning 将 Agent 执行建模为 <span class="wikilink">Partially Observable Markov Decision Process</span> (POMDP)：</p>
 
-<p>$$\mathcal{M} = (\mathcal{S}, \mathcal{O}, \mathcal{A}, \mathcal{P}, \mathcal{R})$$</p>
+<div class="math-block">$$\mathcal{M} = (\mathcal{S}, \mathcal{O}, \mathcal{A}, \mathcal{P}, \mathcal{R})$$</div>
 
 <p>各元素含义：</p>
 
@@ -1467,7 +1468,7 @@ details.paper-note .note-body h3 { font-size: 1em; }
 
 <p><strong>关键设计</strong>: 将 LLM 的一次完整生成（而非单个 token）作为一个 action，这是与传统 token-level RL 的重要区别。策略模型的目标是最大化累积回报：</p>
 
-<p>$$R = \sum_{t=1}^{T} r_t$$</p>
+<div class="math-block">$$R = \sum_{t=1}^{T} r_t$$</div>
 
 <h3 id="33-lightningrl-层次化-rl-算法">3.3 LightningRL: 层次化 RL 算法</h3>
 
@@ -1475,7 +1476,7 @@ details.paper-note .note-body h3 { font-size: 1em; }
 
 <p><strong>单轮 RL 回顾</strong>：现有方法（如 <span class="wikilink">GRPO</span>、<span class="wikilink">REINFORCE++</span>、<span class="wikilink">PPO</span>）主要处理单次 LLM 调用：给定任务 $x$，LLM 生成 response $\texttt{output} = (y_1, \ldots, y_N)$，获得 reward $r(x, \texttt{output}, \hat{y})$。通用训练目标为：</p>
 
-<p>$$\mathcal{L}(\theta) = -\mathbb{E}_{x \sim \mathcal{X}, \texttt{output} \sim \pi_{\theta}(\cdot|x)} \left[ \sum_{j=1}^{N} \log \pi_{\theta}(y_j | x, y_{<j}) \cdot A_j \right]$$</p>
+<div class="math-block">$$\mathcal{L}(\theta) = -\mathbb{E}_{x \sim \mathcal{X}, \texttt{output} \sim \pi_{\theta}(\cdot|x)} \left[ \sum_{j=1}^{N} \log \pi_{\theta}(y_j | x, y_{&lt;j}) \cdot A_j \right]$$</div>
 
 <p>其中 $A_j$ 是 token 级别的 advantage 估计。</p>
 
@@ -1490,7 +1491,7 @@ details.paper-note .note-body h3 { font-size: 1em; }
 
 <p>LightningRL 采用<strong>层次化</strong>方法，将 trajectory 分解为独立的 transition：</p>
 
-<p>$$\texttt{execution}^{RL}(x,k) = \left\{ (\texttt{input}_{t}^{x,k}, \texttt{output}_{t}^{x,k}, r_{t}^{x,k}) \right\}_{t=1}^{T}$$</p>
+<div class="math-block">$$\texttt{execution}^{RL}(x,k) = \left\{ (\texttt{input}_{t}^{x,k}, \texttt{output}_{t}^{x,k}, r_{t}^{x,k}) \right\}_{t=1}^{T}$$</div>
 
 <p>包含一个 <strong>Credit Assignment Module</strong>，将 trajectory 级别的 return 分配到每次 LLM 调用的 reward。这使得每个 transition 可以独立用于 RL 优化，与现有的单轮 RL 算法（如 GRPO）无缝集成。</p>
 
@@ -1545,7 +1546,7 @@ details.paper-note .note-body h3 { font-size: 1em; }
 <li><strong>Agent 设计</strong>: 单 LLM 生成查询 -> 检索 -> 决定是否精炼查询或生成答案</li>
 <li><strong>Reward</strong>: 格式分 + 正确性分的加权组合</li>
 
-<p>$$R = 0.9 \times R_{\text{correctness}} + 0.1 \times R_{\text{format}}$$</p>
+<div class="math-block">$$R = 0.9 \times R_{\text{correctness}} + 0.1 \times R_{\text{format}}$$</div>
 
 <p>其中 $R_{\text{correctness}}$ 采用 word-level F1 score。</p>
 
@@ -1642,9 +1643,9 @@ details.paper-note .note-body h3 { font-size: 1em; }
 
 <h3 id="marl-在推荐中的演化">MARL 在推荐中的演化</h3>
 
-<p>$$</p>
-<p>\pi^*_i(a_i | s, a_{-i}) = \arg\max_{\pi_i} \mathbb{E}\left[\sum_{t=0}^\infty \gamma^t r_i(s_t, a_t)\right]</p>
-<p>$$</p>
+<div class="math-block">$$
+\pi^*_i(a_i | s, a_{-i}) = \arg\max_{\pi_i} \mathbb{E}\left[\sum_{t=0}^\infty \gamma^t r_i(s_t, a_t)\right]
+$$</div>
 
 <li>早期：单 agent 做排序/推荐</li>
 <li>中期：用 LLM 模拟用户做交互</li>
@@ -1716,9 +1717,9 @@ details.paper-note .note-body h3 { font-size: 1em; }
 
 <p>BCR 发现了 task-scaling law：</p>
 
-<p>$$</p>
-<p>\text{Performance} \propto f(\text{num\_tasks}^\alpha \cdot \text{compute}^\beta)</p>
-<p>$$</p>
+<div class="math-block">$$
+\text{Performance} \propto f(\text{num\_tasks}^\alpha \cdot \text{compute}^\beta)
+$$</div>
 
 <p>通过增加训练任务的多样性（而非模型参数），可以更高效地提升推理能力。</p>
 
@@ -1781,9 +1782,9 @@ details.paper-note .note-body h3 { font-size: 1em; }
 
 <h3 id="rrpo-框架">RRPO 框架</h3>
 
-<p>$$</p>
-<p>R = \text{ReaderQuality}(\text{Reranker}(\text{docs}, q), q)</p>
-<p>$$</p>
+<div class="math-block">$$
+R = \text{ReaderQuality}(\text{Reranker}(\text{docs}, q), q)
+$$</div>
 
 <p>1. Reranker 对检索到的文档重新排序</p>
 <p>2. Reader（LLM）基于排序后的文档生成答案</p>
@@ -1852,9 +1853,9 @@ details.paper-note .note-body h3 { font-size: 1em; }
 <p>2. <strong><span class="wikilink">KV cache</span> 优化</strong>：高效管理超长序列的 KV cache</p>
 <p>3. <strong><span class="wikilink">RoPE</span> 位置编码</strong>：适配超长序列的位置编码</p>
 
-<p>$$</p>
-<p>\text{Attention}(Q, K, V) = \text{softmax}\left(\frac{Q K_{\text{sparse}}^\top}{\sqrt{d}}\right) V_{\text{sparse}}</p>
-<p>$$</p>
+<div class="math-block">$$
+\text{Attention}(Q, K, V) = \text{softmax}\left(\frac{Q K_{\text{sparse}}^\top}{\sqrt{d}}\right) V_{\text{sparse}}
+$$</div>
 
 <p>其中 $K_{\text{sparse}}, V_{\text{sparse}}$ 是经过稀疏选择后的 key-value 子集。</p>
 
@@ -1993,9 +1994,9 @@ details.paper-note .note-body h3 { font-size: 1em; }
 
 <h3 id="架构">架构</h3>
 
-<p>$$</p>
-<p>\text{MemOS} = \text{MemScheduler} + \text{MemCube} + \text{MemStore}</p>
-<p>$$</p>
+<div class="math-block">$$
+\text{MemOS} = \text{MemScheduler} + \text{MemCube} + \text{MemStore}
+$$</div>
 
 <li>MemScheduler 负责记忆生命周期管理</li>
 <li>MemCube 封装 <span class="wikilink">KV cache</span>、向量记忆、结构化记忆等</li>
