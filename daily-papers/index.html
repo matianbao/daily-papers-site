@@ -245,6 +245,391 @@ details.paper-note .note-body h3 { font-size: 1em; }
 <li><strong>机构</strong>: University of Chicago, University of Georgia, Johns Hopkins University</li>
 <li><strong>链接</strong>: <a href="http://arxiv.org/abs/2604.04426v1" target="_blank">arXiv</a> | <a href="https://arxiv.org/pdf/2604.04426v1" target="_blank">PDF</a></li>
 <li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+<details class="paper-note"><summary>📒 精读笔记: ShieldNet</summary><div class="note-body"><h1 id="论文笔记shieldnet-network-level-guardrails-against-emerging-supply-chain-injections-in-agentic-systems">论文笔记：ShieldNet: Network-Level Guardrails against Emerging Supply-Chain Injections in Agentic Systems</h1>
+
+<h2 id="元信息">元信息</h2>
+
+<table class="paper-table">
+<thead><tr><th>项目</th><th>内容</th></tr></thead>
+<tbody>
+<tr><td>机构</td><td>UIUC, University of Chicago, University of Georgia, United States Military Academy, eBay, Johns Hopkins University, UCSB, Virtue AI</td></tr>
+<tr><td>日期</td><td>April 2026</td></tr>
+<tr><td>项目主页</td><td>-</td></tr>
+<tr><td>对比基线</td><td><span class="wikilink">Invariant Labs MCP-Scan</span>, <span class="wikilink">Cisco AI MCP-Scanner</span>, <span class="wikilink">Ramparts</span>, <span class="wikilink">Suricata</span>, <span class="wikilink">SAFE-NID</span></td></tr>
+<tr><td>链接</td><td><a href="http://arxiv.org/abs/2604.04426v1" target="_blank">arXiv</a> / Code(-)</td></tr>
+</tbody></table>
+
+
+
+<h2 id="一句话总结">一句话总结</h2>
+
+<blockquote>
+<p>通过网络层流量分析而非语义层检测，提出首个针对 MCP 工具供应链注入攻击的网络级护栏框架 ShieldNet 及配套 benchmark SC-Inject-Bench。</p>
+</blockquote>
+
+
+<h2 id="核心贡献">核心贡献</h2>
+
+<p>1. <strong>SC-Inject-Bench 基准</strong>: 首个代码级攻击注入的 <span class="wikilink">MCP</span> 供应链安全基准，包含 109 个真实服务器、984 个工具、29 种攻击技术，共 19,961 个验证样本，基于 <span class="wikilink">MITRE ATT&CK</span> 分类体系</p>
+<p>2. <strong>ShieldNet 框架</strong>: 网络级护栏框架，通过 <span class="wikilink">MITM Proxy|中间人代理</span> 拦截流量 + <span class="wikilink">Network Event Extraction|事件提取</span> + 轻量分类器实现实时检测，F-1 达 0.995，FPR 仅 0.8%</p>
+<p>3. <strong>系统性评估</strong>: 证明现有 MCP 扫描器和语义层防御在代码级隐蔽攻击下系统性失败，网络层可观测性是检测此类攻击的关键</p>
+
+
+<h2 id="问题背景">问题背景</h2>
+
+<h3 id="要解决的问题">要解决的问题</h3>
+
+<p>随着 <span class="wikilink">LLM Agent</span> 系统越来越依赖第三方工具和 <span class="wikilink">MCP|Model Context Protocol</span> 服务器，一类新的<strong>供应链威胁</strong>已经出现：恶意行为嵌入到看似正常的工具中，在运行时静默劫持 agent 执行、泄露敏感数据或触发未授权操作。</p>
+
+<h3 id="现有方法的局限">现有方法的局限</h3>
+
+<p>1. <strong>语义层检测的盲区</strong>: 现有 MCP 扫描器（Invariant Labs、Cisco AI、Ramparts）和 LLM 基线仅分析工具描述、I/O 记录或 tool-calling 轨迹，隐式假设恶意意图反映在接口语义中</p>
+<p>2. <strong>代码级攻击不可见</strong>: 攻击者在工具实现代码中嵌入恶意逻辑，同时保持良性的工具描述和输入/输出行为，语义层完全看不到</p>
+<p>3. <strong>缺乏基准</strong>: 此前没有针对代码级供应链注入的系统性评估基准</p>
+
+<h3 id="本文的动机">本文的动机</h3>
+
+<p>代码级供应链攻击在语义层不可见，但会在网络层产生可观测的运行时行为特征（如 DNS 探测、数据外传、C2 通信），因此从网络流量角度检测是合理且有效的。</p>
+
+
+<h2 id="方法详解">方法详解</h2>
+
+<h3 id="模型架构">模型架构</h3>
+
+<p>ShieldNet 采用 <strong>网络流量分析 + 轻量语言模型</strong> 架构：</p>
+<li><strong>输入</strong>: 工具执行期间的原始 PCAP 网络包 + MITM 解密的应用层流量</li>
+<li><strong>核心管道</strong>: <span class="wikilink">MITM Proxy|中间人代理</span> 拦截 -> <span class="wikilink">Network Event Extraction|事件提取</span> -> 文本序列化 -> 分类</li>
+<li><strong>Backbone</strong>: <span class="wikilink">Qwen3</span>-0.6B，经过 <span class="wikilink">Supervised Fine-Tuning|SFT</span> 后训练</li>
+<li><strong>输出</strong>: $\hat{y} \in \{\texttt{benign}\} \cup \mathcal{C}$（良性或具体攻击类别）</li>
+
+<h3 id="核心模块">核心模块</h3>
+
+<h4 id="模块1-system-level-traffic-interception系统级流量拦截">模块1: System-Level Traffic Interception（系统级流量拦截）</h4>
+
+<p><strong>设计动机</strong>: 某些攻击只能通过联合推理应用层语义和底层网络行为来识别</p>
+
+<p><strong>具体实现</strong>:</p>
+<li>使用本地 <span class="wikilink">MITM Proxy|MITM 代理</span> 路由 HTTP/HTTPS 流量，获得应用层可见性</li>
+<li>同时在活跃网络接口上录制完整的 PCAP 包捕获</li>
+<li>阻止 UDP 443 端口流量以防止客户端（如 Claude Desktop）通过 <span class="wikilink">QUIC</span> 协议绕过拦截</li>
+<li>执行后恢复所有代理和防火墙设置</li>
+
+<h4 id="模块2-network-event-extraction-and-decryption网络事件提取与解密">模块2: Network Event Extraction and Decryption（网络事件提取与解密）</h4>
+
+<p><strong>设计动机</strong>: 原始网络流量嘈杂且难以解释，需要结构化抽象以保留安全相关语义</p>
+
+<p><strong>具体实现</strong>:</p>
+<li><strong>事件提取</strong>: 从 PCAP 解析网络流量为时间有序的事件序列，覆盖 DNS、TLS、HTTP、ICMP、ARP、SMTP/FTP/SSH/SMB/RDP 等协议</li>
+<li><strong>应用层解密</strong>: 从 MITM 代理获取解密的 HTTP/HTTPS 记录，插入事件序列作为显式应用层事件</li>
+<li><strong>文本序列化</strong>: 将增强的事件序列转换为确定性文本表示，每个事件渲染为包含时间戳、事件类型、端点、协议和语义摘要的单行</li>
+
+<h4 id="模块3-detection-models-and-deployment检测模型与部署">模块3: Detection Models and Deployment（检测模型与部署）</h4>
+
+<p><strong>设计动机</strong>: 前沿 LLM 虽推理能力强但延迟高，实际网络流量需要低延迟处理</p>
+
+<p><strong>具体实现</strong>:</p>
+<li><strong>端到端检测</strong>: 在网络事件 trace 上做分类，使用 <span class="wikilink">Supervised Fine-Tuning|SFT</span> 后训练 Qwen3-0.6B</li>
+<li><strong>流式检测</strong>: 在交互式场景中，使用滑动窗口策略，每 $\Delta$ 个新事件触发一次检测，窗口大小为 $W$</li>
+
+
+<h2 id="关键公式">关键公式</h2>
+
+<h3 id="公式1-network-event-extraction事件序列">公式1: <span class="wikilink">Network Event Extraction|事件序列</span></h3>
+
+<div class="math-block">$$
+\mathcal{E} = \langle e_1, \dots, e_T \rangle
+$$</div>
+
+<p><strong>含义</strong>: 从 PCAP trace 解析得到的时间有序网络事件序列</p>
+
+<p><strong>符号说明</strong>:</p>
+<li>$e_i$: 第 $i$ 个网络事件</li>
+<li>$T$: 事件总数</li>
+
+<h3 id="公式2-network-event-extraction事件结构">公式2: <span class="wikilink">Network Event Extraction|事件结构</span></h3>
+
+<div class="math-block">$$
+e_i = (t_i,\ \tau_i,\ \text{src}_i,\ \text{dst}_i,\ \text{sport}_i,\ \text{dport}_i,\ \pi_i,\ a_i)
+$$</div>
+
+<p><strong>含义</strong>: 每个网络事件的结构化记录</p>
+
+<p><strong>符号说明</strong>:</p>
+<li>$t_i$: 时间戳</li>
+<li>$\tau_i$: 事件类型（DNS_Q, DNS_A, TLS_CH, HTTP_REQ 等）</li>
+<li>$(\text{src}_i, \text{dst}_i)$: 源/目标端点</li>
+<li>$(\text{sport}_i, \text{dport}_i)$: 源/目标端口</li>
+<li>$\pi_i$: 传输协议</li>
+<li>$a_i$: 协议相关属性（包长度、TCP flags、TTL、DNS 查询名等）</li>
+
+<h3 id="公式3-mitm-proxy应用层事件融合">公式3: <span class="wikilink">MITM Proxy|应用层事件融合</span></h3>
+
+<div class="math-block">$$
+\mathcal{E}^* = \mathrm{Insert}(\mathcal{E}, \mathcal{D})
+$$</div>
+
+<p><strong>含义</strong>: 将解密的应用层记录按时间戳插入到包级事件序列中，形成增强的融合事件序列</p>
+
+<p><strong>符号说明</strong>:</p>
+<li>$\mathcal{E}$: PCAP 提取的包级事件序列</li>
+<li>$\mathcal{D}$: MITM 代理获得的解密 HTTP/HTTPS 记录集合</li>
+<li>$\mathcal{E}^*$: 融合后的增强事件序列</li>
+
+<h3 id="公式4-serialization序列化">公式4: <span class="wikilink">Serialization|序列化</span></h3>
+
+<div class="math-block">$$
+\bm{x} = \mathrm{Serialize}(\mathcal{E}^*)
+$$</div>
+
+<p><strong>含义</strong>: 将增强事件序列转换为确定性文本表示，供检测器使用</p>
+
+<h3 id="公式5-prompt-engineering提示构建">公式5: <span class="wikilink">Prompt Engineering|提示构建</span></h3>
+
+<div class="math-block">$$
+\bm{z} = \mathrm{Prompt}(\mathcal{A}(\mathcal{C}), \bm{x})
+$$</div>
+
+<p><strong>含义</strong>: 将攻击类别描述和序列化 trace 组合为 LLM 输入</p>
+
+<p><strong>符号说明</strong>:</p>
+<li>$\mathcal{C}$: 攻击类别集合</li>
+<li>$\mathcal{A}(\mathcal{C})$: 各类别的简短描述</li>
+<li>$\bm{x}$: 序列化的网络 trace</li>
+
+<h3 id="公式6-supervised-fine-tuningsft-损失">公式6: <span class="wikilink">Supervised Fine-Tuning|SFT 损失</span></h3>
+
+<div class="math-block">$$
+\mathcal{L}_{\mathrm{SFT}} = -\mathbb{E}_{(\bm{x},y)} \left[ \log p_\theta(y \mid \bm{x}) \right]
+$$</div>
+
+<p><strong>含义</strong>: 标准条件负对数似然损失，训练轻量模型在网络 trace 上进行攻击分类</p>
+
+<p><strong>符号说明</strong>:</p>
+<li>$(\bm{x}, y)$: 标注的网络 trace 和标签对</li>
+<li>$y \in \{\texttt{benign}\} \cup \mathcal{C}$: 良性或具体攻击类别</li>
+<li>$p_\theta$: 模型预测概率</li>
+<li>$\theta$: 模型参数</li>
+
+
+<h2 id="关键图表">关键图表</h2>
+
+<h3 id="figure-1-语义层-vs-网络层检测对比">Figure 1: 语义层 vs 网络层检测对比</h3>
+
+<p>!<span class="wikilink">ShieldNet_fig1.png|600</span></p>
+
+<p><strong>说明</strong>: 对比语义层和网络层对工具执行的视角。隐蔽的工具注入攻击保持良性的工具接口和 I/O 行为，能够逃避语义层检查，但在网络层暴露出独特的运行时行为（DNS 探测、数据外传、C2 信令等），这激发了网络级护栏的设计。</p>
+
+<h3 id="figure-2-shieldnet-系统概览">Figure 2: ShieldNet 系统概览</h3>
+
+<p>!<span class="wikilink">ShieldNet_fig2.png|600</span></p>
+
+<p><strong>说明</strong>: ShieldNet 网络级 MCP 护栏概览。原始数据包 trace 和解密的应用层流量被捕获并渲染为时间有序的网络事件序列，由护栏模型分析以分类执行为良性或分配特定风险类别。检测管道完全基于网络行为运作，不依赖工具 I/O、调用图或工具元数据。</p>
+
+<h3 id="figure-3-sc-inject-bench-数据构建流程">Figure 3: SC-Inject-Bench 数据构建流程</h3>
+
+<p>!<span class="wikilink">ShieldNet_fig3.png|600</span></p>
+
+<p><strong>说明</strong>: SC-Inject-Bench 的端到端数据构建流程。从收集良性 MCP 服务器开始，将验证过的恶意脚本集成到工具实现中，在 agent 控制下执行工具，使用网络级信号验证攻击，产出经验证的良性和恶意执行 trace。</p>
+
+<h3 id="figure-4-多类检测-f-1-分数">Figure 4: 多类检测 F-1 分数</h3>
+
+<p>!<span class="wikilink">ShieldNet_fig4.png|600</span></p>
+
+<p><strong>说明</strong>: 各攻击技术的多类 F-1 分数。ShieldNet 在几乎所有类别上都达到一致的高性能，而基线方法显示出显著的不稳定性，表明对多样化攻击行为的泛化能力较弱。</p>
+
+<h3 id="figure-5-真实世界流式检测演示">Figure 5: 真实世界流式检测演示</h3>
+
+<p>!<span class="wikilink">ShieldNet_fig5.png|600</span></p>
+
+<p><strong>说明</strong>: ShieldNet 真实世界流式检测演示。左侧 Claude Code 与注入的恶意 MCP 服务器交互，右侧 ShieldNet 实时执行网络拦截和滑动窗口分类，可视化结构化网络事件和检测结果。</p>
+
+<h3 id="table-1-mcp-安全基准对比">Table 1: MCP 安全基准对比</h3>
+
+<table class="paper-table">
+<thead><tr><th>Benchmark</th><th>Real Tool Execution</th><th>Code-Level Injection</th><th>Network-Level Validation</th></tr></thead>
+<tbody>
+<tr><td>MCP Security Bench</td><td>Yes</td><td>No</td><td>No</td></tr>
+<tr><td>MCPSecBench</td><td>No</td><td>No</td><td>No</td></tr>
+<tr><td>MCPTox</td><td>No</td><td>No</td><td>No</td></tr>
+<tr><td>MCP-SafetyBench</td><td>Yes</td><td>No</td><td>No</td></tr>
+<tr><td><strong>SC-Inject-Bench</strong></td><td><strong>Yes</strong></td><td><strong>Yes</strong></td><td><strong>Yes</strong></td></tr>
+</tbody></table>
+
+
+<p><strong>说明</strong>: SC-Inject-Bench 是唯一同时支持真实工具执行、代码级注入和网络级验证的 MCP 安全基准。</p>
+
+<h3 id="table-2-工具级检测性能">Table 2: 工具级检测性能</h3>
+
+<table class="paper-table">
+<thead><tr><th>Type</th><th>Method</th><th>FPR</th><th>F-1</th></tr></thead>
+<tbody>
+<tr><td>Static</td><td>Invariant Labs</td><td>0.068</td><td>0.164</td></tr>
+<tr><td>Static</td><td>Cisco AI</td><td>0.009</td><td>0.029</td></tr>
+<tr><td>Static</td><td>Ramparts</td><td>0.124</td><td>0.172</td></tr>
+<tr><td>Dynamic</td><td>AgentIO-GPT-4.1</td><td>0.022</td><td>0.051</td></tr>
+<tr><td>Dynamic</td><td>AgentIO-GPT-5.2</td><td>0.013</td><td>0.027</td></tr>
+<tr><td>Dynamic</td><td>Traffic-Suricata</td><td>0.000</td><td>0.062</td></tr>
+<tr><td>Dynamic</td><td>Traffic-Safe-NID</td><td>1.000</td><td>0.974</td></tr>
+<tr><td>Dynamic</td><td>Traffic-GPT-4.1</td><td>0.344</td><td>0.908</td></tr>
+<tr><td>Dynamic</td><td>Traffic-GPT-5.2</td><td>0.267</td><td>0.838</td></tr>
+<tr><td>Dynamic</td><td>Traffic-Qwen3-0.6B</td><td>0.942</td><td>0.884</td></tr>
+<tr><td>Dynamic</td><td><strong>ShieldNet</strong></td><td><strong>0.022</strong></td><td><strong>0.998</strong></td></tr>
+</tbody></table>
+
+
+<p><strong>说明</strong>: ShieldNet 在工具级检测中实现最高 F-1（0.998）和低 FPR（0.022）。静态 MCP 扫描器和语义基线的 F-1 极低（<0.2），证明它们无法检测代码级隐蔽攻击。</p>
+
+<h3 id="table-3-流量级检测性能">Table 3: 流量级检测性能</h3>
+
+<table class="paper-table">
+<thead><tr><th>Method</th><th>FPR</th><th>F-1</th><th>Time Overhead</th></tr></thead>
+<tbody>
+<tr><td>AgentIO-GPT-4.1</td><td>0.011</td><td>0.023</td><td>11.45%</td></tr>
+<tr><td>AgentIO-GPT-5.2</td><td>0.005</td><td>0.011</td><td>10.58%</td></tr>
+<tr><td>Traffic-Suricata</td><td>0.000</td><td>0.062</td><td>68.64%</td></tr>
+<tr><td>Traffic-Safe-NID</td><td>1.000</td><td>0.974</td><td>40.15%</td></tr>
+<tr><td>Traffic-GPT-4.1</td><td>0.173</td><td>0.854</td><td>39.68%</td></tr>
+<tr><td>Traffic-GPT-5.2</td><td>0.126</td><td>0.757</td><td>32.03%</td></tr>
+<tr><td>Traffic-Qwen3-0.6B</td><td>0.847</td><td>0.774</td><td>22.58%</td></tr>
+<tr><td><strong>ShieldNet</strong></td><td><strong>0.008</strong></td><td><strong>0.995</strong></td><td>21.38%</td></tr>
+</tbody></table>
+
+
+<p><strong>说明</strong>: 在 PCAP 级别评估中，ShieldNet 达到 0.995 F-1 和 0.8% FPR，同时引入最低的运行时开销（21.38%）。前沿 LLM 基线延迟显著高于轻量模型。</p>
+
+<h3 id="table-4-id-vs-ood-泛化性能">Table 4: ID vs OOD 泛化性能</h3>
+
+<table class="paper-table">
+<thead><tr><th>Method</th><th>ID FPR</th><th>ID F-1</th><th>OOD FPR</th><th>OOD F-1</th></tr></thead>
+<tbody>
+<tr><td>Invariant Labs</td><td>0.027</td><td>0.020</td><td>0.077</td><td>0.048</td></tr>
+<tr><td>Cisco AI</td><td>0.008</td><td>0.024</td><td>0.011</td><td>0.028</td></tr>
+<tr><td>Traffic-GPT-4.1</td><td>0.363</td><td>0.899</td><td>0.313</td><td>0.920</td></tr>
+<tr><td>Traffic-GPT-5.2</td><td>0.250</td><td>0.825</td><td>0.295</td><td>0.858</td></tr>
+<tr><td>Traffic-Qwen3-0.6B</td><td>0.961</td><td>0.881</td><td>0.911</td><td>0.877</td></tr>
+<tr><td><strong>ShieldNet</strong></td><td><strong>0.020</strong></td><td><strong>0.999</strong></td><td><strong>0.026</strong></td><td><strong>0.998</strong></td></tr>
+</tbody></table>
+
+
+<p><strong>说明</strong>: ShieldNet 在 ID 和 OOD 服务器上都保持一致的高性能，证明对未见工具生态系统的鲁棒泛化能力。</p>
+
+<h3 id="table-5-ood-攻击技术零样本检测">Table 5: OOD 攻击技术零样本检测</h3>
+
+<table class="paper-table">
+<thead><tr><th>Method</th><th>Standard Encoding F-1</th><th>Traffic Signaling F-1</th><th>Web Protocols F-1</th></tr></thead>
+<tbody>
+<tr><td>Cisco AI</td><td>0.643</td><td>0.643</td><td>0.643</td></tr>
+<tr><td>Traffic-GPT-4.1</td><td>0.502</td><td>0.771</td><td>0.774</td></tr>
+<tr><td>Traffic-GPT-5.2</td><td>0.426</td><td>0.704</td><td>0.790</td></tr>
+<tr><td>Traffic-Qwen3-0.6B</td><td>0.523</td><td>0.500</td><td>0.486</td></tr>
+<tr><td><strong>ShieldNet</strong></td><td><strong>0.981</strong></td><td><strong>0.982</strong></td><td><strong>0.949</strong></td></tr>
+</tbody></table>
+
+
+<p><strong>说明</strong>: ShieldNet 在三类 OOD 攻击技术上均实现 >0.94 的 F-1，展示出优秀的零样本泛化能力。</p>
+
+<h3 id="table-6-消融实验">Table 6: 消融实验</h3>
+
+<table class="paper-table">
+<thead><tr><th>配置</th><th>FPR</th><th>F-1</th></tr></thead>
+<tbody>
+<tr><td>ShieldNet (完整)</td><td><strong>0.022</strong></td><td><strong>0.998</strong></td></tr>
+<tr><td>w/o decryption</td><td>0.896</td><td>0.977</td></tr>
+<tr><td>w/o decryption and event extraction</td><td>0.386</td><td>0.829</td></tr>
+</tbody></table>
+
+
+<p><strong>关键发现</strong>: 移除解密会导致 FPR 从 0.022 飙升至 0.896（加密的良性 agent 流量被误判为数据外传）。进一步移除事件提取使 F-1 降至 0.829（原始包流超出模型上下文窗口需截断，丢失关键语义信息）。<strong>解密和事件级抽象缺一不可</strong>。</p>
+
+
+<h2 id="实验">实验</h2>
+
+<h3 id="数据集">数据集</h3>
+
+<table class="paper-table">
+<thead><tr><th>数据集</th><th>规模</th><th>特点</th><th>用途</th></tr></thead>
+<tbody>
+<tr><td>SC-Inject-Bench</td><td>19,961 样本（109 服务器, 984 工具, 29 攻击技术）</td><td>代码级注入 + 网络验证</td><td>训练/测试</td></tr>
+<tr><td>训练集</td><td>~6K 样本</td><td>排除 3 种 OOD 攻击技术 + 17 类 OOD 服务器</td><td>训练</td></tr>
+</tbody></table>
+
+
+<h3 id="实现细节">实现细节</h3>
+
+<li><strong>Backbone</strong>: <span class="wikilink">Qwen3</span>-0.6B</li>
+<li><strong>训练方式</strong>: <span class="wikilink">Supervised Fine-Tuning|SFT</span></li>
+<li><strong>上下文长度</strong>: 32K tokens</li>
+<li><strong>流量捕获</strong>: <span class="wikilink">MITM Proxy</span> + PCAP</li>
+<li><strong>流式检测</strong>: 滑动窗口，每 $\Delta$ 事件检测一次，窗口大小 $W$</li>
+<li><strong>部署测试</strong>: Claude Code + 注入的恶意 MCP 服务器</li>
+
+<h3 id="可视化结果">可视化结果</h3>
+
+<li>多类检测中 ShieldNet 在几乎所有 29 种攻击技术上 F-1 > 0.9</li>
+<li>基线方法在 DNS 类攻击、数据外传变体和远程发现技术上频繁失败</li>
+<li>真实世界部署中，ShieldNet 能够实时检测 Claude Code 与恶意 MCP 服务器的交互</li>
+
+
+<h2 id="批判性思考">批判性思考</h2>
+
+<h3 id="优点">优点</h3>
+<p>1. <strong>问题定义精准</strong>: 首次系统性地聚焦 MCP 供应链代码级注入这一关键安全盲区</p>
+<p>2. <strong>方案设计合理</strong>: 从网络层而非语义层检测，抓住了代码级攻击必然产生网络行为的本质</p>
+<p>3. <strong>工程完整度高</strong>: 从 benchmark 构建、attack taxonomy 到检测框架和实时部署，端到端完成</p>
+<p>4. <strong>效率优秀</strong>: 0.6B 轻量模型实现 >0.99 F-1，时间开销仅 ~21%，实际可部署</p>
+
+<h3 id="局限性">局限性</h3>
+<p>1. <strong>仅覆盖网络可见攻击</strong>: 纯本地行为（如文件删除、权限修改）不在检测范围内</p>
+<p>2. <strong>依赖 MITM 代理</strong>: 需要在用户系统上部署 MITM 代理和 CA 证书，可能引入额外的安全顾虑和兼容性问题</p>
+<p>3. <strong>攻击生成依赖 LLM</strong>: benchmark 中的攻击脚本由 Cursor Agent 生成，可能存在攻击样式的偏差</p>
+
+<h3 id="潜在改进方向">潜在改进方向</h3>
+<p>1. 集成主机级遥测（系统调用、文件操作）扩展检测覆盖范围</p>
+<p>2. 融合语义层和网络层信号实现更全面的防护</p>
+<p>3. 研究对抗性攻击者如何规避网络层检测（如流量混淆、慢速外传）</p>
+
+<h3 id="可复现性评估">可复现性评估</h3>
+<li>[ ] 代码开源</li>
+<li>[ ] 预训练模型</li>
+<li>[x] 训练细节完整</li>
+<li>[x] 数据集可获取（benchmark 有详细构建说明）</li>
+
+
+<h2 id="关联笔记">关联笔记</h2>
+
+<h3 id="基于">基于</h3>
+<li><span class="wikilink">MITRE ATT&CK</span>: 攻击分类体系来源</li>
+<li><span class="wikilink">Qwen3</span>: 检测器 backbone</li>
+
+<h3 id="对比">对比</h3>
+<li><span class="wikilink">ShieldAgent</span>: 语义层安全推理，本文证明其不足</li>
+<li><span class="wikilink">Suricata</span>: 传统 IDS，在 MCP 场景下表现差</li>
+<li><span class="wikilink">SAFE-NID</span>: 基于注意力的网络入侵检测，FPR 过高</li>
+
+<h3 id="方法相关">方法相关</h3>
+<li><span class="wikilink">MCP|Model Context Protocol</span>: 核心研究对象</li>
+<li><span class="wikilink">MITM Proxy</span>: 流量拦截核心组件</li>
+<li><span class="wikilink">Supervised Fine-Tuning</span>: 模型训练方法</li>
+<li><span class="wikilink">Network Event Extraction</span>: 关键预处理步骤</li>
+<li><span class="wikilink">Supply Chain Attack</span>: 核心威胁模型</li>
+<li><span class="wikilink">LLM Agent</span>: 被保护的目标系统</li>
+
+<h3 id="硬件数据相关">硬件/数据相关</h3>
+<li><span class="wikilink">SC-Inject-Bench</span>: 本文提出的 benchmark</li>
+
+
+<h2 id="速查卡片">速查卡片</h2>
+
+<blockquote>
+<p>[!summary] ShieldNet: Network-Level Guardrails against Emerging Supply-Chain Injections in Agentic Systems</p>
+<p>- <strong>核心</strong>: 网络层检测 MCP 工具供应链注入攻击</p>
+<p>- <strong>方法</strong>: MITM 代理拦截 + 事件提取 + SFT 轻量 LM 分类</p>
+<p>- <strong>结果</strong>: F-1 0.995, FPR 0.8%, 时间开销 21%</p>
+<p>- <strong>代码</strong>: 暂未公开</p>
+</blockquote>
+
+
+<p><em>笔记创建时间: 2026-04-05</em></p></div></details>
 
 <div class="paper-figure"><img src="https://arxiv.org/html/2604.04426v1/x1.png" alt="" loading="lazy"></div>
 
@@ -255,6 +640,139 @@ details.paper-note .note-body h3 { font-size: 1em; }
 <li><strong>作者</strong>: Dalugoda, Asiri</li>
 <li><strong>链接</strong>: <a href="https://arxiv.org/abs/2604.04522" target="_blank">arXiv</a> | <a href="https://arxiv.org/pdf/2604.04522" target="_blank">PDF</a></li>
 <li><strong>来源</strong>: 📰 HF Daily，⬆️ 1</li>
+<details class="paper-note"><summary>📒 精读笔记: HDP</summary><div class="note-body"><h1 id="hdp-a-lightweight-cryptographic-protocol-for-human-delegation-provenance-in-agentic-ai-systems">HDP: A Lightweight Cryptographic Protocol for Human Delegation Provenance in Agentic AI Systems</h1>
+
+<blockquote>
+<p><strong>一句话总结</strong>：用轻量级密码学协议为 agentic AI 系统的多级委托链建立授权溯源，验证终端动作是否由人类真正授权、经过什么委托路径、在什么权限范围内。</p>
+</blockquote>
+
+<h2 id="1-研究动机与问题定义">1. 研究动机与问题定义</h2>
+
+<h3 id="核心问题">核心问题</h3>
+<p>随着 <span class="wikilink">MCP</span> 和 <span class="wikilink">A2A</span> 协议推动 agent 间的互操作，一个关键安全问题浮现：<strong>在多级 agent 委托链中，如何验证最终执行的动作确实是人类授权的？</strong></p>
+
+<h3 id="威胁模型">威胁模型</h3>
+<li><strong>伪造授权</strong>：恶意 agent 伪造人类授权执行未授权操作</li>
+<li><strong>链篡改</strong>：中间 agent 修改委托链中的权限范围</li>
+<li><strong>重放攻击</strong>：重用过期的授权令牌</li>
+<li><strong>权限提升</strong>：子 agent 越权执行超出委托范围的操作</li>
+
+<h2 id="2-方法详解">2. 方法详解</h2>
+
+<h3 id="21-委托令牌结构">2.1 委托令牌结构</h3>
+
+<p>HDP 的核心是<strong>委托令牌</strong>（Delegation Token），包含：</p>
+
+<div class="math-block">$$\text{Token} = \langle \text{issuer}, \text{delegate}, \text{scope}, \text{ttl}, \text{nonce}, \sigma \rangle$$</div>
+
+<p>其中 $\sigma$ 为数字签名：</p>
+
+<div class="math-block">$$\sigma = \text{Sign}(sk_{\text{issuer}}, H(\text{issuer} \| \text{delegate} \| \text{scope} \| \text{ttl} \| \text{nonce}))$$</div>
+
+<p>$H$ 为密码学哈希函数，$sk_{\text{issuer}}$ 为签发者私钥。</p>
+
+<h3 id="22-委托链构建">2.2 委托链构建</h3>
+
+<p>多级委托形成链式结构：</p>
+
+<div class="math-block">$$\text{Chain} = [\text{Token}_0, \text{Token}_1, \ldots, \text{Token}_n]$$</div>
+
+<p>每级满足：</p>
+<li>$\text{Token}_i.\text{delegate} = \text{Token}_{i+1}.\text{issuer}$</li>
+<li>$\text{Token}_{i+1}.\text{scope} \subseteq \text{Token}_i.\text{scope}$（权限只缩不扩）</li>
+
+<h3 id="23-验证流水线">2.3 验证流水线</h3>
+
+<p>验证一条委托链的算法：</p>
+
+<div class="math-block">$$\text{Verify}(\text{Chain}) = \bigwedge_{i=0}^{n} \left[ \text{VerifySig}(\text{Token}_i) \wedge \text{CheckScope}(\text{Token}_i) \wedge \text{CheckTTL}(\text{Token}_i) \right]$$</div>
+
+<p>时间复杂度 $O(n)$，其中 $n$ 为链长度。</p>
+
+<h3 id="24-权限范围表达">2.4 权限范围表达</h3>
+
+<p>权限使用集合表示：</p>
+
+<div class="math-block">$$\text{scope} = \{(\text{resource}, \text{action}, \text{constraints})\}$$</div>
+
+<p>子集关系验证：</p>
+
+<div class="math-block">$$\text{scope}_{\text{child}} \subseteq \text{scope}_{\text{parent}} \iff \forall s \in \text{scope}_{\text{child}}, \exists p \in \text{scope}_{\text{parent}}: s \preceq p$$</div>
+
+<h3 id="25-重新授权机制">2.5 重新授权机制</h3>
+
+<p>当令牌即将过期时：</p>
+
+<div class="math-block">$$\text{ttl}_{\text{new}} = \min(\text{ttl}_{\text{requested}}, \text{ttl}_{\text{parent}} - t_{\text{elapsed}})$$</div>
+
+<h3 id="26-传输安全">2.6 传输安全</h3>
+
+<p>所有令牌通过 TLS 传输。nonce 防止重放：</p>
+
+<div class="math-block">$$\text{NonceDB} = \text{NonceDB} \cup \{\text{nonce}\}, \quad \text{reject if } \text{nonce} \in \text{NonceDB}$$</div>
+
+<h2 id="3-安全分析">3. 安全分析</h2>
+
+<table class="paper-table">
+<thead><tr><th>威胁</th><th>防护机制</th></tr></thead>
+<tbody>
+<tr><td>伪造授权</td><td>数字签名验证</td></tr>
+<tr><td>链篡改</td><td>逐级签名 + 权限单调递减</td></tr>
+<tr><td>重放攻击</td><td>nonce + TTL</td></tr>
+<tr><td>权限提升</td><td>子集约束 $\text{scope}_{\text{child}} \subseteq \text{scope}_{\text{parent}}$</td></tr>
+<tr><td>提示注入</td><td>协议层独立于 LLM 推理层</td></tr>
+</tbody></table>
+
+
+<h2 id="4-性能评估">4. 性能评估</h2>
+
+<table class="paper-table">
+<thead><tr><th>操作</th><th>延迟</th></tr></thead>
+<tbody>
+<tr><td>令牌签发</td><td>< 1 ms</td></tr>
+<tr><td>单级验证</td><td>< 0.5 ms</td></tr>
+<tr><td>5 级链验证</td><td>< 2.5 ms</td></tr>
+<tr><td>令牌序列化</td><td>< 0.1 ms</td></tr>
+</tbody></table>
+
+
+<h2 id="5-核心概念">5. 核心概念</h2>
+
+<li><span class="wikilink">MCP</span>：Model Context Protocol，agent 工具调用协议</li>
+<li><span class="wikilink">A2A</span>：Agent-to-Agent 协议</li>
+<li><span class="wikilink">Digital Signature</span>：数字签名</li>
+<li><span class="wikilink">Delegation Chain</span>：委托链</li>
+<li><span class="wikilink">Zero Trust</span>：零信任安全架构</li>
+<li><span class="wikilink">HMAC</span>：基于哈希的消息认证码</li>
+
+<h2 id="6-优缺点分析">6. 优缺点分析</h2>
+
+<h3 id="优点">优点</h3>
+<p>1. <strong>问题重要</strong>：agentic AI 的授权溯源是真实需求</p>
+<p>2. <strong>设计轻量</strong>：毫秒级开销，适合实时 agent 交互</p>
+<p>3. <strong>权限单调递减</strong>：数学保证子 agent 不能越权</p>
+<p>4. <strong>协议层独立</strong>：不依赖 LLM 安全性，在密码学层面解决问题</p>
+<p>5. <strong>可组合</strong>：兼容现有 MCP/A2A 生态</p>
+
+<h3 id="缺点">缺点</h3>
+<p>1. <strong>缺少实现</strong>：仅协议设计，无开源实现</p>
+<p>2. <strong>社区关注低</strong>：HF 仅 1 upvote</p>
+<p>3. <strong>密钥管理</strong>：agent 的私钥如何安全存储和轮换？</p>
+<p>4. <strong>动态权限</strong>：scope 一旦签发不可修改，不够灵活</p>
+<p>5. <strong>实际部署</strong>：需要整个 agent 生态采纳才有价值</p>
+
+<h2 id="7-与相关工作对比">7. 与相关工作对比</h2>
+
+<table class="paper-table">
+<thead><tr><th>方法</th><th>层级</th><th>粒度</th><th>开销</th><th>委托链支持</th></tr></thead>
+<tbody>
+<tr><td><strong>HDP</strong></td><td><strong>密码学</strong></td><td><strong>动作级</strong></td><td><strong>< 1ms</strong></td><td><strong>是</strong></td></tr>
+<tr><td>OAuth 2.0</td><td>应用层</td><td>API 级</td><td>中</td><td>有限</td></tr>
+<tr><td>SPIFFE/SPIRE</td><td>基础设施</td><td>服务级</td><td>低</td><td>否</td></tr>
+<tr><td>LLM Guard</td><td>语义层</td><td>prompt 级</td><td>高</td><td>否</td></tr>
+<tr><td>ShieldNet</td><td>网络层</td><td>流量级</td><td>低</td><td>否</td></tr>
+</tbody></table>
+</div></details>
 
 <li><strong>核心方法</strong>: 用密码学协议解决 agentic AI 的授权溯源问题——在多级 agent 委托链中验证终端动作是否由人类真正授权、经过什么委托路径、在什么范围内。类似给 agent 调用链加了一条加密审计追踪。</li>
 <li><strong>借鉴意义</strong>: 随着 <span class="wikilink">MCP</span> 和 <span class="wikilink">A2A</span> 生态扩展，agent 间的授权验证会越来越重要。</li>
@@ -270,6 +788,338 @@ details.paper-note .note-body h3 { font-size: 1em; }
 <li><strong>作者</strong>: Preston Rasmussen, Pavlo Paliychuk (Zep AI)</li>
 <li><strong>链接</strong>: <a href="https://arxiv.org/abs/2501.13956" target="_blank">arXiv</a> | <a href="https://arxiv.org/pdf/2501.13956" target="_blank">PDF</a></li>
 <li><strong>来源</strong>: 🔥 HF Trending，⬆️ 10</li>
+<details class="paper-note"><summary>📒 精读笔记: Zep</summary><div class="note-body"><h1 id="论文笔记zep-a-temporal-knowledge-graph-architecture-for-agent-memory">论文笔记：Zep: A Temporal Knowledge Graph Architecture for Agent Memory</h1>
+
+<h2 id="元信息">元信息</h2>
+
+<table class="paper-table">
+<thead><tr><th>项目</th><th>内容</th></tr></thead>
+<tbody>
+<tr><td>机构</td><td>Zep AI</td></tr>
+<tr><td>日期</td><td>January 2025</td></tr>
+<tr><td>项目主页</td><td><a href="https://www.getzep.com" target="_blank">getzep.com</a></td></tr>
+<tr><td>对比基线</td><td><span class="wikilink">MemGPT</span>、Full-context baseline</td></tr>
+<tr><td>链接</td><td><a href="https://arxiv.org/abs/2501.13956" target="_blank">arXiv</a> / <a href="https://github.com/getzep/graphiti" target="_blank">Code (Graphiti)</a></td></tr>
+</tbody></table>
+
+
+
+<h2 id="一句话总结">一句话总结</h2>
+
+<blockquote>
+<p>基于时序知识图谱引擎 Graphiti 构建 agent 记忆层，通过三层子图结构和多策略检索在 DMR 和 LongMemEval 上超越 MemGPT。</p>
+</blockquote>
+
+
+<h2 id="核心贡献">核心贡献</h2>
+
+<p>1. <strong>Graphiti 时序知识图谱引擎</strong>: 提出动态、temporally-aware 的 <span class="wikilink">Knowledge Graph</span> 引擎，支持非损失性地持续更新知识图谱，维护事实和关系的时间线</p>
+<p>2. <strong>三层层次化图结构</strong>: 设计 Episode-Entity-Community 三层子图架构，融合 <span class="wikilink">Episodic Memory</span> 和 <span class="wikilink">Semantic Memory</span> 的心理学模型</p>
+<p>3. <strong>多策略记忆检索系统</strong>: 组合 cosine similarity、<span class="wikilink">BM25</span>、breadth-first search 三种搜索方法，配合多种 reranker，实现高精度低延迟的记忆检索</p>
+
+
+<h2 id="问题背景">问题背景</h2>
+
+<h3 id="要解决的问题">要解决的问题</h3>
+
+<p>现有 <span class="wikilink">Retrieval-Augmented Generation|RAG</span> 框架主要面向静态文档语料库，而企业级 agent 应用需要从持续对话、业务数据等动态来源中整合知识。Agent 需要一个能够随时间演化的"记忆"系统，而非简单的文档检索。</p>
+
+<h3 id="现有方法的局限">现有方法的局限</h3>
+
+<li><strong>传统 RAG</strong>: 仅支持静态语料，文档内容很少变化，无法处理持续演化的对话历史和业务数据</li>
+<li><strong><span class="wikilink">MemGPT</span></strong>: 虽然探索了 LLM agent 记忆，但不支持直接摄入消息历史，且在复杂时序推理任务上表现有限</li>
+<li><strong>Full-context 方法</strong>: 将全部对话放入 <span class="wikilink">Context Window</span>，受限于 LLM 上下文长度，且随对话增长性能急剧下降</li>
+<li><strong>现有 benchmark (DMR)</strong>: 仅测试简单的单轮事实检索，无法反映企业真实场景</li>
+
+<h3 id="本文的动机">本文的动机</h3>
+
+<p>将 agent 记忆建模为动态时序知识图谱，借鉴人类 episodic memory 和 semantic memory 的双重记忆模型，使 agent 能够非损失地整合新信息、追踪事实变化的时间线、并高效检索相关上下文。</p>
+
+
+<h2 id="方法详解">方法详解</h2>
+
+<h3 id="模型架构">模型架构</h3>
+
+<p>Zep 采用 <strong>三层层次化知识图谱</strong> 架构：</p>
+
+<li><strong>输入</strong>: 原始消息/文本/JSON（称为 Episode），附带参考时间戳 $t_{\text{ref}}$</li>
+<li><strong>图引擎</strong>: <span class="wikilink">Graphiti</span> — temporally-aware 动态知识图谱引擎</li>
+<li><strong>存储后端</strong>: <span class="wikilink">Neo4j</span> 图数据库</li>
+<li><strong>检索输出</strong>: 格式化的文本上下文字符串 $\beta$，包含 FACTS 和 ENTITIES</li>
+
+<p><strong>整体知识图谱定义</strong>:</p>
+
+<div class="math-block">$$
+\mathcal{G} = (\mathcal{N}, \mathcal{E}, \phi)
+$$</div>
+
+<p><strong>含义</strong>: Zep 的核心数据结构，其中 $\mathcal{N}$ 为节点集合，$\mathcal{E}$ 为边集合，$\phi: \mathcal{E} \to \mathcal{N} \times \mathcal{N}$ 为关联函数。</p>
+
+<p><strong>符号说明</strong>:</p>
+<li>$\mathcal{N}$: 所有节点（包括 episode、entity、community 三类）</li>
+<li>$\mathcal{E}$: 所有边（包括 episodic edge、semantic edge、community edge 三类）</li>
+<li>$\phi$: 将每条边映射到其连接的两个节点</li>
+
+<h3 id="核心模块">核心模块</h3>
+
+<h4 id="模块1-episode-subgraph-mathcalg_e">模块1: Episode Subgraph $\mathcal{G}_e$</h4>
+
+<p><strong>设计动机</strong>: 实现非损失性的原始数据存储，类比人类 <span class="wikilink">Episodic Memory</span></p>
+
+<p><strong>具体实现</strong>:</p>
+<li>Episodic nodes $n_i \in \mathcal{N}_e$: 存储原始输入（消息/文本/JSON）</li>
+<li>Episodic edges $e_i \in \mathcal{E}_e \subseteq \phi^*(\mathcal{N}_e \times \mathcal{N}_s)$: 连接 episode 到其提取的 semantic entity</li>
+<li>每条消息附带 $t_{\text{ref}}$ 时间戳，支持绝对和相对时间解析</li>
+<li>实现 <span class="wikilink">Bi-temporal Model|双时间线模型</span>: 时间线 $T$（事件时序）和 $T'$（数据摄入时序）</li>
+
+<h4 id="模块2-semantic-entity-subgraph-mathcalg_s">模块2: Semantic Entity Subgraph $\mathcal{G}_s$</h4>
+
+<p><strong>设计动机</strong>: 从原始 episode 中提取结构化语义知识，类比人类 <span class="wikilink">Semantic Memory</span></p>
+
+<p><strong>具体实现</strong>:</p>
+<li>Entity nodes $n_i \in \mathcal{N}_s$: 从 episode 中提取的命名实体，经过 entity resolution 去重</li>
+<li>Entity edges $e_i \in \mathcal{E}_s \subseteq \phi^*(\mathcal{N}_s \times \mathcal{N}_s)$: 实体间的关系（facts），支持 hyper-edge 建模</li>
+<li>实体提取使用 <span class="wikilink">Reflexion</span> 技术减少幻觉，处理当前消息和最近 $n=4$ 条消息</li>
+<li>实体嵌入为 1024 维向量，通过 cosine similarity + full-text 混合搜索做 entity resolution</li>
+<li>使用预定义 <span class="wikilink">Cypher</span> 查询（而非 LLM 生成）写入图数据库，保证 schema 一致性</li>
+
+<h4 id="模块3-community-subgraph-mathcalg_c">模块3: Community Subgraph $\mathcal{G}_c$</h4>
+
+<p><strong>设计动机</strong>: 利用 <span class="wikilink">GraphRAG</span> 的思路提供高层次的全局理解</p>
+
+<p><strong>具体实现</strong>:</p>
+<li>Community nodes $n_i \in \mathcal{N}_c$: 强连通实体的聚类，包含 map-reduce 式摘要</li>
+<li>Community edges $e_i \in \mathcal{E}_c \subseteq \phi^*(\mathcal{N}_c \times \mathcal{N}_s)$: 连接 community 到其成员 entity</li>
+<li>使用 <span class="wikilink">Label Propagation</span> 算法（而非 <span class="wikilink">Leiden Algorithm</span>），因其支持动态扩展</li>
+<li>新节点加入时动态分配到邻居多数所在社区，无需全量重新计算</li>
+
+<h4 id="模块4-temporal-extraction-and-edge-invalidation">模块4: Temporal Extraction and Edge Invalidation</h4>
+
+<p><strong>设计动机</strong>: 知识会随时间变化，需要追踪事实的有效期</p>
+
+<p><strong>具体实现</strong>:</p>
+<li>每条边存储四个时间戳: $t'\text{created}$, $t'\text{expired} \in T'$（数据层），$t_{\text{valid}}$, $t_{\text{invalid}} \in T$（语义层）</li>
+<li>新边加入时，LLM 比较语义相似的已有边，检测时序重叠的矛盾</li>
+<li>发现矛盾时，将旧边的 $t_{\text{invalid}}$ 设为新边的 $t_{\text{valid}}$</li>
+<li>遵循事务时间线 $T'$，始终优先采纳最新信息</li>
+
+
+<h2 id="关键公式">关键公式</h2>
+
+<h3 id="公式1-knowledge-graph知识图谱定义">公式1: <span class="wikilink">Knowledge Graph|知识图谱定义</span></h3>
+
+<div class="math-block">$$
+\mathcal{G} = (\mathcal{N}, \mathcal{E}, \phi), \quad \phi: \mathcal{E} \to \mathcal{N} \times \mathcal{N}
+$$</div>
+
+<p><strong>含义</strong>: Zep 记忆系统的核心数据结构，由节点、边、关联函数构成的有向图</p>
+
+<p><strong>符号说明</strong>:</p>
+<li>$\mathcal{N}$: 节点集合（$\mathcal{N}_e \cup \mathcal{N}_s \cup \mathcal{N}_c$）</li>
+<li>$\mathcal{E}$: 边集合（$\mathcal{E}_e \cup \mathcal{E}_s \cup \mathcal{E}_c$）</li>
+<li>$\phi$: 边到节点对的映射函数</li>
+
+<h3 id="公式2-information-retrieval记忆检索管线">公式2: <span class="wikilink">Information Retrieval|记忆检索管线</span></h3>
+
+<div class="math-block">$$
+f(\alpha) = \chi(\rho(\varphi(\alpha))) = \beta
+$$</div>
+
+<p><strong>含义</strong>: 将用户查询 $\alpha$ 通过搜索-重排-构造三步管线转化为上下文字符串 $\beta$</p>
+
+<p><strong>符号说明</strong>:</p>
+<li>$\alpha \in S$: 用户文本查询</li>
+<li>$\varphi$: Search 函数，$\varphi: S \to \mathcal{E}_s^n \times \mathcal{N}_s^n \times \mathcal{N}_c^n$</li>
+<li>$\rho$: Reranker 函数，对搜索结果重新排序</li>
+<li>$\chi$: Constructor 函数，将节点和边转为文本上下文</li>
+<li>$\beta \in S$: 输出的格式化上下文字符串</li>
+
+<h3 id="公式3-cosine-similarity语义相似度搜索">公式3: <span class="wikilink">Cosine Similarity|语义相似度搜索</span></h3>
+
+<div class="math-block">$$
+\varphi_{\cos}: S \to \mathcal{E}_s^n \times \mathcal{N}_s^n \times \mathcal{N}_c^n
+$$</div>
+
+<p><strong>含义</strong>: 基于向量余弦相似度的语义搜索，在三类图对象上分别检索</p>
+
+<p><strong>符号说明</strong>:</p>
+<li>$\varphi_{\cos}$: cosine similarity 搜索函数</li>
+<li>$\mathcal{E}_s^n$: 检索到的 top-$n$ semantic edges</li>
+<li>$\mathcal{N}_s^n$: 检索到的 top-$n$ entity nodes</li>
+<li>$\mathcal{N}_c^n$: 检索到的 top-$n$ community nodes</li>
+
+<h3 id="公式4-bm25全文检索">公式4: <span class="wikilink">BM25|全文检索</span></h3>
+
+<div class="math-block">$$
+\varphi_{\text{bm25}}: S \to \mathcal{E}_s^n \times \mathcal{N}_s^n \times \mathcal{N}_c^n
+$$</div>
+
+<p><strong>含义</strong>: 基于 Okapi BM25 的全文检索，捕获词级别匹配，与语义搜索互补</p>
+
+<h3 id="公式5-breadth-first-search广度优先图搜索">公式5: <span class="wikilink">Breadth-First Search|广度优先图搜索</span></h3>
+
+<div class="math-block">$$
+\varphi_{\text{bfs}}: S \to \mathcal{E}_s^n \times \mathcal{N}_s^n \times \mathcal{N}_c^n
+$$</div>
+
+<p><strong>含义</strong>: 图上广度优先搜索，发现上下文邻近但语义不直接相似的节点和边，支持指定种子节点（如最近的 episode）在 $n$-hop 内扩展</p>
+
+
+<h2 id="关键图表">关键图表</h2>
+
+<blockquote>
+<p>注：本文无 Figure，仅包含 3 个 Table。</p>
+</blockquote>
+
+<h3 id="table-1-deep-memory-retrieval-dmr-结果">Table 1: Deep Memory Retrieval (DMR) 结果</h3>
+
+<table class="paper-table">
+<thead><tr><th>Memory</th><th>Model</th><th>Score</th></tr></thead>
+<tbody>
+<tr><td>Recursive Summarization</td><td>gpt-4-turbo</td><td>35.3%</td></tr>
+<tr><td>Conversation Summaries</td><td>gpt-4-turbo</td><td>78.6%</td></tr>
+<tr><td>MemGPT</td><td>gpt-4-turbo</td><td>93.4%</td></tr>
+<tr><td>Full-conversation</td><td>gpt-4-turbo</td><td>94.4%</td></tr>
+<tr><td><strong>Zep</strong></td><td><strong>gpt-4-turbo</strong></td><td><strong>94.8%</strong></td></tr>
+<tr><td>Conversation Summaries</td><td>gpt-4o-mini</td><td>88.0%</td></tr>
+<tr><td>Full-conversation</td><td>gpt-4o-mini</td><td>98.0%</td></tr>
+<tr><td><strong>Zep</strong></td><td><strong>gpt-4o-mini</strong></td><td><strong>98.2%</strong></td></tr>
+</tbody></table>
+
+
+<p><strong>说明</strong>: Zep 在 DMR benchmark 上以 94.8%（gpt-4-turbo）和 98.2%（gpt-4o-mini）超越 MemGPT 的 93.4%。但作者指出 DMR 的局限性——每段对话仅 60 条消息，轻松放入现代 LLM 的上下文窗口，full-context baseline 已能达到 94.4%。</p>
+
+<h3 id="table-2-longmemeval_s-结果">Table 2: LongMemEval$_s$ 结果</h3>
+
+<table class="paper-table">
+<thead><tr><th>Memory</th><th>Model</th><th>Score</th><th>Latency</th><th>Latency IQR</th><th>Avg Context Tokens</th></tr></thead>
+<tbody>
+<tr><td>Full-context</td><td>gpt-4o-mini</td><td>55.4%</td><td>31.3 s</td><td>8.76 s</td><td>115k</td></tr>
+<tr><td><strong>Zep</strong></td><td><strong>gpt-4o-mini</strong></td><td><strong>63.8%</strong></td><td><strong>3.20 s</strong></td><td><strong>1.31 s</strong></td><td><strong>1.6k</strong></td></tr>
+<tr><td>Full-context</td><td>gpt-4o</td><td>60.2%</td><td>28.9 s</td><td>6.01 s</td><td>115k</td></tr>
+<tr><td><strong>Zep</strong></td><td><strong>gpt-4o</strong></td><td><strong>71.2%</strong></td><td><strong>2.58 s</strong></td><td><strong>0.684 s</strong></td><td><strong>1.6k</strong></td></tr>
+</tbody></table>
+
+
+<p><strong>说明</strong>: 在更具挑战性的 LongMemEval 上，Zep 准确率提升高达 18.5%（gpt-4o: 60.2% → 71.2%），同时 latency 降低约 90%（28.9s → 2.58s），上下文 token 从 115k 压缩到 1.6k。</p>
+
+<h3 id="table-3-longmemeval_s-按问题类型分解">Table 3: LongMemEval$_s$ 按问题类型分解</h3>
+
+<table class="paper-table">
+<thead><tr><th>Question Type</th><th>Model</th><th>Full-context</th><th>Zep</th><th>Delta</th></tr></thead>
+<tbody>
+<tr><td>single-session-preference</td><td>gpt-4o-mini</td><td>30.0%</td><td>53.3%</td><td>77.7%↑</td></tr>
+<tr><td>single-session-assistant</td><td>gpt-4o-mini</td><td>81.8%</td><td>75.0%</td><td>9.06%↓</td></tr>
+<tr><td>temporal-reasoning</td><td>gpt-4o-mini</td><td>36.5%</td><td>54.1%</td><td>48.2%↑</td></tr>
+<tr><td>multi-session</td><td>gpt-4o-mini</td><td>40.6%</td><td>47.4%</td><td>16.7%↑</td></tr>
+<tr><td>knowledge-update</td><td>gpt-4o-mini</td><td>76.9%</td><td>74.4%</td><td>3.36%↓</td></tr>
+<tr><td>single-session-user</td><td>gpt-4o-mini</td><td>81.4%</td><td>92.9%</td><td>14.1%↑</td></tr>
+<tr><td>single-session-preference</td><td>gpt-4o</td><td>20.0%</td><td>56.7%</td><td>184%↑</td></tr>
+<tr><td>single-session-assistant</td><td>gpt-4o</td><td>94.6%</td><td>80.4%</td><td>17.7%↓</td></tr>
+<tr><td>temporal-reasoning</td><td>gpt-4o</td><td>45.1%</td><td>62.4%</td><td>38.4%↑</td></tr>
+<tr><td>multi-session</td><td>gpt-4o</td><td>44.3%</td><td>57.9%</td><td>30.7%↑</td></tr>
+<tr><td>knowledge-update</td><td>gpt-4o</td><td>78.2%</td><td>83.3%</td><td>6.52%↑</td></tr>
+<tr><td>single-session-user</td><td>gpt-4o</td><td>81.4%</td><td>92.9%</td><td>14.1%↑</td></tr>
+</tbody></table>
+
+
+<p><strong>关键发现</strong>: Zep 在 single-session-preference（+184%）、temporal-reasoning（+48.2%）、multi-session（+30.7%）等复杂任务上提升最为显著；但在 single-session-assistant 类型上有所下降（-17.7%），可能因为这类问题从完整上下文中更容易直接找到答案。</p>
+
+
+<h2 id="实验">实验</h2>
+
+<h3 id="数据集">数据集</h3>
+
+<table class="paper-table">
+<thead><tr><th>数据集</th><th>规模</th><th>特点</th><th>用途</th></tr></thead>
+<tbody>
+<tr><td>DMR (Deep Memory Retrieval)</td><td>500 段多会话对话，每段 5 session × 12 messages</td><td>单轮事实检索，对话较短</td><td>与 MemGPT 对比</td></tr>
+<tr><td>LongMemEval$_s$</td><td>平均 115k tokens 的长对话</td><td>6 种问题类型，包含时序推理</td><td>企业场景评估</td></tr>
+</tbody></table>
+
+
+<h3 id="实现细节">实现细节</h3>
+
+<li><strong>Embedding Model</strong>: <span class="wikilink">BGE-M3</span>（BAAI），用于 reranking 和 embedding</li>
+<li><strong>图构建 LLM</strong>: gpt-4o-mini-2024-07-18</li>
+<li><strong>回答生成 LLM</strong>: gpt-4o-mini-2024-07-18 和 gpt-4o-2024-11-20</li>
+<li><strong>DMR 评估额外使用</strong>: gpt-4-turbo-2024-04-09（与 MemGPT 对齐）</li>
+<li><strong>评估方法</strong>: GPT-4o 作为 LLM judge，使用 LongMemEval 原论文提供的 question-specific prompts</li>
+<li><strong>图数据库</strong>: <span class="wikilink">Neo4j</span>（使用 Lucene 实现 BM25 和 cosine 搜索）</li>
+<li><strong>检索配置</strong>: 检索 top-20 最相关的 edges 和 entity nodes</li>
+<li><strong>测试环境</strong>: 消费级笔记本（Boston, MA），连接 AWS us-west-2 上的 Zep 服务</li>
+<li><strong>实验时间</strong>: 2024年12月至2025年1月</li>
+
+
+<h2 id="批判性思考">批判性思考</h2>
+
+<h3 id="优点">优点</h3>
+<p>1. <strong>心理学启发的双记忆模型</strong>: Episode + Semantic 子图的设计巧妙对应人类 episodic/semantic memory，概念清晰</p>
+<p>2. <strong>时序知识管理</strong>: bi-temporal model 和 edge invalidation 机制能优雅地处理知识随时间演化的问题</p>
+<p>3. <strong>显著的延迟优化</strong>: 上下文从 115k tokens 压缩到 1.6k，latency 降低 90%，对生产部署意义重大</p>
+<p>4. <strong>社区动态扩展</strong>: 使用 Label Propagation 而非 Leiden，支持增量更新，避免全量重算</p>
+
+<h3 id="局限性">局限性</h3>
+<p>1. <strong>single-session-assistant 性能下降</strong>: 在需要回忆 assistant 自身输出的问题上表现不如 full-context，说明图抽取可能丢失了部分信息</p>
+<p>2. <strong>缺乏与更多 baseline 的对比</strong>: 未与 <span class="wikilink">LightRAG</span>、<span class="wikilink">AriGraph</span>、<span class="wikilink">Distill-SynthKG</span> 等同类 graph-RAG 系统直接对比</p>
+<p>3. <strong>公司自有 benchmark</strong>: 作者来自 Zep AI，评估存在潜在利益冲突；DMR benchmark 本身被作者认为不够充分</p>
+<p>4. <strong>无消融实验</strong>: 未分析三层子图各自的贡献、三种搜索策略的独立效果</p>
+<p>5. <strong>评估规模有限</strong>: LongMemEval 虽然比 DMR 更好，但仍是相对小规模的评估</p>
+
+<h3 id="潜在改进方向">潜在改进方向</h3>
+<p>1. <strong>引入 domain ontology</strong>: 作者自己提出，为 Graphiti 添加领域本体可能提升结构化程度</p>
+<p>2. <strong>Fine-tuned extraction models</strong>: 使用专门微调的模型替代通用 LLM 做实体/关系抽取</p>
+<p>3. <strong>与传统 RAG benchmark 对比</strong>: 评估 Zep 在标准 RAG 任务上的表现</p>
+<p>4. <strong>更丰富的消融实验</strong>: 分析每个组件的独立贡献</p>
+
+<h3 id="可复现性评估">可复现性评估</h3>
+<li>[x] 代码开源（<a href="https://github.com/getzep/graphiti" target="_blank">Graphiti</a>）</li>
+<li>[ ] 预训练模型（使用 API 服务，无自有模型）</li>
+<li>[x] 训练细节完整（prompts 在 Appendix 中提供）</li>
+<li>[x] 数据集可获取（DMR 和 LongMemEval 均公开）</li>
+
+
+<h2 id="关联笔记">关联笔记</h2>
+
+<h3 id="基于">基于</h3>
+<li><span class="wikilink">GraphRAG</span>: Community 子图的社区检测和 map-reduce 摘要直接借鉴</li>
+<li><span class="wikilink">MemGPT</span>: 主要对比基线，LLM agent 记忆的先驱工作</li>
+<li><span class="wikilink">Reflexion</span>: 实体提取中使用的反思技术，减少 LLM 幻觉</li>
+
+<h3 id="对比">对比</h3>
+<li><span class="wikilink">MemGPT</span>: DMR benchmark 的主要对比对象</li>
+<li><span class="wikilink">LightRAG</span>: 作者提到社区搜索与其 high-level key search 方法并行发展</li>
+<li><span class="wikilink">AriGraph</span>: 类似的 episodic memory + knowledge graph 方法</li>
+
+<h3 id="方法相关">方法相关</h3>
+<li><span class="wikilink">Knowledge Graph</span>: 核心数据结构</li>
+<li><span class="wikilink">Bi-temporal Model</span>: 双时间线的时序建模</li>
+<li><span class="wikilink">Label Propagation</span>: 社区检测算法</li>
+<li><span class="wikilink">BM25</span>: 全文检索方法之一</li>
+<li><span class="wikilink">Cosine Similarity</span>: 语义相似度搜索</li>
+<li><span class="wikilink">Breadth-First Search</span>: 图搜索方法之一</li>
+<li><span class="wikilink">Reciprocal Rank Fusion</span>: Reranker 策略</li>
+<li><span class="wikilink">Maximal Marginal Relevance</span>: Reranker 策略</li>
+<li><span class="wikilink">Neo4j</span>: 图数据库后端</li>
+<li><span class="wikilink">BGE-M3</span>: Embedding 模型</li>
+
+<h3 id="硬件数据相关">硬件/数据相关</h3>
+<li><span class="wikilink">DMR Benchmark</span>: MemGPT 提出的 Deep Memory Retrieval 评测</li>
+<li><span class="wikilink">LongMemEval</span>: 长对话记忆评测 benchmark</li>
+
+
+<h2 id="速查卡片">速查卡片</h2>
+
+<blockquote>
+<p>[!summary] Zep: A Temporal Knowledge Graph Architecture for Agent Memory</p>
+<p>- <strong>核心</strong>: 基于时序知识图谱的 agent 记忆层，三层子图（Episode/Entity/Community）</p>
+<p>- <strong>方法</strong>: Graphiti 引擎 + bi-temporal model + 多策略检索（cosine/BM25/BFS）+ 多种 reranker</p>
+<p>- <strong>结果</strong>: DMR 94.8% 超 MemGPT 93.4%；LongMemEval 71.2% (+18.5%)，latency 降低 90%</p>
+<p>- <strong>代码</strong>: <a href="https://github.com/getzep/graphiti" target="_blank">github.com/getzep/graphiti</a></p>
+</blockquote>
+
+
+<p><em>笔记创建时间: 2026-04-05</em></p></div></details>
 
 <li><strong>核心方法</strong>: 基于时序感知知识图谱 Graphiti 的 agent 记忆系统，动态整合非结构化对话和结构化业务数据，同时维护历史关系。在 DMR benchmark 上超过 <span class="wikilink">MemGPT</span>（94.8% vs 93.4%），在 <span class="wikilink">LongMemEval</span> 上准确率提升 18.5%，延迟降低 90%。</li>
 <li><strong>对比方法/Baselines</strong>: <span class="wikilink">MemGPT</span>, <span class="wikilink">RAG</span> baselines, <span class="wikilink">GraphRAG</span>, <span class="wikilink">LightRAG</span></li>
@@ -280,6 +1130,135 @@ details.paper-note .note-body h3 { font-size: 1em; }
 <li><strong>机构</strong>: Meta AI</li>
 <li><strong>链接</strong>: <a href="http://arxiv.org/abs/2604.04872v1" target="_blank">arXiv</a> | <a href="https://arxiv.org/pdf/2604.04872v1" target="_blank">PDF</a></li>
 <li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+<details class="paper-note"><summary>📒 精读笔记: SandMLE</summary><div class="note-body"><h1 id="sandmle-synthetic-sandbox-for-training-machine-learning-engineering-agents">SandMLE: Synthetic Sandbox for Training Machine Learning Engineering Agents</h1>
+
+<blockquote>
+<p><strong>一句话总结</strong>：通过从种子任务合成微型 MLE 环境（每个仅 50-200 样本），将执行时间降低 13 倍，首次实现 MLE 领域大规模 on-policy trajectory-level <span class="wikilink">Reinforcement Learning|RL</span> 训练。</p>
+</blockquote>
+
+<h2 id="1-研究动机与问题定义">1. 研究动机与问题定义</h2>
+
+<h3 id="核心瓶颈">核心瓶颈</h3>
+<p>MLE（Machine Learning Engineering）agent 的训练面临关键瓶颈：<strong>sandbox 数据集太大，验证执行太慢</strong>。现有 MLE benchmark（如 MLE-bench）中的数据集动辄上 GB，单次训练+评估需要数十分钟，使得 on-policy RL 完全不可行。</p>
+
+<h3 id="问题定义">问题定义</h3>
+<p>将 MLE 任务建模为<strong>序列决策过程</strong>（Sequential Decision Process）：</p>
+
+<div class="math-block">$$\tau = (s_0, a_0, s_1, a_1, \ldots, s_T, a_T)$$</div>
+
+<p>其中 $s_t$ 为环境状态（代码、数据、日志），$a_t$ 为 agent 动作（编写代码、执行命令等），$T$ 为最大步数。目标是最大化最终奖励 $R(\tau)$——MLE 任务的提交得分。</p>
+
+<h2 id="2-方法详解">2. 方法详解</h2>
+
+<h3 id="21-合成环境生成流水线">2.1 合成环境生成流水线</h3>
+
+<p>SandMLE 的核心是一个<strong>三角色流水线</strong>：</p>
+
+<p><strong>Data Strategist（数据策略师）</strong>：从种子 MLE 任务出发，通过 LLM 生成多样化的任务变体规格，包括：</p>
+<li>不同数据分布（偏态、多模态、缺失值等）</li>
+<li>不同特征类型（数值、分类、文本、时序等）</li>
+<li>不同目标变量和评估指标</li>
+
+<p><strong>ML Developer（ML 开发者）</strong>：根据规格合成微型数据集：</p>
+
+<div class="math-block">$$|D_{\text{train}}| \in [50, 200], \quad |D_{\text{test}}| \in [20, 50]$$</div>
+
+<p>保留真实 MLE 问题的<strong>结构复杂性</strong>（特征交互、非线性关系等），但大幅缩小数据规模。</p>
+
+<p><strong>MLOps Engineer（MLOps 工程师）</strong>：搭建评估环境，包括 metric 计算脚本、提交格式验证、基线分数设定。</p>
+
+<h3 id="22-trajectory-level-grpo">2.2 Trajectory-Level GRPO</h3>
+
+<p>应用 <span class="wikilink">GRPO</span>（Group Relative Policy Optimization）到多轮 agent 轨迹：</p>
+
+<div class="math-block">$$\mathcal{L}_{\text{GRPO}}(\theta) = -\mathbb{E}_{\tau \sim \pi_{\theta_{\text{old}}}} \left[ \sum_{t=0}^{T} \min\left( r_t(\theta) \hat{A}_t, \text{clip}(r_t(\theta), 1-\epsilon, 1+\epsilon) \hat{A}_t \right) \right]$$</div>
+
+<p>其中 $r_t(\theta) = \frac{\pi_\theta(a_t|s_t)}{\pi_{\theta_{\text{old}}}(a_t|s_t)}$ 为重要性比率。</p>
+
+<p>关键创新：<strong>轨迹级奖励</strong>而非 token 级奖励。对于一组 $G$ 条轨迹，优势函数：</p>
+
+<div class="math-block">$$\hat{A}(\tau_i) = \frac{R(\tau_i) - \text{mean}(\{R(\tau_j)\}_{j=1}^G)}{\text{std}(\{R(\tau_j)\}_{j=1}^G)}$$</div>
+
+<h3 id="23-执行效率提升">2.3 执行效率提升</h3>
+
+<p>核心指标——执行时间对比：</p>
+
+<div class="math-block">$$\text{SandMLE}: \bar{t} \approx 2.5 \text{ min/task} \quad \text{vs.} \quad \text{MLE-bench}: \bar{t} \approx 32.5 \text{ min/task}$$</div>
+
+<p>加速比约 <strong>13x</strong>，使得大规模 on-policy 采样变得可行。</p>
+
+<h2 id="3-实验结果">3. 实验结果</h2>
+
+<h3 id="31-主要结果">3.1 主要结果</h3>
+
+<p>在 MLE-bench-lite 上的 medal rate：</p>
+
+<table class="paper-table">
+<thead><tr><th>模型</th><th>方法</th><th>Medal Rate</th></tr></thead>
+<tbody>
+<tr><td>Qwen3-8B</td><td>SFT baseline</td><td>低</td></tr>
+<tr><td>Qwen3-8B</td><td><strong>SandMLE + GRPO</strong></td><td><strong>+20.3%</strong></td></tr>
+<tr><td>Qwen3-14B</td><td>SFT baseline</td><td>中</td></tr>
+<tr><td>Qwen3-14B</td><td><strong>SandMLE + GRPO</strong></td><td><strong>+42.1%</strong></td></tr>
+<tr><td>Qwen3-30B</td><td>SFT baseline</td><td>中高</td></tr>
+<tr><td>Qwen3-30B</td><td><strong>SandMLE + GRPO</strong></td><td><strong>+66.9%</strong></td></tr>
+</tbody></table>
+
+
+<h3 id="32-跨-scaffold-泛化">3.2 跨 Scaffold 泛化</h3>
+
+<p>在 HumanRank benchmark 上（不同的 agent scaffold）：</p>
+
+<div class="math-block">$$\Delta_{\text{HumanRank}} = +32.4\%$$</div>
+
+<p>说明 SandMLE 训练出的能力可以<strong>迁移到不同的 agent 框架</strong>。</p>
+
+<h3 id="33-合成环境多样性">3.3 合成环境多样性</h3>
+
+<p>生成了 <strong>200+</strong> 个合成 MLE 环境，覆盖：</p>
+<li>回归、分类、排序等任务类型</li>
+<li>表格、时序、NLP 等数据模态</li>
+<li>AUC、RMSE、F1 等评估指标</li>
+
+<h2 id="4-架构图">4. 架构图</h2>
+
+<div class="paper-figure"><img src="https://arxiv.org/html/2604.04872v1/figure/teaser_updated.png" alt="SandMLE 系统架构" loading="lazy"></div>
+
+<h2 id="5-核心概念">5. 核心概念</h2>
+
+<li><span class="wikilink">GRPO</span>：Group Relative Policy Optimization，无需 critic 的策略优化</li>
+<li><span class="wikilink">On-Policy RL</span>：使用当前策略采样的强化学习</li>
+<li><span class="wikilink">MLE-bench</span>：Meta 提出的 MLE agent 评估基准</li>
+<li><span class="wikilink">Supervised Fine-Tuning|SFT</span>：监督微调基线</li>
+<li><span class="wikilink">ReAct</span>：推理+行动的 agent 框架</li>
+<li><span class="wikilink">AIDE</span>：另一种 MLE agent scaffold</li>
+
+<h2 id="6-优缺点分析">6. 优缺点分析</h2>
+
+<h3 id="优点">优点</h3>
+<p>1. <strong>问题定义精准</strong>：MLE verification 太贵导致 on-policy RL 不可行，这是真实痛点</p>
+<p>2. <strong>解决方案优雅</strong>：合成微型环境保留复杂性但降低成本 13x</p>
+<p>3. <strong>实验扎实</strong>：三个模型规模（8B/14B/30B）全面验证</p>
+<p>4. <strong>跨框架泛化</strong>：HumanRank +32.4% 是真正的亮点</p>
+<p>5. <strong>可推广</strong>：思路适用于任何 agent 训练瓶颈是环境执行成本的场景</p>
+
+<h3 id="缺点">缺点</h3>
+<p>1. <strong>未测闭源模型</strong>：没有在 Claude 或 GPT 系列上验证</p>
+<p>2. <strong>合成 vs 真实</strong>：微型合成数据集是否真正保留了真实 MLE 问题的核心难点？</p>
+<p>3. <strong>任务类型有限</strong>：主要聚焦表格数据，对 CV/NLP 任务覆盖不足</p>
+<p>4. <strong>LLM 生成的数据质量</strong>：合成数据的分布是否足够多样？</p>
+
+<h2 id="7-与相关工作对比">7. 与相关工作对比</h2>
+
+<table class="paper-table">
+<thead><tr><th>方法</th><th>训练方式</th><th>环境类型</th><th>执行速度</th><th>可扩展性</th></tr></thead>
+<tbody>
+<tr><td><strong>SandMLE</strong></td><td><strong>On-policy RL</strong></td><td><strong>合成微型</strong></td><td><strong>快 (13x)</strong></td><td><strong>高</strong></td></tr>
+<tr><td>MLE-bench</td><td>评估 only</td><td>真实大数据集</td><td>慢</td><td>低</td></tr>
+<tr><td>SFT</td><td>离线模仿</td><td>专家轨迹</td><td>N/A</td><td>中</td></tr>
+<tr><td>AIDE</td><td>无训练</td><td>真实环境</td><td>慢</td><td>低</td></tr>
+</tbody></table>
+</div></details>
 
 <div class="paper-figure"><img src="https://arxiv.org/html/2604.04872v1/figure/teaser_updated.png" alt="" loading="lazy"></div>
 
@@ -292,6 +1271,133 @@ details.paper-note .note-body h3 { font-size: 1em; }
 <li><strong>机构</strong>: SUNY Binghamton, Arizona State University</li>
 <li><strong>链接</strong>: <a href="http://arxiv.org/abs/2604.03888v1" target="_blank">arXiv</a> | <a href="https://arxiv.org/pdf/2604.03888v1" target="_blank">PDF</a></li>
 <li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+<details class="paper-note"><summary>📒 精读笔记: PolySwarm</summary><div class="note-body"><h1 id="polyswarm-a-multi-agent-llm-framework-for-prediction-market-trading">PolySwarm: A Multi-Agent LLM Framework for Prediction Market Trading</h1>
+
+<blockquote>
+<p><strong>一句话总结</strong>：用 50 个多样化 LLM persona 并发评估二元预测市场，通过 confidence-weighted Bayesian 聚合与市场隐含概率结合，加上 quarter-Kelly 仓位管理进行交易。</p>
+</blockquote>
+
+<h2 id="1-研究动机与问题定义">1. 研究动机与问题定义</h2>
+
+<h3 id="核心问题">核心问题</h3>
+<p><span class="wikilink">预测市场</span>（如 Polymarket）中的价格是否真的反映了事件的真实概率？单个 LLM 存在<strong>幻觉</strong>、<strong>过度自信</strong>和<strong>提示敏感性</strong>三大问题，难以可靠预测。</p>
+
+<h3 id="理论基础">理论基础</h3>
+<li><strong>有效市场假说</strong>：市场价格反映所有可用信息</li>
+<li><strong>Grossman-Stiglitz 悖论</strong>：完全有效的市场不会有人愿意付成本去获取信息</li>
+<li><strong>群体智慧</strong>：多样化个体的独立判断聚合优于单一专家</li>
+
+<h2 id="2-方法详解">2. 方法详解</h2>
+
+<h3 id="21-多样化-persona-设计">2.1 多样化 Persona 设计</h3>
+
+<p>50 个 LLM agent，每个有不同的分析视角和专业背景：</p>
+<li>政治分析师、经济学家、数据科学家、心理学家等</li>
+<li>不同风险偏好：保守、中性、激进</li>
+<li>不同信息侧重：基本面、技术面、情绪面</li>
+
+<h3 id="22-群体共识聚合">2.2 群体共识聚合</h3>
+
+<p>每个 agent $i$ 输出概率估计 $p_i$ 和置信度 $c_i$。加权聚合：</p>
+
+<div class="math-block">$$p_{\text{swarm}} = \frac{\sum_{i=1}^{N} c_i \cdot p_i}{\sum_{i=1}^{N} c_i}$$</div>
+
+<h3 id="23-bayesian-混合">2.3 Bayesian 混合</h3>
+
+<p>将群体共识与市场隐含概率 $p_{\text{market}}$ 结合：</p>
+
+<div class="math-block">$$p_{\text{final}} = \alpha \cdot p_{\text{swarm}} + (1 - \alpha) \cdot p_{\text{market}}$$</div>
+
+<p>其中 $\alpha$ 由群体共识的一致性程度决定。</p>
+
+<h3 id="24-期望价值计算">2.4 期望价值计算</h3>
+
+<div class="math-block">$$\text{EV} = p_{\text{final}} \cdot (\text{payout} - \text{cost}) - (1 - p_{\text{final}}) \cdot \text{cost}$$</div>
+
+<p>只在 $\text{EV} > \text{threshold}$ 时进行交易。</p>
+
+<h3 id="25-跨市场套利检测">2.5 跨市场套利检测</h3>
+
+<p>使用 <span class="wikilink">KL 散度</span> 和 JS 散度检测相关市场间的定价不一致：</p>
+
+<div class="math-block">$$D_{\text{KL}}(P \| Q) = \sum_x P(x) \log \frac{P(x)}{Q(x)}$$</div>
+
+<div class="math-block">$$D_{\text{JS}}(P \| Q) = \frac{1}{2} D_{\text{KL}}(P \| M) + \frac{1}{2} D_{\text{KL}}(Q \| M), \quad M = \frac{P + Q}{2}$$</div>
+
+<p>当 $D_{\text{JS}} > \delta$ 时触发套利信号。</p>
+
+<h3 id="26-仓位管理quarter-kelly">2.6 仓位管理：Quarter-Kelly</h3>
+
+<p><span class="wikilink">Kelly 准则</span> 的保守变体：</p>
+
+<div class="math-block">$$f^* = \frac{p \cdot b - q}{b}, \quad f_{\text{trade}} = \frac{f^*}{4}$$</div>
+
+<p>其中 $p$ 为估计获胜概率，$q = 1 - p$，$b$ 为赔率。使用 1/4 Kelly 以降低波动率。</p>
+
+<h3 id="27-评估指标">2.7 评估指标</h3>
+
+<li><strong>Brier Score</strong>：$\text{BS} = \frac{1}{N} \sum_{i=1}^{N} (p_i - o_i)^2$</li>
+<li><strong>Log-loss</strong>：$\mathcal{L} = -\frac{1}{N} \sum_{i=1}^{N} [o_i \log p_i + (1-o_i) \log(1-p_i)]$</li>
+
+<h2 id="3-实验结果">3. 实验结果</h2>
+
+<h3 id="31-llm-对比">3.1 LLM 对比</h3>
+
+<table class="paper-table">
+<thead><tr><th>模型</th><th>单模型 Brier</th><th>PolySwarm Brier</th><th>改善</th></tr></thead>
+<tbody>
+<tr><td>GPT-4</td><td>0.312</td><td>—</td><td>—</td></tr>
+<tr><td>Claude</td><td>0.298</td><td>—</td><td>—</td></tr>
+<tr><td><strong>PolySwarm (50 agents)</strong></td><td>—</td><td><strong>~0.24</strong></td><td><strong>~20%↓</strong></td></tr>
+</tbody></table>
+
+
+<h3 id="32-关键发现">3.2 关键发现</h3>
+
+<li>50 个 persona 的聚合显著优于单模型预测</li>
+<li>Bayesian 混合优于简单平均</li>
+<li>Quarter-Kelly 在回撤控制上优于 full Kelly</li>
+<li>套利检测模块在 ~15% 的市场对中发现了定价不一致</li>
+
+<h2 id="4-架构图">4. 架构图</h2>
+
+<div class="paper-figure"><img src="https://arxiv.org/html/2604.03888v1/x1.png" alt="PolySwarm 系统架构" loading="lazy"></div>
+
+<h2 id="5-核心概念">5. 核心概念</h2>
+
+<li><span class="wikilink">预测市场</span>：基于事件结果进行交易的市场</li>
+<li><span class="wikilink">Kelly 准则</span>：最优仓位管理公式</li>
+<li><span class="wikilink">KL 散度</span>：衡量概率分布差异</li>
+<li><span class="wikilink">Bayesian Inference</span>：贝叶斯推断框架</li>
+<li><span class="wikilink">Ensemble Methods</span>：集成学习方法</li>
+<li><span class="wikilink">Multi-Agent Systems</span>：多智能体系统</li>
+
+<h2 id="6-优缺点分析">6. 优缺点分析</h2>
+
+<h3 id="优点">优点</h3>
+<p>1. <strong>思路新颖</strong>：50 个 LLM persona 的群体智慧方法很 bold</p>
+<p>2. <strong>理论基础</strong>：有效市场假说 + Grossman-Stiglitz 悖论提供了合理动机</p>
+<p>3. <strong>风险管理</strong>：Quarter-Kelly + 套利检测是实用的工程设计</p>
+<p>4. <strong>多模型对比</strong>：测试了主流 LLM 的预测能力</p>
+
+<h3 id="缺点">缺点</h3>
+<p>1. <strong>无实盘验证</strong>：只有方法论评估，没有 Polymarket 实盘结果</p>
+<p>2. <strong>计算成本</strong>：50 个 LLM 调用的成本是否值得这个提升？</p>
+<p>3. <strong>Persona 设计</strong>：50 个 persona 的多样性如何保证？LLM 的 "角色扮演" 是否真正带来独立视角？</p>
+<p>4. <strong>时效性</strong>：预测市场依赖实时信息，LLM 的知识截止问题如何处理？</p>
+<p>5. <strong>样本量</strong>：评估的市场数量有限，统计显著性存疑</p>
+
+<h2 id="7-与相关工作对比">7. 与相关工作对比</h2>
+
+<table class="paper-table">
+<thead><tr><th>方法</th><th>模型数量</th><th>聚合方式</th><th>仓位管理</th><th>实盘验证</th></tr></thead>
+<tbody>
+<tr><td><strong>PolySwarm</strong></td><td><strong>50</strong></td><td><strong>Bayesian 加权</strong></td><td><strong>Quarter-Kelly</strong></td><td><strong>无</strong></td></tr>
+<tr><td>Lopez-Lira</td><td>1</td><td>单模型</td><td>无</td><td>有</td></tr>
+<tr><td>BloombergGPT</td><td>1</td><td>单模型</td><td>无</td><td>部分</td></tr>
+<tr><td>AutoGen</td><td>多</td><td>对话共识</td><td>无</td><td>无</td></tr>
+</tbody></table>
+</div></details>
 
 <div class="paper-figure"><img src="https://arxiv.org/html/2604.03888v1/x1.png" alt="" loading="lazy"></div>
 
@@ -303,6 +1409,133 @@ details.paper-note .note-body h3 { font-size: 1em; }
 <li><strong>机构</strong>: University of Washington</li>
 <li><strong>链接</strong>: <a href="http://arxiv.org/abs/2604.04929v1" target="_blank">arXiv</a> | <a href="https://arxiv.org/pdf/2604.04929v1" target="_blank">PDF</a></li>
 <li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+<details class="paper-note"><summary>📒 精读笔记: Rethinking Model Efficiency</summary><div class="note-body"><h1 id="rethinking-model-efficiency-multi-agent-inference-with-large-models">Rethinking Model Efficiency: Multi-Agent Inference with Large Models</h1>
+
+<blockquote>
+<p><strong>一句话总结</strong>：发现大模型用更少的 output token 可能比小模型用长序列更快，提出 multi-agent inference 框架：大模型出短回答，必要时从小模型转移关键推理 token。</p>
+</blockquote>
+
+<h2 id="1-研究动机与问题定义">1. 研究动机与问题定义</h2>
+
+<h3 id="核心观察">核心观察</h3>
+<p>传统观点认为小模型更高效（更快、更便宜）。但作者发现一个反直觉现象：</p>
+
+<div class="math-block">$$\text{Latency}_{\text{large}} &lt; \text{Latency}_{\text{small}} \quad \text{when} \quad |T_{\text{large}}| \ll |T_{\text{small}}|$$</div>
+
+<p>即大模型因为"废话少"（生成更紧凑的回答），实际延迟可能低于小模型。</p>
+
+<h3 id="问题定义">问题定义</h3>
+<p>对于 <span class="wikilink">VLM</span>（Vision-Language Model）推理任务，总延迟由两部分组成：</p>
+
+<div class="math-block">$$L_{\text{total}} = L_{\text{prefill}} + L_{\text{decode}} = L_{\text{prefill}} + n_{\text{tokens}} \cdot t_{\text{per\_token}}$$</div>
+
+<p>大模型的 $t_{\text{per\_token}}$ 更大，但 $n_{\text{tokens}}$ 更小。当 decode 阶段主导延迟时，大模型反而更快。</p>
+
+<h2 id="2-方法详解">2. 方法详解</h2>
+
+<h3 id="21-vlm-inference-profile">2.1 VLM Inference Profile</h3>
+
+<p>系统性量化了小模型 vs 大模型的推理行为：</p>
+
+<div class="math-block">$$\text{Efficiency}(M) = \frac{\text{Accuracy}(M)}{\text{Latency}(M)} = \frac{\text{Accuracy}(M)}{n_{\text{tokens}}(M) \cdot t_{\text{per\_token}}(M)}$$</div>
+
+<p>关键发现：</p>
+<li>大模型生成的 token 数量平均比小模型少 40-60%</li>
+<li>大模型的推理更"直接"，减少了不必要的推理步骤和重复</li>
+
+<h3 id="22-multi-agent-inference-框架">2.2 Multi-Agent Inference 框架</h3>
+
+<h4 id="mutual-verification互验证">Mutual Verification（互验证）</h4>
+
+<p>大模型和小模型各自独立回答，然后交叉验证：</p>
+
+<div class="math-block">$$\text{Answer} = \begin{cases} a_{\text{large}} &amp; \text{if } a_{\text{large}} = a_{\text{small}} \\ a_{\text{large}} &amp; \text{if confidence}(a_{\text{large}}) &gt; \tau \\ \text{Reasoning Transfer} &amp; \text{otherwise} \end{cases}$$</div>
+
+<h4 id="reasoning-transfer推理转移">Reasoning Transfer（推理转移）</h4>
+
+<p>当大模型不确定时，从小模型的长推理链中提取关键 token：</p>
+
+<div class="math-block">$$T_{\text{key}} = \text{Extract}(T_{\text{small}}, \text{attention\_scores})$$</div>
+
+<p>将关键推理 token 注入大模型的 context，让大模型重新推理：</p>
+
+<div class="math-block">$$a_{\text{final}} = M_{\text{large}}(\text{prompt} \oplus T_{\text{key}})$$</div>
+
+<h3 id="23-延迟-精度权衡">2.3 延迟-精度权衡</h3>
+
+<div class="math-block">$$\text{Pareto-optimal}: \min_{\alpha} \left[ \alpha \cdot L_{\text{large}} + (1-\alpha) \cdot L_{\text{small}} \right] \quad \text{s.t.} \quad \text{Acc} \geq \text{Acc}_{\text{target}}$$</div>
+
+<p>通过调节大小模型的使用比例，在延迟和精度之间取得最优平衡。</p>
+
+<h2 id="3-实验结果">3. 实验结果</h2>
+
+<h3 id="31-output-token-数量对比">3.1 Output Token 数量对比</h3>
+
+<table class="paper-table">
+<thead><tr><th>模型</th><th>任务</th><th>平均 Token 数</th><th>准确率</th></tr></thead>
+<tbody>
+<tr><td>Qwen-VL-7B</td><td>VQA</td><td>~350</td><td>中</td></tr>
+<tr><td>Qwen-VL-72B</td><td>VQA</td><td>~180</td><td>高</td></tr>
+<tr><td>Token 减少</td><td>—</td><td><strong>~49%</strong></td><td><strong>+15%</strong></td></tr>
+</tbody></table>
+
+
+<h3 id="32-延迟对比">3.2 延迟对比</h3>
+
+<table class="paper-table">
+<thead><tr><th>配置</th><th>延迟</th><th>准确率</th></tr></thead>
+<tbody>
+<tr><td>小模型 alone</td><td>中</td><td>中</td></tr>
+<tr><td>大模型 alone</td><td>中-高</td><td>高</td></tr>
+<tr><td><strong>Multi-Agent</strong></td><td><strong>低-中</strong></td><td><strong>高</strong></td></tr>
+</tbody></table>
+
+
+<h3 id="33-reasoning-transfer-效果">3.3 Reasoning Transfer 效果</h3>
+
+<p>在大模型不确定的 case 中，注入小模型关键推理 token 后：</p>
+<li>准确率提升 8-12%</li>
+<li>额外延迟仅增加 15-20%</li>
+
+<h2 id="4-架构图">4. 架构图</h2>
+
+<div class="paper-figure"><img src="https://arxiv.org/html/2604.04929v1/fig/fig/new_fig/qwen_latency_curve_single.png" alt="延迟-Token 数量关系曲线" loading="lazy"></div>
+
+<h2 id="5-核心概念">5. 核心概念</h2>
+
+<li><span class="wikilink">VLM</span>：Vision-Language Model</li>
+<li><span class="wikilink">Multi-Agent Inference</span>：多智能体推理</li>
+<li><span class="wikilink">Token Efficiency</span>：Token 效率</li>
+<li><span class="wikilink">Reasoning Transfer</span>：推理转移</li>
+<li><span class="wikilink">Prefill</span>：预填充阶段</li>
+<li><span class="wikilink">Autoregressive Decoding</span>：自回归解码</li>
+
+<h2 id="6-优缺点分析">6. 优缺点分析</h2>
+
+<h3 id="优点">优点</h3>
+<p>1. <strong>观察有价值</strong>：系统量化了"大模型废话少"这个直觉</p>
+<p>2. <strong>实用框架</strong>：multi-agent inference 可以直接用于 VLM 部署</p>
+<p>3. <strong>灵活配置</strong>：可根据延迟/精度需求调节大小模型比例</p>
+<p>4. <strong>推理转移</strong>：小模型的详细推理链可以辅助大模型</p>
+
+<h3 id="缺点">缺点</h3>
+<p>1. <strong>观察不算新</strong>：大模型更高效的直觉很多人已经有</p>
+<p>2. <strong>需要两个模型</strong>：部署两个模型的资源开销高于单模型</p>
+<p>3. <strong>模型特定</strong>：只在 Qwen-VL 系列测试，泛化性未验证</p>
+<p>4. <strong>推理转移</strong>：关键 token 的提取方法（attention-based）可能不够鲁棒</p>
+
+<h2 id="7-与相关工作对比">7. 与相关工作对比</h2>
+
+<table class="paper-table">
+<thead><tr><th>方法</th><th>策略</th><th>适用场景</th><th>延迟优化</th></tr></thead>
+<tbody>
+<tr><td><strong>本文</strong></td><td><strong>大小模型协作</strong></td><td><strong>VLM</strong></td><td><strong>是</strong></td></tr>
+<tr><td>Speculative Decoding</td><td>小模型预测+大模型验证</td><td>LLM</td><td>是</td></tr>
+<tr><td>Token Pruning</td><td>减少输入 token</td><td>VLM</td><td>部分</td></tr>
+<tr><td>Model Distillation</td><td>知识蒸馏</td><td>通用</td><td>间接</td></tr>
+<tr><td>Early Exit</td><td>提前退出</td><td>通用</td><td>是</td></tr>
+</tbody></table>
+</div></details>
 
 <div class="paper-figure"><img src="https://arxiv.org/html/2604.04929v1/fig/fig/new_fig/qwen_latency_curve_single.png" alt="" loading="lazy"></div>
 
@@ -321,6 +1554,334 @@ details.paper-note .note-body h3 { font-size: 1em; }
 <li><strong>机构</strong>: USTC</li>
 <li><strong>链接</strong>: <a href="http://arxiv.org/abs/2604.04493v1" target="_blank">arXiv</a> | <a href="https://arxiv.org/pdf/2604.04493v1" target="_blank">PDF</a></li>
 <li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+<details class="paper-note"><summary>📒 精读笔记: SLaB</summary><div class="note-body"><h1 id="论文笔记slab-sparse-lowrank-binary-decomposition-for-efficient-large-language-models">论文笔记：SLaB: Sparse-Lowrank-Binary Decomposition for Efficient Large Language Models</h1>
+
+<h2 id="元信息">元信息</h2>
+
+<table class="paper-table">
+<thead><tr><th>项目</th><th>内容</th></tr></thead>
+<tbody>
+<tr><td>机构</td><td>未明确标注（submitted to IEEE）</td></tr>
+<tr><td>日期</td><td>April 2026</td></tr>
+<tr><td>项目主页</td><td>无</td></tr>
+<tr><td>对比基线</td><td><span class="wikilink">SparseGPT</span>, <span class="wikilink">Wanda</span></td></tr>
+<tr><td>链接</td><td><a href="https://arxiv.org/abs/2604.04493v1" target="_blank">arXiv</a></td></tr>
+</tbody></table>
+
+
+
+<h2 id="一句话总结">一句话总结</h2>
+
+<blockquote>
+<p>将 LLM 权重分解为稀疏+低秩+二值三部分，无需重训练即可在 50% 压缩率下大幅降低 perplexity。</p>
+</blockquote>
+
+
+<h2 id="核心贡献">核心贡献</h2>
+
+<p>1. <strong>三矩阵分解框架</strong>: 提出将线性层权重 $\mathbf{W}$ 分解为稀疏矩阵 $\mathbf{W}_\text{S}$、低秩矩阵 $\mathbf{W}_\text{L}$ 和二值矩阵 $\mathbf{W}_\text{B}$ 的新方法</p>
+<p>2. <strong>交替优化算法</strong>: 推导出三个分量各自的闭式或近似最优解，并通过交替迭代求解</p>
+<p>3. <strong>无需重训练</strong>: 在 Llama 系列模型上实现 SOTA 压缩性能，50% 压缩率下 perplexity 降低最高 36%</p>
+
+
+<h2 id="问题背景">问题背景</h2>
+
+<h3 id="要解决的问题">要解决的问题</h3>
+<p><span class="wikilink">LLM</span> 体积庞大、计算需求高，难以在资源受限设备上部署。<span class="wikilink">Network Pruning|网络剪枝</span> 等压缩方法在高压缩率下性能下降严重。</p>
+
+<h3 id="现有方法的局限">现有方法的局限</h3>
+<li><span class="wikilink">SparseGPT</span> 和 <span class="wikilink">Wanda</span> 等 <span class="wikilink">One-shot Pruning|一次性剪枝</span> 方法在高稀疏度下精度损失显著</li>
+<li>单纯的 <span class="wikilink">Low-rank Decomposition|低秩分解</span>（如 ASVD、SVD-LLM）在硬件友好性上有优势，但简单地将稀疏+低秩组合效果不好（如 Figure 1 所示）</li>
+<li>缺乏有效的方式在剪枝后补偿性能损失</li>
+
+<h3 id="本文的动机">本文的动机</h3>
+<p>通过引入 <span class="wikilink">Binary Matrix|二值矩阵</span> 来弥合稀疏+低秩组合的性能差距——二值矩阵可以显著降低所需的秩，同时硬件友好（$\{+1, -1\}$），并且可以被 Hadamard 乘积吸收到低秩矩阵中。</p>
+
+
+<h2 id="方法详解">方法详解</h2>
+
+<h3 id="模型架构">模型架构</h3>
+
+<p>SLaB 采用<strong>逐层交替优化</strong>架构，对 LLM 中每个线性层的权重矩阵进行分解：</p>
+<li><strong>输入</strong>: 权重矩阵 $\mathbf{W} \in \mathbb{R}^{D_\text{out} \times D_\text{in}}$ 和对应的激活矩阵 $\mathbf{X} \in \mathbb{R}^{(N \times L) \times D_\text{in}}$</li>
+<li><strong>核心分解</strong>: $\mathbf{W} = \mathbf{W}_\text{S} + \mathbf{W}_\text{L} \odot \mathbf{W}_\text{B}$</li>
+<li><strong>输出</strong>: 稀疏矩阵 $\mathbf{W}_\text{S}$、秩-1 矩阵 $\mathbf{U}\mathbf{V}^T$、二值矩阵 $\mathbf{W}_\text{B} \in \{+1, -1\}$</li>
+<li><strong>不需要重训练</strong></li>
+
+<h3 id="核心模块">核心模块</h3>
+
+<h4 id="模块-1-稀疏矩阵-mathbfw_texts-优化">模块 1: 稀疏矩阵 $\mathbf{W}_\text{S}$ 优化</h4>
+
+<p><strong>设计动机</strong>: 利用 <span class="wikilink">Wanda</span> 的 <span class="wikilink">Activation-aware Pruning|激活感知剪枝</span> 技术，结合输入特征范数进行重要性评估。</p>
+
+<p><strong>具体实现</strong>:</p>
+<li>固定 $\mathbf{W}_\text{L}$ 和 $\mathbf{W}_\text{B}$，计算残差 $\mathbf{Y}_\text{S} = \mathbf{W} - \mathbf{W}_\text{L} \odot \mathbf{W}_\text{B}$</li>
+<li>通过评分矩阵 $\mathbf{S}_{ij} = |\mathbf{Y}_{\text{S},ij}| \cdot \|\mathbf{X}_j\|_2$ 进行幅度剪枝</li>
+<li>使用 <span class="wikilink">Comparison Group|比较组</span>（大小 $(1, D_\text{in})$）进行逐行剪枝</li>
+
+<h4 id="模块-2-二值矩阵-mathbfw_textb-优化">模块 2: 二值矩阵 $\mathbf{W}_\text{B}$ 优化</h4>
+
+<p><strong>设计动机</strong>: 利用权重的零均值对称分布特性，证明 $\{+1, -1\}$ 是次优解。</p>
+
+<p><strong>具体实现</strong>:</p>
+<li>固定其他分量，计算 $\mathbf{Y}_\text{B} = (\mathbf{W} - \mathbf{W}_\text{S}) \oslash \mathbf{W}_\text{L}$</li>
+<li>优化目标为 $\arg\min_{\mathbf{W}_\text{B}} \|\mathbf{Y}_\text{B} - \mathbf{W}_\text{B}\|_2^2$</li>
+<li>通过 Lemma 1 和 Proposition 1 证明：对称分布下 $a + b = 0$ 是次优解</li>
+<li>因此 $\mathbf{W}_\text{B} = \text{sign}(\mathbf{W} - \mathbf{W}_\text{S})$</li>
+
+<h4 id="模块-3-低秩矩阵-mathbfw_textl-优化">模块 3: 低秩矩阵 $\mathbf{W}_\text{L}$ 优化</h4>
+
+<p><strong>设计动机</strong>: 利用 <span class="wikilink">Eckart-Young Theorem</span> 获得最优低秩近似。</p>
+
+<p><strong>具体实现</strong>:</p>
+<li>计算 $\mathbf{Y}_\text{L} = (\mathbf{W} - \mathbf{W}_\text{S}) \oslash \mathbf{W}_\text{B}$</li>
+<li>对 $|\mathbf{Y}_\text{BL}|$ 做 <span class="wikilink">Truncated SVD|截断 SVD</span>，取秩-1 近似</li>
+<li>初始化 $\mathbf{U} = \sqrt{\sigma_0}\mathbf{u}_0$, $\mathbf{V} = \sqrt{\sigma_0}\mathbf{v}_0$</li>
+<li>Proposition 2 证明 $\mathbf{W}_\text{L}$ 元素均非负，确保 $\mathbf{W}_\text{B} = \text{sign}(\mathbf{Y}_\text{BL})$ 始终最优</li>
+
+
+<h2 id="关键公式">关键公式</h2>
+
+<h3 id="公式-1-matrix-decomposition三矩阵分解">公式 1: <span class="wikilink">Matrix Decomposition|三矩阵分解</span></h3>
+
+<div class="math-block">$$
+\mathbf{W} = \mathbf{W}_\text{S} + \mathbf{W}_\text{L} \odot \mathbf{W}_\text{B}
+$$</div>
+
+<p><strong>含义</strong>: 将线性层权重分解为稀疏分量、低秩分量与二值分量的组合。</p>
+
+<p><strong>符号说明</strong>:</p>
+<li>$\mathbf{W}$: 原始权重矩阵 $\in \mathbb{R}^{D_\text{out} \times D_\text{in}}$</li>
+<li>$\mathbf{W}_\text{S}$: 稀疏矩阵（保留重要权重）</li>
+<li>$\mathbf{W}_\text{L}$: 低秩矩阵（秩-1，$\mathbf{U}\mathbf{V}^T$）</li>
+<li>$\mathbf{W}_\text{B} \in \{+1, -1\}$: 二值矩阵</li>
+<li>$\odot$: <span class="wikilink">Hadamard Product|Hadamard 乘积</span></li>
+
+<h3 id="公式-2-pruning-score激活感知剪枝评分">公式 2: <span class="wikilink">Pruning Score|激活感知剪枝评分</span></h3>
+
+<div class="math-block">$$
+\mathbf{S}_{ij} = |\mathbf{Y}_{\text{S},ij}| \cdot \|\mathbf{X}_j\|_2
+$$</div>
+
+<p><strong>含义</strong>: 结合残差幅度与激活特征范数来衡量权重的重要性。</p>
+
+<p><strong>符号说明</strong>:</p>
+<li>$\mathbf{Y}_{\text{S},ij}$: 残差矩阵第 $(i,j)$ 元素</li>
+<li>$\|\mathbf{X}_j\|_2$: 第 $j$ 个输入特征的 L2 范数</li>
+
+<h3 id="公式-3-compression-ratio压缩率-计算">公式 3: <span class="wikilink">Compression Ratio|压缩率</span> 计算</h3>
+
+<div class="math-block">$$
+\text{CR} = 1 - \frac{\overbrace{bk}^{\mathbf{W}_\text{S}} + \overbrace{D_\text{out} D_\text{in}}^{\mathbf{W}_\text{B}} + \overbrace{b(D_\text{out} + D_\text{in})}^{\mathbf{W}_\text{L}}}{b D_\text{out} D_\text{in}}
+$$</div>
+
+<p><strong>含义</strong>: 综合考虑三个分量的存储开销计算总体压缩率。</p>
+
+<p><strong>符号说明</strong>:</p>
+<li>$b$: 数据位宽（如 FP16 时 $b=16$）</li>
+<li>$k$: 稀疏矩阵中非零元素数</li>
+<li>$D_\text{out}, D_\text{in}$: 权重矩阵的输出/输入维度</li>
+
+<h3 id="公式-4-稀疏度推导">公式 4: 稀疏度推导</h3>
+
+<div class="math-block">$$
+\frac{k}{D_\text{out} D_\text{in}} = 1 - \text{CR} - \frac{1}{b} - \frac{1}{D_\text{out}} - \frac{1}{D_\text{in}}
+$$</div>
+
+<p><strong>含义</strong>: 根据目标压缩率和矩阵维度推导稀疏矩阵应保留的非零元素比例。</p>
+
+<h3 id="公式-5-lemma-1--binary-quantization二值量化最优分割">公式 5: Lemma 1 — <span class="wikilink">Binary Quantization|二值量化</span>最优分割</h3>
+
+<div class="math-block">$$
+w_t \leq \frac{\tilde{a}+\tilde{b}}{2} \leq w_{t+1}, \quad \tilde{a} = \frac{\sum_{k=0}^{t} w_k}{t+1}, \quad \tilde{b} = \frac{\sum_{k=t+1}^{n-1} w_k}{n-t-1}
+$$</div>
+
+<p><strong>含义</strong>: 排序后的权重值存在最优分割点 $t$，使得两组均值作为二值量化的代表值时误差最小。</p>
+
+<h3 id="公式-6-svdsvd-初始化">公式 6: <span class="wikilink">SVD|SVD 初始化</span></h3>
+
+<div class="math-block">$$
+\mathbf{W}_\text{B} = \text{sign}(\mathbf{Y}_\text{BL}), \quad \mathbf{W}_\text{L} = \mathbf{U}\mathbf{V}^T \quad \text{with} \quad |\mathbf{Y}_\text{BL}| = \sum_{k=0}^{\min\{D_\text{out}, D_\text{in}\}} \sigma_k \mathbf{u}_k \mathbf{v}_k^T
+$$</div>
+
+<p><strong>含义</strong>: 联合优化 $\mathbf{W}_\text{B}$ 和 $\mathbf{W}_\text{L}$ 的初始化策略，基于符号函数和截断 SVD。</p>
+
+
+<h2 id="关键图表">关键图表</h2>
+
+<h3 id="figure-1-稀疏低秩简单组合的失败">Figure 1: 稀疏+低秩简单组合的失败</h3>
+
+<div class="paper-figure"><img src="https://arxiv.org/html/2604.04493v1/x1.png" alt="Figure 1" loading="lazy"></div>
+
+<p><strong>说明</strong>: 在 Llama-2 7B 上以 50% 压缩率仅使用低秩+稀疏矩阵的 perplexity 对比。随着 rank 增加，简单组合方式无法有效降低 perplexity，说明需要引入二值矩阵。</p>
+
+<h3 id="figure-2-slab-框架总览">Figure 2: SLaB 框架总览</h3>
+
+<div class="paper-figure"><img src="https://arxiv.org/html/2604.04493v1/x2.png" alt="Figure 2" loading="lazy"></div>
+
+<p><strong>说明</strong>: SLaB 的整体流程。权重矩阵 $\mathbf{W}$ 被分解为稀疏矩阵 $\mathbf{W}_\text{S}$、低秩矩阵 $\mathbf{W}_\text{L}$（秩-1，$\mathbf{U}\mathbf{V}^T$）和二值矩阵 $\mathbf{W}_\text{B}$（$\{+1,-1\}$），通过交替优化迭代求解。</p>
+
+<h3 id="figure-3-rank-对压缩效果的影响">Figure 3: Rank 对压缩效果的影响</h3>
+
+<div class="paper-figure"><img src="https://arxiv.org/html/2604.04493v1/x3.png" alt="Figure 3" loading="lazy"></div>
+
+<p><strong>说明</strong>: Llama-2 7B 在 50% 压缩率下，rank 从 0（即 Wanda）增至 1 时 Frobenius 范数差显著下降，但继续增加 rank 收益递减。因此 SLaB 采用 rank-1 设定。</p>
+
+<h3 id="table-i-主实验结果">Table I: 主实验结果</h3>
+
+<table class="paper-table">
+<thead><tr><th>Method</th><th>Sparsity (CR)</th><th>Llama-3.2 1B ppl</th><th>Llama-3.2 1B acc</th><th>Llama-2 7B ppl</th><th>Llama-2 7B acc</th><th>Llama-3 8B ppl</th><th>Llama-3 8B acc</th></tr></thead>
+<tbody>
+<tr><td>Dense</td><td>0%</td><td>9.06</td><td>58.3</td><td>5.12</td><td>68.4</td><td>5.75</td><td>72.9</td></tr>
+<tr><td>SparseGPT</td><td>US (50%)</td><td>18.09</td><td>51.2</td><td>6.52</td><td>63.9</td><td>8.73</td><td>66.9</td></tr>
+<tr><td>Wanda</td><td>US (50%)</td><td>21.37</td><td>48.5</td><td>6.45</td><td>64.0</td><td>9.15</td><td>65.4</td></tr>
+<tr><td><strong>SLaB</strong></td><td><strong>US (50%)</strong></td><td><strong>11.57</strong></td><td><strong>55.8</strong></td><td><strong>5.49</strong></td><td><strong>66.2</strong></td><td><strong>6.67</strong></td><td><strong>70.7</strong></td></tr>
+<tr><td>SparseGPT</td><td>4:8 (50%)</td><td>21.64</td><td>48.0</td><td>7.94</td><td>61.6</td><td>11.33</td><td>61.3</td></tr>
+<tr><td>Wanda</td><td>4:8 (50%)</td><td>40.47</td><td>44.3</td><td>8.03</td><td>60.8</td><td>13.41</td><td>65.4</td></tr>
+<tr><td><strong>SLaB</strong></td><td><strong>4:8 (50%)</strong></td><td><strong>12.43</strong></td><td><strong>52.5</strong></td><td><strong>5.61</strong></td><td><strong>65.3</strong></td><td><strong>6.93</strong></td><td><strong>70.1</strong></td></tr>
+<tr><td>SparseGPT</td><td>2:4 (50%)</td><td>30.14</td><td>46.5</td><td>10.37</td><td>58.9</td><td>14.81</td><td>57.4</td></tr>
+<tr><td>Wanda</td><td>2:4 (50%)</td><td>79.06</td><td>41.3</td><td>11.40</td><td>55.6</td><td>22.52</td><td>52.2</td></tr>
+<tr><td><strong>SLaB</strong></td><td><strong>2:4 (50%)</strong></td><td><strong>14.02</strong></td><td><strong>52.5</strong></td><td><strong>5.77</strong></td><td><strong>65.3</strong></td><td><strong>7.32</strong></td><td><strong>70.1</strong></td></tr>
+<tr><td>SparseGPT</td><td>US (60%)</td><td>44.43</td><td>45.2</td><td>9.52</td><td>58.7</td><td>14.45</td><td>59.0</td></tr>
+<tr><td>Wanda</td><td>US (60%)</td><td>71.92</td><td>41.5</td><td>10.01</td><td>57.1</td><td>21.37</td><td>53.3</td></tr>
+<tr><td><strong>SLaB</strong></td><td><strong>US (60%)</strong></td><td><strong>14.73</strong></td><td><strong>51.7</strong></td><td><strong>5.85</strong></td><td><strong>65.0</strong></td><td><strong>7.54</strong></td><td><strong>69.2</strong></td></tr>
+<tr><td>SparseGPT</td><td>US (70%)</td><td>132.62</td><td>40.8</td><td>24.84</td><td>47.6</td><td>38.52</td><td>46.9</td></tr>
+<tr><td>Wanda</td><td>US (70%)</td><td>412.56</td><td>37.4</td><td>71.58</td><td>39.9</td><td>107.00</td><td>39.3</td></tr>
+<tr><td><strong>SLaB</strong></td><td><strong>US (70%)</strong></td><td><strong>26.06</strong></td><td><strong>46.6</strong></td><td><strong>6.88</strong></td><td><strong>62.2</strong></td><td><strong>10.35</strong></td><td><strong>64.3</strong></td></tr>
+<tr><td>SparseGPT</td><td>US (80%)</td><td>471.50</td><td>38.5</td><td>111.27</td><td>37.6</td><td>183.01</td><td>39.5</td></tr>
+<tr><td>Wanda</td><td>US (80%)</td><td>1.34e4</td><td>36.6</td><td>3.60e3</td><td>36.1</td><td>1.25e3</td><td>37.2</td></tr>
+<tr><td><strong>SLaB</strong></td><td><strong>US (80%)</strong></td><td><strong>113.77</strong></td><td><strong>41.5</strong></td><td><strong>13.63</strong></td><td><strong>53.4</strong></td><td><strong>27.02</strong></td><td><strong>49.3</strong></td></tr>
+</tbody></table>
+
+
+<p><strong>说明</strong>: SLaB 在所有压缩率和稀疏模式下均大幅超越 SparseGPT 和 Wanda。在 Llama-3.2 1B 50% US 下 perplexity 降低 36%（18.09 → 11.57 vs SparseGPT），高压缩率（70%-80%）下优势更加显著。</p>
+
+<h3 id="table-ii-超参数探索">Table II: 超参数探索</h3>
+
+<p><strong>比较组大小</strong> (Llama-2 7B, CR=50%):</p>
+
+<table class="paper-table">
+<thead><tr><th>Comparison Group</th><th>$(1, D_\text{in}/32)$</th><th>$(1, D_\text{in}/16)$</th><th>$(1, D_\text{in})$</th><th>$(16, D_\text{in})$</th><th>$(32, D_\text{in})$</th></tr></thead>
+<tbody>
+<tr><td>ppl</td><td>5.516</td><td>5.491</td><td>5.493</td><td>5.544</td><td>5.546</td></tr>
+<tr><td>acc (%)</td><td>65.6</td><td>65.8</td><td>66.2</td><td>65.9</td><td>66.2</td></tr>
+</tbody></table>
+
+
+<p><strong>迭代次数</strong>:</p>
+
+<table class="paper-table">
+<thead><tr><th>Iterations</th><th>1</th><th>10</th><th>20</th><th>30</th><th>40</th></tr></thead>
+<tbody>
+<tr><td>ppl</td><td>5.678</td><td>5.531</td><td>5.493</td><td>5.480</td><td>5.477</td></tr>
+</tbody></table>
+
+
+<p><strong>说明</strong>: 比较组大小对结果影响不大，$(1, D_\text{in})$ 是合理默认值。迭代 20 次后收益递减。</p>
+
+<h3 id="table-iii-消融实验">Table III: 消融实验</h3>
+
+<table class="paper-table">
+<thead><tr><th>配置</th><th>ARC-C</th><th>ARC-E</th><th>RTE</th><th>WinoGrande</th><th>Avg</th></tr></thead>
+<tbody>
+<tr><td>$\mathbf{W}_\text{S}$ only</td><td>32.0</td><td>58.2</td><td>53.1</td><td>62.0</td><td>49.8</td></tr>
+<tr><td>$\mathbf{W}_\text{S} + \mathbf{W}_\text{L}$ (r=16)</td><td>33.4</td><td>59.2</td><td>53.8</td><td>64.8</td><td>51.2</td></tr>
+<tr><td>$\mathbf{W}_\text{S} + \text{factor} \odot \mathbf{W}_\text{B}$</td><td>42.1</td><td>71.8</td><td>55.6</td><td>68.2</td><td>58.2</td></tr>
+<tr><td>$\mathbf{W}_\text{S} + \mathbf{W}_\text{L} \odot \mathbf{W}_\text{B}$ (Full)</td><td><strong>43.2</strong></td><td><strong>71.3</strong></td><td><strong>57.0</strong></td><td><strong>68.6</strong></td><td><strong>58.9</strong></td></tr>
+</tbody></table>
+
+
+<p><strong>关键发现</strong>: 二值矩阵 $\mathbf{W}_\text{B}$ 的贡献远大于单纯的低秩补偿（+8.4% vs +1.4%）。完整的三矩阵组合在所有任务上取得最佳表现。</p>
+
+
+<h2 id="实验">实验</h2>
+
+<h3 id="数据集">数据集</h3>
+
+<table class="paper-table">
+<thead><tr><th>数据集</th><th>规模</th><th>特点</th><th>用途</th></tr></thead>
+<tbody>
+<tr><td><span class="wikilink">C4</span></td><td>128 序列 × 2048 长度</td><td>大规模英文 Web 语料</td><td>校准数据</td></tr>
+<tr><td><span class="wikilink">WikiText-2</span></td><td>标准测试集</td><td>维基百科文本</td><td>Perplexity 评估</td></tr>
+<tr><td><span class="wikilink">LM-Eval-Harness</span></td><td>7 个任务</td><td>ARC-C/E, BoolQ, HellaSwag, PIQA, RTE, WinoGrande</td><td>Zero-shot 评估</td></tr>
+</tbody></table>
+
+
+<h3 id="实现细节">实现细节</h3>
+
+<li><strong>模型</strong>: Llama-2 7B, Llama-3 8B, Llama-3.2 1B</li>
+<li><strong>框架</strong>: PyTorch + HuggingFace Transformers</li>
+<li><strong>剪枝范围</strong>: 所有线性层（不含 Embedding 和分类头）</li>
+<li><strong>迭代次数</strong>: $s = 20$</li>
+<li><strong>比较组大小</strong>: $(1, D_\text{in})$</li>
+<li><strong>压缩率</strong>: 50%, 60%, 70%, 80%</li>
+<li><strong>稀疏模式</strong>: 非结构化 (US)、半结构化 (2:4, 4:8)</li>
+
+<h3 id="可视化结果">可视化结果</h3>
+
+<p>Figure 3 展示了 rank 选择的关键洞察：rank-1 已能获得大部分收益（Frobenius 范数差骤降），更高 rank 带来的边际收益很小。这使得 SLaB 在保持极低额外存储的同时获得显著的性能补偿。</p>
+
+
+<h2 id="批判性思考">批判性思考</h2>
+
+<h3 id="优点">优点</h3>
+<p>1. 理论基础扎实：Lemma 1 和 Proposition 1/2 为二值矩阵的设计提供了严格的数学证明</p>
+<p>2. 实现简洁高效：rank-1 设定使额外存储开销极小（仅两个向量 + 1-bit 矩阵）</p>
+<p>3. 压缩率提升巨大：尤其在高压缩率（70%-80%）下优势非常显著，填补了现有方法的性能断崖</p>
+
+<h3 id="局限性">局限性</h3>
+<p>1. 仅在 Llama 系列模型上验证，缺乏对其他架构（如 Mistral、Qwen）的实验</p>
+<p>2. 未报告推理加速和实际内存节省数据——二值矩阵和稀疏矩阵需要专门的 kernel 支持才能实现硬件加速</p>
+<p>3. 缺乏与量化方法（如 GPTQ、AWQ）的对比和组合实验</p>
+
+<h3 id="潜在改进方向">潜在改进方向</h3>
+<p>1. 探索 rank > 1 的设定在更大模型上的效果</p>
+<p>2. 开发针对 $\mathbf{W}_\text{S} + \mathbf{W}_\text{L} \odot \mathbf{W}_\text{B}$ 结构的专用 CUDA kernel 以实现实际推理加速</p>
+<p>3. 与 <span class="wikilink">Quantization|量化</span> 技术结合，进一步压缩 $\mathbf{W}_\text{S}$ 和 $\mathbf{W}_\text{L}$</p>
+
+<h3 id="可复现性评估">可复现性评估</h3>
+<li>[ ] 代码开源（论文未提及）</li>
+<li>[ ] 预训练模型（未提供）</li>
+<li>[x] 训练细节完整（算法伪代码、超参数完整）</li>
+<li>[x] 数据集可获取（C4、WikiText-2 均公开）</li>
+
+
+<h2 id="关联笔记">关联笔记</h2>
+
+<h3 id="基于">基于</h3>
+<li><span class="wikilink">SparseGPT</span>: 一次性剪枝方法，SLaB 的主要对比基线</li>
+<li><span class="wikilink">Wanda</span>: 激活感知剪枝，SLaB 的评分机制基于此</li>
+<li><span class="wikilink">ASVD</span>: 低秩分解方法</li>
+<li><span class="wikilink">SVD-LLM</span>: 基于 SVD 的 LLM 压缩</li>
+
+<h3 id="对比">对比</h3>
+<li><span class="wikilink">SparseGPT</span>: 同为 one-shot 剪枝，SLaB 在所有设定下显著超越</li>
+<li><span class="wikilink">Wanda</span>: SLaB 的稀疏部分沿用 Wanda 的评分方式，但增加了低秩+二值补偿</li>
+
+<h3 id="方法相关">方法相关</h3>
+<li><span class="wikilink">Hadamard Product</span>: 二值矩阵与低秩矩阵的组合方式</li>
+<li><span class="wikilink">Truncated SVD</span>: 低秩矩阵优化的核心工具</li>
+<li><span class="wikilink">Eckart-Young Theorem</span>: 证明截断 SVD 为最优低秩近似的理论基础</li>
+<li><span class="wikilink">Binary Matrix</span>: 硬件友好的 $\{+1, -1\}$ 矩阵</li>
+
+<h3 id="硬件数据相关">硬件/数据相关</h3>
+<li><span class="wikilink">WikiText-2</span>: 语言建模评估基准</li>
+<li><span class="wikilink">C4</span>: 校准数据来源</li>
+<li><span class="wikilink">LM-Eval-Harness</span>: Zero-shot 评估框架</li>
+
+
+<h2 id="速查卡片">速查卡片</h2>
+
+<blockquote>
+<p>[!summary] SLaB: Sparse-Lowrank-Binary Decomposition</p>
+<p>- <strong>核心</strong>: 将 LLM 权重分解为稀疏+低秩+二值三部分，交替优化求解</p>
+<p>- <strong>方法</strong>: $\mathbf{W} = \mathbf{W}_\text{S} + \mathbf{W}_\text{L} \odot \mathbf{W}_\text{B}$，rank-1 + 激活感知剪枝</p>
+<p>- <strong>结果</strong>: 50% 压缩率下 perplexity 降 36%，acc 提升 8.98%（vs 最优基线）</p>
+<p>- <strong>代码</strong>: 未公开</p>
+</blockquote>
+
+
+<p><em>笔记创建时间: 2026-04-05</em></p></div></details>
 
 <div class="paper-figure"><img src="https://arxiv.org/html/2604.04493v1/x1.png" alt="" loading="lazy"></div>
 
@@ -332,6 +1893,136 @@ details.paper-note .note-body h3 { font-size: 1em; }
 <li><strong>机构</strong>: Korea University, Virginia Tech, University of Houston</li>
 <li><strong>链接</strong>: <a href="http://arxiv.org/abs/2604.04527v1" target="_blank">arXiv</a> | <a href="https://arxiv.org/pdf/2604.04527v1" target="_blank">PDF</a></li>
 <li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+<details class="paper-note"><summary>📒 精读笔记: ENCRUST</summary><div class="note-body"><h1 id="encrust-agentic-c-to-rust-translation">ENCRUST: Agentic C-to-Rust Translation</h1>
+
+<blockquote>
+<p><strong>一句话总结</strong>：两阶段 C-to-Rust 翻译框架——Phase 1 通过 ABI-preserving wrapper 逐函数封装替换，Phase 2 用 LLM agent 处理全局 unsafe 构造，实现安全的项目级 C 到 Rust 迁移。</p>
+</blockquote>
+
+<h2 id="1-研究动机与问题定义">1. 研究动机与问题定义</h2>
+
+<h3 id="核心挑战">核心挑战</h3>
+<p>将 C 代码迁移到 <span class="wikilink">Rust</span> 是提升内存安全的重要手段，但面临两大挑战：</p>
+<p>1. <strong>验证范围</strong>（Verification scope）：如何保证翻译后的代码行为等价？</p>
+<p>2. <strong>转换范围</strong>（Transformation scope）：如何处理项目级的跨文件依赖？</p>
+
+<h3 id="现有方法的不足">现有方法的不足</h3>
+<li><strong>规则翻译器</strong>（如 C2Rust）：生成大量 unsafe 代码，本质上是语法转换</li>
+<li><strong>LLM 函数级翻译</strong>：无法处理跨函数/跨文件的全局状态</li>
+<li><strong>项目级翻译</strong>：缺乏增量验证机制，翻译失败会波及全项目</li>
+
+<h2 id="2-方法详解">2. 方法详解</h2>
+
+<h3 id="21-phase-1-encapsulated-substitution封装替换">2.1 Phase 1: Encapsulated Substitution（封装替换）</h3>
+
+<p>核心思想：<strong>逐函数翻译，ABI 兼容封装，失败自动回滚</strong>。</p>
+
+<h4 id="预处理">预处理</h4>
+<p>1. <strong>分解</strong>（Decomposition）：将项目拆分为独立翻译单元</p>
+<p>2. <strong>翻译排序</strong>（Translation ordering）：按依赖关系确定翻译顺序，叶函数优先</p>
+<p>3. <strong>C-to-Rust 源映射</strong>：建立 C 函数到 Rust 函数的对应关系</p>
+
+<h4 id="abi-wrapper-机制">ABI Wrapper 机制</h4>
+
+<p>对每个翻译的函数 $f_C$，生成 ABI 兼容的 Rust wrapper $f_R$：</p>
+
+<div class="math-block">$$f_R: \text{C-ABI-types} \to \text{C-ABI-types}$$</div>
+
+<p>保证 $f_R$ 可以直接替换 $f_C$ 而不影响其他代码：</p>
+
+<div class="math-block">$$\forall x \in \text{Domain}(f_C): f_R(x) \equiv f_C(x)$$</div>
+
+<h4 id="自动回滚">自动回滚</h4>
+<p>如果翻译后的函数未通过测试：</p>
+
+<div class="math-block">$$\text{if } \neg \text{TestPass}(f_R) \Rightarrow \text{revert}(f_R \to f_C)$$</div>
+
+<h3 id="22-phase-2-agentic-refinement智能体精炼">2.2 Phase 2: Agentic Refinement（智能体精炼）</h3>
+
+<p>Phase 1 完成后，代码中仍存在 unsafe 构造。Phase 2 使用 LLM agent 处理：</p>
+
+<p><strong>全局 unsafe 构造类型</strong>：</p>
+<li><code>static mut</code> 全局可变状态</li>
+<li>跨编译单元的类型不匹配</li>
+<li>raw pointer 操作</li>
+<li><code>extern "C"</code> 接口</li>
+
+<p>Agent 工作流：</p>
+<p>1. <strong>检测</strong>：扫描所有 unsafe 块和 unsafe 函数</p>
+<p>2. <strong>分类</strong>：根据 unsafe 原因分类处理策略</p>
+<p>3. <strong>重构</strong>：LLM 生成安全替代方案</p>
+<p>4. <strong>验证</strong>：编译 + 测试 + 行为等价性检查</p>
+
+<h3 id="23-形式化安全保证">2.3 形式化安全保证</h3>
+
+<p>Phase 1 的增量正确性：</p>
+
+<div class="math-block">$$\text{Correct}(P_n) = \text{Correct}(P_0) \wedge \bigwedge_{i=1}^{n} \text{TestPass}(f_{R_i})$$</div>
+
+<p>其中 $P_0$ 为原始 C 项目，$P_n$ 为翻译 $n$ 个函数后的混合项目。</p>
+
+<h2 id="3-实验结果">3. 实验结果</h2>
+
+<h3 id="31-评估基准">3.1 评估基准</h3>
+
+<table class="paper-table">
+<thead><tr><th>项目</th><th>类型</th><th>函数数</th><th>Phase 1 成功率</th></tr></thead>
+<tbody>
+<tr><td>GNU coreutils (7个)</td><td>系统工具</td><td>~500</td><td>高</td></tr>
+<tr><td>Laertes 库 (8个)</td><td>C 库</td><td>~300</td><td>高</td></tr>
+</tbody></table>
+
+
+<h3 id="32-与现有方法对比">3.2 与现有方法对比</h3>
+
+<table class="paper-table">
+<thead><tr><th>方法</th><th>翻译粒度</th><th>unsafe 处理</th><th>回滚支持</th><th>项目级</th></tr></thead>
+<tbody>
+<tr><td><strong>ENCRUST</strong></td><td><strong>函数级→全局</strong></td><td><strong>两阶段</strong></td><td><strong>是</strong></td><td><strong>是</strong></td></tr>
+<tr><td>C2Rust</td><td>语法级</td><td>无（全 unsafe）</td><td>否</td><td>是</td></tr>
+<tr><td>LLM 单函数</td><td>函数级</td><td>部分</td><td>否</td><td>否</td></tr>
+<tr><td>Flourine</td><td>函数级</td><td>有限</td><td>否</td><td>部分</td></tr>
+</tbody></table>
+
+
+<h2 id="4-架构图">4. 架构图</h2>
+
+<div class="paper-figure"><img src="https://arxiv.org/html/2604.04527v1/x1.png" alt="ENCRUST 两阶段架构" loading="lazy"></div>
+
+<h2 id="5-核心概念">5. 核心概念</h2>
+
+<li><span class="wikilink">Rust</span>：内存安全的系统编程语言</li>
+<li><span class="wikilink">ABI</span>：Application Binary Interface</li>
+<li><span class="wikilink">Unsafe Rust</span>：绕过 Rust 借用检查的代码块</li>
+<li><span class="wikilink">LLM Agent</span>：基于 LLM 的自主代理</li>
+<li><span class="wikilink">C2Rust</span>：规则化 C-to-Rust 翻译器</li>
+<li><span class="wikilink">Memory Safety</span>：内存安全保证</li>
+
+<h2 id="6-优缺点分析">6. 优缺点分析</h2>
+
+<h3 id="优点">优点</h3>
+<p>1. <strong>解耦设计</strong>：分离 "边界适配" 和 "函数逻辑"，降低复杂度</p>
+<p>2. <strong>ABI wrapper + 自动回滚</strong>：保证翻译过程不破坏现有代码</p>
+<p>3. <strong>增量翻译</strong>：可以逐步迁移，不需要一次性翻译整个项目</p>
+<p>4. <strong>实际项目验证</strong>：在 GNU coreutils 等真实项目上测试</p>
+
+<h3 id="缺点">缺点</h3>
+<p>1. <strong>unsafe 消除率</strong>：没有公布具体数字，只说 "substantial reduction"</p>
+<p>2. <strong>LLM 依赖</strong>：Phase 2 的质量强依赖 LLM 能力</p>
+<p>3. <strong>测试覆盖率</strong>：回滚机制依赖测试质量，测试不充分则可能漏掉等价性问题</p>
+<p>4. <strong>性能开销</strong>：ABI wrapper 可能引入额外的函数调用开销</p>
+
+<h2 id="7-与相关工作对比">7. 与相关工作对比</h2>
+
+<table class="paper-table">
+<thead><tr><th>维度</th><th>ENCRUST</th><th>C2Rust</th><th>Laertes</th><th>CRustS</th></tr></thead>
+<tbody>
+<tr><td>自动化程度</td><td>高（LLM agent）</td><td>高（规则）</td><td>中</td><td>中</td></tr>
+<tr><td>输出质量</td><td>惯用 Rust</td><td>C-like Rust</td><td>中</td><td>中</td></tr>
+<tr><td>unsafe 处理</td><td>两阶段精炼</td><td>不处理</td><td>后处理</td><td>部分</td></tr>
+<tr><td>可靠性</td><td>高（回滚）</td><td>高</td><td>中</td><td>中</td></tr>
+</tbody></table>
+</div></details>
 
 <div class="paper-figure"><img src="https://arxiv.org/html/2604.04527v1/x1.png" alt="" loading="lazy"></div>
 
@@ -343,6 +2034,391 @@ details.paper-note .note-body h3 { font-size: 1em; }
 <li><strong>机构</strong>: University of Chicago, University of Georgia, Johns Hopkins University</li>
 <li><strong>链接</strong>: <a href="http://arxiv.org/abs/2604.04426v1" target="_blank">arXiv</a> | <a href="https://arxiv.org/pdf/2604.04426v1" target="_blank">PDF</a></li>
 <li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+<details class="paper-note"><summary>📒 精读笔记: ShieldNet</summary><div class="note-body"><h1 id="论文笔记shieldnet-network-level-guardrails-against-emerging-supply-chain-injections-in-agentic-systems">论文笔记：ShieldNet: Network-Level Guardrails against Emerging Supply-Chain Injections in Agentic Systems</h1>
+
+<h2 id="元信息">元信息</h2>
+
+<table class="paper-table">
+<thead><tr><th>项目</th><th>内容</th></tr></thead>
+<tbody>
+<tr><td>机构</td><td>UIUC, University of Chicago, University of Georgia, United States Military Academy, eBay, Johns Hopkins University, UCSB, Virtue AI</td></tr>
+<tr><td>日期</td><td>April 2026</td></tr>
+<tr><td>项目主页</td><td>-</td></tr>
+<tr><td>对比基线</td><td><span class="wikilink">Invariant Labs MCP-Scan</span>, <span class="wikilink">Cisco AI MCP-Scanner</span>, <span class="wikilink">Ramparts</span>, <span class="wikilink">Suricata</span>, <span class="wikilink">SAFE-NID</span></td></tr>
+<tr><td>链接</td><td><a href="http://arxiv.org/abs/2604.04426v1" target="_blank">arXiv</a> / Code(-)</td></tr>
+</tbody></table>
+
+
+
+<h2 id="一句话总结">一句话总结</h2>
+
+<blockquote>
+<p>通过网络层流量分析而非语义层检测，提出首个针对 MCP 工具供应链注入攻击的网络级护栏框架 ShieldNet 及配套 benchmark SC-Inject-Bench。</p>
+</blockquote>
+
+
+<h2 id="核心贡献">核心贡献</h2>
+
+<p>1. <strong>SC-Inject-Bench 基准</strong>: 首个代码级攻击注入的 <span class="wikilink">MCP</span> 供应链安全基准，包含 109 个真实服务器、984 个工具、29 种攻击技术，共 19,961 个验证样本，基于 <span class="wikilink">MITRE ATT&CK</span> 分类体系</p>
+<p>2. <strong>ShieldNet 框架</strong>: 网络级护栏框架，通过 <span class="wikilink">MITM Proxy|中间人代理</span> 拦截流量 + <span class="wikilink">Network Event Extraction|事件提取</span> + 轻量分类器实现实时检测，F-1 达 0.995，FPR 仅 0.8%</p>
+<p>3. <strong>系统性评估</strong>: 证明现有 MCP 扫描器和语义层防御在代码级隐蔽攻击下系统性失败，网络层可观测性是检测此类攻击的关键</p>
+
+
+<h2 id="问题背景">问题背景</h2>
+
+<h3 id="要解决的问题">要解决的问题</h3>
+
+<p>随着 <span class="wikilink">LLM Agent</span> 系统越来越依赖第三方工具和 <span class="wikilink">MCP|Model Context Protocol</span> 服务器，一类新的<strong>供应链威胁</strong>已经出现：恶意行为嵌入到看似正常的工具中，在运行时静默劫持 agent 执行、泄露敏感数据或触发未授权操作。</p>
+
+<h3 id="现有方法的局限">现有方法的局限</h3>
+
+<p>1. <strong>语义层检测的盲区</strong>: 现有 MCP 扫描器（Invariant Labs、Cisco AI、Ramparts）和 LLM 基线仅分析工具描述、I/O 记录或 tool-calling 轨迹，隐式假设恶意意图反映在接口语义中</p>
+<p>2. <strong>代码级攻击不可见</strong>: 攻击者在工具实现代码中嵌入恶意逻辑，同时保持良性的工具描述和输入/输出行为，语义层完全看不到</p>
+<p>3. <strong>缺乏基准</strong>: 此前没有针对代码级供应链注入的系统性评估基准</p>
+
+<h3 id="本文的动机">本文的动机</h3>
+
+<p>代码级供应链攻击在语义层不可见，但会在网络层产生可观测的运行时行为特征（如 DNS 探测、数据外传、C2 通信），因此从网络流量角度检测是合理且有效的。</p>
+
+
+<h2 id="方法详解">方法详解</h2>
+
+<h3 id="模型架构">模型架构</h3>
+
+<p>ShieldNet 采用 <strong>网络流量分析 + 轻量语言模型</strong> 架构：</p>
+<li><strong>输入</strong>: 工具执行期间的原始 PCAP 网络包 + MITM 解密的应用层流量</li>
+<li><strong>核心管道</strong>: <span class="wikilink">MITM Proxy|中间人代理</span> 拦截 -> <span class="wikilink">Network Event Extraction|事件提取</span> -> 文本序列化 -> 分类</li>
+<li><strong>Backbone</strong>: <span class="wikilink">Qwen3</span>-0.6B，经过 <span class="wikilink">Supervised Fine-Tuning|SFT</span> 后训练</li>
+<li><strong>输出</strong>: $\hat{y} \in \{\texttt{benign}\} \cup \mathcal{C}$（良性或具体攻击类别）</li>
+
+<h3 id="核心模块">核心模块</h3>
+
+<h4 id="模块1-system-level-traffic-interception系统级流量拦截">模块1: System-Level Traffic Interception（系统级流量拦截）</h4>
+
+<p><strong>设计动机</strong>: 某些攻击只能通过联合推理应用层语义和底层网络行为来识别</p>
+
+<p><strong>具体实现</strong>:</p>
+<li>使用本地 <span class="wikilink">MITM Proxy|MITM 代理</span> 路由 HTTP/HTTPS 流量，获得应用层可见性</li>
+<li>同时在活跃网络接口上录制完整的 PCAP 包捕获</li>
+<li>阻止 UDP 443 端口流量以防止客户端（如 Claude Desktop）通过 <span class="wikilink">QUIC</span> 协议绕过拦截</li>
+<li>执行后恢复所有代理和防火墙设置</li>
+
+<h4 id="模块2-network-event-extraction-and-decryption网络事件提取与解密">模块2: Network Event Extraction and Decryption（网络事件提取与解密）</h4>
+
+<p><strong>设计动机</strong>: 原始网络流量嘈杂且难以解释，需要结构化抽象以保留安全相关语义</p>
+
+<p><strong>具体实现</strong>:</p>
+<li><strong>事件提取</strong>: 从 PCAP 解析网络流量为时间有序的事件序列，覆盖 DNS、TLS、HTTP、ICMP、ARP、SMTP/FTP/SSH/SMB/RDP 等协议</li>
+<li><strong>应用层解密</strong>: 从 MITM 代理获取解密的 HTTP/HTTPS 记录，插入事件序列作为显式应用层事件</li>
+<li><strong>文本序列化</strong>: 将增强的事件序列转换为确定性文本表示，每个事件渲染为包含时间戳、事件类型、端点、协议和语义摘要的单行</li>
+
+<h4 id="模块3-detection-models-and-deployment检测模型与部署">模块3: Detection Models and Deployment（检测模型与部署）</h4>
+
+<p><strong>设计动机</strong>: 前沿 LLM 虽推理能力强但延迟高，实际网络流量需要低延迟处理</p>
+
+<p><strong>具体实现</strong>:</p>
+<li><strong>端到端检测</strong>: 在网络事件 trace 上做分类，使用 <span class="wikilink">Supervised Fine-Tuning|SFT</span> 后训练 Qwen3-0.6B</li>
+<li><strong>流式检测</strong>: 在交互式场景中，使用滑动窗口策略，每 $\Delta$ 个新事件触发一次检测，窗口大小为 $W$</li>
+
+
+<h2 id="关键公式">关键公式</h2>
+
+<h3 id="公式1-network-event-extraction事件序列">公式1: <span class="wikilink">Network Event Extraction|事件序列</span></h3>
+
+<div class="math-block">$$
+\mathcal{E} = \langle e_1, \dots, e_T \rangle
+$$</div>
+
+<p><strong>含义</strong>: 从 PCAP trace 解析得到的时间有序网络事件序列</p>
+
+<p><strong>符号说明</strong>:</p>
+<li>$e_i$: 第 $i$ 个网络事件</li>
+<li>$T$: 事件总数</li>
+
+<h3 id="公式2-network-event-extraction事件结构">公式2: <span class="wikilink">Network Event Extraction|事件结构</span></h3>
+
+<div class="math-block">$$
+e_i = (t_i,\ \tau_i,\ \text{src}_i,\ \text{dst}_i,\ \text{sport}_i,\ \text{dport}_i,\ \pi_i,\ a_i)
+$$</div>
+
+<p><strong>含义</strong>: 每个网络事件的结构化记录</p>
+
+<p><strong>符号说明</strong>:</p>
+<li>$t_i$: 时间戳</li>
+<li>$\tau_i$: 事件类型（DNS_Q, DNS_A, TLS_CH, HTTP_REQ 等）</li>
+<li>$(\text{src}_i, \text{dst}_i)$: 源/目标端点</li>
+<li>$(\text{sport}_i, \text{dport}_i)$: 源/目标端口</li>
+<li>$\pi_i$: 传输协议</li>
+<li>$a_i$: 协议相关属性（包长度、TCP flags、TTL、DNS 查询名等）</li>
+
+<h3 id="公式3-mitm-proxy应用层事件融合">公式3: <span class="wikilink">MITM Proxy|应用层事件融合</span></h3>
+
+<div class="math-block">$$
+\mathcal{E}^* = \mathrm{Insert}(\mathcal{E}, \mathcal{D})
+$$</div>
+
+<p><strong>含义</strong>: 将解密的应用层记录按时间戳插入到包级事件序列中，形成增强的融合事件序列</p>
+
+<p><strong>符号说明</strong>:</p>
+<li>$\mathcal{E}$: PCAP 提取的包级事件序列</li>
+<li>$\mathcal{D}$: MITM 代理获得的解密 HTTP/HTTPS 记录集合</li>
+<li>$\mathcal{E}^*$: 融合后的增强事件序列</li>
+
+<h3 id="公式4-serialization序列化">公式4: <span class="wikilink">Serialization|序列化</span></h3>
+
+<div class="math-block">$$
+\bm{x} = \mathrm{Serialize}(\mathcal{E}^*)
+$$</div>
+
+<p><strong>含义</strong>: 将增强事件序列转换为确定性文本表示，供检测器使用</p>
+
+<h3 id="公式5-prompt-engineering提示构建">公式5: <span class="wikilink">Prompt Engineering|提示构建</span></h3>
+
+<div class="math-block">$$
+\bm{z} = \mathrm{Prompt}(\mathcal{A}(\mathcal{C}), \bm{x})
+$$</div>
+
+<p><strong>含义</strong>: 将攻击类别描述和序列化 trace 组合为 LLM 输入</p>
+
+<p><strong>符号说明</strong>:</p>
+<li>$\mathcal{C}$: 攻击类别集合</li>
+<li>$\mathcal{A}(\mathcal{C})$: 各类别的简短描述</li>
+<li>$\bm{x}$: 序列化的网络 trace</li>
+
+<h3 id="公式6-supervised-fine-tuningsft-损失">公式6: <span class="wikilink">Supervised Fine-Tuning|SFT 损失</span></h3>
+
+<div class="math-block">$$
+\mathcal{L}_{\mathrm{SFT}} = -\mathbb{E}_{(\bm{x},y)} \left[ \log p_\theta(y \mid \bm{x}) \right]
+$$</div>
+
+<p><strong>含义</strong>: 标准条件负对数似然损失，训练轻量模型在网络 trace 上进行攻击分类</p>
+
+<p><strong>符号说明</strong>:</p>
+<li>$(\bm{x}, y)$: 标注的网络 trace 和标签对</li>
+<li>$y \in \{\texttt{benign}\} \cup \mathcal{C}$: 良性或具体攻击类别</li>
+<li>$p_\theta$: 模型预测概率</li>
+<li>$\theta$: 模型参数</li>
+
+
+<h2 id="关键图表">关键图表</h2>
+
+<h3 id="figure-1-语义层-vs-网络层检测对比">Figure 1: 语义层 vs 网络层检测对比</h3>
+
+<p>!<span class="wikilink">ShieldNet_fig1.png|600</span></p>
+
+<p><strong>说明</strong>: 对比语义层和网络层对工具执行的视角。隐蔽的工具注入攻击保持良性的工具接口和 I/O 行为，能够逃避语义层检查，但在网络层暴露出独特的运行时行为（DNS 探测、数据外传、C2 信令等），这激发了网络级护栏的设计。</p>
+
+<h3 id="figure-2-shieldnet-系统概览">Figure 2: ShieldNet 系统概览</h3>
+
+<p>!<span class="wikilink">ShieldNet_fig2.png|600</span></p>
+
+<p><strong>说明</strong>: ShieldNet 网络级 MCP 护栏概览。原始数据包 trace 和解密的应用层流量被捕获并渲染为时间有序的网络事件序列，由护栏模型分析以分类执行为良性或分配特定风险类别。检测管道完全基于网络行为运作，不依赖工具 I/O、调用图或工具元数据。</p>
+
+<h3 id="figure-3-sc-inject-bench-数据构建流程">Figure 3: SC-Inject-Bench 数据构建流程</h3>
+
+<p>!<span class="wikilink">ShieldNet_fig3.png|600</span></p>
+
+<p><strong>说明</strong>: SC-Inject-Bench 的端到端数据构建流程。从收集良性 MCP 服务器开始，将验证过的恶意脚本集成到工具实现中，在 agent 控制下执行工具，使用网络级信号验证攻击，产出经验证的良性和恶意执行 trace。</p>
+
+<h3 id="figure-4-多类检测-f-1-分数">Figure 4: 多类检测 F-1 分数</h3>
+
+<p>!<span class="wikilink">ShieldNet_fig4.png|600</span></p>
+
+<p><strong>说明</strong>: 各攻击技术的多类 F-1 分数。ShieldNet 在几乎所有类别上都达到一致的高性能，而基线方法显示出显著的不稳定性，表明对多样化攻击行为的泛化能力较弱。</p>
+
+<h3 id="figure-5-真实世界流式检测演示">Figure 5: 真实世界流式检测演示</h3>
+
+<p>!<span class="wikilink">ShieldNet_fig5.png|600</span></p>
+
+<p><strong>说明</strong>: ShieldNet 真实世界流式检测演示。左侧 Claude Code 与注入的恶意 MCP 服务器交互，右侧 ShieldNet 实时执行网络拦截和滑动窗口分类，可视化结构化网络事件和检测结果。</p>
+
+<h3 id="table-1-mcp-安全基准对比">Table 1: MCP 安全基准对比</h3>
+
+<table class="paper-table">
+<thead><tr><th>Benchmark</th><th>Real Tool Execution</th><th>Code-Level Injection</th><th>Network-Level Validation</th></tr></thead>
+<tbody>
+<tr><td>MCP Security Bench</td><td>Yes</td><td>No</td><td>No</td></tr>
+<tr><td>MCPSecBench</td><td>No</td><td>No</td><td>No</td></tr>
+<tr><td>MCPTox</td><td>No</td><td>No</td><td>No</td></tr>
+<tr><td>MCP-SafetyBench</td><td>Yes</td><td>No</td><td>No</td></tr>
+<tr><td><strong>SC-Inject-Bench</strong></td><td><strong>Yes</strong></td><td><strong>Yes</strong></td><td><strong>Yes</strong></td></tr>
+</tbody></table>
+
+
+<p><strong>说明</strong>: SC-Inject-Bench 是唯一同时支持真实工具执行、代码级注入和网络级验证的 MCP 安全基准。</p>
+
+<h3 id="table-2-工具级检测性能">Table 2: 工具级检测性能</h3>
+
+<table class="paper-table">
+<thead><tr><th>Type</th><th>Method</th><th>FPR</th><th>F-1</th></tr></thead>
+<tbody>
+<tr><td>Static</td><td>Invariant Labs</td><td>0.068</td><td>0.164</td></tr>
+<tr><td>Static</td><td>Cisco AI</td><td>0.009</td><td>0.029</td></tr>
+<tr><td>Static</td><td>Ramparts</td><td>0.124</td><td>0.172</td></tr>
+<tr><td>Dynamic</td><td>AgentIO-GPT-4.1</td><td>0.022</td><td>0.051</td></tr>
+<tr><td>Dynamic</td><td>AgentIO-GPT-5.2</td><td>0.013</td><td>0.027</td></tr>
+<tr><td>Dynamic</td><td>Traffic-Suricata</td><td>0.000</td><td>0.062</td></tr>
+<tr><td>Dynamic</td><td>Traffic-Safe-NID</td><td>1.000</td><td>0.974</td></tr>
+<tr><td>Dynamic</td><td>Traffic-GPT-4.1</td><td>0.344</td><td>0.908</td></tr>
+<tr><td>Dynamic</td><td>Traffic-GPT-5.2</td><td>0.267</td><td>0.838</td></tr>
+<tr><td>Dynamic</td><td>Traffic-Qwen3-0.6B</td><td>0.942</td><td>0.884</td></tr>
+<tr><td>Dynamic</td><td><strong>ShieldNet</strong></td><td><strong>0.022</strong></td><td><strong>0.998</strong></td></tr>
+</tbody></table>
+
+
+<p><strong>说明</strong>: ShieldNet 在工具级检测中实现最高 F-1（0.998）和低 FPR（0.022）。静态 MCP 扫描器和语义基线的 F-1 极低（<0.2），证明它们无法检测代码级隐蔽攻击。</p>
+
+<h3 id="table-3-流量级检测性能">Table 3: 流量级检测性能</h3>
+
+<table class="paper-table">
+<thead><tr><th>Method</th><th>FPR</th><th>F-1</th><th>Time Overhead</th></tr></thead>
+<tbody>
+<tr><td>AgentIO-GPT-4.1</td><td>0.011</td><td>0.023</td><td>11.45%</td></tr>
+<tr><td>AgentIO-GPT-5.2</td><td>0.005</td><td>0.011</td><td>10.58%</td></tr>
+<tr><td>Traffic-Suricata</td><td>0.000</td><td>0.062</td><td>68.64%</td></tr>
+<tr><td>Traffic-Safe-NID</td><td>1.000</td><td>0.974</td><td>40.15%</td></tr>
+<tr><td>Traffic-GPT-4.1</td><td>0.173</td><td>0.854</td><td>39.68%</td></tr>
+<tr><td>Traffic-GPT-5.2</td><td>0.126</td><td>0.757</td><td>32.03%</td></tr>
+<tr><td>Traffic-Qwen3-0.6B</td><td>0.847</td><td>0.774</td><td>22.58%</td></tr>
+<tr><td><strong>ShieldNet</strong></td><td><strong>0.008</strong></td><td><strong>0.995</strong></td><td>21.38%</td></tr>
+</tbody></table>
+
+
+<p><strong>说明</strong>: 在 PCAP 级别评估中，ShieldNet 达到 0.995 F-1 和 0.8% FPR，同时引入最低的运行时开销（21.38%）。前沿 LLM 基线延迟显著高于轻量模型。</p>
+
+<h3 id="table-4-id-vs-ood-泛化性能">Table 4: ID vs OOD 泛化性能</h3>
+
+<table class="paper-table">
+<thead><tr><th>Method</th><th>ID FPR</th><th>ID F-1</th><th>OOD FPR</th><th>OOD F-1</th></tr></thead>
+<tbody>
+<tr><td>Invariant Labs</td><td>0.027</td><td>0.020</td><td>0.077</td><td>0.048</td></tr>
+<tr><td>Cisco AI</td><td>0.008</td><td>0.024</td><td>0.011</td><td>0.028</td></tr>
+<tr><td>Traffic-GPT-4.1</td><td>0.363</td><td>0.899</td><td>0.313</td><td>0.920</td></tr>
+<tr><td>Traffic-GPT-5.2</td><td>0.250</td><td>0.825</td><td>0.295</td><td>0.858</td></tr>
+<tr><td>Traffic-Qwen3-0.6B</td><td>0.961</td><td>0.881</td><td>0.911</td><td>0.877</td></tr>
+<tr><td><strong>ShieldNet</strong></td><td><strong>0.020</strong></td><td><strong>0.999</strong></td><td><strong>0.026</strong></td><td><strong>0.998</strong></td></tr>
+</tbody></table>
+
+
+<p><strong>说明</strong>: ShieldNet 在 ID 和 OOD 服务器上都保持一致的高性能，证明对未见工具生态系统的鲁棒泛化能力。</p>
+
+<h3 id="table-5-ood-攻击技术零样本检测">Table 5: OOD 攻击技术零样本检测</h3>
+
+<table class="paper-table">
+<thead><tr><th>Method</th><th>Standard Encoding F-1</th><th>Traffic Signaling F-1</th><th>Web Protocols F-1</th></tr></thead>
+<tbody>
+<tr><td>Cisco AI</td><td>0.643</td><td>0.643</td><td>0.643</td></tr>
+<tr><td>Traffic-GPT-4.1</td><td>0.502</td><td>0.771</td><td>0.774</td></tr>
+<tr><td>Traffic-GPT-5.2</td><td>0.426</td><td>0.704</td><td>0.790</td></tr>
+<tr><td>Traffic-Qwen3-0.6B</td><td>0.523</td><td>0.500</td><td>0.486</td></tr>
+<tr><td><strong>ShieldNet</strong></td><td><strong>0.981</strong></td><td><strong>0.982</strong></td><td><strong>0.949</strong></td></tr>
+</tbody></table>
+
+
+<p><strong>说明</strong>: ShieldNet 在三类 OOD 攻击技术上均实现 >0.94 的 F-1，展示出优秀的零样本泛化能力。</p>
+
+<h3 id="table-6-消融实验">Table 6: 消融实验</h3>
+
+<table class="paper-table">
+<thead><tr><th>配置</th><th>FPR</th><th>F-1</th></tr></thead>
+<tbody>
+<tr><td>ShieldNet (完整)</td><td><strong>0.022</strong></td><td><strong>0.998</strong></td></tr>
+<tr><td>w/o decryption</td><td>0.896</td><td>0.977</td></tr>
+<tr><td>w/o decryption and event extraction</td><td>0.386</td><td>0.829</td></tr>
+</tbody></table>
+
+
+<p><strong>关键发现</strong>: 移除解密会导致 FPR 从 0.022 飙升至 0.896（加密的良性 agent 流量被误判为数据外传）。进一步移除事件提取使 F-1 降至 0.829（原始包流超出模型上下文窗口需截断，丢失关键语义信息）。<strong>解密和事件级抽象缺一不可</strong>。</p>
+
+
+<h2 id="实验">实验</h2>
+
+<h3 id="数据集">数据集</h3>
+
+<table class="paper-table">
+<thead><tr><th>数据集</th><th>规模</th><th>特点</th><th>用途</th></tr></thead>
+<tbody>
+<tr><td>SC-Inject-Bench</td><td>19,961 样本（109 服务器, 984 工具, 29 攻击技术）</td><td>代码级注入 + 网络验证</td><td>训练/测试</td></tr>
+<tr><td>训练集</td><td>~6K 样本</td><td>排除 3 种 OOD 攻击技术 + 17 类 OOD 服务器</td><td>训练</td></tr>
+</tbody></table>
+
+
+<h3 id="实现细节">实现细节</h3>
+
+<li><strong>Backbone</strong>: <span class="wikilink">Qwen3</span>-0.6B</li>
+<li><strong>训练方式</strong>: <span class="wikilink">Supervised Fine-Tuning|SFT</span></li>
+<li><strong>上下文长度</strong>: 32K tokens</li>
+<li><strong>流量捕获</strong>: <span class="wikilink">MITM Proxy</span> + PCAP</li>
+<li><strong>流式检测</strong>: 滑动窗口，每 $\Delta$ 事件检测一次，窗口大小 $W$</li>
+<li><strong>部署测试</strong>: Claude Code + 注入的恶意 MCP 服务器</li>
+
+<h3 id="可视化结果">可视化结果</h3>
+
+<li>多类检测中 ShieldNet 在几乎所有 29 种攻击技术上 F-1 > 0.9</li>
+<li>基线方法在 DNS 类攻击、数据外传变体和远程发现技术上频繁失败</li>
+<li>真实世界部署中，ShieldNet 能够实时检测 Claude Code 与恶意 MCP 服务器的交互</li>
+
+
+<h2 id="批判性思考">批判性思考</h2>
+
+<h3 id="优点">优点</h3>
+<p>1. <strong>问题定义精准</strong>: 首次系统性地聚焦 MCP 供应链代码级注入这一关键安全盲区</p>
+<p>2. <strong>方案设计合理</strong>: 从网络层而非语义层检测，抓住了代码级攻击必然产生网络行为的本质</p>
+<p>3. <strong>工程完整度高</strong>: 从 benchmark 构建、attack taxonomy 到检测框架和实时部署，端到端完成</p>
+<p>4. <strong>效率优秀</strong>: 0.6B 轻量模型实现 >0.99 F-1，时间开销仅 ~21%，实际可部署</p>
+
+<h3 id="局限性">局限性</h3>
+<p>1. <strong>仅覆盖网络可见攻击</strong>: 纯本地行为（如文件删除、权限修改）不在检测范围内</p>
+<p>2. <strong>依赖 MITM 代理</strong>: 需要在用户系统上部署 MITM 代理和 CA 证书，可能引入额外的安全顾虑和兼容性问题</p>
+<p>3. <strong>攻击生成依赖 LLM</strong>: benchmark 中的攻击脚本由 Cursor Agent 生成，可能存在攻击样式的偏差</p>
+
+<h3 id="潜在改进方向">潜在改进方向</h3>
+<p>1. 集成主机级遥测（系统调用、文件操作）扩展检测覆盖范围</p>
+<p>2. 融合语义层和网络层信号实现更全面的防护</p>
+<p>3. 研究对抗性攻击者如何规避网络层检测（如流量混淆、慢速外传）</p>
+
+<h3 id="可复现性评估">可复现性评估</h3>
+<li>[ ] 代码开源</li>
+<li>[ ] 预训练模型</li>
+<li>[x] 训练细节完整</li>
+<li>[x] 数据集可获取（benchmark 有详细构建说明）</li>
+
+
+<h2 id="关联笔记">关联笔记</h2>
+
+<h3 id="基于">基于</h3>
+<li><span class="wikilink">MITRE ATT&CK</span>: 攻击分类体系来源</li>
+<li><span class="wikilink">Qwen3</span>: 检测器 backbone</li>
+
+<h3 id="对比">对比</h3>
+<li><span class="wikilink">ShieldAgent</span>: 语义层安全推理，本文证明其不足</li>
+<li><span class="wikilink">Suricata</span>: 传统 IDS，在 MCP 场景下表现差</li>
+<li><span class="wikilink">SAFE-NID</span>: 基于注意力的网络入侵检测，FPR 过高</li>
+
+<h3 id="方法相关">方法相关</h3>
+<li><span class="wikilink">MCP|Model Context Protocol</span>: 核心研究对象</li>
+<li><span class="wikilink">MITM Proxy</span>: 流量拦截核心组件</li>
+<li><span class="wikilink">Supervised Fine-Tuning</span>: 模型训练方法</li>
+<li><span class="wikilink">Network Event Extraction</span>: 关键预处理步骤</li>
+<li><span class="wikilink">Supply Chain Attack</span>: 核心威胁模型</li>
+<li><span class="wikilink">LLM Agent</span>: 被保护的目标系统</li>
+
+<h3 id="硬件数据相关">硬件/数据相关</h3>
+<li><span class="wikilink">SC-Inject-Bench</span>: 本文提出的 benchmark</li>
+
+
+<h2 id="速查卡片">速查卡片</h2>
+
+<blockquote>
+<p>[!summary] ShieldNet: Network-Level Guardrails against Emerging Supply-Chain Injections in Agentic Systems</p>
+<p>- <strong>核心</strong>: 网络层检测 MCP 工具供应链注入攻击</p>
+<p>- <strong>方法</strong>: MITM 代理拦截 + 事件提取 + SFT 轻量 LM 分类</p>
+<p>- <strong>结果</strong>: F-1 0.995, FPR 0.8%, 时间开销 21%</p>
+<p>- <strong>代码</strong>: 暂未公开</p>
+</blockquote>
+
+
+<p><em>笔记创建时间: 2026-04-05</em></p></div></details>
 
 <div class="paper-figure"><img src="https://arxiv.org/html/2604.04426v1/x1.png" alt="" loading="lazy"></div>
 
@@ -353,6 +2429,139 @@ details.paper-note .note-body h3 { font-size: 1em; }
 <li><strong>作者</strong>: Dalugoda, Asiri</li>
 <li><strong>链接</strong>: <a href="https://arxiv.org/abs/2604.04522" target="_blank">arXiv</a> | <a href="https://arxiv.org/pdf/2604.04522" target="_blank">PDF</a></li>
 <li><strong>来源</strong>: 📰 HF Daily，⬆️ 1</li>
+<details class="paper-note"><summary>📒 精读笔记: HDP</summary><div class="note-body"><h1 id="hdp-a-lightweight-cryptographic-protocol-for-human-delegation-provenance-in-agentic-ai-systems">HDP: A Lightweight Cryptographic Protocol for Human Delegation Provenance in Agentic AI Systems</h1>
+
+<blockquote>
+<p><strong>一句话总结</strong>：用轻量级密码学协议为 agentic AI 系统的多级委托链建立授权溯源，验证终端动作是否由人类真正授权、经过什么委托路径、在什么权限范围内。</p>
+</blockquote>
+
+<h2 id="1-研究动机与问题定义">1. 研究动机与问题定义</h2>
+
+<h3 id="核心问题">核心问题</h3>
+<p>随着 <span class="wikilink">MCP</span> 和 <span class="wikilink">A2A</span> 协议推动 agent 间的互操作，一个关键安全问题浮现：<strong>在多级 agent 委托链中，如何验证最终执行的动作确实是人类授权的？</strong></p>
+
+<h3 id="威胁模型">威胁模型</h3>
+<li><strong>伪造授权</strong>：恶意 agent 伪造人类授权执行未授权操作</li>
+<li><strong>链篡改</strong>：中间 agent 修改委托链中的权限范围</li>
+<li><strong>重放攻击</strong>：重用过期的授权令牌</li>
+<li><strong>权限提升</strong>：子 agent 越权执行超出委托范围的操作</li>
+
+<h2 id="2-方法详解">2. 方法详解</h2>
+
+<h3 id="21-委托令牌结构">2.1 委托令牌结构</h3>
+
+<p>HDP 的核心是<strong>委托令牌</strong>（Delegation Token），包含：</p>
+
+<div class="math-block">$$\text{Token} = \langle \text{issuer}, \text{delegate}, \text{scope}, \text{ttl}, \text{nonce}, \sigma \rangle$$</div>
+
+<p>其中 $\sigma$ 为数字签名：</p>
+
+<div class="math-block">$$\sigma = \text{Sign}(sk_{\text{issuer}}, H(\text{issuer} \| \text{delegate} \| \text{scope} \| \text{ttl} \| \text{nonce}))$$</div>
+
+<p>$H$ 为密码学哈希函数，$sk_{\text{issuer}}$ 为签发者私钥。</p>
+
+<h3 id="22-委托链构建">2.2 委托链构建</h3>
+
+<p>多级委托形成链式结构：</p>
+
+<div class="math-block">$$\text{Chain} = [\text{Token}_0, \text{Token}_1, \ldots, \text{Token}_n]$$</div>
+
+<p>每级满足：</p>
+<li>$\text{Token}_i.\text{delegate} = \text{Token}_{i+1}.\text{issuer}$</li>
+<li>$\text{Token}_{i+1}.\text{scope} \subseteq \text{Token}_i.\text{scope}$（权限只缩不扩）</li>
+
+<h3 id="23-验证流水线">2.3 验证流水线</h3>
+
+<p>验证一条委托链的算法：</p>
+
+<div class="math-block">$$\text{Verify}(\text{Chain}) = \bigwedge_{i=0}^{n} \left[ \text{VerifySig}(\text{Token}_i) \wedge \text{CheckScope}(\text{Token}_i) \wedge \text{CheckTTL}(\text{Token}_i) \right]$$</div>
+
+<p>时间复杂度 $O(n)$，其中 $n$ 为链长度。</p>
+
+<h3 id="24-权限范围表达">2.4 权限范围表达</h3>
+
+<p>权限使用集合表示：</p>
+
+<div class="math-block">$$\text{scope} = \{(\text{resource}, \text{action}, \text{constraints})\}$$</div>
+
+<p>子集关系验证：</p>
+
+<div class="math-block">$$\text{scope}_{\text{child}} \subseteq \text{scope}_{\text{parent}} \iff \forall s \in \text{scope}_{\text{child}}, \exists p \in \text{scope}_{\text{parent}}: s \preceq p$$</div>
+
+<h3 id="25-重新授权机制">2.5 重新授权机制</h3>
+
+<p>当令牌即将过期时：</p>
+
+<div class="math-block">$$\text{ttl}_{\text{new}} = \min(\text{ttl}_{\text{requested}}, \text{ttl}_{\text{parent}} - t_{\text{elapsed}})$$</div>
+
+<h3 id="26-传输安全">2.6 传输安全</h3>
+
+<p>所有令牌通过 TLS 传输。nonce 防止重放：</p>
+
+<div class="math-block">$$\text{NonceDB} = \text{NonceDB} \cup \{\text{nonce}\}, \quad \text{reject if } \text{nonce} \in \text{NonceDB}$$</div>
+
+<h2 id="3-安全分析">3. 安全分析</h2>
+
+<table class="paper-table">
+<thead><tr><th>威胁</th><th>防护机制</th></tr></thead>
+<tbody>
+<tr><td>伪造授权</td><td>数字签名验证</td></tr>
+<tr><td>链篡改</td><td>逐级签名 + 权限单调递减</td></tr>
+<tr><td>重放攻击</td><td>nonce + TTL</td></tr>
+<tr><td>权限提升</td><td>子集约束 $\text{scope}_{\text{child}} \subseteq \text{scope}_{\text{parent}}$</td></tr>
+<tr><td>提示注入</td><td>协议层独立于 LLM 推理层</td></tr>
+</tbody></table>
+
+
+<h2 id="4-性能评估">4. 性能评估</h2>
+
+<table class="paper-table">
+<thead><tr><th>操作</th><th>延迟</th></tr></thead>
+<tbody>
+<tr><td>令牌签发</td><td>< 1 ms</td></tr>
+<tr><td>单级验证</td><td>< 0.5 ms</td></tr>
+<tr><td>5 级链验证</td><td>< 2.5 ms</td></tr>
+<tr><td>令牌序列化</td><td>< 0.1 ms</td></tr>
+</tbody></table>
+
+
+<h2 id="5-核心概念">5. 核心概念</h2>
+
+<li><span class="wikilink">MCP</span>：Model Context Protocol，agent 工具调用协议</li>
+<li><span class="wikilink">A2A</span>：Agent-to-Agent 协议</li>
+<li><span class="wikilink">Digital Signature</span>：数字签名</li>
+<li><span class="wikilink">Delegation Chain</span>：委托链</li>
+<li><span class="wikilink">Zero Trust</span>：零信任安全架构</li>
+<li><span class="wikilink">HMAC</span>：基于哈希的消息认证码</li>
+
+<h2 id="6-优缺点分析">6. 优缺点分析</h2>
+
+<h3 id="优点">优点</h3>
+<p>1. <strong>问题重要</strong>：agentic AI 的授权溯源是真实需求</p>
+<p>2. <strong>设计轻量</strong>：毫秒级开销，适合实时 agent 交互</p>
+<p>3. <strong>权限单调递减</strong>：数学保证子 agent 不能越权</p>
+<p>4. <strong>协议层独立</strong>：不依赖 LLM 安全性，在密码学层面解决问题</p>
+<p>5. <strong>可组合</strong>：兼容现有 MCP/A2A 生态</p>
+
+<h3 id="缺点">缺点</h3>
+<p>1. <strong>缺少实现</strong>：仅协议设计，无开源实现</p>
+<p>2. <strong>社区关注低</strong>：HF 仅 1 upvote</p>
+<p>3. <strong>密钥管理</strong>：agent 的私钥如何安全存储和轮换？</p>
+<p>4. <strong>动态权限</strong>：scope 一旦签发不可修改，不够灵活</p>
+<p>5. <strong>实际部署</strong>：需要整个 agent 生态采纳才有价值</p>
+
+<h2 id="7-与相关工作对比">7. 与相关工作对比</h2>
+
+<table class="paper-table">
+<thead><tr><th>方法</th><th>层级</th><th>粒度</th><th>开销</th><th>委托链支持</th></tr></thead>
+<tbody>
+<tr><td><strong>HDP</strong></td><td><strong>密码学</strong></td><td><strong>动作级</strong></td><td><strong>< 1ms</strong></td><td><strong>是</strong></td></tr>
+<tr><td>OAuth 2.0</td><td>应用层</td><td>API 级</td><td>中</td><td>有限</td></tr>
+<tr><td>SPIFFE/SPIRE</td><td>基础设施</td><td>服务级</td><td>低</td><td>否</td></tr>
+<tr><td>LLM Guard</td><td>语义层</td><td>prompt 级</td><td>高</td><td>否</td></tr>
+<tr><td>ShieldNet</td><td>网络层</td><td>流量级</td><td>低</td><td>否</td></tr>
+</tbody></table>
+</div></details>
 
 <li><strong>核心方法</strong>: 用密码学协议解决 agentic AI 的授权溯源问题——在多级 agent 委托链中验证终端动作是否由人类真正授权、经过什么委托路径、在什么范围内。类似给 agent 调用链加了一条加密审计追踪。</li>
 <li><strong>借鉴意义</strong>: 随着 <span class="wikilink">MCP</span> 和 <span class="wikilink">A2A</span> 生态扩展，agent 间的授权验证会越来越重要。</li>
@@ -369,6 +2578,338 @@ details.paper-note .note-body h3 { font-size: 1em; }
 <li><strong>作者</strong>: Preston Rasmussen, Pavlo Paliychuk (Zep AI)</li>
 <li><strong>链接</strong>: <a href="https://arxiv.org/abs/2501.13956" target="_blank">arXiv</a> | <a href="https://arxiv.org/pdf/2501.13956" target="_blank">PDF</a></li>
 <li><strong>来源</strong>: 🔥 HF Trending，⬆️ 10</li>
+<details class="paper-note"><summary>📒 精读笔记: Zep</summary><div class="note-body"><h1 id="论文笔记zep-a-temporal-knowledge-graph-architecture-for-agent-memory">论文笔记：Zep: A Temporal Knowledge Graph Architecture for Agent Memory</h1>
+
+<h2 id="元信息">元信息</h2>
+
+<table class="paper-table">
+<thead><tr><th>项目</th><th>内容</th></tr></thead>
+<tbody>
+<tr><td>机构</td><td>Zep AI</td></tr>
+<tr><td>日期</td><td>January 2025</td></tr>
+<tr><td>项目主页</td><td><a href="https://www.getzep.com" target="_blank">getzep.com</a></td></tr>
+<tr><td>对比基线</td><td><span class="wikilink">MemGPT</span>、Full-context baseline</td></tr>
+<tr><td>链接</td><td><a href="https://arxiv.org/abs/2501.13956" target="_blank">arXiv</a> / <a href="https://github.com/getzep/graphiti" target="_blank">Code (Graphiti)</a></td></tr>
+</tbody></table>
+
+
+
+<h2 id="一句话总结">一句话总结</h2>
+
+<blockquote>
+<p>基于时序知识图谱引擎 Graphiti 构建 agent 记忆层，通过三层子图结构和多策略检索在 DMR 和 LongMemEval 上超越 MemGPT。</p>
+</blockquote>
+
+
+<h2 id="核心贡献">核心贡献</h2>
+
+<p>1. <strong>Graphiti 时序知识图谱引擎</strong>: 提出动态、temporally-aware 的 <span class="wikilink">Knowledge Graph</span> 引擎，支持非损失性地持续更新知识图谱，维护事实和关系的时间线</p>
+<p>2. <strong>三层层次化图结构</strong>: 设计 Episode-Entity-Community 三层子图架构，融合 <span class="wikilink">Episodic Memory</span> 和 <span class="wikilink">Semantic Memory</span> 的心理学模型</p>
+<p>3. <strong>多策略记忆检索系统</strong>: 组合 cosine similarity、<span class="wikilink">BM25</span>、breadth-first search 三种搜索方法，配合多种 reranker，实现高精度低延迟的记忆检索</p>
+
+
+<h2 id="问题背景">问题背景</h2>
+
+<h3 id="要解决的问题">要解决的问题</h3>
+
+<p>现有 <span class="wikilink">Retrieval-Augmented Generation|RAG</span> 框架主要面向静态文档语料库，而企业级 agent 应用需要从持续对话、业务数据等动态来源中整合知识。Agent 需要一个能够随时间演化的"记忆"系统，而非简单的文档检索。</p>
+
+<h3 id="现有方法的局限">现有方法的局限</h3>
+
+<li><strong>传统 RAG</strong>: 仅支持静态语料，文档内容很少变化，无法处理持续演化的对话历史和业务数据</li>
+<li><strong><span class="wikilink">MemGPT</span></strong>: 虽然探索了 LLM agent 记忆，但不支持直接摄入消息历史，且在复杂时序推理任务上表现有限</li>
+<li><strong>Full-context 方法</strong>: 将全部对话放入 <span class="wikilink">Context Window</span>，受限于 LLM 上下文长度，且随对话增长性能急剧下降</li>
+<li><strong>现有 benchmark (DMR)</strong>: 仅测试简单的单轮事实检索，无法反映企业真实场景</li>
+
+<h3 id="本文的动机">本文的动机</h3>
+
+<p>将 agent 记忆建模为动态时序知识图谱，借鉴人类 episodic memory 和 semantic memory 的双重记忆模型，使 agent 能够非损失地整合新信息、追踪事实变化的时间线、并高效检索相关上下文。</p>
+
+
+<h2 id="方法详解">方法详解</h2>
+
+<h3 id="模型架构">模型架构</h3>
+
+<p>Zep 采用 <strong>三层层次化知识图谱</strong> 架构：</p>
+
+<li><strong>输入</strong>: 原始消息/文本/JSON（称为 Episode），附带参考时间戳 $t_{\text{ref}}$</li>
+<li><strong>图引擎</strong>: <span class="wikilink">Graphiti</span> — temporally-aware 动态知识图谱引擎</li>
+<li><strong>存储后端</strong>: <span class="wikilink">Neo4j</span> 图数据库</li>
+<li><strong>检索输出</strong>: 格式化的文本上下文字符串 $\beta$，包含 FACTS 和 ENTITIES</li>
+
+<p><strong>整体知识图谱定义</strong>:</p>
+
+<div class="math-block">$$
+\mathcal{G} = (\mathcal{N}, \mathcal{E}, \phi)
+$$</div>
+
+<p><strong>含义</strong>: Zep 的核心数据结构，其中 $\mathcal{N}$ 为节点集合，$\mathcal{E}$ 为边集合，$\phi: \mathcal{E} \to \mathcal{N} \times \mathcal{N}$ 为关联函数。</p>
+
+<p><strong>符号说明</strong>:</p>
+<li>$\mathcal{N}$: 所有节点（包括 episode、entity、community 三类）</li>
+<li>$\mathcal{E}$: 所有边（包括 episodic edge、semantic edge、community edge 三类）</li>
+<li>$\phi$: 将每条边映射到其连接的两个节点</li>
+
+<h3 id="核心模块">核心模块</h3>
+
+<h4 id="模块1-episode-subgraph-mathcalg_e">模块1: Episode Subgraph $\mathcal{G}_e$</h4>
+
+<p><strong>设计动机</strong>: 实现非损失性的原始数据存储，类比人类 <span class="wikilink">Episodic Memory</span></p>
+
+<p><strong>具体实现</strong>:</p>
+<li>Episodic nodes $n_i \in \mathcal{N}_e$: 存储原始输入（消息/文本/JSON）</li>
+<li>Episodic edges $e_i \in \mathcal{E}_e \subseteq \phi^*(\mathcal{N}_e \times \mathcal{N}_s)$: 连接 episode 到其提取的 semantic entity</li>
+<li>每条消息附带 $t_{\text{ref}}$ 时间戳，支持绝对和相对时间解析</li>
+<li>实现 <span class="wikilink">Bi-temporal Model|双时间线模型</span>: 时间线 $T$（事件时序）和 $T'$（数据摄入时序）</li>
+
+<h4 id="模块2-semantic-entity-subgraph-mathcalg_s">模块2: Semantic Entity Subgraph $\mathcal{G}_s$</h4>
+
+<p><strong>设计动机</strong>: 从原始 episode 中提取结构化语义知识，类比人类 <span class="wikilink">Semantic Memory</span></p>
+
+<p><strong>具体实现</strong>:</p>
+<li>Entity nodes $n_i \in \mathcal{N}_s$: 从 episode 中提取的命名实体，经过 entity resolution 去重</li>
+<li>Entity edges $e_i \in \mathcal{E}_s \subseteq \phi^*(\mathcal{N}_s \times \mathcal{N}_s)$: 实体间的关系（facts），支持 hyper-edge 建模</li>
+<li>实体提取使用 <span class="wikilink">Reflexion</span> 技术减少幻觉，处理当前消息和最近 $n=4$ 条消息</li>
+<li>实体嵌入为 1024 维向量，通过 cosine similarity + full-text 混合搜索做 entity resolution</li>
+<li>使用预定义 <span class="wikilink">Cypher</span> 查询（而非 LLM 生成）写入图数据库，保证 schema 一致性</li>
+
+<h4 id="模块3-community-subgraph-mathcalg_c">模块3: Community Subgraph $\mathcal{G}_c$</h4>
+
+<p><strong>设计动机</strong>: 利用 <span class="wikilink">GraphRAG</span> 的思路提供高层次的全局理解</p>
+
+<p><strong>具体实现</strong>:</p>
+<li>Community nodes $n_i \in \mathcal{N}_c$: 强连通实体的聚类，包含 map-reduce 式摘要</li>
+<li>Community edges $e_i \in \mathcal{E}_c \subseteq \phi^*(\mathcal{N}_c \times \mathcal{N}_s)$: 连接 community 到其成员 entity</li>
+<li>使用 <span class="wikilink">Label Propagation</span> 算法（而非 <span class="wikilink">Leiden Algorithm</span>），因其支持动态扩展</li>
+<li>新节点加入时动态分配到邻居多数所在社区，无需全量重新计算</li>
+
+<h4 id="模块4-temporal-extraction-and-edge-invalidation">模块4: Temporal Extraction and Edge Invalidation</h4>
+
+<p><strong>设计动机</strong>: 知识会随时间变化，需要追踪事实的有效期</p>
+
+<p><strong>具体实现</strong>:</p>
+<li>每条边存储四个时间戳: $t'\text{created}$, $t'\text{expired} \in T'$（数据层），$t_{\text{valid}}$, $t_{\text{invalid}} \in T$（语义层）</li>
+<li>新边加入时，LLM 比较语义相似的已有边，检测时序重叠的矛盾</li>
+<li>发现矛盾时，将旧边的 $t_{\text{invalid}}$ 设为新边的 $t_{\text{valid}}$</li>
+<li>遵循事务时间线 $T'$，始终优先采纳最新信息</li>
+
+
+<h2 id="关键公式">关键公式</h2>
+
+<h3 id="公式1-knowledge-graph知识图谱定义">公式1: <span class="wikilink">Knowledge Graph|知识图谱定义</span></h3>
+
+<div class="math-block">$$
+\mathcal{G} = (\mathcal{N}, \mathcal{E}, \phi), \quad \phi: \mathcal{E} \to \mathcal{N} \times \mathcal{N}
+$$</div>
+
+<p><strong>含义</strong>: Zep 记忆系统的核心数据结构，由节点、边、关联函数构成的有向图</p>
+
+<p><strong>符号说明</strong>:</p>
+<li>$\mathcal{N}$: 节点集合（$\mathcal{N}_e \cup \mathcal{N}_s \cup \mathcal{N}_c$）</li>
+<li>$\mathcal{E}$: 边集合（$\mathcal{E}_e \cup \mathcal{E}_s \cup \mathcal{E}_c$）</li>
+<li>$\phi$: 边到节点对的映射函数</li>
+
+<h3 id="公式2-information-retrieval记忆检索管线">公式2: <span class="wikilink">Information Retrieval|记忆检索管线</span></h3>
+
+<div class="math-block">$$
+f(\alpha) = \chi(\rho(\varphi(\alpha))) = \beta
+$$</div>
+
+<p><strong>含义</strong>: 将用户查询 $\alpha$ 通过搜索-重排-构造三步管线转化为上下文字符串 $\beta$</p>
+
+<p><strong>符号说明</strong>:</p>
+<li>$\alpha \in S$: 用户文本查询</li>
+<li>$\varphi$: Search 函数，$\varphi: S \to \mathcal{E}_s^n \times \mathcal{N}_s^n \times \mathcal{N}_c^n$</li>
+<li>$\rho$: Reranker 函数，对搜索结果重新排序</li>
+<li>$\chi$: Constructor 函数，将节点和边转为文本上下文</li>
+<li>$\beta \in S$: 输出的格式化上下文字符串</li>
+
+<h3 id="公式3-cosine-similarity语义相似度搜索">公式3: <span class="wikilink">Cosine Similarity|语义相似度搜索</span></h3>
+
+<div class="math-block">$$
+\varphi_{\cos}: S \to \mathcal{E}_s^n \times \mathcal{N}_s^n \times \mathcal{N}_c^n
+$$</div>
+
+<p><strong>含义</strong>: 基于向量余弦相似度的语义搜索，在三类图对象上分别检索</p>
+
+<p><strong>符号说明</strong>:</p>
+<li>$\varphi_{\cos}$: cosine similarity 搜索函数</li>
+<li>$\mathcal{E}_s^n$: 检索到的 top-$n$ semantic edges</li>
+<li>$\mathcal{N}_s^n$: 检索到的 top-$n$ entity nodes</li>
+<li>$\mathcal{N}_c^n$: 检索到的 top-$n$ community nodes</li>
+
+<h3 id="公式4-bm25全文检索">公式4: <span class="wikilink">BM25|全文检索</span></h3>
+
+<div class="math-block">$$
+\varphi_{\text{bm25}}: S \to \mathcal{E}_s^n \times \mathcal{N}_s^n \times \mathcal{N}_c^n
+$$</div>
+
+<p><strong>含义</strong>: 基于 Okapi BM25 的全文检索，捕获词级别匹配，与语义搜索互补</p>
+
+<h3 id="公式5-breadth-first-search广度优先图搜索">公式5: <span class="wikilink">Breadth-First Search|广度优先图搜索</span></h3>
+
+<div class="math-block">$$
+\varphi_{\text{bfs}}: S \to \mathcal{E}_s^n \times \mathcal{N}_s^n \times \mathcal{N}_c^n
+$$</div>
+
+<p><strong>含义</strong>: 图上广度优先搜索，发现上下文邻近但语义不直接相似的节点和边，支持指定种子节点（如最近的 episode）在 $n$-hop 内扩展</p>
+
+
+<h2 id="关键图表">关键图表</h2>
+
+<blockquote>
+<p>注：本文无 Figure，仅包含 3 个 Table。</p>
+</blockquote>
+
+<h3 id="table-1-deep-memory-retrieval-dmr-结果">Table 1: Deep Memory Retrieval (DMR) 结果</h3>
+
+<table class="paper-table">
+<thead><tr><th>Memory</th><th>Model</th><th>Score</th></tr></thead>
+<tbody>
+<tr><td>Recursive Summarization</td><td>gpt-4-turbo</td><td>35.3%</td></tr>
+<tr><td>Conversation Summaries</td><td>gpt-4-turbo</td><td>78.6%</td></tr>
+<tr><td>MemGPT</td><td>gpt-4-turbo</td><td>93.4%</td></tr>
+<tr><td>Full-conversation</td><td>gpt-4-turbo</td><td>94.4%</td></tr>
+<tr><td><strong>Zep</strong></td><td><strong>gpt-4-turbo</strong></td><td><strong>94.8%</strong></td></tr>
+<tr><td>Conversation Summaries</td><td>gpt-4o-mini</td><td>88.0%</td></tr>
+<tr><td>Full-conversation</td><td>gpt-4o-mini</td><td>98.0%</td></tr>
+<tr><td><strong>Zep</strong></td><td><strong>gpt-4o-mini</strong></td><td><strong>98.2%</strong></td></tr>
+</tbody></table>
+
+
+<p><strong>说明</strong>: Zep 在 DMR benchmark 上以 94.8%（gpt-4-turbo）和 98.2%（gpt-4o-mini）超越 MemGPT 的 93.4%。但作者指出 DMR 的局限性——每段对话仅 60 条消息，轻松放入现代 LLM 的上下文窗口，full-context baseline 已能达到 94.4%。</p>
+
+<h3 id="table-2-longmemeval_s-结果">Table 2: LongMemEval$_s$ 结果</h3>
+
+<table class="paper-table">
+<thead><tr><th>Memory</th><th>Model</th><th>Score</th><th>Latency</th><th>Latency IQR</th><th>Avg Context Tokens</th></tr></thead>
+<tbody>
+<tr><td>Full-context</td><td>gpt-4o-mini</td><td>55.4%</td><td>31.3 s</td><td>8.76 s</td><td>115k</td></tr>
+<tr><td><strong>Zep</strong></td><td><strong>gpt-4o-mini</strong></td><td><strong>63.8%</strong></td><td><strong>3.20 s</strong></td><td><strong>1.31 s</strong></td><td><strong>1.6k</strong></td></tr>
+<tr><td>Full-context</td><td>gpt-4o</td><td>60.2%</td><td>28.9 s</td><td>6.01 s</td><td>115k</td></tr>
+<tr><td><strong>Zep</strong></td><td><strong>gpt-4o</strong></td><td><strong>71.2%</strong></td><td><strong>2.58 s</strong></td><td><strong>0.684 s</strong></td><td><strong>1.6k</strong></td></tr>
+</tbody></table>
+
+
+<p><strong>说明</strong>: 在更具挑战性的 LongMemEval 上，Zep 准确率提升高达 18.5%（gpt-4o: 60.2% → 71.2%），同时 latency 降低约 90%（28.9s → 2.58s），上下文 token 从 115k 压缩到 1.6k。</p>
+
+<h3 id="table-3-longmemeval_s-按问题类型分解">Table 3: LongMemEval$_s$ 按问题类型分解</h3>
+
+<table class="paper-table">
+<thead><tr><th>Question Type</th><th>Model</th><th>Full-context</th><th>Zep</th><th>Delta</th></tr></thead>
+<tbody>
+<tr><td>single-session-preference</td><td>gpt-4o-mini</td><td>30.0%</td><td>53.3%</td><td>77.7%↑</td></tr>
+<tr><td>single-session-assistant</td><td>gpt-4o-mini</td><td>81.8%</td><td>75.0%</td><td>9.06%↓</td></tr>
+<tr><td>temporal-reasoning</td><td>gpt-4o-mini</td><td>36.5%</td><td>54.1%</td><td>48.2%↑</td></tr>
+<tr><td>multi-session</td><td>gpt-4o-mini</td><td>40.6%</td><td>47.4%</td><td>16.7%↑</td></tr>
+<tr><td>knowledge-update</td><td>gpt-4o-mini</td><td>76.9%</td><td>74.4%</td><td>3.36%↓</td></tr>
+<tr><td>single-session-user</td><td>gpt-4o-mini</td><td>81.4%</td><td>92.9%</td><td>14.1%↑</td></tr>
+<tr><td>single-session-preference</td><td>gpt-4o</td><td>20.0%</td><td>56.7%</td><td>184%↑</td></tr>
+<tr><td>single-session-assistant</td><td>gpt-4o</td><td>94.6%</td><td>80.4%</td><td>17.7%↓</td></tr>
+<tr><td>temporal-reasoning</td><td>gpt-4o</td><td>45.1%</td><td>62.4%</td><td>38.4%↑</td></tr>
+<tr><td>multi-session</td><td>gpt-4o</td><td>44.3%</td><td>57.9%</td><td>30.7%↑</td></tr>
+<tr><td>knowledge-update</td><td>gpt-4o</td><td>78.2%</td><td>83.3%</td><td>6.52%↑</td></tr>
+<tr><td>single-session-user</td><td>gpt-4o</td><td>81.4%</td><td>92.9%</td><td>14.1%↑</td></tr>
+</tbody></table>
+
+
+<p><strong>关键发现</strong>: Zep 在 single-session-preference（+184%）、temporal-reasoning（+48.2%）、multi-session（+30.7%）等复杂任务上提升最为显著；但在 single-session-assistant 类型上有所下降（-17.7%），可能因为这类问题从完整上下文中更容易直接找到答案。</p>
+
+
+<h2 id="实验">实验</h2>
+
+<h3 id="数据集">数据集</h3>
+
+<table class="paper-table">
+<thead><tr><th>数据集</th><th>规模</th><th>特点</th><th>用途</th></tr></thead>
+<tbody>
+<tr><td>DMR (Deep Memory Retrieval)</td><td>500 段多会话对话，每段 5 session × 12 messages</td><td>单轮事实检索，对话较短</td><td>与 MemGPT 对比</td></tr>
+<tr><td>LongMemEval$_s$</td><td>平均 115k tokens 的长对话</td><td>6 种问题类型，包含时序推理</td><td>企业场景评估</td></tr>
+</tbody></table>
+
+
+<h3 id="实现细节">实现细节</h3>
+
+<li><strong>Embedding Model</strong>: <span class="wikilink">BGE-M3</span>（BAAI），用于 reranking 和 embedding</li>
+<li><strong>图构建 LLM</strong>: gpt-4o-mini-2024-07-18</li>
+<li><strong>回答生成 LLM</strong>: gpt-4o-mini-2024-07-18 和 gpt-4o-2024-11-20</li>
+<li><strong>DMR 评估额外使用</strong>: gpt-4-turbo-2024-04-09（与 MemGPT 对齐）</li>
+<li><strong>评估方法</strong>: GPT-4o 作为 LLM judge，使用 LongMemEval 原论文提供的 question-specific prompts</li>
+<li><strong>图数据库</strong>: <span class="wikilink">Neo4j</span>（使用 Lucene 实现 BM25 和 cosine 搜索）</li>
+<li><strong>检索配置</strong>: 检索 top-20 最相关的 edges 和 entity nodes</li>
+<li><strong>测试环境</strong>: 消费级笔记本（Boston, MA），连接 AWS us-west-2 上的 Zep 服务</li>
+<li><strong>实验时间</strong>: 2024年12月至2025年1月</li>
+
+
+<h2 id="批判性思考">批判性思考</h2>
+
+<h3 id="优点">优点</h3>
+<p>1. <strong>心理学启发的双记忆模型</strong>: Episode + Semantic 子图的设计巧妙对应人类 episodic/semantic memory，概念清晰</p>
+<p>2. <strong>时序知识管理</strong>: bi-temporal model 和 edge invalidation 机制能优雅地处理知识随时间演化的问题</p>
+<p>3. <strong>显著的延迟优化</strong>: 上下文从 115k tokens 压缩到 1.6k，latency 降低 90%，对生产部署意义重大</p>
+<p>4. <strong>社区动态扩展</strong>: 使用 Label Propagation 而非 Leiden，支持增量更新，避免全量重算</p>
+
+<h3 id="局限性">局限性</h3>
+<p>1. <strong>single-session-assistant 性能下降</strong>: 在需要回忆 assistant 自身输出的问题上表现不如 full-context，说明图抽取可能丢失了部分信息</p>
+<p>2. <strong>缺乏与更多 baseline 的对比</strong>: 未与 <span class="wikilink">LightRAG</span>、<span class="wikilink">AriGraph</span>、<span class="wikilink">Distill-SynthKG</span> 等同类 graph-RAG 系统直接对比</p>
+<p>3. <strong>公司自有 benchmark</strong>: 作者来自 Zep AI，评估存在潜在利益冲突；DMR benchmark 本身被作者认为不够充分</p>
+<p>4. <strong>无消融实验</strong>: 未分析三层子图各自的贡献、三种搜索策略的独立效果</p>
+<p>5. <strong>评估规模有限</strong>: LongMemEval 虽然比 DMR 更好，但仍是相对小规模的评估</p>
+
+<h3 id="潜在改进方向">潜在改进方向</h3>
+<p>1. <strong>引入 domain ontology</strong>: 作者自己提出，为 Graphiti 添加领域本体可能提升结构化程度</p>
+<p>2. <strong>Fine-tuned extraction models</strong>: 使用专门微调的模型替代通用 LLM 做实体/关系抽取</p>
+<p>3. <strong>与传统 RAG benchmark 对比</strong>: 评估 Zep 在标准 RAG 任务上的表现</p>
+<p>4. <strong>更丰富的消融实验</strong>: 分析每个组件的独立贡献</p>
+
+<h3 id="可复现性评估">可复现性评估</h3>
+<li>[x] 代码开源（<a href="https://github.com/getzep/graphiti" target="_blank">Graphiti</a>）</li>
+<li>[ ] 预训练模型（使用 API 服务，无自有模型）</li>
+<li>[x] 训练细节完整（prompts 在 Appendix 中提供）</li>
+<li>[x] 数据集可获取（DMR 和 LongMemEval 均公开）</li>
+
+
+<h2 id="关联笔记">关联笔记</h2>
+
+<h3 id="基于">基于</h3>
+<li><span class="wikilink">GraphRAG</span>: Community 子图的社区检测和 map-reduce 摘要直接借鉴</li>
+<li><span class="wikilink">MemGPT</span>: 主要对比基线，LLM agent 记忆的先驱工作</li>
+<li><span class="wikilink">Reflexion</span>: 实体提取中使用的反思技术，减少 LLM 幻觉</li>
+
+<h3 id="对比">对比</h3>
+<li><span class="wikilink">MemGPT</span>: DMR benchmark 的主要对比对象</li>
+<li><span class="wikilink">LightRAG</span>: 作者提到社区搜索与其 high-level key search 方法并行发展</li>
+<li><span class="wikilink">AriGraph</span>: 类似的 episodic memory + knowledge graph 方法</li>
+
+<h3 id="方法相关">方法相关</h3>
+<li><span class="wikilink">Knowledge Graph</span>: 核心数据结构</li>
+<li><span class="wikilink">Bi-temporal Model</span>: 双时间线的时序建模</li>
+<li><span class="wikilink">Label Propagation</span>: 社区检测算法</li>
+<li><span class="wikilink">BM25</span>: 全文检索方法之一</li>
+<li><span class="wikilink">Cosine Similarity</span>: 语义相似度搜索</li>
+<li><span class="wikilink">Breadth-First Search</span>: 图搜索方法之一</li>
+<li><span class="wikilink">Reciprocal Rank Fusion</span>: Reranker 策略</li>
+<li><span class="wikilink">Maximal Marginal Relevance</span>: Reranker 策略</li>
+<li><span class="wikilink">Neo4j</span>: 图数据库后端</li>
+<li><span class="wikilink">BGE-M3</span>: Embedding 模型</li>
+
+<h3 id="硬件数据相关">硬件/数据相关</h3>
+<li><span class="wikilink">DMR Benchmark</span>: MemGPT 提出的 Deep Memory Retrieval 评测</li>
+<li><span class="wikilink">LongMemEval</span>: 长对话记忆评测 benchmark</li>
+
+
+<h2 id="速查卡片">速查卡片</h2>
+
+<blockquote>
+<p>[!summary] Zep: A Temporal Knowledge Graph Architecture for Agent Memory</p>
+<p>- <strong>核心</strong>: 基于时序知识图谱的 agent 记忆层，三层子图（Episode/Entity/Community）</p>
+<p>- <strong>方法</strong>: Graphiti 引擎 + bi-temporal model + 多策略检索（cosine/BM25/BFS）+ 多种 reranker</p>
+<p>- <strong>结果</strong>: DMR 94.8% 超 MemGPT 93.4%；LongMemEval 71.2% (+18.5%)，latency 降低 90%</p>
+<p>- <strong>代码</strong>: <a href="https://github.com/getzep/graphiti" target="_blank">github.com/getzep/graphiti</a></p>
+</blockquote>
+
+
+<p><em>笔记创建时间: 2026-04-05</em></p></div></details>
 
 <li><strong>核心方法</strong>: 基于时序感知知识图谱 Graphiti 的 agent 记忆系统，动态整合非结构化对话和结构化业务数据，同时维护历史关系。在 DMR benchmark 上超过 <span class="wikilink">MemGPT</span>（94.8% vs 93.4%），在 <span class="wikilink">LongMemEval</span> 上准确率提升 18.5%，延迟降低 90%。</li>
 <li><strong>对比方法/Baselines</strong>: <span class="wikilink">MemGPT</span>, <span class="wikilink">RAG</span> baselines, <span class="wikilink">GraphRAG</span>, <span class="wikilink">LightRAG</span></li>
@@ -380,6 +2921,135 @@ details.paper-note .note-body h3 { font-size: 1em; }
 <li><strong>机构</strong>: Meta AI</li>
 <li><strong>链接</strong>: <a href="http://arxiv.org/abs/2604.04872v1" target="_blank">arXiv</a> | <a href="https://arxiv.org/pdf/2604.04872v1" target="_blank">PDF</a></li>
 <li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+<details class="paper-note"><summary>📒 精读笔记: SandMLE</summary><div class="note-body"><h1 id="sandmle-synthetic-sandbox-for-training-machine-learning-engineering-agents">SandMLE: Synthetic Sandbox for Training Machine Learning Engineering Agents</h1>
+
+<blockquote>
+<p><strong>一句话总结</strong>：通过从种子任务合成微型 MLE 环境（每个仅 50-200 样本），将执行时间降低 13 倍，首次实现 MLE 领域大规模 on-policy trajectory-level <span class="wikilink">Reinforcement Learning|RL</span> 训练。</p>
+</blockquote>
+
+<h2 id="1-研究动机与问题定义">1. 研究动机与问题定义</h2>
+
+<h3 id="核心瓶颈">核心瓶颈</h3>
+<p>MLE（Machine Learning Engineering）agent 的训练面临关键瓶颈：<strong>sandbox 数据集太大，验证执行太慢</strong>。现有 MLE benchmark（如 MLE-bench）中的数据集动辄上 GB，单次训练+评估需要数十分钟，使得 on-policy RL 完全不可行。</p>
+
+<h3 id="问题定义">问题定义</h3>
+<p>将 MLE 任务建模为<strong>序列决策过程</strong>（Sequential Decision Process）：</p>
+
+<div class="math-block">$$\tau = (s_0, a_0, s_1, a_1, \ldots, s_T, a_T)$$</div>
+
+<p>其中 $s_t$ 为环境状态（代码、数据、日志），$a_t$ 为 agent 动作（编写代码、执行命令等），$T$ 为最大步数。目标是最大化最终奖励 $R(\tau)$——MLE 任务的提交得分。</p>
+
+<h2 id="2-方法详解">2. 方法详解</h2>
+
+<h3 id="21-合成环境生成流水线">2.1 合成环境生成流水线</h3>
+
+<p>SandMLE 的核心是一个<strong>三角色流水线</strong>：</p>
+
+<p><strong>Data Strategist（数据策略师）</strong>：从种子 MLE 任务出发，通过 LLM 生成多样化的任务变体规格，包括：</p>
+<li>不同数据分布（偏态、多模态、缺失值等）</li>
+<li>不同特征类型（数值、分类、文本、时序等）</li>
+<li>不同目标变量和评估指标</li>
+
+<p><strong>ML Developer（ML 开发者）</strong>：根据规格合成微型数据集：</p>
+
+<div class="math-block">$$|D_{\text{train}}| \in [50, 200], \quad |D_{\text{test}}| \in [20, 50]$$</div>
+
+<p>保留真实 MLE 问题的<strong>结构复杂性</strong>（特征交互、非线性关系等），但大幅缩小数据规模。</p>
+
+<p><strong>MLOps Engineer（MLOps 工程师）</strong>：搭建评估环境，包括 metric 计算脚本、提交格式验证、基线分数设定。</p>
+
+<h3 id="22-trajectory-level-grpo">2.2 Trajectory-Level GRPO</h3>
+
+<p>应用 <span class="wikilink">GRPO</span>（Group Relative Policy Optimization）到多轮 agent 轨迹：</p>
+
+<div class="math-block">$$\mathcal{L}_{\text{GRPO}}(\theta) = -\mathbb{E}_{\tau \sim \pi_{\theta_{\text{old}}}} \left[ \sum_{t=0}^{T} \min\left( r_t(\theta) \hat{A}_t, \text{clip}(r_t(\theta), 1-\epsilon, 1+\epsilon) \hat{A}_t \right) \right]$$</div>
+
+<p>其中 $r_t(\theta) = \frac{\pi_\theta(a_t|s_t)}{\pi_{\theta_{\text{old}}}(a_t|s_t)}$ 为重要性比率。</p>
+
+<p>关键创新：<strong>轨迹级奖励</strong>而非 token 级奖励。对于一组 $G$ 条轨迹，优势函数：</p>
+
+<div class="math-block">$$\hat{A}(\tau_i) = \frac{R(\tau_i) - \text{mean}(\{R(\tau_j)\}_{j=1}^G)}{\text{std}(\{R(\tau_j)\}_{j=1}^G)}$$</div>
+
+<h3 id="23-执行效率提升">2.3 执行效率提升</h3>
+
+<p>核心指标——执行时间对比：</p>
+
+<div class="math-block">$$\text{SandMLE}: \bar{t} \approx 2.5 \text{ min/task} \quad \text{vs.} \quad \text{MLE-bench}: \bar{t} \approx 32.5 \text{ min/task}$$</div>
+
+<p>加速比约 <strong>13x</strong>，使得大规模 on-policy 采样变得可行。</p>
+
+<h2 id="3-实验结果">3. 实验结果</h2>
+
+<h3 id="31-主要结果">3.1 主要结果</h3>
+
+<p>在 MLE-bench-lite 上的 medal rate：</p>
+
+<table class="paper-table">
+<thead><tr><th>模型</th><th>方法</th><th>Medal Rate</th></tr></thead>
+<tbody>
+<tr><td>Qwen3-8B</td><td>SFT baseline</td><td>低</td></tr>
+<tr><td>Qwen3-8B</td><td><strong>SandMLE + GRPO</strong></td><td><strong>+20.3%</strong></td></tr>
+<tr><td>Qwen3-14B</td><td>SFT baseline</td><td>中</td></tr>
+<tr><td>Qwen3-14B</td><td><strong>SandMLE + GRPO</strong></td><td><strong>+42.1%</strong></td></tr>
+<tr><td>Qwen3-30B</td><td>SFT baseline</td><td>中高</td></tr>
+<tr><td>Qwen3-30B</td><td><strong>SandMLE + GRPO</strong></td><td><strong>+66.9%</strong></td></tr>
+</tbody></table>
+
+
+<h3 id="32-跨-scaffold-泛化">3.2 跨 Scaffold 泛化</h3>
+
+<p>在 HumanRank benchmark 上（不同的 agent scaffold）：</p>
+
+<div class="math-block">$$\Delta_{\text{HumanRank}} = +32.4\%$$</div>
+
+<p>说明 SandMLE 训练出的能力可以<strong>迁移到不同的 agent 框架</strong>。</p>
+
+<h3 id="33-合成环境多样性">3.3 合成环境多样性</h3>
+
+<p>生成了 <strong>200+</strong> 个合成 MLE 环境，覆盖：</p>
+<li>回归、分类、排序等任务类型</li>
+<li>表格、时序、NLP 等数据模态</li>
+<li>AUC、RMSE、F1 等评估指标</li>
+
+<h2 id="4-架构图">4. 架构图</h2>
+
+<div class="paper-figure"><img src="https://arxiv.org/html/2604.04872v1/figure/teaser_updated.png" alt="SandMLE 系统架构" loading="lazy"></div>
+
+<h2 id="5-核心概念">5. 核心概念</h2>
+
+<li><span class="wikilink">GRPO</span>：Group Relative Policy Optimization，无需 critic 的策略优化</li>
+<li><span class="wikilink">On-Policy RL</span>：使用当前策略采样的强化学习</li>
+<li><span class="wikilink">MLE-bench</span>：Meta 提出的 MLE agent 评估基准</li>
+<li><span class="wikilink">Supervised Fine-Tuning|SFT</span>：监督微调基线</li>
+<li><span class="wikilink">ReAct</span>：推理+行动的 agent 框架</li>
+<li><span class="wikilink">AIDE</span>：另一种 MLE agent scaffold</li>
+
+<h2 id="6-优缺点分析">6. 优缺点分析</h2>
+
+<h3 id="优点">优点</h3>
+<p>1. <strong>问题定义精准</strong>：MLE verification 太贵导致 on-policy RL 不可行，这是真实痛点</p>
+<p>2. <strong>解决方案优雅</strong>：合成微型环境保留复杂性但降低成本 13x</p>
+<p>3. <strong>实验扎实</strong>：三个模型规模（8B/14B/30B）全面验证</p>
+<p>4. <strong>跨框架泛化</strong>：HumanRank +32.4% 是真正的亮点</p>
+<p>5. <strong>可推广</strong>：思路适用于任何 agent 训练瓶颈是环境执行成本的场景</p>
+
+<h3 id="缺点">缺点</h3>
+<p>1. <strong>未测闭源模型</strong>：没有在 Claude 或 GPT 系列上验证</p>
+<p>2. <strong>合成 vs 真实</strong>：微型合成数据集是否真正保留了真实 MLE 问题的核心难点？</p>
+<p>3. <strong>任务类型有限</strong>：主要聚焦表格数据，对 CV/NLP 任务覆盖不足</p>
+<p>4. <strong>LLM 生成的数据质量</strong>：合成数据的分布是否足够多样？</p>
+
+<h2 id="7-与相关工作对比">7. 与相关工作对比</h2>
+
+<table class="paper-table">
+<thead><tr><th>方法</th><th>训练方式</th><th>环境类型</th><th>执行速度</th><th>可扩展性</th></tr></thead>
+<tbody>
+<tr><td><strong>SandMLE</strong></td><td><strong>On-policy RL</strong></td><td><strong>合成微型</strong></td><td><strong>快 (13x)</strong></td><td><strong>高</strong></td></tr>
+<tr><td>MLE-bench</td><td>评估 only</td><td>真实大数据集</td><td>慢</td><td>低</td></tr>
+<tr><td>SFT</td><td>离线模仿</td><td>专家轨迹</td><td>N/A</td><td>中</td></tr>
+<tr><td>AIDE</td><td>无训练</td><td>真实环境</td><td>慢</td><td>低</td></tr>
+</tbody></table>
+</div></details>
 
 <div class="paper-figure"><img src="https://arxiv.org/html/2604.04872v1/figure/teaser_updated.png" alt="" loading="lazy"></div>
 
@@ -393,6 +3063,133 @@ details.paper-note .note-body h3 { font-size: 1em; }
 <li><strong>机构</strong>: SUNY Binghamton, Arizona State University</li>
 <li><strong>链接</strong>: <a href="http://arxiv.org/abs/2604.03888v1" target="_blank">arXiv</a> | <a href="https://arxiv.org/pdf/2604.03888v1" target="_blank">PDF</a></li>
 <li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+<details class="paper-note"><summary>📒 精读笔记: PolySwarm</summary><div class="note-body"><h1 id="polyswarm-a-multi-agent-llm-framework-for-prediction-market-trading">PolySwarm: A Multi-Agent LLM Framework for Prediction Market Trading</h1>
+
+<blockquote>
+<p><strong>一句话总结</strong>：用 50 个多样化 LLM persona 并发评估二元预测市场，通过 confidence-weighted Bayesian 聚合与市场隐含概率结合，加上 quarter-Kelly 仓位管理进行交易。</p>
+</blockquote>
+
+<h2 id="1-研究动机与问题定义">1. 研究动机与问题定义</h2>
+
+<h3 id="核心问题">核心问题</h3>
+<p><span class="wikilink">预测市场</span>（如 Polymarket）中的价格是否真的反映了事件的真实概率？单个 LLM 存在<strong>幻觉</strong>、<strong>过度自信</strong>和<strong>提示敏感性</strong>三大问题，难以可靠预测。</p>
+
+<h3 id="理论基础">理论基础</h3>
+<li><strong>有效市场假说</strong>：市场价格反映所有可用信息</li>
+<li><strong>Grossman-Stiglitz 悖论</strong>：完全有效的市场不会有人愿意付成本去获取信息</li>
+<li><strong>群体智慧</strong>：多样化个体的独立判断聚合优于单一专家</li>
+
+<h2 id="2-方法详解">2. 方法详解</h2>
+
+<h3 id="21-多样化-persona-设计">2.1 多样化 Persona 设计</h3>
+
+<p>50 个 LLM agent，每个有不同的分析视角和专业背景：</p>
+<li>政治分析师、经济学家、数据科学家、心理学家等</li>
+<li>不同风险偏好：保守、中性、激进</li>
+<li>不同信息侧重：基本面、技术面、情绪面</li>
+
+<h3 id="22-群体共识聚合">2.2 群体共识聚合</h3>
+
+<p>每个 agent $i$ 输出概率估计 $p_i$ 和置信度 $c_i$。加权聚合：</p>
+
+<div class="math-block">$$p_{\text{swarm}} = \frac{\sum_{i=1}^{N} c_i \cdot p_i}{\sum_{i=1}^{N} c_i}$$</div>
+
+<h3 id="23-bayesian-混合">2.3 Bayesian 混合</h3>
+
+<p>将群体共识与市场隐含概率 $p_{\text{market}}$ 结合：</p>
+
+<div class="math-block">$$p_{\text{final}} = \alpha \cdot p_{\text{swarm}} + (1 - \alpha) \cdot p_{\text{market}}$$</div>
+
+<p>其中 $\alpha$ 由群体共识的一致性程度决定。</p>
+
+<h3 id="24-期望价值计算">2.4 期望价值计算</h3>
+
+<div class="math-block">$$\text{EV} = p_{\text{final}} \cdot (\text{payout} - \text{cost}) - (1 - p_{\text{final}}) \cdot \text{cost}$$</div>
+
+<p>只在 $\text{EV} > \text{threshold}$ 时进行交易。</p>
+
+<h3 id="25-跨市场套利检测">2.5 跨市场套利检测</h3>
+
+<p>使用 <span class="wikilink">KL 散度</span> 和 JS 散度检测相关市场间的定价不一致：</p>
+
+<div class="math-block">$$D_{\text{KL}}(P \| Q) = \sum_x P(x) \log \frac{P(x)}{Q(x)}$$</div>
+
+<div class="math-block">$$D_{\text{JS}}(P \| Q) = \frac{1}{2} D_{\text{KL}}(P \| M) + \frac{1}{2} D_{\text{KL}}(Q \| M), \quad M = \frac{P + Q}{2}$$</div>
+
+<p>当 $D_{\text{JS}} > \delta$ 时触发套利信号。</p>
+
+<h3 id="26-仓位管理quarter-kelly">2.6 仓位管理：Quarter-Kelly</h3>
+
+<p><span class="wikilink">Kelly 准则</span> 的保守变体：</p>
+
+<div class="math-block">$$f^* = \frac{p \cdot b - q}{b}, \quad f_{\text{trade}} = \frac{f^*}{4}$$</div>
+
+<p>其中 $p$ 为估计获胜概率，$q = 1 - p$，$b$ 为赔率。使用 1/4 Kelly 以降低波动率。</p>
+
+<h3 id="27-评估指标">2.7 评估指标</h3>
+
+<li><strong>Brier Score</strong>：$\text{BS} = \frac{1}{N} \sum_{i=1}^{N} (p_i - o_i)^2$</li>
+<li><strong>Log-loss</strong>：$\mathcal{L} = -\frac{1}{N} \sum_{i=1}^{N} [o_i \log p_i + (1-o_i) \log(1-p_i)]$</li>
+
+<h2 id="3-实验结果">3. 实验结果</h2>
+
+<h3 id="31-llm-对比">3.1 LLM 对比</h3>
+
+<table class="paper-table">
+<thead><tr><th>模型</th><th>单模型 Brier</th><th>PolySwarm Brier</th><th>改善</th></tr></thead>
+<tbody>
+<tr><td>GPT-4</td><td>0.312</td><td>—</td><td>—</td></tr>
+<tr><td>Claude</td><td>0.298</td><td>—</td><td>—</td></tr>
+<tr><td><strong>PolySwarm (50 agents)</strong></td><td>—</td><td><strong>~0.24</strong></td><td><strong>~20%↓</strong></td></tr>
+</tbody></table>
+
+
+<h3 id="32-关键发现">3.2 关键发现</h3>
+
+<li>50 个 persona 的聚合显著优于单模型预测</li>
+<li>Bayesian 混合优于简单平均</li>
+<li>Quarter-Kelly 在回撤控制上优于 full Kelly</li>
+<li>套利检测模块在 ~15% 的市场对中发现了定价不一致</li>
+
+<h2 id="4-架构图">4. 架构图</h2>
+
+<div class="paper-figure"><img src="https://arxiv.org/html/2604.03888v1/x1.png" alt="PolySwarm 系统架构" loading="lazy"></div>
+
+<h2 id="5-核心概念">5. 核心概念</h2>
+
+<li><span class="wikilink">预测市场</span>：基于事件结果进行交易的市场</li>
+<li><span class="wikilink">Kelly 准则</span>：最优仓位管理公式</li>
+<li><span class="wikilink">KL 散度</span>：衡量概率分布差异</li>
+<li><span class="wikilink">Bayesian Inference</span>：贝叶斯推断框架</li>
+<li><span class="wikilink">Ensemble Methods</span>：集成学习方法</li>
+<li><span class="wikilink">Multi-Agent Systems</span>：多智能体系统</li>
+
+<h2 id="6-优缺点分析">6. 优缺点分析</h2>
+
+<h3 id="优点">优点</h3>
+<p>1. <strong>思路新颖</strong>：50 个 LLM persona 的群体智慧方法很 bold</p>
+<p>2. <strong>理论基础</strong>：有效市场假说 + Grossman-Stiglitz 悖论提供了合理动机</p>
+<p>3. <strong>风险管理</strong>：Quarter-Kelly + 套利检测是实用的工程设计</p>
+<p>4. <strong>多模型对比</strong>：测试了主流 LLM 的预测能力</p>
+
+<h3 id="缺点">缺点</h3>
+<p>1. <strong>无实盘验证</strong>：只有方法论评估，没有 Polymarket 实盘结果</p>
+<p>2. <strong>计算成本</strong>：50 个 LLM 调用的成本是否值得这个提升？</p>
+<p>3. <strong>Persona 设计</strong>：50 个 persona 的多样性如何保证？LLM 的 "角色扮演" 是否真正带来独立视角？</p>
+<p>4. <strong>时效性</strong>：预测市场依赖实时信息，LLM 的知识截止问题如何处理？</p>
+<p>5. <strong>样本量</strong>：评估的市场数量有限，统计显著性存疑</p>
+
+<h2 id="7-与相关工作对比">7. 与相关工作对比</h2>
+
+<table class="paper-table">
+<thead><tr><th>方法</th><th>模型数量</th><th>聚合方式</th><th>仓位管理</th><th>实盘验证</th></tr></thead>
+<tbody>
+<tr><td><strong>PolySwarm</strong></td><td><strong>50</strong></td><td><strong>Bayesian 加权</strong></td><td><strong>Quarter-Kelly</strong></td><td><strong>无</strong></td></tr>
+<tr><td>Lopez-Lira</td><td>1</td><td>单模型</td><td>无</td><td>有</td></tr>
+<tr><td>BloombergGPT</td><td>1</td><td>单模型</td><td>无</td><td>部分</td></tr>
+<tr><td>AutoGen</td><td>多</td><td>对话共识</td><td>无</td><td>无</td></tr>
+</tbody></table>
+</div></details>
 
 <div class="paper-figure"><img src="https://arxiv.org/html/2604.03888v1/x1.png" alt="" loading="lazy"></div>
 
@@ -404,6 +3201,133 @@ details.paper-note .note-body h3 { font-size: 1em; }
 <li><strong>机构</strong>: University of Washington</li>
 <li><strong>链接</strong>: <a href="http://arxiv.org/abs/2604.04929v1" target="_blank">arXiv</a> | <a href="https://arxiv.org/pdf/2604.04929v1" target="_blank">PDF</a></li>
 <li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+<details class="paper-note"><summary>📒 精读笔记: Rethinking Model Efficiency</summary><div class="note-body"><h1 id="rethinking-model-efficiency-multi-agent-inference-with-large-models">Rethinking Model Efficiency: Multi-Agent Inference with Large Models</h1>
+
+<blockquote>
+<p><strong>一句话总结</strong>：发现大模型用更少的 output token 可能比小模型用长序列更快，提出 multi-agent inference 框架：大模型出短回答，必要时从小模型转移关键推理 token。</p>
+</blockquote>
+
+<h2 id="1-研究动机与问题定义">1. 研究动机与问题定义</h2>
+
+<h3 id="核心观察">核心观察</h3>
+<p>传统观点认为小模型更高效（更快、更便宜）。但作者发现一个反直觉现象：</p>
+
+<div class="math-block">$$\text{Latency}_{\text{large}} &lt; \text{Latency}_{\text{small}} \quad \text{when} \quad |T_{\text{large}}| \ll |T_{\text{small}}|$$</div>
+
+<p>即大模型因为"废话少"（生成更紧凑的回答），实际延迟可能低于小模型。</p>
+
+<h3 id="问题定义">问题定义</h3>
+<p>对于 <span class="wikilink">VLM</span>（Vision-Language Model）推理任务，总延迟由两部分组成：</p>
+
+<div class="math-block">$$L_{\text{total}} = L_{\text{prefill}} + L_{\text{decode}} = L_{\text{prefill}} + n_{\text{tokens}} \cdot t_{\text{per\_token}}$$</div>
+
+<p>大模型的 $t_{\text{per\_token}}$ 更大，但 $n_{\text{tokens}}$ 更小。当 decode 阶段主导延迟时，大模型反而更快。</p>
+
+<h2 id="2-方法详解">2. 方法详解</h2>
+
+<h3 id="21-vlm-inference-profile">2.1 VLM Inference Profile</h3>
+
+<p>系统性量化了小模型 vs 大模型的推理行为：</p>
+
+<div class="math-block">$$\text{Efficiency}(M) = \frac{\text{Accuracy}(M)}{\text{Latency}(M)} = \frac{\text{Accuracy}(M)}{n_{\text{tokens}}(M) \cdot t_{\text{per\_token}}(M)}$$</div>
+
+<p>关键发现：</p>
+<li>大模型生成的 token 数量平均比小模型少 40-60%</li>
+<li>大模型的推理更"直接"，减少了不必要的推理步骤和重复</li>
+
+<h3 id="22-multi-agent-inference-框架">2.2 Multi-Agent Inference 框架</h3>
+
+<h4 id="mutual-verification互验证">Mutual Verification（互验证）</h4>
+
+<p>大模型和小模型各自独立回答，然后交叉验证：</p>
+
+<div class="math-block">$$\text{Answer} = \begin{cases} a_{\text{large}} &amp; \text{if } a_{\text{large}} = a_{\text{small}} \\ a_{\text{large}} &amp; \text{if confidence}(a_{\text{large}}) &gt; \tau \\ \text{Reasoning Transfer} &amp; \text{otherwise} \end{cases}$$</div>
+
+<h4 id="reasoning-transfer推理转移">Reasoning Transfer（推理转移）</h4>
+
+<p>当大模型不确定时，从小模型的长推理链中提取关键 token：</p>
+
+<div class="math-block">$$T_{\text{key}} = \text{Extract}(T_{\text{small}}, \text{attention\_scores})$$</div>
+
+<p>将关键推理 token 注入大模型的 context，让大模型重新推理：</p>
+
+<div class="math-block">$$a_{\text{final}} = M_{\text{large}}(\text{prompt} \oplus T_{\text{key}})$$</div>
+
+<h3 id="23-延迟-精度权衡">2.3 延迟-精度权衡</h3>
+
+<div class="math-block">$$\text{Pareto-optimal}: \min_{\alpha} \left[ \alpha \cdot L_{\text{large}} + (1-\alpha) \cdot L_{\text{small}} \right] \quad \text{s.t.} \quad \text{Acc} \geq \text{Acc}_{\text{target}}$$</div>
+
+<p>通过调节大小模型的使用比例，在延迟和精度之间取得最优平衡。</p>
+
+<h2 id="3-实验结果">3. 实验结果</h2>
+
+<h3 id="31-output-token-数量对比">3.1 Output Token 数量对比</h3>
+
+<table class="paper-table">
+<thead><tr><th>模型</th><th>任务</th><th>平均 Token 数</th><th>准确率</th></tr></thead>
+<tbody>
+<tr><td>Qwen-VL-7B</td><td>VQA</td><td>~350</td><td>中</td></tr>
+<tr><td>Qwen-VL-72B</td><td>VQA</td><td>~180</td><td>高</td></tr>
+<tr><td>Token 减少</td><td>—</td><td><strong>~49%</strong></td><td><strong>+15%</strong></td></tr>
+</tbody></table>
+
+
+<h3 id="32-延迟对比">3.2 延迟对比</h3>
+
+<table class="paper-table">
+<thead><tr><th>配置</th><th>延迟</th><th>准确率</th></tr></thead>
+<tbody>
+<tr><td>小模型 alone</td><td>中</td><td>中</td></tr>
+<tr><td>大模型 alone</td><td>中-高</td><td>高</td></tr>
+<tr><td><strong>Multi-Agent</strong></td><td><strong>低-中</strong></td><td><strong>高</strong></td></tr>
+</tbody></table>
+
+
+<h3 id="33-reasoning-transfer-效果">3.3 Reasoning Transfer 效果</h3>
+
+<p>在大模型不确定的 case 中，注入小模型关键推理 token 后：</p>
+<li>准确率提升 8-12%</li>
+<li>额外延迟仅增加 15-20%</li>
+
+<h2 id="4-架构图">4. 架构图</h2>
+
+<div class="paper-figure"><img src="https://arxiv.org/html/2604.04929v1/fig/fig/new_fig/qwen_latency_curve_single.png" alt="延迟-Token 数量关系曲线" loading="lazy"></div>
+
+<h2 id="5-核心概念">5. 核心概念</h2>
+
+<li><span class="wikilink">VLM</span>：Vision-Language Model</li>
+<li><span class="wikilink">Multi-Agent Inference</span>：多智能体推理</li>
+<li><span class="wikilink">Token Efficiency</span>：Token 效率</li>
+<li><span class="wikilink">Reasoning Transfer</span>：推理转移</li>
+<li><span class="wikilink">Prefill</span>：预填充阶段</li>
+<li><span class="wikilink">Autoregressive Decoding</span>：自回归解码</li>
+
+<h2 id="6-优缺点分析">6. 优缺点分析</h2>
+
+<h3 id="优点">优点</h3>
+<p>1. <strong>观察有价值</strong>：系统量化了"大模型废话少"这个直觉</p>
+<p>2. <strong>实用框架</strong>：multi-agent inference 可以直接用于 VLM 部署</p>
+<p>3. <strong>灵活配置</strong>：可根据延迟/精度需求调节大小模型比例</p>
+<p>4. <strong>推理转移</strong>：小模型的详细推理链可以辅助大模型</p>
+
+<h3 id="缺点">缺点</h3>
+<p>1. <strong>观察不算新</strong>：大模型更高效的直觉很多人已经有</p>
+<p>2. <strong>需要两个模型</strong>：部署两个模型的资源开销高于单模型</p>
+<p>3. <strong>模型特定</strong>：只在 Qwen-VL 系列测试，泛化性未验证</p>
+<p>4. <strong>推理转移</strong>：关键 token 的提取方法（attention-based）可能不够鲁棒</p>
+
+<h2 id="7-与相关工作对比">7. 与相关工作对比</h2>
+
+<table class="paper-table">
+<thead><tr><th>方法</th><th>策略</th><th>适用场景</th><th>延迟优化</th></tr></thead>
+<tbody>
+<tr><td><strong>本文</strong></td><td><strong>大小模型协作</strong></td><td><strong>VLM</strong></td><td><strong>是</strong></td></tr>
+<tr><td>Speculative Decoding</td><td>小模型预测+大模型验证</td><td>LLM</td><td>是</td></tr>
+<tr><td>Token Pruning</td><td>减少输入 token</td><td>VLM</td><td>部分</td></tr>
+<tr><td>Model Distillation</td><td>知识蒸馏</td><td>通用</td><td>间接</td></tr>
+<tr><td>Early Exit</td><td>提前退出</td><td>通用</td><td>是</td></tr>
+</tbody></table>
+</div></details>
 
 <div class="paper-figure"><img src="https://arxiv.org/html/2604.04929v1/fig/fig/new_fig/qwen_latency_curve_single.png" alt="" loading="lazy"></div>
 
@@ -423,6 +3347,334 @@ details.paper-note .note-body h3 { font-size: 1em; }
 <li><strong>机构</strong>: USTC</li>
 <li><strong>链接</strong>: <a href="http://arxiv.org/abs/2604.04493v1" target="_blank">arXiv</a> | <a href="https://arxiv.org/pdf/2604.04493v1" target="_blank">PDF</a></li>
 <li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+<details class="paper-note"><summary>📒 精读笔记: SLaB</summary><div class="note-body"><h1 id="论文笔记slab-sparse-lowrank-binary-decomposition-for-efficient-large-language-models">论文笔记：SLaB: Sparse-Lowrank-Binary Decomposition for Efficient Large Language Models</h1>
+
+<h2 id="元信息">元信息</h2>
+
+<table class="paper-table">
+<thead><tr><th>项目</th><th>内容</th></tr></thead>
+<tbody>
+<tr><td>机构</td><td>未明确标注（submitted to IEEE）</td></tr>
+<tr><td>日期</td><td>April 2026</td></tr>
+<tr><td>项目主页</td><td>无</td></tr>
+<tr><td>对比基线</td><td><span class="wikilink">SparseGPT</span>, <span class="wikilink">Wanda</span></td></tr>
+<tr><td>链接</td><td><a href="https://arxiv.org/abs/2604.04493v1" target="_blank">arXiv</a></td></tr>
+</tbody></table>
+
+
+
+<h2 id="一句话总结">一句话总结</h2>
+
+<blockquote>
+<p>将 LLM 权重分解为稀疏+低秩+二值三部分，无需重训练即可在 50% 压缩率下大幅降低 perplexity。</p>
+</blockquote>
+
+
+<h2 id="核心贡献">核心贡献</h2>
+
+<p>1. <strong>三矩阵分解框架</strong>: 提出将线性层权重 $\mathbf{W}$ 分解为稀疏矩阵 $\mathbf{W}_\text{S}$、低秩矩阵 $\mathbf{W}_\text{L}$ 和二值矩阵 $\mathbf{W}_\text{B}$ 的新方法</p>
+<p>2. <strong>交替优化算法</strong>: 推导出三个分量各自的闭式或近似最优解，并通过交替迭代求解</p>
+<p>3. <strong>无需重训练</strong>: 在 Llama 系列模型上实现 SOTA 压缩性能，50% 压缩率下 perplexity 降低最高 36%</p>
+
+
+<h2 id="问题背景">问题背景</h2>
+
+<h3 id="要解决的问题">要解决的问题</h3>
+<p><span class="wikilink">LLM</span> 体积庞大、计算需求高，难以在资源受限设备上部署。<span class="wikilink">Network Pruning|网络剪枝</span> 等压缩方法在高压缩率下性能下降严重。</p>
+
+<h3 id="现有方法的局限">现有方法的局限</h3>
+<li><span class="wikilink">SparseGPT</span> 和 <span class="wikilink">Wanda</span> 等 <span class="wikilink">One-shot Pruning|一次性剪枝</span> 方法在高稀疏度下精度损失显著</li>
+<li>单纯的 <span class="wikilink">Low-rank Decomposition|低秩分解</span>（如 ASVD、SVD-LLM）在硬件友好性上有优势，但简单地将稀疏+低秩组合效果不好（如 Figure 1 所示）</li>
+<li>缺乏有效的方式在剪枝后补偿性能损失</li>
+
+<h3 id="本文的动机">本文的动机</h3>
+<p>通过引入 <span class="wikilink">Binary Matrix|二值矩阵</span> 来弥合稀疏+低秩组合的性能差距——二值矩阵可以显著降低所需的秩，同时硬件友好（$\{+1, -1\}$），并且可以被 Hadamard 乘积吸收到低秩矩阵中。</p>
+
+
+<h2 id="方法详解">方法详解</h2>
+
+<h3 id="模型架构">模型架构</h3>
+
+<p>SLaB 采用<strong>逐层交替优化</strong>架构，对 LLM 中每个线性层的权重矩阵进行分解：</p>
+<li><strong>输入</strong>: 权重矩阵 $\mathbf{W} \in \mathbb{R}^{D_\text{out} \times D_\text{in}}$ 和对应的激活矩阵 $\mathbf{X} \in \mathbb{R}^{(N \times L) \times D_\text{in}}$</li>
+<li><strong>核心分解</strong>: $\mathbf{W} = \mathbf{W}_\text{S} + \mathbf{W}_\text{L} \odot \mathbf{W}_\text{B}$</li>
+<li><strong>输出</strong>: 稀疏矩阵 $\mathbf{W}_\text{S}$、秩-1 矩阵 $\mathbf{U}\mathbf{V}^T$、二值矩阵 $\mathbf{W}_\text{B} \in \{+1, -1\}$</li>
+<li><strong>不需要重训练</strong></li>
+
+<h3 id="核心模块">核心模块</h3>
+
+<h4 id="模块-1-稀疏矩阵-mathbfw_texts-优化">模块 1: 稀疏矩阵 $\mathbf{W}_\text{S}$ 优化</h4>
+
+<p><strong>设计动机</strong>: 利用 <span class="wikilink">Wanda</span> 的 <span class="wikilink">Activation-aware Pruning|激活感知剪枝</span> 技术，结合输入特征范数进行重要性评估。</p>
+
+<p><strong>具体实现</strong>:</p>
+<li>固定 $\mathbf{W}_\text{L}$ 和 $\mathbf{W}_\text{B}$，计算残差 $\mathbf{Y}_\text{S} = \mathbf{W} - \mathbf{W}_\text{L} \odot \mathbf{W}_\text{B}$</li>
+<li>通过评分矩阵 $\mathbf{S}_{ij} = |\mathbf{Y}_{\text{S},ij}| \cdot \|\mathbf{X}_j\|_2$ 进行幅度剪枝</li>
+<li>使用 <span class="wikilink">Comparison Group|比较组</span>（大小 $(1, D_\text{in})$）进行逐行剪枝</li>
+
+<h4 id="模块-2-二值矩阵-mathbfw_textb-优化">模块 2: 二值矩阵 $\mathbf{W}_\text{B}$ 优化</h4>
+
+<p><strong>设计动机</strong>: 利用权重的零均值对称分布特性，证明 $\{+1, -1\}$ 是次优解。</p>
+
+<p><strong>具体实现</strong>:</p>
+<li>固定其他分量，计算 $\mathbf{Y}_\text{B} = (\mathbf{W} - \mathbf{W}_\text{S}) \oslash \mathbf{W}_\text{L}$</li>
+<li>优化目标为 $\arg\min_{\mathbf{W}_\text{B}} \|\mathbf{Y}_\text{B} - \mathbf{W}_\text{B}\|_2^2$</li>
+<li>通过 Lemma 1 和 Proposition 1 证明：对称分布下 $a + b = 0$ 是次优解</li>
+<li>因此 $\mathbf{W}_\text{B} = \text{sign}(\mathbf{W} - \mathbf{W}_\text{S})$</li>
+
+<h4 id="模块-3-低秩矩阵-mathbfw_textl-优化">模块 3: 低秩矩阵 $\mathbf{W}_\text{L}$ 优化</h4>
+
+<p><strong>设计动机</strong>: 利用 <span class="wikilink">Eckart-Young Theorem</span> 获得最优低秩近似。</p>
+
+<p><strong>具体实现</strong>:</p>
+<li>计算 $\mathbf{Y}_\text{L} = (\mathbf{W} - \mathbf{W}_\text{S}) \oslash \mathbf{W}_\text{B}$</li>
+<li>对 $|\mathbf{Y}_\text{BL}|$ 做 <span class="wikilink">Truncated SVD|截断 SVD</span>，取秩-1 近似</li>
+<li>初始化 $\mathbf{U} = \sqrt{\sigma_0}\mathbf{u}_0$, $\mathbf{V} = \sqrt{\sigma_0}\mathbf{v}_0$</li>
+<li>Proposition 2 证明 $\mathbf{W}_\text{L}$ 元素均非负，确保 $\mathbf{W}_\text{B} = \text{sign}(\mathbf{Y}_\text{BL})$ 始终最优</li>
+
+
+<h2 id="关键公式">关键公式</h2>
+
+<h3 id="公式-1-matrix-decomposition三矩阵分解">公式 1: <span class="wikilink">Matrix Decomposition|三矩阵分解</span></h3>
+
+<div class="math-block">$$
+\mathbf{W} = \mathbf{W}_\text{S} + \mathbf{W}_\text{L} \odot \mathbf{W}_\text{B}
+$$</div>
+
+<p><strong>含义</strong>: 将线性层权重分解为稀疏分量、低秩分量与二值分量的组合。</p>
+
+<p><strong>符号说明</strong>:</p>
+<li>$\mathbf{W}$: 原始权重矩阵 $\in \mathbb{R}^{D_\text{out} \times D_\text{in}}$</li>
+<li>$\mathbf{W}_\text{S}$: 稀疏矩阵（保留重要权重）</li>
+<li>$\mathbf{W}_\text{L}$: 低秩矩阵（秩-1，$\mathbf{U}\mathbf{V}^T$）</li>
+<li>$\mathbf{W}_\text{B} \in \{+1, -1\}$: 二值矩阵</li>
+<li>$\odot$: <span class="wikilink">Hadamard Product|Hadamard 乘积</span></li>
+
+<h3 id="公式-2-pruning-score激活感知剪枝评分">公式 2: <span class="wikilink">Pruning Score|激活感知剪枝评分</span></h3>
+
+<div class="math-block">$$
+\mathbf{S}_{ij} = |\mathbf{Y}_{\text{S},ij}| \cdot \|\mathbf{X}_j\|_2
+$$</div>
+
+<p><strong>含义</strong>: 结合残差幅度与激活特征范数来衡量权重的重要性。</p>
+
+<p><strong>符号说明</strong>:</p>
+<li>$\mathbf{Y}_{\text{S},ij}$: 残差矩阵第 $(i,j)$ 元素</li>
+<li>$\|\mathbf{X}_j\|_2$: 第 $j$ 个输入特征的 L2 范数</li>
+
+<h3 id="公式-3-compression-ratio压缩率-计算">公式 3: <span class="wikilink">Compression Ratio|压缩率</span> 计算</h3>
+
+<div class="math-block">$$
+\text{CR} = 1 - \frac{\overbrace{bk}^{\mathbf{W}_\text{S}} + \overbrace{D_\text{out} D_\text{in}}^{\mathbf{W}_\text{B}} + \overbrace{b(D_\text{out} + D_\text{in})}^{\mathbf{W}_\text{L}}}{b D_\text{out} D_\text{in}}
+$$</div>
+
+<p><strong>含义</strong>: 综合考虑三个分量的存储开销计算总体压缩率。</p>
+
+<p><strong>符号说明</strong>:</p>
+<li>$b$: 数据位宽（如 FP16 时 $b=16$）</li>
+<li>$k$: 稀疏矩阵中非零元素数</li>
+<li>$D_\text{out}, D_\text{in}$: 权重矩阵的输出/输入维度</li>
+
+<h3 id="公式-4-稀疏度推导">公式 4: 稀疏度推导</h3>
+
+<div class="math-block">$$
+\frac{k}{D_\text{out} D_\text{in}} = 1 - \text{CR} - \frac{1}{b} - \frac{1}{D_\text{out}} - \frac{1}{D_\text{in}}
+$$</div>
+
+<p><strong>含义</strong>: 根据目标压缩率和矩阵维度推导稀疏矩阵应保留的非零元素比例。</p>
+
+<h3 id="公式-5-lemma-1--binary-quantization二值量化最优分割">公式 5: Lemma 1 — <span class="wikilink">Binary Quantization|二值量化</span>最优分割</h3>
+
+<div class="math-block">$$
+w_t \leq \frac{\tilde{a}+\tilde{b}}{2} \leq w_{t+1}, \quad \tilde{a} = \frac{\sum_{k=0}^{t} w_k}{t+1}, \quad \tilde{b} = \frac{\sum_{k=t+1}^{n-1} w_k}{n-t-1}
+$$</div>
+
+<p><strong>含义</strong>: 排序后的权重值存在最优分割点 $t$，使得两组均值作为二值量化的代表值时误差最小。</p>
+
+<h3 id="公式-6-svdsvd-初始化">公式 6: <span class="wikilink">SVD|SVD 初始化</span></h3>
+
+<div class="math-block">$$
+\mathbf{W}_\text{B} = \text{sign}(\mathbf{Y}_\text{BL}), \quad \mathbf{W}_\text{L} = \mathbf{U}\mathbf{V}^T \quad \text{with} \quad |\mathbf{Y}_\text{BL}| = \sum_{k=0}^{\min\{D_\text{out}, D_\text{in}\}} \sigma_k \mathbf{u}_k \mathbf{v}_k^T
+$$</div>
+
+<p><strong>含义</strong>: 联合优化 $\mathbf{W}_\text{B}$ 和 $\mathbf{W}_\text{L}$ 的初始化策略，基于符号函数和截断 SVD。</p>
+
+
+<h2 id="关键图表">关键图表</h2>
+
+<h3 id="figure-1-稀疏低秩简单组合的失败">Figure 1: 稀疏+低秩简单组合的失败</h3>
+
+<div class="paper-figure"><img src="https://arxiv.org/html/2604.04493v1/x1.png" alt="Figure 1" loading="lazy"></div>
+
+<p><strong>说明</strong>: 在 Llama-2 7B 上以 50% 压缩率仅使用低秩+稀疏矩阵的 perplexity 对比。随着 rank 增加，简单组合方式无法有效降低 perplexity，说明需要引入二值矩阵。</p>
+
+<h3 id="figure-2-slab-框架总览">Figure 2: SLaB 框架总览</h3>
+
+<div class="paper-figure"><img src="https://arxiv.org/html/2604.04493v1/x2.png" alt="Figure 2" loading="lazy"></div>
+
+<p><strong>说明</strong>: SLaB 的整体流程。权重矩阵 $\mathbf{W}$ 被分解为稀疏矩阵 $\mathbf{W}_\text{S}$、低秩矩阵 $\mathbf{W}_\text{L}$（秩-1，$\mathbf{U}\mathbf{V}^T$）和二值矩阵 $\mathbf{W}_\text{B}$（$\{+1,-1\}$），通过交替优化迭代求解。</p>
+
+<h3 id="figure-3-rank-对压缩效果的影响">Figure 3: Rank 对压缩效果的影响</h3>
+
+<div class="paper-figure"><img src="https://arxiv.org/html/2604.04493v1/x3.png" alt="Figure 3" loading="lazy"></div>
+
+<p><strong>说明</strong>: Llama-2 7B 在 50% 压缩率下，rank 从 0（即 Wanda）增至 1 时 Frobenius 范数差显著下降，但继续增加 rank 收益递减。因此 SLaB 采用 rank-1 设定。</p>
+
+<h3 id="table-i-主实验结果">Table I: 主实验结果</h3>
+
+<table class="paper-table">
+<thead><tr><th>Method</th><th>Sparsity (CR)</th><th>Llama-3.2 1B ppl</th><th>Llama-3.2 1B acc</th><th>Llama-2 7B ppl</th><th>Llama-2 7B acc</th><th>Llama-3 8B ppl</th><th>Llama-3 8B acc</th></tr></thead>
+<tbody>
+<tr><td>Dense</td><td>0%</td><td>9.06</td><td>58.3</td><td>5.12</td><td>68.4</td><td>5.75</td><td>72.9</td></tr>
+<tr><td>SparseGPT</td><td>US (50%)</td><td>18.09</td><td>51.2</td><td>6.52</td><td>63.9</td><td>8.73</td><td>66.9</td></tr>
+<tr><td>Wanda</td><td>US (50%)</td><td>21.37</td><td>48.5</td><td>6.45</td><td>64.0</td><td>9.15</td><td>65.4</td></tr>
+<tr><td><strong>SLaB</strong></td><td><strong>US (50%)</strong></td><td><strong>11.57</strong></td><td><strong>55.8</strong></td><td><strong>5.49</strong></td><td><strong>66.2</strong></td><td><strong>6.67</strong></td><td><strong>70.7</strong></td></tr>
+<tr><td>SparseGPT</td><td>4:8 (50%)</td><td>21.64</td><td>48.0</td><td>7.94</td><td>61.6</td><td>11.33</td><td>61.3</td></tr>
+<tr><td>Wanda</td><td>4:8 (50%)</td><td>40.47</td><td>44.3</td><td>8.03</td><td>60.8</td><td>13.41</td><td>65.4</td></tr>
+<tr><td><strong>SLaB</strong></td><td><strong>4:8 (50%)</strong></td><td><strong>12.43</strong></td><td><strong>52.5</strong></td><td><strong>5.61</strong></td><td><strong>65.3</strong></td><td><strong>6.93</strong></td><td><strong>70.1</strong></td></tr>
+<tr><td>SparseGPT</td><td>2:4 (50%)</td><td>30.14</td><td>46.5</td><td>10.37</td><td>58.9</td><td>14.81</td><td>57.4</td></tr>
+<tr><td>Wanda</td><td>2:4 (50%)</td><td>79.06</td><td>41.3</td><td>11.40</td><td>55.6</td><td>22.52</td><td>52.2</td></tr>
+<tr><td><strong>SLaB</strong></td><td><strong>2:4 (50%)</strong></td><td><strong>14.02</strong></td><td><strong>52.5</strong></td><td><strong>5.77</strong></td><td><strong>65.3</strong></td><td><strong>7.32</strong></td><td><strong>70.1</strong></td></tr>
+<tr><td>SparseGPT</td><td>US (60%)</td><td>44.43</td><td>45.2</td><td>9.52</td><td>58.7</td><td>14.45</td><td>59.0</td></tr>
+<tr><td>Wanda</td><td>US (60%)</td><td>71.92</td><td>41.5</td><td>10.01</td><td>57.1</td><td>21.37</td><td>53.3</td></tr>
+<tr><td><strong>SLaB</strong></td><td><strong>US (60%)</strong></td><td><strong>14.73</strong></td><td><strong>51.7</strong></td><td><strong>5.85</strong></td><td><strong>65.0</strong></td><td><strong>7.54</strong></td><td><strong>69.2</strong></td></tr>
+<tr><td>SparseGPT</td><td>US (70%)</td><td>132.62</td><td>40.8</td><td>24.84</td><td>47.6</td><td>38.52</td><td>46.9</td></tr>
+<tr><td>Wanda</td><td>US (70%)</td><td>412.56</td><td>37.4</td><td>71.58</td><td>39.9</td><td>107.00</td><td>39.3</td></tr>
+<tr><td><strong>SLaB</strong></td><td><strong>US (70%)</strong></td><td><strong>26.06</strong></td><td><strong>46.6</strong></td><td><strong>6.88</strong></td><td><strong>62.2</strong></td><td><strong>10.35</strong></td><td><strong>64.3</strong></td></tr>
+<tr><td>SparseGPT</td><td>US (80%)</td><td>471.50</td><td>38.5</td><td>111.27</td><td>37.6</td><td>183.01</td><td>39.5</td></tr>
+<tr><td>Wanda</td><td>US (80%)</td><td>1.34e4</td><td>36.6</td><td>3.60e3</td><td>36.1</td><td>1.25e3</td><td>37.2</td></tr>
+<tr><td><strong>SLaB</strong></td><td><strong>US (80%)</strong></td><td><strong>113.77</strong></td><td><strong>41.5</strong></td><td><strong>13.63</strong></td><td><strong>53.4</strong></td><td><strong>27.02</strong></td><td><strong>49.3</strong></td></tr>
+</tbody></table>
+
+
+<p><strong>说明</strong>: SLaB 在所有压缩率和稀疏模式下均大幅超越 SparseGPT 和 Wanda。在 Llama-3.2 1B 50% US 下 perplexity 降低 36%（18.09 → 11.57 vs SparseGPT），高压缩率（70%-80%）下优势更加显著。</p>
+
+<h3 id="table-ii-超参数探索">Table II: 超参数探索</h3>
+
+<p><strong>比较组大小</strong> (Llama-2 7B, CR=50%):</p>
+
+<table class="paper-table">
+<thead><tr><th>Comparison Group</th><th>$(1, D_\text{in}/32)$</th><th>$(1, D_\text{in}/16)$</th><th>$(1, D_\text{in})$</th><th>$(16, D_\text{in})$</th><th>$(32, D_\text{in})$</th></tr></thead>
+<tbody>
+<tr><td>ppl</td><td>5.516</td><td>5.491</td><td>5.493</td><td>5.544</td><td>5.546</td></tr>
+<tr><td>acc (%)</td><td>65.6</td><td>65.8</td><td>66.2</td><td>65.9</td><td>66.2</td></tr>
+</tbody></table>
+
+
+<p><strong>迭代次数</strong>:</p>
+
+<table class="paper-table">
+<thead><tr><th>Iterations</th><th>1</th><th>10</th><th>20</th><th>30</th><th>40</th></tr></thead>
+<tbody>
+<tr><td>ppl</td><td>5.678</td><td>5.531</td><td>5.493</td><td>5.480</td><td>5.477</td></tr>
+</tbody></table>
+
+
+<p><strong>说明</strong>: 比较组大小对结果影响不大，$(1, D_\text{in})$ 是合理默认值。迭代 20 次后收益递减。</p>
+
+<h3 id="table-iii-消融实验">Table III: 消融实验</h3>
+
+<table class="paper-table">
+<thead><tr><th>配置</th><th>ARC-C</th><th>ARC-E</th><th>RTE</th><th>WinoGrande</th><th>Avg</th></tr></thead>
+<tbody>
+<tr><td>$\mathbf{W}_\text{S}$ only</td><td>32.0</td><td>58.2</td><td>53.1</td><td>62.0</td><td>49.8</td></tr>
+<tr><td>$\mathbf{W}_\text{S} + \mathbf{W}_\text{L}$ (r=16)</td><td>33.4</td><td>59.2</td><td>53.8</td><td>64.8</td><td>51.2</td></tr>
+<tr><td>$\mathbf{W}_\text{S} + \text{factor} \odot \mathbf{W}_\text{B}$</td><td>42.1</td><td>71.8</td><td>55.6</td><td>68.2</td><td>58.2</td></tr>
+<tr><td>$\mathbf{W}_\text{S} + \mathbf{W}_\text{L} \odot \mathbf{W}_\text{B}$ (Full)</td><td><strong>43.2</strong></td><td><strong>71.3</strong></td><td><strong>57.0</strong></td><td><strong>68.6</strong></td><td><strong>58.9</strong></td></tr>
+</tbody></table>
+
+
+<p><strong>关键发现</strong>: 二值矩阵 $\mathbf{W}_\text{B}$ 的贡献远大于单纯的低秩补偿（+8.4% vs +1.4%）。完整的三矩阵组合在所有任务上取得最佳表现。</p>
+
+
+<h2 id="实验">实验</h2>
+
+<h3 id="数据集">数据集</h3>
+
+<table class="paper-table">
+<thead><tr><th>数据集</th><th>规模</th><th>特点</th><th>用途</th></tr></thead>
+<tbody>
+<tr><td><span class="wikilink">C4</span></td><td>128 序列 × 2048 长度</td><td>大规模英文 Web 语料</td><td>校准数据</td></tr>
+<tr><td><span class="wikilink">WikiText-2</span></td><td>标准测试集</td><td>维基百科文本</td><td>Perplexity 评估</td></tr>
+<tr><td><span class="wikilink">LM-Eval-Harness</span></td><td>7 个任务</td><td>ARC-C/E, BoolQ, HellaSwag, PIQA, RTE, WinoGrande</td><td>Zero-shot 评估</td></tr>
+</tbody></table>
+
+
+<h3 id="实现细节">实现细节</h3>
+
+<li><strong>模型</strong>: Llama-2 7B, Llama-3 8B, Llama-3.2 1B</li>
+<li><strong>框架</strong>: PyTorch + HuggingFace Transformers</li>
+<li><strong>剪枝范围</strong>: 所有线性层（不含 Embedding 和分类头）</li>
+<li><strong>迭代次数</strong>: $s = 20$</li>
+<li><strong>比较组大小</strong>: $(1, D_\text{in})$</li>
+<li><strong>压缩率</strong>: 50%, 60%, 70%, 80%</li>
+<li><strong>稀疏模式</strong>: 非结构化 (US)、半结构化 (2:4, 4:8)</li>
+
+<h3 id="可视化结果">可视化结果</h3>
+
+<p>Figure 3 展示了 rank 选择的关键洞察：rank-1 已能获得大部分收益（Frobenius 范数差骤降），更高 rank 带来的边际收益很小。这使得 SLaB 在保持极低额外存储的同时获得显著的性能补偿。</p>
+
+
+<h2 id="批判性思考">批判性思考</h2>
+
+<h3 id="优点">优点</h3>
+<p>1. 理论基础扎实：Lemma 1 和 Proposition 1/2 为二值矩阵的设计提供了严格的数学证明</p>
+<p>2. 实现简洁高效：rank-1 设定使额外存储开销极小（仅两个向量 + 1-bit 矩阵）</p>
+<p>3. 压缩率提升巨大：尤其在高压缩率（70%-80%）下优势非常显著，填补了现有方法的性能断崖</p>
+
+<h3 id="局限性">局限性</h3>
+<p>1. 仅在 Llama 系列模型上验证，缺乏对其他架构（如 Mistral、Qwen）的实验</p>
+<p>2. 未报告推理加速和实际内存节省数据——二值矩阵和稀疏矩阵需要专门的 kernel 支持才能实现硬件加速</p>
+<p>3. 缺乏与量化方法（如 GPTQ、AWQ）的对比和组合实验</p>
+
+<h3 id="潜在改进方向">潜在改进方向</h3>
+<p>1. 探索 rank > 1 的设定在更大模型上的效果</p>
+<p>2. 开发针对 $\mathbf{W}_\text{S} + \mathbf{W}_\text{L} \odot \mathbf{W}_\text{B}$ 结构的专用 CUDA kernel 以实现实际推理加速</p>
+<p>3. 与 <span class="wikilink">Quantization|量化</span> 技术结合，进一步压缩 $\mathbf{W}_\text{S}$ 和 $\mathbf{W}_\text{L}$</p>
+
+<h3 id="可复现性评估">可复现性评估</h3>
+<li>[ ] 代码开源（论文未提及）</li>
+<li>[ ] 预训练模型（未提供）</li>
+<li>[x] 训练细节完整（算法伪代码、超参数完整）</li>
+<li>[x] 数据集可获取（C4、WikiText-2 均公开）</li>
+
+
+<h2 id="关联笔记">关联笔记</h2>
+
+<h3 id="基于">基于</h3>
+<li><span class="wikilink">SparseGPT</span>: 一次性剪枝方法，SLaB 的主要对比基线</li>
+<li><span class="wikilink">Wanda</span>: 激活感知剪枝，SLaB 的评分机制基于此</li>
+<li><span class="wikilink">ASVD</span>: 低秩分解方法</li>
+<li><span class="wikilink">SVD-LLM</span>: 基于 SVD 的 LLM 压缩</li>
+
+<h3 id="对比">对比</h3>
+<li><span class="wikilink">SparseGPT</span>: 同为 one-shot 剪枝，SLaB 在所有设定下显著超越</li>
+<li><span class="wikilink">Wanda</span>: SLaB 的稀疏部分沿用 Wanda 的评分方式，但增加了低秩+二值补偿</li>
+
+<h3 id="方法相关">方法相关</h3>
+<li><span class="wikilink">Hadamard Product</span>: 二值矩阵与低秩矩阵的组合方式</li>
+<li><span class="wikilink">Truncated SVD</span>: 低秩矩阵优化的核心工具</li>
+<li><span class="wikilink">Eckart-Young Theorem</span>: 证明截断 SVD 为最优低秩近似的理论基础</li>
+<li><span class="wikilink">Binary Matrix</span>: 硬件友好的 $\{+1, -1\}$ 矩阵</li>
+
+<h3 id="硬件数据相关">硬件/数据相关</h3>
+<li><span class="wikilink">WikiText-2</span>: 语言建模评估基准</li>
+<li><span class="wikilink">C4</span>: 校准数据来源</li>
+<li><span class="wikilink">LM-Eval-Harness</span>: Zero-shot 评估框架</li>
+
+
+<h2 id="速查卡片">速查卡片</h2>
+
+<blockquote>
+<p>[!summary] SLaB: Sparse-Lowrank-Binary Decomposition</p>
+<p>- <strong>核心</strong>: 将 LLM 权重分解为稀疏+低秩+二值三部分，交替优化求解</p>
+<p>- <strong>方法</strong>: $\mathbf{W} = \mathbf{W}_\text{S} + \mathbf{W}_\text{L} \odot \mathbf{W}_\text{B}$，rank-1 + 激活感知剪枝</p>
+<p>- <strong>结果</strong>: 50% 压缩率下 perplexity 降 36%，acc 提升 8.98%（vs 最优基线）</p>
+<p>- <strong>代码</strong>: 未公开</p>
+</blockquote>
+
+
+<p><em>笔记创建时间: 2026-04-05</em></p></div></details>
 
 <div class="paper-figure"><img src="https://arxiv.org/html/2604.04493v1/x1.png" alt="" loading="lazy"></div>
 
@@ -434,6 +3686,136 @@ details.paper-note .note-body h3 { font-size: 1em; }
 <li><strong>机构</strong>: Korea University, Virginia Tech, University of Houston</li>
 <li><strong>链接</strong>: <a href="http://arxiv.org/abs/2604.04527v1" target="_blank">arXiv</a> | <a href="https://arxiv.org/pdf/2604.04527v1" target="_blank">PDF</a></li>
 <li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+<details class="paper-note"><summary>📒 精读笔记: ENCRUST</summary><div class="note-body"><h1 id="encrust-agentic-c-to-rust-translation">ENCRUST: Agentic C-to-Rust Translation</h1>
+
+<blockquote>
+<p><strong>一句话总结</strong>：两阶段 C-to-Rust 翻译框架——Phase 1 通过 ABI-preserving wrapper 逐函数封装替换，Phase 2 用 LLM agent 处理全局 unsafe 构造，实现安全的项目级 C 到 Rust 迁移。</p>
+</blockquote>
+
+<h2 id="1-研究动机与问题定义">1. 研究动机与问题定义</h2>
+
+<h3 id="核心挑战">核心挑战</h3>
+<p>将 C 代码迁移到 <span class="wikilink">Rust</span> 是提升内存安全的重要手段，但面临两大挑战：</p>
+<p>1. <strong>验证范围</strong>（Verification scope）：如何保证翻译后的代码行为等价？</p>
+<p>2. <strong>转换范围</strong>（Transformation scope）：如何处理项目级的跨文件依赖？</p>
+
+<h3 id="现有方法的不足">现有方法的不足</h3>
+<li><strong>规则翻译器</strong>（如 C2Rust）：生成大量 unsafe 代码，本质上是语法转换</li>
+<li><strong>LLM 函数级翻译</strong>：无法处理跨函数/跨文件的全局状态</li>
+<li><strong>项目级翻译</strong>：缺乏增量验证机制，翻译失败会波及全项目</li>
+
+<h2 id="2-方法详解">2. 方法详解</h2>
+
+<h3 id="21-phase-1-encapsulated-substitution封装替换">2.1 Phase 1: Encapsulated Substitution（封装替换）</h3>
+
+<p>核心思想：<strong>逐函数翻译，ABI 兼容封装，失败自动回滚</strong>。</p>
+
+<h4 id="预处理">预处理</h4>
+<p>1. <strong>分解</strong>（Decomposition）：将项目拆分为独立翻译单元</p>
+<p>2. <strong>翻译排序</strong>（Translation ordering）：按依赖关系确定翻译顺序，叶函数优先</p>
+<p>3. <strong>C-to-Rust 源映射</strong>：建立 C 函数到 Rust 函数的对应关系</p>
+
+<h4 id="abi-wrapper-机制">ABI Wrapper 机制</h4>
+
+<p>对每个翻译的函数 $f_C$，生成 ABI 兼容的 Rust wrapper $f_R$：</p>
+
+<div class="math-block">$$f_R: \text{C-ABI-types} \to \text{C-ABI-types}$$</div>
+
+<p>保证 $f_R$ 可以直接替换 $f_C$ 而不影响其他代码：</p>
+
+<div class="math-block">$$\forall x \in \text{Domain}(f_C): f_R(x) \equiv f_C(x)$$</div>
+
+<h4 id="自动回滚">自动回滚</h4>
+<p>如果翻译后的函数未通过测试：</p>
+
+<div class="math-block">$$\text{if } \neg \text{TestPass}(f_R) \Rightarrow \text{revert}(f_R \to f_C)$$</div>
+
+<h3 id="22-phase-2-agentic-refinement智能体精炼">2.2 Phase 2: Agentic Refinement（智能体精炼）</h3>
+
+<p>Phase 1 完成后，代码中仍存在 unsafe 构造。Phase 2 使用 LLM agent 处理：</p>
+
+<p><strong>全局 unsafe 构造类型</strong>：</p>
+<li><code>static mut</code> 全局可变状态</li>
+<li>跨编译单元的类型不匹配</li>
+<li>raw pointer 操作</li>
+<li><code>extern "C"</code> 接口</li>
+
+<p>Agent 工作流：</p>
+<p>1. <strong>检测</strong>：扫描所有 unsafe 块和 unsafe 函数</p>
+<p>2. <strong>分类</strong>：根据 unsafe 原因分类处理策略</p>
+<p>3. <strong>重构</strong>：LLM 生成安全替代方案</p>
+<p>4. <strong>验证</strong>：编译 + 测试 + 行为等价性检查</p>
+
+<h3 id="23-形式化安全保证">2.3 形式化安全保证</h3>
+
+<p>Phase 1 的增量正确性：</p>
+
+<div class="math-block">$$\text{Correct}(P_n) = \text{Correct}(P_0) \wedge \bigwedge_{i=1}^{n} \text{TestPass}(f_{R_i})$$</div>
+
+<p>其中 $P_0$ 为原始 C 项目，$P_n$ 为翻译 $n$ 个函数后的混合项目。</p>
+
+<h2 id="3-实验结果">3. 实验结果</h2>
+
+<h3 id="31-评估基准">3.1 评估基准</h3>
+
+<table class="paper-table">
+<thead><tr><th>项目</th><th>类型</th><th>函数数</th><th>Phase 1 成功率</th></tr></thead>
+<tbody>
+<tr><td>GNU coreutils (7个)</td><td>系统工具</td><td>~500</td><td>高</td></tr>
+<tr><td>Laertes 库 (8个)</td><td>C 库</td><td>~300</td><td>高</td></tr>
+</tbody></table>
+
+
+<h3 id="32-与现有方法对比">3.2 与现有方法对比</h3>
+
+<table class="paper-table">
+<thead><tr><th>方法</th><th>翻译粒度</th><th>unsafe 处理</th><th>回滚支持</th><th>项目级</th></tr></thead>
+<tbody>
+<tr><td><strong>ENCRUST</strong></td><td><strong>函数级→全局</strong></td><td><strong>两阶段</strong></td><td><strong>是</strong></td><td><strong>是</strong></td></tr>
+<tr><td>C2Rust</td><td>语法级</td><td>无（全 unsafe）</td><td>否</td><td>是</td></tr>
+<tr><td>LLM 单函数</td><td>函数级</td><td>部分</td><td>否</td><td>否</td></tr>
+<tr><td>Flourine</td><td>函数级</td><td>有限</td><td>否</td><td>部分</td></tr>
+</tbody></table>
+
+
+<h2 id="4-架构图">4. 架构图</h2>
+
+<div class="paper-figure"><img src="https://arxiv.org/html/2604.04527v1/x1.png" alt="ENCRUST 两阶段架构" loading="lazy"></div>
+
+<h2 id="5-核心概念">5. 核心概念</h2>
+
+<li><span class="wikilink">Rust</span>：内存安全的系统编程语言</li>
+<li><span class="wikilink">ABI</span>：Application Binary Interface</li>
+<li><span class="wikilink">Unsafe Rust</span>：绕过 Rust 借用检查的代码块</li>
+<li><span class="wikilink">LLM Agent</span>：基于 LLM 的自主代理</li>
+<li><span class="wikilink">C2Rust</span>：规则化 C-to-Rust 翻译器</li>
+<li><span class="wikilink">Memory Safety</span>：内存安全保证</li>
+
+<h2 id="6-优缺点分析">6. 优缺点分析</h2>
+
+<h3 id="优点">优点</h3>
+<p>1. <strong>解耦设计</strong>：分离 "边界适配" 和 "函数逻辑"，降低复杂度</p>
+<p>2. <strong>ABI wrapper + 自动回滚</strong>：保证翻译过程不破坏现有代码</p>
+<p>3. <strong>增量翻译</strong>：可以逐步迁移，不需要一次性翻译整个项目</p>
+<p>4. <strong>实际项目验证</strong>：在 GNU coreutils 等真实项目上测试</p>
+
+<h3 id="缺点">缺点</h3>
+<p>1. <strong>unsafe 消除率</strong>：没有公布具体数字，只说 "substantial reduction"</p>
+<p>2. <strong>LLM 依赖</strong>：Phase 2 的质量强依赖 LLM 能力</p>
+<p>3. <strong>测试覆盖率</strong>：回滚机制依赖测试质量，测试不充分则可能漏掉等价性问题</p>
+<p>4. <strong>性能开销</strong>：ABI wrapper 可能引入额外的函数调用开销</p>
+
+<h2 id="7-与相关工作对比">7. 与相关工作对比</h2>
+
+<table class="paper-table">
+<thead><tr><th>维度</th><th>ENCRUST</th><th>C2Rust</th><th>Laertes</th><th>CRustS</th></tr></thead>
+<tbody>
+<tr><td>自动化程度</td><td>高（LLM agent）</td><td>高（规则）</td><td>中</td><td>中</td></tr>
+<tr><td>输出质量</td><td>惯用 Rust</td><td>C-like Rust</td><td>中</td><td>中</td></tr>
+<tr><td>unsafe 处理</td><td>两阶段精炼</td><td>不处理</td><td>后处理</td><td>部分</td></tr>
+<tr><td>可靠性</td><td>高（回滚）</td><td>高</td><td>中</td><td>中</td></tr>
+</tbody></table>
+</div></details>
 
 <div class="paper-figure"><img src="https://arxiv.org/html/2604.04527v1/x1.png" alt="" loading="lazy"></div>
 
