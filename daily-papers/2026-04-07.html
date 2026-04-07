@@ -190,7 +190,7 @@ details.paper-note .note-body h3 { font-size: 1em; }
 
 </head>
 <body>
-<nav class="nav"><a href="index.html">🏠 首页</a><a href="2026-04-03.html">← 前一天</a></nav>
+<nav class="nav"><a href="index.html">🏠 首页</a><a href="2026-04-06.html">← 前一天</a></nav>
 <div class="detail-page"><h1 id="-今日锐评">🔪 今日锐评</h1>
 
 <p>Agent 周一：今天的候选池简直是 "Agentic" 关键词的狂欢——30 篇论文里至少 20 篇标题带 agent。但大部分是把 LLM 往某个垂直领域一插就发论文的套路。真正有干货的不多，Meta 的 SandMLE 是今天唯一让我眼前一亮的——终于有人认真解决 MLE agent 训练太贵这个痛点了。MCP 安全方向的 ShieldNet 也值得关注，毕竟工具链投毒是真实威胁。</p>
@@ -607,139 +607,332 @@ $$</div>
 <li><strong>作者</strong>: Dalugoda, Asiri</li>
 <li><strong>链接</strong>: <a href="https://arxiv.org/abs/2604.04522" target="_blank">arXiv</a> | <a href="https://arxiv.org/pdf/2604.04522" target="_blank">PDF</a></li>
 <li><strong>来源</strong>: 📰 HF Daily，⬆️ 1</li>
-<details class="paper-note"><summary>📒 精读笔记: HDP</summary><div class="note-body"><h1 id="hdp-a-lightweight-cryptographic-protocol-for-human-delegation-provenance-in-agentic-ai-systems">HDP: A Lightweight Cryptographic Protocol for Human Delegation Provenance in Agentic AI Systems</h1>
+<details class="paper-note"><summary>📒 精读笔记: HDP</summary><div class="note-body"><h1 id="论文笔记hdp-a-lightweight-cryptographic-protocol-for-human-delegation-provenance-in-agentic-ai-systems">论文笔记：HDP: A Lightweight Cryptographic Protocol for Human Delegation Provenance in Agentic AI Systems</h1>
+
+<h2 id="元信息">元信息</h2>
+
+<table class="paper-table">
+<thead><tr><th>项目</th><th>内容</th></tr></thead>
+<tbody>
+<tr><td>机构</td><td>Helixar Limited, Auckland, New Zealand</td></tr>
+<tr><td>日期</td><td>March 2026</td></tr>
+<tr><td>项目主页</td><td><a href="https://helixar.ai/labs/hdp" target="_blank">helixar.ai/labs/hdp</a></td></tr>
+<tr><td>IETF I-D</td><td>draft-helixar-hdp-agentic-delegation-00</td></tr>
+<tr><td>链接</td><td><a href="https://arxiv.org/abs/2604.04522" target="_blank">arXiv</a> / <a href="https://www.npmjs.com/package/@helixar_ai/hdp" target="_blank">SDK (@helixar_ai/hdp)</a></td></tr>
+</tbody></table>
+
+
+
+<h2 id="一句话总结">一句话总结</h2>
 
 <blockquote>
-<p><strong>一句话总结</strong>：用轻量级密码学协议为 agentic AI 系统的多级委托链建立授权溯源，验证终端动作是否由人类真正授权、经过什么委托路径、在什么权限范围内。</p>
+<p>提出 HDP 协议，用轻量级 <span class="wikilink">Ed25519</span> 签名的 JSON token 将人类授权事件密码学绑定到 agentic AI 多级委托链，实现完全离线可验证的授权溯源。</p>
 </blockquote>
 
-<h2 id="1-研究动机与问题定义">1. 研究动机与问题定义</h2>
 
-<h3 id="核心问题">核心问题</h3>
-<p>随着 <span class="wikilink">MCP</span> 和 <span class="wikilink">A2A</span> 协议推动 agent 间的互操作，一个关键安全问题浮现：<strong>在多级 agent 委托链中，如何验证最终执行的动作确实是人类授权的？</strong></p>
+<h2 id="核心贡献">核心贡献</h2>
 
-<h3 id="威胁模型">威胁模型</h3>
-<li><strong>伪造授权</strong>：恶意 agent 伪造人类授权执行未授权操作</li>
-<li><strong>链篡改</strong>：中间 agent 修改委托链中的权限范围</li>
-<li><strong>重放攻击</strong>：重用过期的授权令牌</li>
-<li><strong>权限提升</strong>：子 agent 越权执行超出委托范围的操作</li>
+<p>1. <strong>人类委托溯源协议 (HDP)</strong>: 定义了一种 JSON token 结构，将人类授权事件（principal + scope）与 append-only 的 agent 委托链密码学绑定</p>
+<p>2. <strong>完全离线验证</strong>: 仅需 issuer 的 <span class="wikilink">Ed25519</span> 公钥（32 bytes）和 session_id 即可完成 7 步验证，无需网络调用或第三方信任锚</p>
+<p>3. <strong>系统性对比分析</strong>: 将 HDP 置于 <span class="wikilink">OAuth 2.0</span> Token Exchange (RFC 8693)、<span class="wikilink">JWT</span> (RFC 7519)、<span class="wikilink">UCAN</span>、<span class="wikilink">Intent Provenance Protocol|IPP</span> 的现有委托协议图谱中，明确各自设计取舍</p>
 
-<h2 id="2-方法详解">2. 方法详解</h2>
 
-<h3 id="21-委托令牌结构">2.1 委托令牌结构</h3>
+<h2 id="问题背景">问题背景</h2>
 
-<p>HDP 的核心是<strong>委托令牌</strong>（Delegation Token），包含：</p>
+<h3 id="要解决的问题">要解决的问题</h3>
 
-<div class="math-block">$$\text{Token} = \langle \text{issuer}, \text{delegate}, \text{scope}, \text{ttl}, \text{nonce}, \sigma \rangle$$</div>
+<p><span class="wikilink">Agentic AI</span> 系统中，人类指令经过 orchestrator → sub-agents → tool-execution agents 的多级委托链后，终端动作与原始人类授权之间的关联完全断裂。没有标准机制让下游 agent 验证其收到的指令确实来自人类授权、授权范围是什么、经过了怎样的委托路径。</p>
 
-<p>其中 $\sigma$ 为数字签名：</p>
+<h3 id="现有方法的局限">现有方法的局限</h3>
 
-<div class="math-block">$$\sigma = \text{Sign}(sk_{\text{issuer}}, H(\text{issuer} \| \text{delegate} \| \text{scope} \| \text{ttl} \| \text{nonce}))$$</div>
+<li><strong><span class="wikilink">OAuth 2.0</span> Token Exchange (RFC 8693)</strong>: 点对点交换，每次产生新 token，无法在单一 artifact 中保留完整委托历史；需要在线授权服务器；无人类授权绑定和 scope provenance</li>
+<li><strong><span class="wikilink">JWT</span> (RFC 7519)</strong>: 通用签名声明格式，无 append-only 多方签名的委托链；使用 base64url 编码的 header.payload 而非 canonical JSON</li>
+<li><strong><span class="wikilink">UCAN</span></strong>: 能力授权系统，编码可执行权能，依赖 <span class="wikilink">DID</span> 基础设施，复杂度高于纯溯源需求</li>
+<li><strong><span class="wikilink">Intent Provenance Protocol|IPP</span></strong>: 最接近 HDP，同样使用 Ed25519 + append-only chain，但需要中心化撤销注册表、genesis seal 绑定第三方 URL、强制 W3C DID</li>
 
-<p>$H$ 为密码学哈希函数，$sk_{\text{issuer}}$ 为签发者私钥。</p>
+<h3 id="本文的动机">本文的动机</h3>
 
-<h3 id="22-委托链构建">2.2 委托链构建</h3>
+<p>现有协议均为 human-to-system 交互设计，无法满足 agentic pipeline 的三个结构性需求：<strong>多跳 (multi-hop)</strong>、<strong>仅追加 (append-only)</strong>、<strong>人类溯源 (human-provenance)</strong>。HDP 以最小化基础设施依赖为设计目标，填补这一空白。</p>
 
-<p>多级委托形成链式结构：</p>
 
-<div class="math-block">$$\text{Chain} = [\text{Token}_0, \text{Token}_1, \ldots, \text{Token}_n]$$</div>
+<h2 id="方法详解">方法详解</h2>
 
-<p>每级满足：</p>
-<li>$\text{Token}_i.\text{delegate} = \text{Token}_{i+1}.\text{issuer}$</li>
-<li>$\text{Token}_{i+1}.\text{scope} \subseteq \text{Token}_i.\text{scope}$（权限只缩不扩）</li>
+<h3 id="设计原则">设计原则</h3>
 
-<h3 id="23-验证流水线">2.3 验证流水线</h3>
+<p>HDP 按五个有序原则设计：</p>
 
-<p>验证一条委托链的算法：</p>
+<p>1. <strong>离线可验证性 (Offline Verifiability)</strong>: 验证仅需公钥 + session_id，无网络调用</p>
+<p>2. <strong>自主权 (Self-Sovereignty)</strong>: 任何组织无需注册即可签发和验证 token</p>
+<p>3. <strong>防篡改证据 (Tamper Evidence)</strong>: 任何字段的修改都可被验证管线检测</p>
+<p>4. <strong>最小足迹 (Minimal Footprint)</strong>: 仅需 <span class="wikilink">Ed25519</span> + JSON 支持即可实现</p>
+<p>5. <strong>隐私设计 (Privacy by Design)</strong>: principal 身份字段与审计字段结构分离</p>
 
-<div class="math-block">$$\text{Verify}(\text{Chain}) = \bigwedge_{i=0}^{n} \left[ \text{VerifySig}(\text{Token}_i) \wedge \text{CheckScope}(\text{Token}_i) \wedge \text{CheckTTL}(\text{Token}_i) \right]$$</div>
+<h3 id="token-结构">Token 结构</h3>
 
-<p>时间复杂度 $O(n)$，其中 $n$ 为链长度。</p>
+<p>HDP token 是包含六个顶层字段的 JSON 对象：</p>
 
-<h3 id="24-权限范围表达">2.4 权限范围表达</h3>
+<li><strong><code>hdp</code></strong>: 协议版本字符串（当前 <code>"0.1"</code>）</li>
+<li><strong><code>header</code></strong>: 生命周期与会话绑定（token_id, issued_at, expires_at, session_id, version, parent_token_id）</li>
+<li><strong><code>principal</code></strong>: 授权人类身份（id, id_type, display_name, poh_credential）</li>
+<li><strong><code>scope</code></strong>: 授权范围（intent, authorized_tools, data_classification, network_egress, persistence, max_hops）</li>
+<li><strong><code>chain</code></strong>: append-only 委托链数组，每个 hop 记录 agent 的委托动作</li>
+<li><strong><code>signature</code></strong>: 根签名（kid, alg, value），使用 <span class="wikilink">Ed25519</span> 签名</li>
 
-<p>权限使用集合表示：</p>
+<h3 id="figure-1-hdp-token-top-level-structure">Figure 1: HDP Token Top-Level Structure</h3>
 
-<div class="math-block">$$\text{scope} = \{(\text{resource}, \text{action}, \text{constraints})\}$$</div>
+<pre><code>
+{
+  &quot;hdp&quot; : &quot;0.1&quot;,
+  &quot;header&quot; : { token_id, issued_at, expires_at, session_id, version },
+  &quot;principal&quot; : { id, id_type, display_name, poh_credential },
+  &quot;scope&quot; : { intent, authorized_tools, data_classification,
+    network_egress, persistence, max_hops },
+  &quot;chain&quot; : [ hop_1, hop_2, ... hop_n ],
+  &quot;signature&quot; : { kid, alg, value }
+}
+</code></pre>
 
-<p>子集关系验证：</p>
+<p><strong>说明</strong>: HDP token 的顶层 JSON 结构。header 携带会话绑定信息，principal 标识授权人类，scope 记录授权范围，chain 以 append-only 方式记录每一跳的委托，signature 是覆盖全部内容的 <span class="wikilink">Ed25519</span> 根签名。</p>
 
-<div class="math-block">$$\text{scope}_{\text{child}} \subseteq \text{scope}_{\text{parent}} \iff \forall s \in \text{scope}_{\text{child}}, \exists p \in \text{scope}_{\text{parent}}: s \preceq p$$</div>
+<h3 id="密码学构造">密码学构造</h3>
 
-<h3 id="25-重新授权机制">2.5 重新授权机制</h3>
+<h4 id="根签名-root-signature">根签名 (Root Signature)</h4>
 
-<p>当令牌即将过期时：</p>
+<p>Token 创建时对 header、principal、scope 和空 chain 计算根签名：</p>
 
-<div class="math-block">$$\text{ttl}_{\text{new}} = \min(\text{ttl}_{\text{requested}}, \text{ttl}_{\text{parent}} - t_{\text{elapsed}})$$</div>
+<p>1. 构造未签名 token 对象</p>
+<p>2. 按 <span class="wikilink">RFC 8785</span> (JSON Canonicalization Scheme) 序列化为 canonical JSON</p>
+<p>3. 对 canonical bytes 计算 <span class="wikilink">Ed25519</span> 签名</p>
+<p>4. Base64url 编码后填入 <code>signature.value</code></p>
 
-<h3 id="26-传输安全">2.6 传输安全</h3>
+<h4 id="跳签名-hop-signature">跳签名 (Hop Signature)</h4>
 
-<p>所有令牌通过 TLS 传输。nonce 防止重放：</p>
+<p>每个 hop 携带 <code>hop_signature</code>，将新 hop 绑定到完整的累积委托历史和根签名。</p>
 
-<div class="math-block">$$\text{NonceDB} = \text{NonceDB} \cup \{\text{nonce}\}, \quad \text{reject if } \text{nonce} \in \text{NonceDB}$$</div>
 
-<h2 id="3-安全分析">3. 安全分析</h2>
+<h2 id="关键公式">关键公式</h2>
+
+<h3 id="公式-1-ed25519根签名计算">公式 1: <span class="wikilink">Ed25519|根签名计算</span></h3>
+
+<div class="math-block">$$
+\sigma_{\text{root}} = \text{Ed25519-Sign}\bigl(sk,\; \text{JCS}\bigl(\{hdp, header, principal, scope, chain{=}[\,]\}\bigr)\bigr)
+$$</div>
+
+<p><strong>含义</strong>: 根签名覆盖 token 的所有核心字段（header、principal、scope）和空 chain，使用 issuer 的私钥 $sk$ 签名。<span class="wikilink">RFC 8785|JCS</span> 确保序列化的确定性。</p>
+
+<p><strong>符号说明</strong>:</p>
+<li>$\sigma_{\text{root}}$: 根签名值</li>
+<li>$sk$: issuer 的 <span class="wikilink">Ed25519</span> 私钥</li>
+<li>$\text{JCS}(\cdot)$: <span class="wikilink">RFC 8785</span> JSON Canonicalization Scheme，确保确定性序列化</li>
+
+<h3 id="公式-2-digital-signature跳签名载荷构造">公式 2: <span class="wikilink">Digital Signature|跳签名载荷构造</span></h3>
+
+<div class="math-block">$$
+P_n = [\sigma_{\text{root}},\; h_1^{\text{signed}},\; \ldots,\; h_{n-1}^{\text{signed}},\; h_n^{\text{unsigned}}]
+$$</div>
+
+<p><strong>含义</strong>: 第 $n$ 跳的签名载荷是一个 JSON 数组，包含根签名值、所有已签名的前序 hop（含其 hop_signature）、以及当前新 hop（不含 hop_signature）。这一非对称结构确保每个 hop 签名覆盖所有先前 hop 及根签名。</p>
+
+<p><strong>符号说明</strong>:</p>
+<li>$P_n$: 第 $n$ 跳的签名载荷</li>
+<li>$h_i^{\text{signed}}$: 第 $i$ 跳（含 hop_signature 字段）</li>
+<li>$h_n^{\text{unsigned}}$: 当前新 hop（不含 hop_signature）</li>
+
+<h3 id="公式-3-ed25519跳签名计算">公式 3: <span class="wikilink">Ed25519|跳签名计算</span></h3>
+
+<div class="math-block">$$
+\sigma_{\text{hop},n} = \text{Ed25519-Sign}\bigl(sk,\; \text{JCS}(P_n)\bigr)
+$$</div>
+
+<p><strong>含义</strong>: 对构造的载荷 $P_n$ 做 JCS 序列化后使用 issuer 私钥签名。由于 $P_n$ 包含 $\sigma_{\text{root}}$ 和所有先前 hop 签名，任何历史篡改都会导致当前及后续所有 hop 的签名验证失败。</p>
+
+<p><strong>符号说明</strong>:</p>
+<li>$\sigma_{\text{hop},n}$: 第 $n$ 跳的签名值</li>
+<li>$P_n$: 签名载荷（见公式 2）</li>
+
+<h3 id="公式-4-token验证验证管线">公式 4: <span class="wikilink">Token验证|验证管线</span></h3>
+
+<div class="math-block">$$
+V(T) = \bigwedge_{i=1}^{7} v_i(T) = v_{\text{ver}} \wedge v_{\text{exp}} \wedge v_{\text{root}} \wedge v_{\text{seq}} \wedge v_{\text{hop}} \wedge v_{\text{max}} \wedge v_{\text{sess}}
+$$</div>
+
+<p><strong>含义</strong>: 验证管线由 7 个有序步骤组成，任一步骤失败即立即拒绝 token。</p>
+
+<p><strong>符号说明</strong>:</p>
+<li>$v_{\text{ver}}$: 版本检查（hdp 字段）</li>
+<li>$v_{\text{exp}}$: 过期检查（expires_at vs 当前时间）</li>
+<li>$v_{\text{root}}$: 根签名验证（使用 issuer 公钥）</li>
+<li>$v_{\text{seq}}$: hop 序列完整性检查（无间隔、无重复）</li>
+<li>$v_{\text{hop}}$: 每个 hop 的签名验证（重构载荷 $P_n$ 后验签）</li>
+<li>$v_{\text{max}}$: max_hops 检查（chain 长度 $\leq$ scope.max_hops）</li>
+<li>$v_{\text{sess}}$: 会话绑定检查（header.session_id == verifier 当前 session）</li>
+
+<h3 id="公式-5-ed25519重新授权链接">公式 5: <span class="wikilink">Ed25519|重新授权链接</span></h3>
+
+<div class="math-block">$$
+T_{\text{new}}.header.parent\_token\_id = T_{\text{old}}.header.token\_id
+$$</div>
+
+<p><strong>含义</strong>: 长时间 session 中需要重新授权时，新 token 通过 parent_token_id 字段链接到旧 token，形成可审计的 scope 演进谱系。新 token 的根签名覆盖该链接关系。</p>
+
+
+<h2 id="关键图表">关键图表</h2>
+
+<h3 id="figure-1-hdp-token-top-level-structure--hdp-token-顶层结构">Figure 1: HDP Token Top-Level Structure / HDP Token 顶层结构</h3>
+
+<p>（见上方"Token 结构"节中的 JSON 代码块。论文中唯一的 Figure，展示 token 的六个顶层字段。该 Figure 为文本/代码形式，非位图。）</p>
+
+
+<h2 id="威胁模型">威胁模型</h2>
+
+<h3 id="攻击者能力">攻击者能力</h3>
 
 <table class="paper-table">
-<thead><tr><th>威胁</th><th>防护机制</th></tr></thead>
+<thead><tr><th>编号</th><th>能力</th></tr></thead>
 <tbody>
-<tr><td>伪造授权</td><td>数字签名验证</td></tr>
-<tr><td>链篡改</td><td>逐级签名 + 权限单调递减</td></tr>
-<tr><td>重放攻击</td><td>nonce + TTL</td></tr>
-<tr><td>权限提升</td><td>子集约束 $\text{scope}_{\text{child}} \subseteq \text{scope}_{\text{parent}}$</td></tr>
-<tr><td>提示注入</td><td>协议层独立于 LLM 推理层</td></tr>
+<tr><td>A1</td><td>通过 <span class="wikilink">Indirect Prompt Injection</span> 向 agent 输入流注入对抗内容</td></tr>
+<tr><td>A2</td><td>拦截和检查 agent 间传输的 token</td></tr>
+<tr><td>A3</td><td>尝试跨会话重放捕获的 token</td></tr>
+<tr><td>A4</td><td>尝试伪造或修改 token 以声称虚假授权</td></tr>
+<tr><td>A5</td><td>尝试向委托链中插入伪造的 hop</td></tr>
 </tbody></table>
 
 
-<h2 id="4-性能评估">4. 性能评估</h2>
+<h3 id="不建模的攻击者">不建模的攻击者</h3>
+
+<li>持有 issuer 的 <span class="wikilink">Ed25519</span> 私钥（密钥泄露是运维问题）</li>
+<li>能破解 Ed25519 签名安全或 SHA-512 抗碰撞性</li>
+<li>能篡改传输层通道（假设有 TLS 等保护）</li>
+
+<h3 id="防护资产">防护资产</h3>
+
+<li><strong>(P1)</strong> 人类授权事件的完整性（principal、scope、session binding）</li>
+<li><strong>(P2)</strong> 委托链的完整性（hop 准确反映实际委托历史）</li>
+<li><strong>(P3)</strong> token 的不可重放性（跨会话、过期后无效）</li>
+
+<h3 id="可检测攻击场景">可检测攻击场景</h3>
 
 <table class="paper-table">
-<thead><tr><th>操作</th><th>延迟</th></tr></thead>
+<thead><tr><th>场景</th><th>描述</th><th>检测方式</th></tr></thead>
 <tbody>
-<tr><td>令牌签发</td><td>< 1 ms</td></tr>
-<tr><td>单级验证</td><td>< 0.5 ms</td></tr>
-<tr><td>5 级链验证</td><td>< 2.5 ms</td></tr>
-<tr><td>令牌序列化</td><td>< 0.1 ms</td></tr>
+<tr><td>S1</td><td>agent 无 HDP token 执行动作</td><td>无 token = 未授权</td></tr>
+<tr><td>S2</td><td>伪造 principal 或 scope</td><td>根签名验证失败</td></tr>
+<tr><td>S3</td><td>篡改或删除 chain 中的 hop</td><td>hop 签名验证失败</td></tr>
+<tr><td>S4</td><td>跨会话重放 token</td><td>session binding 检查失败</td></tr>
 </tbody></table>
 
 
-<h2 id="5-核心概念">5. 核心概念</h2>
 
-<li><span class="wikilink">MCP</span>：Model Context Protocol，agent 工具调用协议</li>
-<li><span class="wikilink">A2A</span>：Agent-to-Agent 协议</li>
-<li><span class="wikilink">Digital Signature</span>：数字签名</li>
-<li><span class="wikilink">Delegation Chain</span>：委托链</li>
-<li><span class="wikilink">Zero Trust</span>：零信任安全架构</li>
-<li><span class="wikilink">HMAC</span>：基于哈希的消息认证码</li>
+<h2 id="安全分析">安全分析</h2>
 
-<h2 id="6-优缺点分析">6. 优缺点分析</h2>
+<h3 id="51-token-伪造防御">5.1 Token 伪造防御</h3>
+
+<p>根签名验证的安全性归约为 <span class="wikilink">Ed25519</span> 在选择消息攻击下的不可伪造性 (EUF-CMA)。Ed25519 基于 <span class="wikilink">Curve25519</span> 上的离散对数难度问题。</p>
+
+<h3 id="52-委托链篡改防御">5.2 委托链篡改防御</h3>
+
+<p>链式签名构造确保每个 hop 签名覆盖所有先前 hop 及根签名，任何历史修改都会导致被篡改 hop 及其后所有 hop 的签名验证失败。安全性同样归约为 Ed25519 的 EUF-CMA。</p>
+
+<h3 id="53-重放攻击防御">5.3 重放攻击防御</h3>
+
+<p>双重防御机制：</p>
+<li><strong>时间过期</strong>: expires_at（默认 24 小时）确保 token 有时效性</li>
+<li><strong>会话绑定</strong>: session_id 确保 token 仅在指定会话中有效</li>
+
+<h3 id="54-prompt-injection-缓解边界">5.4 Prompt Injection 缓解边界</h3>
+
+<p>HDP <strong>不阻止</strong> <span class="wikilink">Prompt Injection</span>，但提供事后可检测性：</p>
+<li>注入动作若未扩展 HDP chain，产生可检测的 gap（无委托记录）</li>
+<li>注入动作若伪造 hop，签名验证失败（需 issuer 私钥才能伪造）</li>
+<li><strong>语义边界</strong>: agent 被诱导记录真实 hop 但 action_summary 被误导，协议无法检测（应用层问题）</li>
+
+
+<h2 id="实现与部署">实现与部署</h2>
+
+<h3 id="参考实现">参考实现</h3>
+
+<table class="paper-table">
+<thead><tr><th>项目</th><th>详情</th></tr></thead>
+<tbody>
+<tr><td>TypeScript SDK</td><td><code>@helixar_ai/hdp</code> (npm)，提供 token 签发、hop 扩展、7 步验证</td></tr>
+<tr><td>Python 集成</td><td>支持 CrewAI 和 <span class="wikilink">MCP</span></td></tr>
+<tr><td>密码学库</td><td>noble-ed25519 (Ed25519) + 确定性 JSON 序列化 (RFC 8785)</td></tr>
+<tr><td>IETF I-D</td><td>draft-helixar-hdp-agentic-delegation-00 (RATS WG)</td></tr>
+</tbody></table>
+
+
+<h3 id="集成模式">集成模式</h3>
+
+<p>1. 人类通过 issuer SDK 在 session 开始时签发 HDP token</p>
+<p>2. Token 附加到任务上下文传递给 orchestrator</p>
+<p>3. 管线中每个 agent 验证 token，扩展 chain（添加 hop），传递给下游</p>
+<p>4. 终端 tool-execution agent 验证完整 chain 后执行动作</p>
+
+<h3 id="性能特征">性能特征</h3>
+
+<li><span class="wikilink">Ed25519</span> 签名验证：< 100 微秒</li>
+<li><span class="wikilink">RFC 8785</span> JSON 序列化：$O(n)$，$n$ 为 token 大小</li>
+<li>典型 10-hop chain 完整验证：< 2 毫秒</li>
+<li>Token 大小随 chain 线性增长，10-hop 典型值 4-8 KB</li>
+
+
+<h2 id="批判性思考">批判性思考</h2>
 
 <h3 id="优点">优点</h3>
-<p>1. <strong>问题重要</strong>：agentic AI 的授权溯源是真实需求</p>
-<p>2. <strong>设计轻量</strong>：毫秒级开销，适合实时 agent 交互</p>
-<p>3. <strong>权限单调递减</strong>：数学保证子 agent 不能越权</p>
-<p>4. <strong>协议层独立</strong>：不依赖 LLM 安全性，在密码学层面解决问题</p>
-<p>5. <strong>可组合</strong>：兼容现有 MCP/A2A 生态</p>
+<p>1. <strong>极简设计</strong>: 仅依赖 Ed25519 + JSON，无需 DID/PKI/区块链等重型基础设施，部署门槛极低</p>
+<p>2. <strong>完全离线验证</strong>: 特别适合 air-gapped 环境、边缘部署、低延迟场景</p>
+<p>3. <strong>清晰的安全边界</strong>: 明确声明 HDP 是问责基础设施而非完整防御，避免过度承诺</p>
+<p>4. <strong>IETF 标准化路径</strong>: 已提交 Internet-Draft，有望成为行业标准</p>
 
-<h3 id="缺点">缺点</h3>
-<p>1. <strong>缺少实现</strong>：仅协议设计，无开源实现</p>
-<p>2. <strong>社区关注低</strong>：HF 仅 1 upvote</p>
-<p>3. <strong>密钥管理</strong>：agent 的私钥如何安全存储和轮换？</p>
-<p>4. <strong>动态权限</strong>：scope 一旦签发不可修改，不够灵活</p>
-<p>5. <strong>实际部署</strong>：需要整个 agent 生态采纳才有价值</p>
+<h3 id="局限性">局限性</h3>
+<p>1. <strong>v0.1 单密钥限制</strong>: 所有 hop 签名使用 issuer 的密钥，hop 签名仅证明"在 issuer 处记录"而非"由特定 agent 产生"。v0.2 计划引入 per-agent key binding</p>
+<p>2. <strong>无语义执行</strong>: HDP 仅记录授权范围但不强制执行，agent 实际动作是否符合 scope.intent 需要应用层判断</p>
+<p>3. <strong>隐私-审计权衡</strong>: principal 对象可能包含 PII，token 在 agent 间传递存在隐私泄露风险（虽提供 opaque id_type 缓解）</p>
+<p>4. <strong>缺乏实证评估</strong>: 论文无实际部署的实验数据，无 benchmark 对比（可理解，协议设计论文的常见模式）</p>
 
-<h2 id="7-与相关工作对比">7. 与相关工作对比</h2>
+<h3 id="潜在改进方向">潜在改进方向</h3>
+<p>1. <strong>Multi-key delegation (v0.2)</strong>: 引入 per-agent 密钥，实现真正的多方签名委托链</p>
+<p>2. <strong>运行时策略集成</strong>: 与 MI9、CaMeL 等运行时治理框架结合，实现 scope 语义执行</p>
+<p>3. <strong>M-of-N 多主体同时授权</strong>: 使用 <span class="wikilink">Threshold Signature</span> 实现无需顺序依赖的联合授权</p>
 
-<table class="paper-table">
-<thead><tr><th>方法</th><th>层级</th><th>粒度</th><th>开销</th><th>委托链支持</th></tr></thead>
-<tbody>
-<tr><td><strong>HDP</strong></td><td><strong>密码学</strong></td><td><strong>动作级</strong></td><td><strong>< 1ms</strong></td><td><strong>是</strong></td></tr>
-<tr><td>OAuth 2.0</td><td>应用层</td><td>API 级</td><td>中</td><td>有限</td></tr>
-<tr><td>SPIFFE/SPIRE</td><td>基础设施</td><td>服务级</td><td>低</td><td>否</td></tr>
-<tr><td>LLM Guard</td><td>语义层</td><td>prompt 级</td><td>高</td><td>否</td></tr>
-<tr><td>ShieldNet</td><td>网络层</td><td>流量级</td><td>低</td><td>否</td></tr>
-</tbody></table>
-</div></details>
+<h3 id="可复现性评估">可复现性评估</h3>
+<li>[x] 代码开源（TypeScript SDK on npm）</li>
+<li>[ ] 预训练模型（不适用）</li>
+<li>[x] 协议细节完整（IETF I-D 定义规范）</li>
+<li>[ ] 实际部署数据（无）</li>
+
+
+<h2 id="关联笔记">关联笔记</h2>
+
+<h3 id="对比">对比</h3>
+<li><span class="wikilink">OAuth 2.0</span>: 点对点 token 交换，需在线授权服务器</li>
+<li><span class="wikilink">JWT</span>: 通用签名声明，无 append-only 委托链</li>
+<li><span class="wikilink">UCAN</span>: 能力授权网络，依赖 DID 基础设施</li>
+<li><span class="wikilink">Intent Provenance Protocol</span>: 最接近方案，但需中心化撤销注册表</li>
+
+<h3 id="方法相关">方法相关</h3>
+<li><span class="wikilink">Ed25519</span>: 核心签名算法 (RFC 8032)</li>
+<li><span class="wikilink">RFC 8785</span>: JSON Canonicalization Scheme，确保确定性序列化</li>
+<li><span class="wikilink">Prompt Injection</span>: HDP 主要缓解的攻击面</li>
+<li><span class="wikilink">Agentic AI</span>: HDP 的目标应用场景</li>
+<li><span class="wikilink">Digital Signature</span>: 密码学签名基础</li>
+
+<h3 id="标准相关">标准相关</h3>
+<li><span class="wikilink">MCP</span>: Model Context Protocol，HDP 提供 Python 集成</li>
+
+
+<h2 id="速查卡片">速查卡片</h2>
+
+<blockquote>
+<p>[!summary] HDP: A Lightweight Cryptographic Protocol for Human Delegation Provenance in Agentic AI Systems</p>
+<p>- <strong>核心</strong>: 用密码学 token 将人类授权绑定到 agentic AI 的多级委托链</p>
+<p>- <strong>方法</strong>: JSON token + Ed25519 签名 + append-only hop chain + 7 步离线验证</p>
+<p>- <strong>结果</strong>: 已发布 IETF Internet-Draft + TypeScript/Python SDK</p>
+<p>- <strong>代码</strong>: <a href="https://www.npmjs.com/package/@helixar_ai/hdp" target="_blank">@helixar_ai/hdp</a></p>
+</blockquote>
+
+
+<p><em>笔记创建时间: 2026-04-05</em></p></div></details>
 
 <li><strong>核心方法</strong>: 用密码学协议解决 agentic AI 的授权溯源问题——在多级 agent 委托链中验证终端动作是否由人类真正授权、经过什么委托路径、在什么范围内。类似给 agent 调用链加了一条加密审计追踪。</li>
 <li><strong>借鉴意义</strong>: 随着 <span class="wikilink">MCP</span> 和 <span class="wikilink">A2A</span> 生态扩展，agent 间的授权验证会越来越重要。</li>
@@ -2396,139 +2589,332 @@ $$</div>
 <li><strong>作者</strong>: Dalugoda, Asiri</li>
 <li><strong>链接</strong>: <a href="https://arxiv.org/abs/2604.04522" target="_blank">arXiv</a> | <a href="https://arxiv.org/pdf/2604.04522" target="_blank">PDF</a></li>
 <li><strong>来源</strong>: 📰 HF Daily，⬆️ 1</li>
-<details class="paper-note"><summary>📒 精读笔记: HDP</summary><div class="note-body"><h1 id="hdp-a-lightweight-cryptographic-protocol-for-human-delegation-provenance-in-agentic-ai-systems">HDP: A Lightweight Cryptographic Protocol for Human Delegation Provenance in Agentic AI Systems</h1>
+<details class="paper-note"><summary>📒 精读笔记: HDP</summary><div class="note-body"><h1 id="论文笔记hdp-a-lightweight-cryptographic-protocol-for-human-delegation-provenance-in-agentic-ai-systems">论文笔记：HDP: A Lightweight Cryptographic Protocol for Human Delegation Provenance in Agentic AI Systems</h1>
+
+<h2 id="元信息">元信息</h2>
+
+<table class="paper-table">
+<thead><tr><th>项目</th><th>内容</th></tr></thead>
+<tbody>
+<tr><td>机构</td><td>Helixar Limited, Auckland, New Zealand</td></tr>
+<tr><td>日期</td><td>March 2026</td></tr>
+<tr><td>项目主页</td><td><a href="https://helixar.ai/labs/hdp" target="_blank">helixar.ai/labs/hdp</a></td></tr>
+<tr><td>IETF I-D</td><td>draft-helixar-hdp-agentic-delegation-00</td></tr>
+<tr><td>链接</td><td><a href="https://arxiv.org/abs/2604.04522" target="_blank">arXiv</a> / <a href="https://www.npmjs.com/package/@helixar_ai/hdp" target="_blank">SDK (@helixar_ai/hdp)</a></td></tr>
+</tbody></table>
+
+
+
+<h2 id="一句话总结">一句话总结</h2>
 
 <blockquote>
-<p><strong>一句话总结</strong>：用轻量级密码学协议为 agentic AI 系统的多级委托链建立授权溯源，验证终端动作是否由人类真正授权、经过什么委托路径、在什么权限范围内。</p>
+<p>提出 HDP 协议，用轻量级 <span class="wikilink">Ed25519</span> 签名的 JSON token 将人类授权事件密码学绑定到 agentic AI 多级委托链，实现完全离线可验证的授权溯源。</p>
 </blockquote>
 
-<h2 id="1-研究动机与问题定义">1. 研究动机与问题定义</h2>
 
-<h3 id="核心问题">核心问题</h3>
-<p>随着 <span class="wikilink">MCP</span> 和 <span class="wikilink">A2A</span> 协议推动 agent 间的互操作，一个关键安全问题浮现：<strong>在多级 agent 委托链中，如何验证最终执行的动作确实是人类授权的？</strong></p>
+<h2 id="核心贡献">核心贡献</h2>
 
-<h3 id="威胁模型">威胁模型</h3>
-<li><strong>伪造授权</strong>：恶意 agent 伪造人类授权执行未授权操作</li>
-<li><strong>链篡改</strong>：中间 agent 修改委托链中的权限范围</li>
-<li><strong>重放攻击</strong>：重用过期的授权令牌</li>
-<li><strong>权限提升</strong>：子 agent 越权执行超出委托范围的操作</li>
+<p>1. <strong>人类委托溯源协议 (HDP)</strong>: 定义了一种 JSON token 结构，将人类授权事件（principal + scope）与 append-only 的 agent 委托链密码学绑定</p>
+<p>2. <strong>完全离线验证</strong>: 仅需 issuer 的 <span class="wikilink">Ed25519</span> 公钥（32 bytes）和 session_id 即可完成 7 步验证，无需网络调用或第三方信任锚</p>
+<p>3. <strong>系统性对比分析</strong>: 将 HDP 置于 <span class="wikilink">OAuth 2.0</span> Token Exchange (RFC 8693)、<span class="wikilink">JWT</span> (RFC 7519)、<span class="wikilink">UCAN</span>、<span class="wikilink">Intent Provenance Protocol|IPP</span> 的现有委托协议图谱中，明确各自设计取舍</p>
 
-<h2 id="2-方法详解">2. 方法详解</h2>
 
-<h3 id="21-委托令牌结构">2.1 委托令牌结构</h3>
+<h2 id="问题背景">问题背景</h2>
 
-<p>HDP 的核心是<strong>委托令牌</strong>（Delegation Token），包含：</p>
+<h3 id="要解决的问题">要解决的问题</h3>
 
-<div class="math-block">$$\text{Token} = \langle \text{issuer}, \text{delegate}, \text{scope}, \text{ttl}, \text{nonce}, \sigma \rangle$$</div>
+<p><span class="wikilink">Agentic AI</span> 系统中，人类指令经过 orchestrator → sub-agents → tool-execution agents 的多级委托链后，终端动作与原始人类授权之间的关联完全断裂。没有标准机制让下游 agent 验证其收到的指令确实来自人类授权、授权范围是什么、经过了怎样的委托路径。</p>
 
-<p>其中 $\sigma$ 为数字签名：</p>
+<h3 id="现有方法的局限">现有方法的局限</h3>
 
-<div class="math-block">$$\sigma = \text{Sign}(sk_{\text{issuer}}, H(\text{issuer} \| \text{delegate} \| \text{scope} \| \text{ttl} \| \text{nonce}))$$</div>
+<li><strong><span class="wikilink">OAuth 2.0</span> Token Exchange (RFC 8693)</strong>: 点对点交换，每次产生新 token，无法在单一 artifact 中保留完整委托历史；需要在线授权服务器；无人类授权绑定和 scope provenance</li>
+<li><strong><span class="wikilink">JWT</span> (RFC 7519)</strong>: 通用签名声明格式，无 append-only 多方签名的委托链；使用 base64url 编码的 header.payload 而非 canonical JSON</li>
+<li><strong><span class="wikilink">UCAN</span></strong>: 能力授权系统，编码可执行权能，依赖 <span class="wikilink">DID</span> 基础设施，复杂度高于纯溯源需求</li>
+<li><strong><span class="wikilink">Intent Provenance Protocol|IPP</span></strong>: 最接近 HDP，同样使用 Ed25519 + append-only chain，但需要中心化撤销注册表、genesis seal 绑定第三方 URL、强制 W3C DID</li>
 
-<p>$H$ 为密码学哈希函数，$sk_{\text{issuer}}$ 为签发者私钥。</p>
+<h3 id="本文的动机">本文的动机</h3>
 
-<h3 id="22-委托链构建">2.2 委托链构建</h3>
+<p>现有协议均为 human-to-system 交互设计，无法满足 agentic pipeline 的三个结构性需求：<strong>多跳 (multi-hop)</strong>、<strong>仅追加 (append-only)</strong>、<strong>人类溯源 (human-provenance)</strong>。HDP 以最小化基础设施依赖为设计目标，填补这一空白。</p>
 
-<p>多级委托形成链式结构：</p>
 
-<div class="math-block">$$\text{Chain} = [\text{Token}_0, \text{Token}_1, \ldots, \text{Token}_n]$$</div>
+<h2 id="方法详解">方法详解</h2>
 
-<p>每级满足：</p>
-<li>$\text{Token}_i.\text{delegate} = \text{Token}_{i+1}.\text{issuer}$</li>
-<li>$\text{Token}_{i+1}.\text{scope} \subseteq \text{Token}_i.\text{scope}$（权限只缩不扩）</li>
+<h3 id="设计原则">设计原则</h3>
 
-<h3 id="23-验证流水线">2.3 验证流水线</h3>
+<p>HDP 按五个有序原则设计：</p>
 
-<p>验证一条委托链的算法：</p>
+<p>1. <strong>离线可验证性 (Offline Verifiability)</strong>: 验证仅需公钥 + session_id，无网络调用</p>
+<p>2. <strong>自主权 (Self-Sovereignty)</strong>: 任何组织无需注册即可签发和验证 token</p>
+<p>3. <strong>防篡改证据 (Tamper Evidence)</strong>: 任何字段的修改都可被验证管线检测</p>
+<p>4. <strong>最小足迹 (Minimal Footprint)</strong>: 仅需 <span class="wikilink">Ed25519</span> + JSON 支持即可实现</p>
+<p>5. <strong>隐私设计 (Privacy by Design)</strong>: principal 身份字段与审计字段结构分离</p>
 
-<div class="math-block">$$\text{Verify}(\text{Chain}) = \bigwedge_{i=0}^{n} \left[ \text{VerifySig}(\text{Token}_i) \wedge \text{CheckScope}(\text{Token}_i) \wedge \text{CheckTTL}(\text{Token}_i) \right]$$</div>
+<h3 id="token-结构">Token 结构</h3>
 
-<p>时间复杂度 $O(n)$，其中 $n$ 为链长度。</p>
+<p>HDP token 是包含六个顶层字段的 JSON 对象：</p>
 
-<h3 id="24-权限范围表达">2.4 权限范围表达</h3>
+<li><strong><code>hdp</code></strong>: 协议版本字符串（当前 <code>"0.1"</code>）</li>
+<li><strong><code>header</code></strong>: 生命周期与会话绑定（token_id, issued_at, expires_at, session_id, version, parent_token_id）</li>
+<li><strong><code>principal</code></strong>: 授权人类身份（id, id_type, display_name, poh_credential）</li>
+<li><strong><code>scope</code></strong>: 授权范围（intent, authorized_tools, data_classification, network_egress, persistence, max_hops）</li>
+<li><strong><code>chain</code></strong>: append-only 委托链数组，每个 hop 记录 agent 的委托动作</li>
+<li><strong><code>signature</code></strong>: 根签名（kid, alg, value），使用 <span class="wikilink">Ed25519</span> 签名</li>
 
-<p>权限使用集合表示：</p>
+<h3 id="figure-1-hdp-token-top-level-structure">Figure 1: HDP Token Top-Level Structure</h3>
 
-<div class="math-block">$$\text{scope} = \{(\text{resource}, \text{action}, \text{constraints})\}$$</div>
+<pre><code>
+{
+  &quot;hdp&quot; : &quot;0.1&quot;,
+  &quot;header&quot; : { token_id, issued_at, expires_at, session_id, version },
+  &quot;principal&quot; : { id, id_type, display_name, poh_credential },
+  &quot;scope&quot; : { intent, authorized_tools, data_classification,
+    network_egress, persistence, max_hops },
+  &quot;chain&quot; : [ hop_1, hop_2, ... hop_n ],
+  &quot;signature&quot; : { kid, alg, value }
+}
+</code></pre>
 
-<p>子集关系验证：</p>
+<p><strong>说明</strong>: HDP token 的顶层 JSON 结构。header 携带会话绑定信息，principal 标识授权人类，scope 记录授权范围，chain 以 append-only 方式记录每一跳的委托，signature 是覆盖全部内容的 <span class="wikilink">Ed25519</span> 根签名。</p>
 
-<div class="math-block">$$\text{scope}_{\text{child}} \subseteq \text{scope}_{\text{parent}} \iff \forall s \in \text{scope}_{\text{child}}, \exists p \in \text{scope}_{\text{parent}}: s \preceq p$$</div>
+<h3 id="密码学构造">密码学构造</h3>
 
-<h3 id="25-重新授权机制">2.5 重新授权机制</h3>
+<h4 id="根签名-root-signature">根签名 (Root Signature)</h4>
 
-<p>当令牌即将过期时：</p>
+<p>Token 创建时对 header、principal、scope 和空 chain 计算根签名：</p>
 
-<div class="math-block">$$\text{ttl}_{\text{new}} = \min(\text{ttl}_{\text{requested}}, \text{ttl}_{\text{parent}} - t_{\text{elapsed}})$$</div>
+<p>1. 构造未签名 token 对象</p>
+<p>2. 按 <span class="wikilink">RFC 8785</span> (JSON Canonicalization Scheme) 序列化为 canonical JSON</p>
+<p>3. 对 canonical bytes 计算 <span class="wikilink">Ed25519</span> 签名</p>
+<p>4. Base64url 编码后填入 <code>signature.value</code></p>
 
-<h3 id="26-传输安全">2.6 传输安全</h3>
+<h4 id="跳签名-hop-signature">跳签名 (Hop Signature)</h4>
 
-<p>所有令牌通过 TLS 传输。nonce 防止重放：</p>
+<p>每个 hop 携带 <code>hop_signature</code>，将新 hop 绑定到完整的累积委托历史和根签名。</p>
 
-<div class="math-block">$$\text{NonceDB} = \text{NonceDB} \cup \{\text{nonce}\}, \quad \text{reject if } \text{nonce} \in \text{NonceDB}$$</div>
 
-<h2 id="3-安全分析">3. 安全分析</h2>
+<h2 id="关键公式">关键公式</h2>
+
+<h3 id="公式-1-ed25519根签名计算">公式 1: <span class="wikilink">Ed25519|根签名计算</span></h3>
+
+<div class="math-block">$$
+\sigma_{\text{root}} = \text{Ed25519-Sign}\bigl(sk,\; \text{JCS}\bigl(\{hdp, header, principal, scope, chain{=}[\,]\}\bigr)\bigr)
+$$</div>
+
+<p><strong>含义</strong>: 根签名覆盖 token 的所有核心字段（header、principal、scope）和空 chain，使用 issuer 的私钥 $sk$ 签名。<span class="wikilink">RFC 8785|JCS</span> 确保序列化的确定性。</p>
+
+<p><strong>符号说明</strong>:</p>
+<li>$\sigma_{\text{root}}$: 根签名值</li>
+<li>$sk$: issuer 的 <span class="wikilink">Ed25519</span> 私钥</li>
+<li>$\text{JCS}(\cdot)$: <span class="wikilink">RFC 8785</span> JSON Canonicalization Scheme，确保确定性序列化</li>
+
+<h3 id="公式-2-digital-signature跳签名载荷构造">公式 2: <span class="wikilink">Digital Signature|跳签名载荷构造</span></h3>
+
+<div class="math-block">$$
+P_n = [\sigma_{\text{root}},\; h_1^{\text{signed}},\; \ldots,\; h_{n-1}^{\text{signed}},\; h_n^{\text{unsigned}}]
+$$</div>
+
+<p><strong>含义</strong>: 第 $n$ 跳的签名载荷是一个 JSON 数组，包含根签名值、所有已签名的前序 hop（含其 hop_signature）、以及当前新 hop（不含 hop_signature）。这一非对称结构确保每个 hop 签名覆盖所有先前 hop 及根签名。</p>
+
+<p><strong>符号说明</strong>:</p>
+<li>$P_n$: 第 $n$ 跳的签名载荷</li>
+<li>$h_i^{\text{signed}}$: 第 $i$ 跳（含 hop_signature 字段）</li>
+<li>$h_n^{\text{unsigned}}$: 当前新 hop（不含 hop_signature）</li>
+
+<h3 id="公式-3-ed25519跳签名计算">公式 3: <span class="wikilink">Ed25519|跳签名计算</span></h3>
+
+<div class="math-block">$$
+\sigma_{\text{hop},n} = \text{Ed25519-Sign}\bigl(sk,\; \text{JCS}(P_n)\bigr)
+$$</div>
+
+<p><strong>含义</strong>: 对构造的载荷 $P_n$ 做 JCS 序列化后使用 issuer 私钥签名。由于 $P_n$ 包含 $\sigma_{\text{root}}$ 和所有先前 hop 签名，任何历史篡改都会导致当前及后续所有 hop 的签名验证失败。</p>
+
+<p><strong>符号说明</strong>:</p>
+<li>$\sigma_{\text{hop},n}$: 第 $n$ 跳的签名值</li>
+<li>$P_n$: 签名载荷（见公式 2）</li>
+
+<h3 id="公式-4-token验证验证管线">公式 4: <span class="wikilink">Token验证|验证管线</span></h3>
+
+<div class="math-block">$$
+V(T) = \bigwedge_{i=1}^{7} v_i(T) = v_{\text{ver}} \wedge v_{\text{exp}} \wedge v_{\text{root}} \wedge v_{\text{seq}} \wedge v_{\text{hop}} \wedge v_{\text{max}} \wedge v_{\text{sess}}
+$$</div>
+
+<p><strong>含义</strong>: 验证管线由 7 个有序步骤组成，任一步骤失败即立即拒绝 token。</p>
+
+<p><strong>符号说明</strong>:</p>
+<li>$v_{\text{ver}}$: 版本检查（hdp 字段）</li>
+<li>$v_{\text{exp}}$: 过期检查（expires_at vs 当前时间）</li>
+<li>$v_{\text{root}}$: 根签名验证（使用 issuer 公钥）</li>
+<li>$v_{\text{seq}}$: hop 序列完整性检查（无间隔、无重复）</li>
+<li>$v_{\text{hop}}$: 每个 hop 的签名验证（重构载荷 $P_n$ 后验签）</li>
+<li>$v_{\text{max}}$: max_hops 检查（chain 长度 $\leq$ scope.max_hops）</li>
+<li>$v_{\text{sess}}$: 会话绑定检查（header.session_id == verifier 当前 session）</li>
+
+<h3 id="公式-5-ed25519重新授权链接">公式 5: <span class="wikilink">Ed25519|重新授权链接</span></h3>
+
+<div class="math-block">$$
+T_{\text{new}}.header.parent\_token\_id = T_{\text{old}}.header.token\_id
+$$</div>
+
+<p><strong>含义</strong>: 长时间 session 中需要重新授权时，新 token 通过 parent_token_id 字段链接到旧 token，形成可审计的 scope 演进谱系。新 token 的根签名覆盖该链接关系。</p>
+
+
+<h2 id="关键图表">关键图表</h2>
+
+<h3 id="figure-1-hdp-token-top-level-structure--hdp-token-顶层结构">Figure 1: HDP Token Top-Level Structure / HDP Token 顶层结构</h3>
+
+<p>（见上方"Token 结构"节中的 JSON 代码块。论文中唯一的 Figure，展示 token 的六个顶层字段。该 Figure 为文本/代码形式，非位图。）</p>
+
+
+<h2 id="威胁模型">威胁模型</h2>
+
+<h3 id="攻击者能力">攻击者能力</h3>
 
 <table class="paper-table">
-<thead><tr><th>威胁</th><th>防护机制</th></tr></thead>
+<thead><tr><th>编号</th><th>能力</th></tr></thead>
 <tbody>
-<tr><td>伪造授权</td><td>数字签名验证</td></tr>
-<tr><td>链篡改</td><td>逐级签名 + 权限单调递减</td></tr>
-<tr><td>重放攻击</td><td>nonce + TTL</td></tr>
-<tr><td>权限提升</td><td>子集约束 $\text{scope}_{\text{child}} \subseteq \text{scope}_{\text{parent}}$</td></tr>
-<tr><td>提示注入</td><td>协议层独立于 LLM 推理层</td></tr>
+<tr><td>A1</td><td>通过 <span class="wikilink">Indirect Prompt Injection</span> 向 agent 输入流注入对抗内容</td></tr>
+<tr><td>A2</td><td>拦截和检查 agent 间传输的 token</td></tr>
+<tr><td>A3</td><td>尝试跨会话重放捕获的 token</td></tr>
+<tr><td>A4</td><td>尝试伪造或修改 token 以声称虚假授权</td></tr>
+<tr><td>A5</td><td>尝试向委托链中插入伪造的 hop</td></tr>
 </tbody></table>
 
 
-<h2 id="4-性能评估">4. 性能评估</h2>
+<h3 id="不建模的攻击者">不建模的攻击者</h3>
+
+<li>持有 issuer 的 <span class="wikilink">Ed25519</span> 私钥（密钥泄露是运维问题）</li>
+<li>能破解 Ed25519 签名安全或 SHA-512 抗碰撞性</li>
+<li>能篡改传输层通道（假设有 TLS 等保护）</li>
+
+<h3 id="防护资产">防护资产</h3>
+
+<li><strong>(P1)</strong> 人类授权事件的完整性（principal、scope、session binding）</li>
+<li><strong>(P2)</strong> 委托链的完整性（hop 准确反映实际委托历史）</li>
+<li><strong>(P3)</strong> token 的不可重放性（跨会话、过期后无效）</li>
+
+<h3 id="可检测攻击场景">可检测攻击场景</h3>
 
 <table class="paper-table">
-<thead><tr><th>操作</th><th>延迟</th></tr></thead>
+<thead><tr><th>场景</th><th>描述</th><th>检测方式</th></tr></thead>
 <tbody>
-<tr><td>令牌签发</td><td>< 1 ms</td></tr>
-<tr><td>单级验证</td><td>< 0.5 ms</td></tr>
-<tr><td>5 级链验证</td><td>< 2.5 ms</td></tr>
-<tr><td>令牌序列化</td><td>< 0.1 ms</td></tr>
+<tr><td>S1</td><td>agent 无 HDP token 执行动作</td><td>无 token = 未授权</td></tr>
+<tr><td>S2</td><td>伪造 principal 或 scope</td><td>根签名验证失败</td></tr>
+<tr><td>S3</td><td>篡改或删除 chain 中的 hop</td><td>hop 签名验证失败</td></tr>
+<tr><td>S4</td><td>跨会话重放 token</td><td>session binding 检查失败</td></tr>
 </tbody></table>
 
 
-<h2 id="5-核心概念">5. 核心概念</h2>
 
-<li><span class="wikilink">MCP</span>：Model Context Protocol，agent 工具调用协议</li>
-<li><span class="wikilink">A2A</span>：Agent-to-Agent 协议</li>
-<li><span class="wikilink">Digital Signature</span>：数字签名</li>
-<li><span class="wikilink">Delegation Chain</span>：委托链</li>
-<li><span class="wikilink">Zero Trust</span>：零信任安全架构</li>
-<li><span class="wikilink">HMAC</span>：基于哈希的消息认证码</li>
+<h2 id="安全分析">安全分析</h2>
 
-<h2 id="6-优缺点分析">6. 优缺点分析</h2>
+<h3 id="51-token-伪造防御">5.1 Token 伪造防御</h3>
+
+<p>根签名验证的安全性归约为 <span class="wikilink">Ed25519</span> 在选择消息攻击下的不可伪造性 (EUF-CMA)。Ed25519 基于 <span class="wikilink">Curve25519</span> 上的离散对数难度问题。</p>
+
+<h3 id="52-委托链篡改防御">5.2 委托链篡改防御</h3>
+
+<p>链式签名构造确保每个 hop 签名覆盖所有先前 hop 及根签名，任何历史修改都会导致被篡改 hop 及其后所有 hop 的签名验证失败。安全性同样归约为 Ed25519 的 EUF-CMA。</p>
+
+<h3 id="53-重放攻击防御">5.3 重放攻击防御</h3>
+
+<p>双重防御机制：</p>
+<li><strong>时间过期</strong>: expires_at（默认 24 小时）确保 token 有时效性</li>
+<li><strong>会话绑定</strong>: session_id 确保 token 仅在指定会话中有效</li>
+
+<h3 id="54-prompt-injection-缓解边界">5.4 Prompt Injection 缓解边界</h3>
+
+<p>HDP <strong>不阻止</strong> <span class="wikilink">Prompt Injection</span>，但提供事后可检测性：</p>
+<li>注入动作若未扩展 HDP chain，产生可检测的 gap（无委托记录）</li>
+<li>注入动作若伪造 hop，签名验证失败（需 issuer 私钥才能伪造）</li>
+<li><strong>语义边界</strong>: agent 被诱导记录真实 hop 但 action_summary 被误导，协议无法检测（应用层问题）</li>
+
+
+<h2 id="实现与部署">实现与部署</h2>
+
+<h3 id="参考实现">参考实现</h3>
+
+<table class="paper-table">
+<thead><tr><th>项目</th><th>详情</th></tr></thead>
+<tbody>
+<tr><td>TypeScript SDK</td><td><code>@helixar_ai/hdp</code> (npm)，提供 token 签发、hop 扩展、7 步验证</td></tr>
+<tr><td>Python 集成</td><td>支持 CrewAI 和 <span class="wikilink">MCP</span></td></tr>
+<tr><td>密码学库</td><td>noble-ed25519 (Ed25519) + 确定性 JSON 序列化 (RFC 8785)</td></tr>
+<tr><td>IETF I-D</td><td>draft-helixar-hdp-agentic-delegation-00 (RATS WG)</td></tr>
+</tbody></table>
+
+
+<h3 id="集成模式">集成模式</h3>
+
+<p>1. 人类通过 issuer SDK 在 session 开始时签发 HDP token</p>
+<p>2. Token 附加到任务上下文传递给 orchestrator</p>
+<p>3. 管线中每个 agent 验证 token，扩展 chain（添加 hop），传递给下游</p>
+<p>4. 终端 tool-execution agent 验证完整 chain 后执行动作</p>
+
+<h3 id="性能特征">性能特征</h3>
+
+<li><span class="wikilink">Ed25519</span> 签名验证：< 100 微秒</li>
+<li><span class="wikilink">RFC 8785</span> JSON 序列化：$O(n)$，$n$ 为 token 大小</li>
+<li>典型 10-hop chain 完整验证：< 2 毫秒</li>
+<li>Token 大小随 chain 线性增长，10-hop 典型值 4-8 KB</li>
+
+
+<h2 id="批判性思考">批判性思考</h2>
 
 <h3 id="优点">优点</h3>
-<p>1. <strong>问题重要</strong>：agentic AI 的授权溯源是真实需求</p>
-<p>2. <strong>设计轻量</strong>：毫秒级开销，适合实时 agent 交互</p>
-<p>3. <strong>权限单调递减</strong>：数学保证子 agent 不能越权</p>
-<p>4. <strong>协议层独立</strong>：不依赖 LLM 安全性，在密码学层面解决问题</p>
-<p>5. <strong>可组合</strong>：兼容现有 MCP/A2A 生态</p>
+<p>1. <strong>极简设计</strong>: 仅依赖 Ed25519 + JSON，无需 DID/PKI/区块链等重型基础设施，部署门槛极低</p>
+<p>2. <strong>完全离线验证</strong>: 特别适合 air-gapped 环境、边缘部署、低延迟场景</p>
+<p>3. <strong>清晰的安全边界</strong>: 明确声明 HDP 是问责基础设施而非完整防御，避免过度承诺</p>
+<p>4. <strong>IETF 标准化路径</strong>: 已提交 Internet-Draft，有望成为行业标准</p>
 
-<h3 id="缺点">缺点</h3>
-<p>1. <strong>缺少实现</strong>：仅协议设计，无开源实现</p>
-<p>2. <strong>社区关注低</strong>：HF 仅 1 upvote</p>
-<p>3. <strong>密钥管理</strong>：agent 的私钥如何安全存储和轮换？</p>
-<p>4. <strong>动态权限</strong>：scope 一旦签发不可修改，不够灵活</p>
-<p>5. <strong>实际部署</strong>：需要整个 agent 生态采纳才有价值</p>
+<h3 id="局限性">局限性</h3>
+<p>1. <strong>v0.1 单密钥限制</strong>: 所有 hop 签名使用 issuer 的密钥，hop 签名仅证明"在 issuer 处记录"而非"由特定 agent 产生"。v0.2 计划引入 per-agent key binding</p>
+<p>2. <strong>无语义执行</strong>: HDP 仅记录授权范围但不强制执行，agent 实际动作是否符合 scope.intent 需要应用层判断</p>
+<p>3. <strong>隐私-审计权衡</strong>: principal 对象可能包含 PII，token 在 agent 间传递存在隐私泄露风险（虽提供 opaque id_type 缓解）</p>
+<p>4. <strong>缺乏实证评估</strong>: 论文无实际部署的实验数据，无 benchmark 对比（可理解，协议设计论文的常见模式）</p>
 
-<h2 id="7-与相关工作对比">7. 与相关工作对比</h2>
+<h3 id="潜在改进方向">潜在改进方向</h3>
+<p>1. <strong>Multi-key delegation (v0.2)</strong>: 引入 per-agent 密钥，实现真正的多方签名委托链</p>
+<p>2. <strong>运行时策略集成</strong>: 与 MI9、CaMeL 等运行时治理框架结合，实现 scope 语义执行</p>
+<p>3. <strong>M-of-N 多主体同时授权</strong>: 使用 <span class="wikilink">Threshold Signature</span> 实现无需顺序依赖的联合授权</p>
 
-<table class="paper-table">
-<thead><tr><th>方法</th><th>层级</th><th>粒度</th><th>开销</th><th>委托链支持</th></tr></thead>
-<tbody>
-<tr><td><strong>HDP</strong></td><td><strong>密码学</strong></td><td><strong>动作级</strong></td><td><strong>< 1ms</strong></td><td><strong>是</strong></td></tr>
-<tr><td>OAuth 2.0</td><td>应用层</td><td>API 级</td><td>中</td><td>有限</td></tr>
-<tr><td>SPIFFE/SPIRE</td><td>基础设施</td><td>服务级</td><td>低</td><td>否</td></tr>
-<tr><td>LLM Guard</td><td>语义层</td><td>prompt 级</td><td>高</td><td>否</td></tr>
-<tr><td>ShieldNet</td><td>网络层</td><td>流量级</td><td>低</td><td>否</td></tr>
-</tbody></table>
-</div></details>
+<h3 id="可复现性评估">可复现性评估</h3>
+<li>[x] 代码开源（TypeScript SDK on npm）</li>
+<li>[ ] 预训练模型（不适用）</li>
+<li>[x] 协议细节完整（IETF I-D 定义规范）</li>
+<li>[ ] 实际部署数据（无）</li>
+
+
+<h2 id="关联笔记">关联笔记</h2>
+
+<h3 id="对比">对比</h3>
+<li><span class="wikilink">OAuth 2.0</span>: 点对点 token 交换，需在线授权服务器</li>
+<li><span class="wikilink">JWT</span>: 通用签名声明，无 append-only 委托链</li>
+<li><span class="wikilink">UCAN</span>: 能力授权网络，依赖 DID 基础设施</li>
+<li><span class="wikilink">Intent Provenance Protocol</span>: 最接近方案，但需中心化撤销注册表</li>
+
+<h3 id="方法相关">方法相关</h3>
+<li><span class="wikilink">Ed25519</span>: 核心签名算法 (RFC 8032)</li>
+<li><span class="wikilink">RFC 8785</span>: JSON Canonicalization Scheme，确保确定性序列化</li>
+<li><span class="wikilink">Prompt Injection</span>: HDP 主要缓解的攻击面</li>
+<li><span class="wikilink">Agentic AI</span>: HDP 的目标应用场景</li>
+<li><span class="wikilink">Digital Signature</span>: 密码学签名基础</li>
+
+<h3 id="标准相关">标准相关</h3>
+<li><span class="wikilink">MCP</span>: Model Context Protocol，HDP 提供 Python 集成</li>
+
+
+<h2 id="速查卡片">速查卡片</h2>
+
+<blockquote>
+<p>[!summary] HDP: A Lightweight Cryptographic Protocol for Human Delegation Provenance in Agentic AI Systems</p>
+<p>- <strong>核心</strong>: 用密码学 token 将人类授权绑定到 agentic AI 的多级委托链</p>
+<p>- <strong>方法</strong>: JSON token + Ed25519 签名 + append-only hop chain + 7 步离线验证</p>
+<p>- <strong>结果</strong>: 已发布 IETF Internet-Draft + TypeScript/Python SDK</p>
+<p>- <strong>代码</strong>: <a href="https://www.npmjs.com/package/@helixar_ai/hdp" target="_blank">@helixar_ai/hdp</a></p>
+</blockquote>
+
+
+<p><em>笔记创建时间: 2026-04-05</em></p></div></details>
 
 <li><strong>核心方法</strong>: 用密码学协议解决 agentic AI 的授权溯源问题——在多级 agent 委托链中验证终端动作是否由人类真正授权、经过什么委托路径、在什么范围内。类似给 agent 调用链加了一条加密审计追踪。</li>
 <li><strong>借鉴意义</strong>: 随着 <span class="wikilink">MCP</span> 和 <span class="wikilink">A2A</span> 生态扩展，agent 间的授权验证会越来越重要。</li>

@@ -187,14 +187,14 @@ details.paper-note .note-body h3 { font-size: 1em; }
 }
 </style>
 
-<script>const DAYS_DATA = [{"date": "2026-04-07", "weekday": "周二", "counts": {"must": 1, "look": 5, "skip": 3}, "topicCounts": {"🤖 Agent 框架与安全": 3, "🧠 Agent 记忆与推理": 1, "🏋️ Agent 训练": 1, "🤝 Multi-Agent 系统": 3, "🔧 LLM 效率与工具": 2}}, {"date": "2026-04-03", "weekday": "周五", "counts": {"must": 2, "look": 5, "skip": 3}, "topicCounts": {"🤖 Agent × Tool Use": 3, "📊 推荐系统": 1, "🧠 Agent × Reinforcement Learning": 2, "🔍 RAG × RL": 1, "💾 Memory × Agent": 3}}, {"date": "2026-04-02", "weekday": "周四", "counts": {"must": 4, "look": 4, "skip": 2}, "topicCounts": {"推荐系统": 2, "Agent 训练与框架": 2, "对话与工具使用": 1, "多模态 Agent": 2, "Multi-Agent 协作": 1, "LLM 基础": 2}}];</script>
+<script>const DAYS_DATA = [{"date": "2026-04-07", "weekday": "周二", "counts": {"must": 1, "look": 5, "skip": 3}, "topicCounts": {"🤖 Agent 框架与安全": 3, "🧠 Agent 记忆与推理": 1, "🏋️ Agent 训练": 1, "🤝 Multi-Agent 系统": 3, "🔧 LLM 效率与工具": 2}}, {"date": "2026-04-06", "weekday": "周一", "counts": {"must": 1, "look": 4, "skip": 3}, "topicCounts": {"🏋️ Agent 训练": 3, "🧪 LLM 训练与对齐": 2, "🔧 Agent 框架": 2, "📊 Benchmark & 评测": 2}}, {"date": "2026-04-03", "weekday": "周五", "counts": {"must": 2, "look": 5, "skip": 3}, "topicCounts": {"🤖 Agent × Tool Use": 3, "📊 推荐系统": 1, "🧠 Agent × Reinforcement Learning": 2, "🔍 RAG × RL": 1, "💾 Memory × Agent": 3}}, {"date": "2026-04-02", "weekday": "周四", "counts": {"must": 4, "look": 4, "skip": 2}, "topicCounts": {"推荐系统": 2, "Agent 训练与框架": 2, "对话与工具使用": 1, "多模态 Agent": 2, "Multi-Agent 协作": 1, "LLM 基础": 2}}];</script>
 </head>
 <body>
 
 
 <div class="header">
   <h1>📚 每日论文推荐</h1>
-  <p>共 3 天记录</p>
+  <p>共 4 天记录</p>
 </div>
 <div class="dashboard">
   <div class="sidebar">
@@ -640,139 +640,332 @@ $$</div>
 <li><strong>作者</strong>: Dalugoda, Asiri</li>
 <li><strong>链接</strong>: <a href="https://arxiv.org/abs/2604.04522" target="_blank">arXiv</a> | <a href="https://arxiv.org/pdf/2604.04522" target="_blank">PDF</a></li>
 <li><strong>来源</strong>: 📰 HF Daily，⬆️ 1</li>
-<details class="paper-note"><summary>📒 精读笔记: HDP</summary><div class="note-body"><h1 id="hdp-a-lightweight-cryptographic-protocol-for-human-delegation-provenance-in-agentic-ai-systems">HDP: A Lightweight Cryptographic Protocol for Human Delegation Provenance in Agentic AI Systems</h1>
+<details class="paper-note"><summary>📒 精读笔记: HDP</summary><div class="note-body"><h1 id="论文笔记hdp-a-lightweight-cryptographic-protocol-for-human-delegation-provenance-in-agentic-ai-systems">论文笔记：HDP: A Lightweight Cryptographic Protocol for Human Delegation Provenance in Agentic AI Systems</h1>
+
+<h2 id="元信息">元信息</h2>
+
+<table class="paper-table">
+<thead><tr><th>项目</th><th>内容</th></tr></thead>
+<tbody>
+<tr><td>机构</td><td>Helixar Limited, Auckland, New Zealand</td></tr>
+<tr><td>日期</td><td>March 2026</td></tr>
+<tr><td>项目主页</td><td><a href="https://helixar.ai/labs/hdp" target="_blank">helixar.ai/labs/hdp</a></td></tr>
+<tr><td>IETF I-D</td><td>draft-helixar-hdp-agentic-delegation-00</td></tr>
+<tr><td>链接</td><td><a href="https://arxiv.org/abs/2604.04522" target="_blank">arXiv</a> / <a href="https://www.npmjs.com/package/@helixar_ai/hdp" target="_blank">SDK (@helixar_ai/hdp)</a></td></tr>
+</tbody></table>
+
+
+
+<h2 id="一句话总结">一句话总结</h2>
 
 <blockquote>
-<p><strong>一句话总结</strong>：用轻量级密码学协议为 agentic AI 系统的多级委托链建立授权溯源，验证终端动作是否由人类真正授权、经过什么委托路径、在什么权限范围内。</p>
+<p>提出 HDP 协议，用轻量级 <span class="wikilink">Ed25519</span> 签名的 JSON token 将人类授权事件密码学绑定到 agentic AI 多级委托链，实现完全离线可验证的授权溯源。</p>
 </blockquote>
 
-<h2 id="1-研究动机与问题定义">1. 研究动机与问题定义</h2>
 
-<h3 id="核心问题">核心问题</h3>
-<p>随着 <span class="wikilink">MCP</span> 和 <span class="wikilink">A2A</span> 协议推动 agent 间的互操作，一个关键安全问题浮现：<strong>在多级 agent 委托链中，如何验证最终执行的动作确实是人类授权的？</strong></p>
+<h2 id="核心贡献">核心贡献</h2>
 
-<h3 id="威胁模型">威胁模型</h3>
-<li><strong>伪造授权</strong>：恶意 agent 伪造人类授权执行未授权操作</li>
-<li><strong>链篡改</strong>：中间 agent 修改委托链中的权限范围</li>
-<li><strong>重放攻击</strong>：重用过期的授权令牌</li>
-<li><strong>权限提升</strong>：子 agent 越权执行超出委托范围的操作</li>
+<p>1. <strong>人类委托溯源协议 (HDP)</strong>: 定义了一种 JSON token 结构，将人类授权事件（principal + scope）与 append-only 的 agent 委托链密码学绑定</p>
+<p>2. <strong>完全离线验证</strong>: 仅需 issuer 的 <span class="wikilink">Ed25519</span> 公钥（32 bytes）和 session_id 即可完成 7 步验证，无需网络调用或第三方信任锚</p>
+<p>3. <strong>系统性对比分析</strong>: 将 HDP 置于 <span class="wikilink">OAuth 2.0</span> Token Exchange (RFC 8693)、<span class="wikilink">JWT</span> (RFC 7519)、<span class="wikilink">UCAN</span>、<span class="wikilink">Intent Provenance Protocol|IPP</span> 的现有委托协议图谱中，明确各自设计取舍</p>
 
-<h2 id="2-方法详解">2. 方法详解</h2>
 
-<h3 id="21-委托令牌结构">2.1 委托令牌结构</h3>
+<h2 id="问题背景">问题背景</h2>
 
-<p>HDP 的核心是<strong>委托令牌</strong>（Delegation Token），包含：</p>
+<h3 id="要解决的问题">要解决的问题</h3>
 
-<div class="math-block">$$\text{Token} = \langle \text{issuer}, \text{delegate}, \text{scope}, \text{ttl}, \text{nonce}, \sigma \rangle$$</div>
+<p><span class="wikilink">Agentic AI</span> 系统中，人类指令经过 orchestrator → sub-agents → tool-execution agents 的多级委托链后，终端动作与原始人类授权之间的关联完全断裂。没有标准机制让下游 agent 验证其收到的指令确实来自人类授权、授权范围是什么、经过了怎样的委托路径。</p>
 
-<p>其中 $\sigma$ 为数字签名：</p>
+<h3 id="现有方法的局限">现有方法的局限</h3>
 
-<div class="math-block">$$\sigma = \text{Sign}(sk_{\text{issuer}}, H(\text{issuer} \| \text{delegate} \| \text{scope} \| \text{ttl} \| \text{nonce}))$$</div>
+<li><strong><span class="wikilink">OAuth 2.0</span> Token Exchange (RFC 8693)</strong>: 点对点交换，每次产生新 token，无法在单一 artifact 中保留完整委托历史；需要在线授权服务器；无人类授权绑定和 scope provenance</li>
+<li><strong><span class="wikilink">JWT</span> (RFC 7519)</strong>: 通用签名声明格式，无 append-only 多方签名的委托链；使用 base64url 编码的 header.payload 而非 canonical JSON</li>
+<li><strong><span class="wikilink">UCAN</span></strong>: 能力授权系统，编码可执行权能，依赖 <span class="wikilink">DID</span> 基础设施，复杂度高于纯溯源需求</li>
+<li><strong><span class="wikilink">Intent Provenance Protocol|IPP</span></strong>: 最接近 HDP，同样使用 Ed25519 + append-only chain，但需要中心化撤销注册表、genesis seal 绑定第三方 URL、强制 W3C DID</li>
 
-<p>$H$ 为密码学哈希函数，$sk_{\text{issuer}}$ 为签发者私钥。</p>
+<h3 id="本文的动机">本文的动机</h3>
 
-<h3 id="22-委托链构建">2.2 委托链构建</h3>
+<p>现有协议均为 human-to-system 交互设计，无法满足 agentic pipeline 的三个结构性需求：<strong>多跳 (multi-hop)</strong>、<strong>仅追加 (append-only)</strong>、<strong>人类溯源 (human-provenance)</strong>。HDP 以最小化基础设施依赖为设计目标，填补这一空白。</p>
 
-<p>多级委托形成链式结构：</p>
 
-<div class="math-block">$$\text{Chain} = [\text{Token}_0, \text{Token}_1, \ldots, \text{Token}_n]$$</div>
+<h2 id="方法详解">方法详解</h2>
 
-<p>每级满足：</p>
-<li>$\text{Token}_i.\text{delegate} = \text{Token}_{i+1}.\text{issuer}$</li>
-<li>$\text{Token}_{i+1}.\text{scope} \subseteq \text{Token}_i.\text{scope}$（权限只缩不扩）</li>
+<h3 id="设计原则">设计原则</h3>
 
-<h3 id="23-验证流水线">2.3 验证流水线</h3>
+<p>HDP 按五个有序原则设计：</p>
 
-<p>验证一条委托链的算法：</p>
+<p>1. <strong>离线可验证性 (Offline Verifiability)</strong>: 验证仅需公钥 + session_id，无网络调用</p>
+<p>2. <strong>自主权 (Self-Sovereignty)</strong>: 任何组织无需注册即可签发和验证 token</p>
+<p>3. <strong>防篡改证据 (Tamper Evidence)</strong>: 任何字段的修改都可被验证管线检测</p>
+<p>4. <strong>最小足迹 (Minimal Footprint)</strong>: 仅需 <span class="wikilink">Ed25519</span> + JSON 支持即可实现</p>
+<p>5. <strong>隐私设计 (Privacy by Design)</strong>: principal 身份字段与审计字段结构分离</p>
 
-<div class="math-block">$$\text{Verify}(\text{Chain}) = \bigwedge_{i=0}^{n} \left[ \text{VerifySig}(\text{Token}_i) \wedge \text{CheckScope}(\text{Token}_i) \wedge \text{CheckTTL}(\text{Token}_i) \right]$$</div>
+<h3 id="token-结构">Token 结构</h3>
 
-<p>时间复杂度 $O(n)$，其中 $n$ 为链长度。</p>
+<p>HDP token 是包含六个顶层字段的 JSON 对象：</p>
 
-<h3 id="24-权限范围表达">2.4 权限范围表达</h3>
+<li><strong><code>hdp</code></strong>: 协议版本字符串（当前 <code>"0.1"</code>）</li>
+<li><strong><code>header</code></strong>: 生命周期与会话绑定（token_id, issued_at, expires_at, session_id, version, parent_token_id）</li>
+<li><strong><code>principal</code></strong>: 授权人类身份（id, id_type, display_name, poh_credential）</li>
+<li><strong><code>scope</code></strong>: 授权范围（intent, authorized_tools, data_classification, network_egress, persistence, max_hops）</li>
+<li><strong><code>chain</code></strong>: append-only 委托链数组，每个 hop 记录 agent 的委托动作</li>
+<li><strong><code>signature</code></strong>: 根签名（kid, alg, value），使用 <span class="wikilink">Ed25519</span> 签名</li>
 
-<p>权限使用集合表示：</p>
+<h3 id="figure-1-hdp-token-top-level-structure">Figure 1: HDP Token Top-Level Structure</h3>
 
-<div class="math-block">$$\text{scope} = \{(\text{resource}, \text{action}, \text{constraints})\}$$</div>
+<pre><code>
+{
+  &quot;hdp&quot; : &quot;0.1&quot;,
+  &quot;header&quot; : { token_id, issued_at, expires_at, session_id, version },
+  &quot;principal&quot; : { id, id_type, display_name, poh_credential },
+  &quot;scope&quot; : { intent, authorized_tools, data_classification,
+    network_egress, persistence, max_hops },
+  &quot;chain&quot; : [ hop_1, hop_2, ... hop_n ],
+  &quot;signature&quot; : { kid, alg, value }
+}
+</code></pre>
 
-<p>子集关系验证：</p>
+<p><strong>说明</strong>: HDP token 的顶层 JSON 结构。header 携带会话绑定信息，principal 标识授权人类，scope 记录授权范围，chain 以 append-only 方式记录每一跳的委托，signature 是覆盖全部内容的 <span class="wikilink">Ed25519</span> 根签名。</p>
 
-<div class="math-block">$$\text{scope}_{\text{child}} \subseteq \text{scope}_{\text{parent}} \iff \forall s \in \text{scope}_{\text{child}}, \exists p \in \text{scope}_{\text{parent}}: s \preceq p$$</div>
+<h3 id="密码学构造">密码学构造</h3>
 
-<h3 id="25-重新授权机制">2.5 重新授权机制</h3>
+<h4 id="根签名-root-signature">根签名 (Root Signature)</h4>
 
-<p>当令牌即将过期时：</p>
+<p>Token 创建时对 header、principal、scope 和空 chain 计算根签名：</p>
 
-<div class="math-block">$$\text{ttl}_{\text{new}} = \min(\text{ttl}_{\text{requested}}, \text{ttl}_{\text{parent}} - t_{\text{elapsed}})$$</div>
+<p>1. 构造未签名 token 对象</p>
+<p>2. 按 <span class="wikilink">RFC 8785</span> (JSON Canonicalization Scheme) 序列化为 canonical JSON</p>
+<p>3. 对 canonical bytes 计算 <span class="wikilink">Ed25519</span> 签名</p>
+<p>4. Base64url 编码后填入 <code>signature.value</code></p>
 
-<h3 id="26-传输安全">2.6 传输安全</h3>
+<h4 id="跳签名-hop-signature">跳签名 (Hop Signature)</h4>
 
-<p>所有令牌通过 TLS 传输。nonce 防止重放：</p>
+<p>每个 hop 携带 <code>hop_signature</code>，将新 hop 绑定到完整的累积委托历史和根签名。</p>
 
-<div class="math-block">$$\text{NonceDB} = \text{NonceDB} \cup \{\text{nonce}\}, \quad \text{reject if } \text{nonce} \in \text{NonceDB}$$</div>
 
-<h2 id="3-安全分析">3. 安全分析</h2>
+<h2 id="关键公式">关键公式</h2>
+
+<h3 id="公式-1-ed25519根签名计算">公式 1: <span class="wikilink">Ed25519|根签名计算</span></h3>
+
+<div class="math-block">$$
+\sigma_{\text{root}} = \text{Ed25519-Sign}\bigl(sk,\; \text{JCS}\bigl(\{hdp, header, principal, scope, chain{=}[\,]\}\bigr)\bigr)
+$$</div>
+
+<p><strong>含义</strong>: 根签名覆盖 token 的所有核心字段（header、principal、scope）和空 chain，使用 issuer 的私钥 $sk$ 签名。<span class="wikilink">RFC 8785|JCS</span> 确保序列化的确定性。</p>
+
+<p><strong>符号说明</strong>:</p>
+<li>$\sigma_{\text{root}}$: 根签名值</li>
+<li>$sk$: issuer 的 <span class="wikilink">Ed25519</span> 私钥</li>
+<li>$\text{JCS}(\cdot)$: <span class="wikilink">RFC 8785</span> JSON Canonicalization Scheme，确保确定性序列化</li>
+
+<h3 id="公式-2-digital-signature跳签名载荷构造">公式 2: <span class="wikilink">Digital Signature|跳签名载荷构造</span></h3>
+
+<div class="math-block">$$
+P_n = [\sigma_{\text{root}},\; h_1^{\text{signed}},\; \ldots,\; h_{n-1}^{\text{signed}},\; h_n^{\text{unsigned}}]
+$$</div>
+
+<p><strong>含义</strong>: 第 $n$ 跳的签名载荷是一个 JSON 数组，包含根签名值、所有已签名的前序 hop（含其 hop_signature）、以及当前新 hop（不含 hop_signature）。这一非对称结构确保每个 hop 签名覆盖所有先前 hop 及根签名。</p>
+
+<p><strong>符号说明</strong>:</p>
+<li>$P_n$: 第 $n$ 跳的签名载荷</li>
+<li>$h_i^{\text{signed}}$: 第 $i$ 跳（含 hop_signature 字段）</li>
+<li>$h_n^{\text{unsigned}}$: 当前新 hop（不含 hop_signature）</li>
+
+<h3 id="公式-3-ed25519跳签名计算">公式 3: <span class="wikilink">Ed25519|跳签名计算</span></h3>
+
+<div class="math-block">$$
+\sigma_{\text{hop},n} = \text{Ed25519-Sign}\bigl(sk,\; \text{JCS}(P_n)\bigr)
+$$</div>
+
+<p><strong>含义</strong>: 对构造的载荷 $P_n$ 做 JCS 序列化后使用 issuer 私钥签名。由于 $P_n$ 包含 $\sigma_{\text{root}}$ 和所有先前 hop 签名，任何历史篡改都会导致当前及后续所有 hop 的签名验证失败。</p>
+
+<p><strong>符号说明</strong>:</p>
+<li>$\sigma_{\text{hop},n}$: 第 $n$ 跳的签名值</li>
+<li>$P_n$: 签名载荷（见公式 2）</li>
+
+<h3 id="公式-4-token验证验证管线">公式 4: <span class="wikilink">Token验证|验证管线</span></h3>
+
+<div class="math-block">$$
+V(T) = \bigwedge_{i=1}^{7} v_i(T) = v_{\text{ver}} \wedge v_{\text{exp}} \wedge v_{\text{root}} \wedge v_{\text{seq}} \wedge v_{\text{hop}} \wedge v_{\text{max}} \wedge v_{\text{sess}}
+$$</div>
+
+<p><strong>含义</strong>: 验证管线由 7 个有序步骤组成，任一步骤失败即立即拒绝 token。</p>
+
+<p><strong>符号说明</strong>:</p>
+<li>$v_{\text{ver}}$: 版本检查（hdp 字段）</li>
+<li>$v_{\text{exp}}$: 过期检查（expires_at vs 当前时间）</li>
+<li>$v_{\text{root}}$: 根签名验证（使用 issuer 公钥）</li>
+<li>$v_{\text{seq}}$: hop 序列完整性检查（无间隔、无重复）</li>
+<li>$v_{\text{hop}}$: 每个 hop 的签名验证（重构载荷 $P_n$ 后验签）</li>
+<li>$v_{\text{max}}$: max_hops 检查（chain 长度 $\leq$ scope.max_hops）</li>
+<li>$v_{\text{sess}}$: 会话绑定检查（header.session_id == verifier 当前 session）</li>
+
+<h3 id="公式-5-ed25519重新授权链接">公式 5: <span class="wikilink">Ed25519|重新授权链接</span></h3>
+
+<div class="math-block">$$
+T_{\text{new}}.header.parent\_token\_id = T_{\text{old}}.header.token\_id
+$$</div>
+
+<p><strong>含义</strong>: 长时间 session 中需要重新授权时，新 token 通过 parent_token_id 字段链接到旧 token，形成可审计的 scope 演进谱系。新 token 的根签名覆盖该链接关系。</p>
+
+
+<h2 id="关键图表">关键图表</h2>
+
+<h3 id="figure-1-hdp-token-top-level-structure--hdp-token-顶层结构">Figure 1: HDP Token Top-Level Structure / HDP Token 顶层结构</h3>
+
+<p>（见上方"Token 结构"节中的 JSON 代码块。论文中唯一的 Figure，展示 token 的六个顶层字段。该 Figure 为文本/代码形式，非位图。）</p>
+
+
+<h2 id="威胁模型">威胁模型</h2>
+
+<h3 id="攻击者能力">攻击者能力</h3>
 
 <table class="paper-table">
-<thead><tr><th>威胁</th><th>防护机制</th></tr></thead>
+<thead><tr><th>编号</th><th>能力</th></tr></thead>
 <tbody>
-<tr><td>伪造授权</td><td>数字签名验证</td></tr>
-<tr><td>链篡改</td><td>逐级签名 + 权限单调递减</td></tr>
-<tr><td>重放攻击</td><td>nonce + TTL</td></tr>
-<tr><td>权限提升</td><td>子集约束 $\text{scope}_{\text{child}} \subseteq \text{scope}_{\text{parent}}$</td></tr>
-<tr><td>提示注入</td><td>协议层独立于 LLM 推理层</td></tr>
+<tr><td>A1</td><td>通过 <span class="wikilink">Indirect Prompt Injection</span> 向 agent 输入流注入对抗内容</td></tr>
+<tr><td>A2</td><td>拦截和检查 agent 间传输的 token</td></tr>
+<tr><td>A3</td><td>尝试跨会话重放捕获的 token</td></tr>
+<tr><td>A4</td><td>尝试伪造或修改 token 以声称虚假授权</td></tr>
+<tr><td>A5</td><td>尝试向委托链中插入伪造的 hop</td></tr>
 </tbody></table>
 
 
-<h2 id="4-性能评估">4. 性能评估</h2>
+<h3 id="不建模的攻击者">不建模的攻击者</h3>
+
+<li>持有 issuer 的 <span class="wikilink">Ed25519</span> 私钥（密钥泄露是运维问题）</li>
+<li>能破解 Ed25519 签名安全或 SHA-512 抗碰撞性</li>
+<li>能篡改传输层通道（假设有 TLS 等保护）</li>
+
+<h3 id="防护资产">防护资产</h3>
+
+<li><strong>(P1)</strong> 人类授权事件的完整性（principal、scope、session binding）</li>
+<li><strong>(P2)</strong> 委托链的完整性（hop 准确反映实际委托历史）</li>
+<li><strong>(P3)</strong> token 的不可重放性（跨会话、过期后无效）</li>
+
+<h3 id="可检测攻击场景">可检测攻击场景</h3>
 
 <table class="paper-table">
-<thead><tr><th>操作</th><th>延迟</th></tr></thead>
+<thead><tr><th>场景</th><th>描述</th><th>检测方式</th></tr></thead>
 <tbody>
-<tr><td>令牌签发</td><td>< 1 ms</td></tr>
-<tr><td>单级验证</td><td>< 0.5 ms</td></tr>
-<tr><td>5 级链验证</td><td>< 2.5 ms</td></tr>
-<tr><td>令牌序列化</td><td>< 0.1 ms</td></tr>
+<tr><td>S1</td><td>agent 无 HDP token 执行动作</td><td>无 token = 未授权</td></tr>
+<tr><td>S2</td><td>伪造 principal 或 scope</td><td>根签名验证失败</td></tr>
+<tr><td>S3</td><td>篡改或删除 chain 中的 hop</td><td>hop 签名验证失败</td></tr>
+<tr><td>S4</td><td>跨会话重放 token</td><td>session binding 检查失败</td></tr>
 </tbody></table>
 
 
-<h2 id="5-核心概念">5. 核心概念</h2>
 
-<li><span class="wikilink">MCP</span>：Model Context Protocol，agent 工具调用协议</li>
-<li><span class="wikilink">A2A</span>：Agent-to-Agent 协议</li>
-<li><span class="wikilink">Digital Signature</span>：数字签名</li>
-<li><span class="wikilink">Delegation Chain</span>：委托链</li>
-<li><span class="wikilink">Zero Trust</span>：零信任安全架构</li>
-<li><span class="wikilink">HMAC</span>：基于哈希的消息认证码</li>
+<h2 id="安全分析">安全分析</h2>
 
-<h2 id="6-优缺点分析">6. 优缺点分析</h2>
+<h3 id="51-token-伪造防御">5.1 Token 伪造防御</h3>
+
+<p>根签名验证的安全性归约为 <span class="wikilink">Ed25519</span> 在选择消息攻击下的不可伪造性 (EUF-CMA)。Ed25519 基于 <span class="wikilink">Curve25519</span> 上的离散对数难度问题。</p>
+
+<h3 id="52-委托链篡改防御">5.2 委托链篡改防御</h3>
+
+<p>链式签名构造确保每个 hop 签名覆盖所有先前 hop 及根签名，任何历史修改都会导致被篡改 hop 及其后所有 hop 的签名验证失败。安全性同样归约为 Ed25519 的 EUF-CMA。</p>
+
+<h3 id="53-重放攻击防御">5.3 重放攻击防御</h3>
+
+<p>双重防御机制：</p>
+<li><strong>时间过期</strong>: expires_at（默认 24 小时）确保 token 有时效性</li>
+<li><strong>会话绑定</strong>: session_id 确保 token 仅在指定会话中有效</li>
+
+<h3 id="54-prompt-injection-缓解边界">5.4 Prompt Injection 缓解边界</h3>
+
+<p>HDP <strong>不阻止</strong> <span class="wikilink">Prompt Injection</span>，但提供事后可检测性：</p>
+<li>注入动作若未扩展 HDP chain，产生可检测的 gap（无委托记录）</li>
+<li>注入动作若伪造 hop，签名验证失败（需 issuer 私钥才能伪造）</li>
+<li><strong>语义边界</strong>: agent 被诱导记录真实 hop 但 action_summary 被误导，协议无法检测（应用层问题）</li>
+
+
+<h2 id="实现与部署">实现与部署</h2>
+
+<h3 id="参考实现">参考实现</h3>
+
+<table class="paper-table">
+<thead><tr><th>项目</th><th>详情</th></tr></thead>
+<tbody>
+<tr><td>TypeScript SDK</td><td><code>@helixar_ai/hdp</code> (npm)，提供 token 签发、hop 扩展、7 步验证</td></tr>
+<tr><td>Python 集成</td><td>支持 CrewAI 和 <span class="wikilink">MCP</span></td></tr>
+<tr><td>密码学库</td><td>noble-ed25519 (Ed25519) + 确定性 JSON 序列化 (RFC 8785)</td></tr>
+<tr><td>IETF I-D</td><td>draft-helixar-hdp-agentic-delegation-00 (RATS WG)</td></tr>
+</tbody></table>
+
+
+<h3 id="集成模式">集成模式</h3>
+
+<p>1. 人类通过 issuer SDK 在 session 开始时签发 HDP token</p>
+<p>2. Token 附加到任务上下文传递给 orchestrator</p>
+<p>3. 管线中每个 agent 验证 token，扩展 chain（添加 hop），传递给下游</p>
+<p>4. 终端 tool-execution agent 验证完整 chain 后执行动作</p>
+
+<h3 id="性能特征">性能特征</h3>
+
+<li><span class="wikilink">Ed25519</span> 签名验证：< 100 微秒</li>
+<li><span class="wikilink">RFC 8785</span> JSON 序列化：$O(n)$，$n$ 为 token 大小</li>
+<li>典型 10-hop chain 完整验证：< 2 毫秒</li>
+<li>Token 大小随 chain 线性增长，10-hop 典型值 4-8 KB</li>
+
+
+<h2 id="批判性思考">批判性思考</h2>
 
 <h3 id="优点">优点</h3>
-<p>1. <strong>问题重要</strong>：agentic AI 的授权溯源是真实需求</p>
-<p>2. <strong>设计轻量</strong>：毫秒级开销，适合实时 agent 交互</p>
-<p>3. <strong>权限单调递减</strong>：数学保证子 agent 不能越权</p>
-<p>4. <strong>协议层独立</strong>：不依赖 LLM 安全性，在密码学层面解决问题</p>
-<p>5. <strong>可组合</strong>：兼容现有 MCP/A2A 生态</p>
+<p>1. <strong>极简设计</strong>: 仅依赖 Ed25519 + JSON，无需 DID/PKI/区块链等重型基础设施，部署门槛极低</p>
+<p>2. <strong>完全离线验证</strong>: 特别适合 air-gapped 环境、边缘部署、低延迟场景</p>
+<p>3. <strong>清晰的安全边界</strong>: 明确声明 HDP 是问责基础设施而非完整防御，避免过度承诺</p>
+<p>4. <strong>IETF 标准化路径</strong>: 已提交 Internet-Draft，有望成为行业标准</p>
 
-<h3 id="缺点">缺点</h3>
-<p>1. <strong>缺少实现</strong>：仅协议设计，无开源实现</p>
-<p>2. <strong>社区关注低</strong>：HF 仅 1 upvote</p>
-<p>3. <strong>密钥管理</strong>：agent 的私钥如何安全存储和轮换？</p>
-<p>4. <strong>动态权限</strong>：scope 一旦签发不可修改，不够灵活</p>
-<p>5. <strong>实际部署</strong>：需要整个 agent 生态采纳才有价值</p>
+<h3 id="局限性">局限性</h3>
+<p>1. <strong>v0.1 单密钥限制</strong>: 所有 hop 签名使用 issuer 的密钥，hop 签名仅证明"在 issuer 处记录"而非"由特定 agent 产生"。v0.2 计划引入 per-agent key binding</p>
+<p>2. <strong>无语义执行</strong>: HDP 仅记录授权范围但不强制执行，agent 实际动作是否符合 scope.intent 需要应用层判断</p>
+<p>3. <strong>隐私-审计权衡</strong>: principal 对象可能包含 PII，token 在 agent 间传递存在隐私泄露风险（虽提供 opaque id_type 缓解）</p>
+<p>4. <strong>缺乏实证评估</strong>: 论文无实际部署的实验数据，无 benchmark 对比（可理解，协议设计论文的常见模式）</p>
 
-<h2 id="7-与相关工作对比">7. 与相关工作对比</h2>
+<h3 id="潜在改进方向">潜在改进方向</h3>
+<p>1. <strong>Multi-key delegation (v0.2)</strong>: 引入 per-agent 密钥，实现真正的多方签名委托链</p>
+<p>2. <strong>运行时策略集成</strong>: 与 MI9、CaMeL 等运行时治理框架结合，实现 scope 语义执行</p>
+<p>3. <strong>M-of-N 多主体同时授权</strong>: 使用 <span class="wikilink">Threshold Signature</span> 实现无需顺序依赖的联合授权</p>
 
-<table class="paper-table">
-<thead><tr><th>方法</th><th>层级</th><th>粒度</th><th>开销</th><th>委托链支持</th></tr></thead>
-<tbody>
-<tr><td><strong>HDP</strong></td><td><strong>密码学</strong></td><td><strong>动作级</strong></td><td><strong>< 1ms</strong></td><td><strong>是</strong></td></tr>
-<tr><td>OAuth 2.0</td><td>应用层</td><td>API 级</td><td>中</td><td>有限</td></tr>
-<tr><td>SPIFFE/SPIRE</td><td>基础设施</td><td>服务级</td><td>低</td><td>否</td></tr>
-<tr><td>LLM Guard</td><td>语义层</td><td>prompt 级</td><td>高</td><td>否</td></tr>
-<tr><td>ShieldNet</td><td>网络层</td><td>流量级</td><td>低</td><td>否</td></tr>
-</tbody></table>
-</div></details>
+<h3 id="可复现性评估">可复现性评估</h3>
+<li>[x] 代码开源（TypeScript SDK on npm）</li>
+<li>[ ] 预训练模型（不适用）</li>
+<li>[x] 协议细节完整（IETF I-D 定义规范）</li>
+<li>[ ] 实际部署数据（无）</li>
+
+
+<h2 id="关联笔记">关联笔记</h2>
+
+<h3 id="对比">对比</h3>
+<li><span class="wikilink">OAuth 2.0</span>: 点对点 token 交换，需在线授权服务器</li>
+<li><span class="wikilink">JWT</span>: 通用签名声明，无 append-only 委托链</li>
+<li><span class="wikilink">UCAN</span>: 能力授权网络，依赖 DID 基础设施</li>
+<li><span class="wikilink">Intent Provenance Protocol</span>: 最接近方案，但需中心化撤销注册表</li>
+
+<h3 id="方法相关">方法相关</h3>
+<li><span class="wikilink">Ed25519</span>: 核心签名算法 (RFC 8032)</li>
+<li><span class="wikilink">RFC 8785</span>: JSON Canonicalization Scheme，确保确定性序列化</li>
+<li><span class="wikilink">Prompt Injection</span>: HDP 主要缓解的攻击面</li>
+<li><span class="wikilink">Agentic AI</span>: HDP 的目标应用场景</li>
+<li><span class="wikilink">Digital Signature</span>: 密码学签名基础</li>
+
+<h3 id="标准相关">标准相关</h3>
+<li><span class="wikilink">MCP</span>: Model Context Protocol，HDP 提供 Python 集成</li>
+
+
+<h2 id="速查卡片">速查卡片</h2>
+
+<blockquote>
+<p>[!summary] HDP: A Lightweight Cryptographic Protocol for Human Delegation Provenance in Agentic AI Systems</p>
+<p>- <strong>核心</strong>: 用密码学 token 将人类授权绑定到 agentic AI 的多级委托链</p>
+<p>- <strong>方法</strong>: JSON token + Ed25519 签名 + append-only hop chain + 7 步离线验证</p>
+<p>- <strong>结果</strong>: 已发布 IETF Internet-Draft + TypeScript/Python SDK</p>
+<p>- <strong>代码</strong>: <a href="https://www.npmjs.com/package/@helixar_ai/hdp" target="_blank">@helixar_ai/hdp</a></p>
+</blockquote>
+
+
+<p><em>笔记创建时间: 2026-04-05</em></p></div></details>
 
 <li><strong>核心方法</strong>: 用密码学协议解决 agentic AI 的授权溯源问题——在多级 agent 委托链中验证终端动作是否由人类真正授权、经过什么委托路径、在什么范围内。类似给 agent 调用链加了一条加密审计追踪。</li>
 <li><strong>借鉴意义</strong>: 随着 <span class="wikilink">MCP</span> 和 <span class="wikilink">A2A</span> 生态扩展，agent 间的授权验证会越来越重要。</li>
@@ -2429,139 +2622,332 @@ $$</div>
 <li><strong>作者</strong>: Dalugoda, Asiri</li>
 <li><strong>链接</strong>: <a href="https://arxiv.org/abs/2604.04522" target="_blank">arXiv</a> | <a href="https://arxiv.org/pdf/2604.04522" target="_blank">PDF</a></li>
 <li><strong>来源</strong>: 📰 HF Daily，⬆️ 1</li>
-<details class="paper-note"><summary>📒 精读笔记: HDP</summary><div class="note-body"><h1 id="hdp-a-lightweight-cryptographic-protocol-for-human-delegation-provenance-in-agentic-ai-systems">HDP: A Lightweight Cryptographic Protocol for Human Delegation Provenance in Agentic AI Systems</h1>
+<details class="paper-note"><summary>📒 精读笔记: HDP</summary><div class="note-body"><h1 id="论文笔记hdp-a-lightweight-cryptographic-protocol-for-human-delegation-provenance-in-agentic-ai-systems">论文笔记：HDP: A Lightweight Cryptographic Protocol for Human Delegation Provenance in Agentic AI Systems</h1>
+
+<h2 id="元信息">元信息</h2>
+
+<table class="paper-table">
+<thead><tr><th>项目</th><th>内容</th></tr></thead>
+<tbody>
+<tr><td>机构</td><td>Helixar Limited, Auckland, New Zealand</td></tr>
+<tr><td>日期</td><td>March 2026</td></tr>
+<tr><td>项目主页</td><td><a href="https://helixar.ai/labs/hdp" target="_blank">helixar.ai/labs/hdp</a></td></tr>
+<tr><td>IETF I-D</td><td>draft-helixar-hdp-agentic-delegation-00</td></tr>
+<tr><td>链接</td><td><a href="https://arxiv.org/abs/2604.04522" target="_blank">arXiv</a> / <a href="https://www.npmjs.com/package/@helixar_ai/hdp" target="_blank">SDK (@helixar_ai/hdp)</a></td></tr>
+</tbody></table>
+
+
+
+<h2 id="一句话总结">一句话总结</h2>
 
 <blockquote>
-<p><strong>一句话总结</strong>：用轻量级密码学协议为 agentic AI 系统的多级委托链建立授权溯源，验证终端动作是否由人类真正授权、经过什么委托路径、在什么权限范围内。</p>
+<p>提出 HDP 协议，用轻量级 <span class="wikilink">Ed25519</span> 签名的 JSON token 将人类授权事件密码学绑定到 agentic AI 多级委托链，实现完全离线可验证的授权溯源。</p>
 </blockquote>
 
-<h2 id="1-研究动机与问题定义">1. 研究动机与问题定义</h2>
 
-<h3 id="核心问题">核心问题</h3>
-<p>随着 <span class="wikilink">MCP</span> 和 <span class="wikilink">A2A</span> 协议推动 agent 间的互操作，一个关键安全问题浮现：<strong>在多级 agent 委托链中，如何验证最终执行的动作确实是人类授权的？</strong></p>
+<h2 id="核心贡献">核心贡献</h2>
 
-<h3 id="威胁模型">威胁模型</h3>
-<li><strong>伪造授权</strong>：恶意 agent 伪造人类授权执行未授权操作</li>
-<li><strong>链篡改</strong>：中间 agent 修改委托链中的权限范围</li>
-<li><strong>重放攻击</strong>：重用过期的授权令牌</li>
-<li><strong>权限提升</strong>：子 agent 越权执行超出委托范围的操作</li>
+<p>1. <strong>人类委托溯源协议 (HDP)</strong>: 定义了一种 JSON token 结构，将人类授权事件（principal + scope）与 append-only 的 agent 委托链密码学绑定</p>
+<p>2. <strong>完全离线验证</strong>: 仅需 issuer 的 <span class="wikilink">Ed25519</span> 公钥（32 bytes）和 session_id 即可完成 7 步验证，无需网络调用或第三方信任锚</p>
+<p>3. <strong>系统性对比分析</strong>: 将 HDP 置于 <span class="wikilink">OAuth 2.0</span> Token Exchange (RFC 8693)、<span class="wikilink">JWT</span> (RFC 7519)、<span class="wikilink">UCAN</span>、<span class="wikilink">Intent Provenance Protocol|IPP</span> 的现有委托协议图谱中，明确各自设计取舍</p>
 
-<h2 id="2-方法详解">2. 方法详解</h2>
 
-<h3 id="21-委托令牌结构">2.1 委托令牌结构</h3>
+<h2 id="问题背景">问题背景</h2>
 
-<p>HDP 的核心是<strong>委托令牌</strong>（Delegation Token），包含：</p>
+<h3 id="要解决的问题">要解决的问题</h3>
 
-<div class="math-block">$$\text{Token} = \langle \text{issuer}, \text{delegate}, \text{scope}, \text{ttl}, \text{nonce}, \sigma \rangle$$</div>
+<p><span class="wikilink">Agentic AI</span> 系统中，人类指令经过 orchestrator → sub-agents → tool-execution agents 的多级委托链后，终端动作与原始人类授权之间的关联完全断裂。没有标准机制让下游 agent 验证其收到的指令确实来自人类授权、授权范围是什么、经过了怎样的委托路径。</p>
 
-<p>其中 $\sigma$ 为数字签名：</p>
+<h3 id="现有方法的局限">现有方法的局限</h3>
 
-<div class="math-block">$$\sigma = \text{Sign}(sk_{\text{issuer}}, H(\text{issuer} \| \text{delegate} \| \text{scope} \| \text{ttl} \| \text{nonce}))$$</div>
+<li><strong><span class="wikilink">OAuth 2.0</span> Token Exchange (RFC 8693)</strong>: 点对点交换，每次产生新 token，无法在单一 artifact 中保留完整委托历史；需要在线授权服务器；无人类授权绑定和 scope provenance</li>
+<li><strong><span class="wikilink">JWT</span> (RFC 7519)</strong>: 通用签名声明格式，无 append-only 多方签名的委托链；使用 base64url 编码的 header.payload 而非 canonical JSON</li>
+<li><strong><span class="wikilink">UCAN</span></strong>: 能力授权系统，编码可执行权能，依赖 <span class="wikilink">DID</span> 基础设施，复杂度高于纯溯源需求</li>
+<li><strong><span class="wikilink">Intent Provenance Protocol|IPP</span></strong>: 最接近 HDP，同样使用 Ed25519 + append-only chain，但需要中心化撤销注册表、genesis seal 绑定第三方 URL、强制 W3C DID</li>
 
-<p>$H$ 为密码学哈希函数，$sk_{\text{issuer}}$ 为签发者私钥。</p>
+<h3 id="本文的动机">本文的动机</h3>
 
-<h3 id="22-委托链构建">2.2 委托链构建</h3>
+<p>现有协议均为 human-to-system 交互设计，无法满足 agentic pipeline 的三个结构性需求：<strong>多跳 (multi-hop)</strong>、<strong>仅追加 (append-only)</strong>、<strong>人类溯源 (human-provenance)</strong>。HDP 以最小化基础设施依赖为设计目标，填补这一空白。</p>
 
-<p>多级委托形成链式结构：</p>
 
-<div class="math-block">$$\text{Chain} = [\text{Token}_0, \text{Token}_1, \ldots, \text{Token}_n]$$</div>
+<h2 id="方法详解">方法详解</h2>
 
-<p>每级满足：</p>
-<li>$\text{Token}_i.\text{delegate} = \text{Token}_{i+1}.\text{issuer}$</li>
-<li>$\text{Token}_{i+1}.\text{scope} \subseteq \text{Token}_i.\text{scope}$（权限只缩不扩）</li>
+<h3 id="设计原则">设计原则</h3>
 
-<h3 id="23-验证流水线">2.3 验证流水线</h3>
+<p>HDP 按五个有序原则设计：</p>
 
-<p>验证一条委托链的算法：</p>
+<p>1. <strong>离线可验证性 (Offline Verifiability)</strong>: 验证仅需公钥 + session_id，无网络调用</p>
+<p>2. <strong>自主权 (Self-Sovereignty)</strong>: 任何组织无需注册即可签发和验证 token</p>
+<p>3. <strong>防篡改证据 (Tamper Evidence)</strong>: 任何字段的修改都可被验证管线检测</p>
+<p>4. <strong>最小足迹 (Minimal Footprint)</strong>: 仅需 <span class="wikilink">Ed25519</span> + JSON 支持即可实现</p>
+<p>5. <strong>隐私设计 (Privacy by Design)</strong>: principal 身份字段与审计字段结构分离</p>
 
-<div class="math-block">$$\text{Verify}(\text{Chain}) = \bigwedge_{i=0}^{n} \left[ \text{VerifySig}(\text{Token}_i) \wedge \text{CheckScope}(\text{Token}_i) \wedge \text{CheckTTL}(\text{Token}_i) \right]$$</div>
+<h3 id="token-结构">Token 结构</h3>
 
-<p>时间复杂度 $O(n)$，其中 $n$ 为链长度。</p>
+<p>HDP token 是包含六个顶层字段的 JSON 对象：</p>
 
-<h3 id="24-权限范围表达">2.4 权限范围表达</h3>
+<li><strong><code>hdp</code></strong>: 协议版本字符串（当前 <code>"0.1"</code>）</li>
+<li><strong><code>header</code></strong>: 生命周期与会话绑定（token_id, issued_at, expires_at, session_id, version, parent_token_id）</li>
+<li><strong><code>principal</code></strong>: 授权人类身份（id, id_type, display_name, poh_credential）</li>
+<li><strong><code>scope</code></strong>: 授权范围（intent, authorized_tools, data_classification, network_egress, persistence, max_hops）</li>
+<li><strong><code>chain</code></strong>: append-only 委托链数组，每个 hop 记录 agent 的委托动作</li>
+<li><strong><code>signature</code></strong>: 根签名（kid, alg, value），使用 <span class="wikilink">Ed25519</span> 签名</li>
 
-<p>权限使用集合表示：</p>
+<h3 id="figure-1-hdp-token-top-level-structure">Figure 1: HDP Token Top-Level Structure</h3>
 
-<div class="math-block">$$\text{scope} = \{(\text{resource}, \text{action}, \text{constraints})\}$$</div>
+<pre><code>
+{
+  &quot;hdp&quot; : &quot;0.1&quot;,
+  &quot;header&quot; : { token_id, issued_at, expires_at, session_id, version },
+  &quot;principal&quot; : { id, id_type, display_name, poh_credential },
+  &quot;scope&quot; : { intent, authorized_tools, data_classification,
+    network_egress, persistence, max_hops },
+  &quot;chain&quot; : [ hop_1, hop_2, ... hop_n ],
+  &quot;signature&quot; : { kid, alg, value }
+}
+</code></pre>
 
-<p>子集关系验证：</p>
+<p><strong>说明</strong>: HDP token 的顶层 JSON 结构。header 携带会话绑定信息，principal 标识授权人类，scope 记录授权范围，chain 以 append-only 方式记录每一跳的委托，signature 是覆盖全部内容的 <span class="wikilink">Ed25519</span> 根签名。</p>
 
-<div class="math-block">$$\text{scope}_{\text{child}} \subseteq \text{scope}_{\text{parent}} \iff \forall s \in \text{scope}_{\text{child}}, \exists p \in \text{scope}_{\text{parent}}: s \preceq p$$</div>
+<h3 id="密码学构造">密码学构造</h3>
 
-<h3 id="25-重新授权机制">2.5 重新授权机制</h3>
+<h4 id="根签名-root-signature">根签名 (Root Signature)</h4>
 
-<p>当令牌即将过期时：</p>
+<p>Token 创建时对 header、principal、scope 和空 chain 计算根签名：</p>
 
-<div class="math-block">$$\text{ttl}_{\text{new}} = \min(\text{ttl}_{\text{requested}}, \text{ttl}_{\text{parent}} - t_{\text{elapsed}})$$</div>
+<p>1. 构造未签名 token 对象</p>
+<p>2. 按 <span class="wikilink">RFC 8785</span> (JSON Canonicalization Scheme) 序列化为 canonical JSON</p>
+<p>3. 对 canonical bytes 计算 <span class="wikilink">Ed25519</span> 签名</p>
+<p>4. Base64url 编码后填入 <code>signature.value</code></p>
 
-<h3 id="26-传输安全">2.6 传输安全</h3>
+<h4 id="跳签名-hop-signature">跳签名 (Hop Signature)</h4>
 
-<p>所有令牌通过 TLS 传输。nonce 防止重放：</p>
+<p>每个 hop 携带 <code>hop_signature</code>，将新 hop 绑定到完整的累积委托历史和根签名。</p>
 
-<div class="math-block">$$\text{NonceDB} = \text{NonceDB} \cup \{\text{nonce}\}, \quad \text{reject if } \text{nonce} \in \text{NonceDB}$$</div>
 
-<h2 id="3-安全分析">3. 安全分析</h2>
+<h2 id="关键公式">关键公式</h2>
+
+<h3 id="公式-1-ed25519根签名计算">公式 1: <span class="wikilink">Ed25519|根签名计算</span></h3>
+
+<div class="math-block">$$
+\sigma_{\text{root}} = \text{Ed25519-Sign}\bigl(sk,\; \text{JCS}\bigl(\{hdp, header, principal, scope, chain{=}[\,]\}\bigr)\bigr)
+$$</div>
+
+<p><strong>含义</strong>: 根签名覆盖 token 的所有核心字段（header、principal、scope）和空 chain，使用 issuer 的私钥 $sk$ 签名。<span class="wikilink">RFC 8785|JCS</span> 确保序列化的确定性。</p>
+
+<p><strong>符号说明</strong>:</p>
+<li>$\sigma_{\text{root}}$: 根签名值</li>
+<li>$sk$: issuer 的 <span class="wikilink">Ed25519</span> 私钥</li>
+<li>$\text{JCS}(\cdot)$: <span class="wikilink">RFC 8785</span> JSON Canonicalization Scheme，确保确定性序列化</li>
+
+<h3 id="公式-2-digital-signature跳签名载荷构造">公式 2: <span class="wikilink">Digital Signature|跳签名载荷构造</span></h3>
+
+<div class="math-block">$$
+P_n = [\sigma_{\text{root}},\; h_1^{\text{signed}},\; \ldots,\; h_{n-1}^{\text{signed}},\; h_n^{\text{unsigned}}]
+$$</div>
+
+<p><strong>含义</strong>: 第 $n$ 跳的签名载荷是一个 JSON 数组，包含根签名值、所有已签名的前序 hop（含其 hop_signature）、以及当前新 hop（不含 hop_signature）。这一非对称结构确保每个 hop 签名覆盖所有先前 hop 及根签名。</p>
+
+<p><strong>符号说明</strong>:</p>
+<li>$P_n$: 第 $n$ 跳的签名载荷</li>
+<li>$h_i^{\text{signed}}$: 第 $i$ 跳（含 hop_signature 字段）</li>
+<li>$h_n^{\text{unsigned}}$: 当前新 hop（不含 hop_signature）</li>
+
+<h3 id="公式-3-ed25519跳签名计算">公式 3: <span class="wikilink">Ed25519|跳签名计算</span></h3>
+
+<div class="math-block">$$
+\sigma_{\text{hop},n} = \text{Ed25519-Sign}\bigl(sk,\; \text{JCS}(P_n)\bigr)
+$$</div>
+
+<p><strong>含义</strong>: 对构造的载荷 $P_n$ 做 JCS 序列化后使用 issuer 私钥签名。由于 $P_n$ 包含 $\sigma_{\text{root}}$ 和所有先前 hop 签名，任何历史篡改都会导致当前及后续所有 hop 的签名验证失败。</p>
+
+<p><strong>符号说明</strong>:</p>
+<li>$\sigma_{\text{hop},n}$: 第 $n$ 跳的签名值</li>
+<li>$P_n$: 签名载荷（见公式 2）</li>
+
+<h3 id="公式-4-token验证验证管线">公式 4: <span class="wikilink">Token验证|验证管线</span></h3>
+
+<div class="math-block">$$
+V(T) = \bigwedge_{i=1}^{7} v_i(T) = v_{\text{ver}} \wedge v_{\text{exp}} \wedge v_{\text{root}} \wedge v_{\text{seq}} \wedge v_{\text{hop}} \wedge v_{\text{max}} \wedge v_{\text{sess}}
+$$</div>
+
+<p><strong>含义</strong>: 验证管线由 7 个有序步骤组成，任一步骤失败即立即拒绝 token。</p>
+
+<p><strong>符号说明</strong>:</p>
+<li>$v_{\text{ver}}$: 版本检查（hdp 字段）</li>
+<li>$v_{\text{exp}}$: 过期检查（expires_at vs 当前时间）</li>
+<li>$v_{\text{root}}$: 根签名验证（使用 issuer 公钥）</li>
+<li>$v_{\text{seq}}$: hop 序列完整性检查（无间隔、无重复）</li>
+<li>$v_{\text{hop}}$: 每个 hop 的签名验证（重构载荷 $P_n$ 后验签）</li>
+<li>$v_{\text{max}}$: max_hops 检查（chain 长度 $\leq$ scope.max_hops）</li>
+<li>$v_{\text{sess}}$: 会话绑定检查（header.session_id == verifier 当前 session）</li>
+
+<h3 id="公式-5-ed25519重新授权链接">公式 5: <span class="wikilink">Ed25519|重新授权链接</span></h3>
+
+<div class="math-block">$$
+T_{\text{new}}.header.parent\_token\_id = T_{\text{old}}.header.token\_id
+$$</div>
+
+<p><strong>含义</strong>: 长时间 session 中需要重新授权时，新 token 通过 parent_token_id 字段链接到旧 token，形成可审计的 scope 演进谱系。新 token 的根签名覆盖该链接关系。</p>
+
+
+<h2 id="关键图表">关键图表</h2>
+
+<h3 id="figure-1-hdp-token-top-level-structure--hdp-token-顶层结构">Figure 1: HDP Token Top-Level Structure / HDP Token 顶层结构</h3>
+
+<p>（见上方"Token 结构"节中的 JSON 代码块。论文中唯一的 Figure，展示 token 的六个顶层字段。该 Figure 为文本/代码形式，非位图。）</p>
+
+
+<h2 id="威胁模型">威胁模型</h2>
+
+<h3 id="攻击者能力">攻击者能力</h3>
 
 <table class="paper-table">
-<thead><tr><th>威胁</th><th>防护机制</th></tr></thead>
+<thead><tr><th>编号</th><th>能力</th></tr></thead>
 <tbody>
-<tr><td>伪造授权</td><td>数字签名验证</td></tr>
-<tr><td>链篡改</td><td>逐级签名 + 权限单调递减</td></tr>
-<tr><td>重放攻击</td><td>nonce + TTL</td></tr>
-<tr><td>权限提升</td><td>子集约束 $\text{scope}_{\text{child}} \subseteq \text{scope}_{\text{parent}}$</td></tr>
-<tr><td>提示注入</td><td>协议层独立于 LLM 推理层</td></tr>
+<tr><td>A1</td><td>通过 <span class="wikilink">Indirect Prompt Injection</span> 向 agent 输入流注入对抗内容</td></tr>
+<tr><td>A2</td><td>拦截和检查 agent 间传输的 token</td></tr>
+<tr><td>A3</td><td>尝试跨会话重放捕获的 token</td></tr>
+<tr><td>A4</td><td>尝试伪造或修改 token 以声称虚假授权</td></tr>
+<tr><td>A5</td><td>尝试向委托链中插入伪造的 hop</td></tr>
 </tbody></table>
 
 
-<h2 id="4-性能评估">4. 性能评估</h2>
+<h3 id="不建模的攻击者">不建模的攻击者</h3>
+
+<li>持有 issuer 的 <span class="wikilink">Ed25519</span> 私钥（密钥泄露是运维问题）</li>
+<li>能破解 Ed25519 签名安全或 SHA-512 抗碰撞性</li>
+<li>能篡改传输层通道（假设有 TLS 等保护）</li>
+
+<h3 id="防护资产">防护资产</h3>
+
+<li><strong>(P1)</strong> 人类授权事件的完整性（principal、scope、session binding）</li>
+<li><strong>(P2)</strong> 委托链的完整性（hop 准确反映实际委托历史）</li>
+<li><strong>(P3)</strong> token 的不可重放性（跨会话、过期后无效）</li>
+
+<h3 id="可检测攻击场景">可检测攻击场景</h3>
 
 <table class="paper-table">
-<thead><tr><th>操作</th><th>延迟</th></tr></thead>
+<thead><tr><th>场景</th><th>描述</th><th>检测方式</th></tr></thead>
 <tbody>
-<tr><td>令牌签发</td><td>< 1 ms</td></tr>
-<tr><td>单级验证</td><td>< 0.5 ms</td></tr>
-<tr><td>5 级链验证</td><td>< 2.5 ms</td></tr>
-<tr><td>令牌序列化</td><td>< 0.1 ms</td></tr>
+<tr><td>S1</td><td>agent 无 HDP token 执行动作</td><td>无 token = 未授权</td></tr>
+<tr><td>S2</td><td>伪造 principal 或 scope</td><td>根签名验证失败</td></tr>
+<tr><td>S3</td><td>篡改或删除 chain 中的 hop</td><td>hop 签名验证失败</td></tr>
+<tr><td>S4</td><td>跨会话重放 token</td><td>session binding 检查失败</td></tr>
 </tbody></table>
 
 
-<h2 id="5-核心概念">5. 核心概念</h2>
 
-<li><span class="wikilink">MCP</span>：Model Context Protocol，agent 工具调用协议</li>
-<li><span class="wikilink">A2A</span>：Agent-to-Agent 协议</li>
-<li><span class="wikilink">Digital Signature</span>：数字签名</li>
-<li><span class="wikilink">Delegation Chain</span>：委托链</li>
-<li><span class="wikilink">Zero Trust</span>：零信任安全架构</li>
-<li><span class="wikilink">HMAC</span>：基于哈希的消息认证码</li>
+<h2 id="安全分析">安全分析</h2>
 
-<h2 id="6-优缺点分析">6. 优缺点分析</h2>
+<h3 id="51-token-伪造防御">5.1 Token 伪造防御</h3>
+
+<p>根签名验证的安全性归约为 <span class="wikilink">Ed25519</span> 在选择消息攻击下的不可伪造性 (EUF-CMA)。Ed25519 基于 <span class="wikilink">Curve25519</span> 上的离散对数难度问题。</p>
+
+<h3 id="52-委托链篡改防御">5.2 委托链篡改防御</h3>
+
+<p>链式签名构造确保每个 hop 签名覆盖所有先前 hop 及根签名，任何历史修改都会导致被篡改 hop 及其后所有 hop 的签名验证失败。安全性同样归约为 Ed25519 的 EUF-CMA。</p>
+
+<h3 id="53-重放攻击防御">5.3 重放攻击防御</h3>
+
+<p>双重防御机制：</p>
+<li><strong>时间过期</strong>: expires_at（默认 24 小时）确保 token 有时效性</li>
+<li><strong>会话绑定</strong>: session_id 确保 token 仅在指定会话中有效</li>
+
+<h3 id="54-prompt-injection-缓解边界">5.4 Prompt Injection 缓解边界</h3>
+
+<p>HDP <strong>不阻止</strong> <span class="wikilink">Prompt Injection</span>，但提供事后可检测性：</p>
+<li>注入动作若未扩展 HDP chain，产生可检测的 gap（无委托记录）</li>
+<li>注入动作若伪造 hop，签名验证失败（需 issuer 私钥才能伪造）</li>
+<li><strong>语义边界</strong>: agent 被诱导记录真实 hop 但 action_summary 被误导，协议无法检测（应用层问题）</li>
+
+
+<h2 id="实现与部署">实现与部署</h2>
+
+<h3 id="参考实现">参考实现</h3>
+
+<table class="paper-table">
+<thead><tr><th>项目</th><th>详情</th></tr></thead>
+<tbody>
+<tr><td>TypeScript SDK</td><td><code>@helixar_ai/hdp</code> (npm)，提供 token 签发、hop 扩展、7 步验证</td></tr>
+<tr><td>Python 集成</td><td>支持 CrewAI 和 <span class="wikilink">MCP</span></td></tr>
+<tr><td>密码学库</td><td>noble-ed25519 (Ed25519) + 确定性 JSON 序列化 (RFC 8785)</td></tr>
+<tr><td>IETF I-D</td><td>draft-helixar-hdp-agentic-delegation-00 (RATS WG)</td></tr>
+</tbody></table>
+
+
+<h3 id="集成模式">集成模式</h3>
+
+<p>1. 人类通过 issuer SDK 在 session 开始时签发 HDP token</p>
+<p>2. Token 附加到任务上下文传递给 orchestrator</p>
+<p>3. 管线中每个 agent 验证 token，扩展 chain（添加 hop），传递给下游</p>
+<p>4. 终端 tool-execution agent 验证完整 chain 后执行动作</p>
+
+<h3 id="性能特征">性能特征</h3>
+
+<li><span class="wikilink">Ed25519</span> 签名验证：< 100 微秒</li>
+<li><span class="wikilink">RFC 8785</span> JSON 序列化：$O(n)$，$n$ 为 token 大小</li>
+<li>典型 10-hop chain 完整验证：< 2 毫秒</li>
+<li>Token 大小随 chain 线性增长，10-hop 典型值 4-8 KB</li>
+
+
+<h2 id="批判性思考">批判性思考</h2>
 
 <h3 id="优点">优点</h3>
-<p>1. <strong>问题重要</strong>：agentic AI 的授权溯源是真实需求</p>
-<p>2. <strong>设计轻量</strong>：毫秒级开销，适合实时 agent 交互</p>
-<p>3. <strong>权限单调递减</strong>：数学保证子 agent 不能越权</p>
-<p>4. <strong>协议层独立</strong>：不依赖 LLM 安全性，在密码学层面解决问题</p>
-<p>5. <strong>可组合</strong>：兼容现有 MCP/A2A 生态</p>
+<p>1. <strong>极简设计</strong>: 仅依赖 Ed25519 + JSON，无需 DID/PKI/区块链等重型基础设施，部署门槛极低</p>
+<p>2. <strong>完全离线验证</strong>: 特别适合 air-gapped 环境、边缘部署、低延迟场景</p>
+<p>3. <strong>清晰的安全边界</strong>: 明确声明 HDP 是问责基础设施而非完整防御，避免过度承诺</p>
+<p>4. <strong>IETF 标准化路径</strong>: 已提交 Internet-Draft，有望成为行业标准</p>
 
-<h3 id="缺点">缺点</h3>
-<p>1. <strong>缺少实现</strong>：仅协议设计，无开源实现</p>
-<p>2. <strong>社区关注低</strong>：HF 仅 1 upvote</p>
-<p>3. <strong>密钥管理</strong>：agent 的私钥如何安全存储和轮换？</p>
-<p>4. <strong>动态权限</strong>：scope 一旦签发不可修改，不够灵活</p>
-<p>5. <strong>实际部署</strong>：需要整个 agent 生态采纳才有价值</p>
+<h3 id="局限性">局限性</h3>
+<p>1. <strong>v0.1 单密钥限制</strong>: 所有 hop 签名使用 issuer 的密钥，hop 签名仅证明"在 issuer 处记录"而非"由特定 agent 产生"。v0.2 计划引入 per-agent key binding</p>
+<p>2. <strong>无语义执行</strong>: HDP 仅记录授权范围但不强制执行，agent 实际动作是否符合 scope.intent 需要应用层判断</p>
+<p>3. <strong>隐私-审计权衡</strong>: principal 对象可能包含 PII，token 在 agent 间传递存在隐私泄露风险（虽提供 opaque id_type 缓解）</p>
+<p>4. <strong>缺乏实证评估</strong>: 论文无实际部署的实验数据，无 benchmark 对比（可理解，协议设计论文的常见模式）</p>
 
-<h2 id="7-与相关工作对比">7. 与相关工作对比</h2>
+<h3 id="潜在改进方向">潜在改进方向</h3>
+<p>1. <strong>Multi-key delegation (v0.2)</strong>: 引入 per-agent 密钥，实现真正的多方签名委托链</p>
+<p>2. <strong>运行时策略集成</strong>: 与 MI9、CaMeL 等运行时治理框架结合，实现 scope 语义执行</p>
+<p>3. <strong>M-of-N 多主体同时授权</strong>: 使用 <span class="wikilink">Threshold Signature</span> 实现无需顺序依赖的联合授权</p>
 
-<table class="paper-table">
-<thead><tr><th>方法</th><th>层级</th><th>粒度</th><th>开销</th><th>委托链支持</th></tr></thead>
-<tbody>
-<tr><td><strong>HDP</strong></td><td><strong>密码学</strong></td><td><strong>动作级</strong></td><td><strong>< 1ms</strong></td><td><strong>是</strong></td></tr>
-<tr><td>OAuth 2.0</td><td>应用层</td><td>API 级</td><td>中</td><td>有限</td></tr>
-<tr><td>SPIFFE/SPIRE</td><td>基础设施</td><td>服务级</td><td>低</td><td>否</td></tr>
-<tr><td>LLM Guard</td><td>语义层</td><td>prompt 级</td><td>高</td><td>否</td></tr>
-<tr><td>ShieldNet</td><td>网络层</td><td>流量级</td><td>低</td><td>否</td></tr>
-</tbody></table>
-</div></details>
+<h3 id="可复现性评估">可复现性评估</h3>
+<li>[x] 代码开源（TypeScript SDK on npm）</li>
+<li>[ ] 预训练模型（不适用）</li>
+<li>[x] 协议细节完整（IETF I-D 定义规范）</li>
+<li>[ ] 实际部署数据（无）</li>
+
+
+<h2 id="关联笔记">关联笔记</h2>
+
+<h3 id="对比">对比</h3>
+<li><span class="wikilink">OAuth 2.0</span>: 点对点 token 交换，需在线授权服务器</li>
+<li><span class="wikilink">JWT</span>: 通用签名声明，无 append-only 委托链</li>
+<li><span class="wikilink">UCAN</span>: 能力授权网络，依赖 DID 基础设施</li>
+<li><span class="wikilink">Intent Provenance Protocol</span>: 最接近方案，但需中心化撤销注册表</li>
+
+<h3 id="方法相关">方法相关</h3>
+<li><span class="wikilink">Ed25519</span>: 核心签名算法 (RFC 8032)</li>
+<li><span class="wikilink">RFC 8785</span>: JSON Canonicalization Scheme，确保确定性序列化</li>
+<li><span class="wikilink">Prompt Injection</span>: HDP 主要缓解的攻击面</li>
+<li><span class="wikilink">Agentic AI</span>: HDP 的目标应用场景</li>
+<li><span class="wikilink">Digital Signature</span>: 密码学签名基础</li>
+
+<h3 id="标准相关">标准相关</h3>
+<li><span class="wikilink">MCP</span>: Model Context Protocol，HDP 提供 Python 集成</li>
+
+
+<h2 id="速查卡片">速查卡片</h2>
+
+<blockquote>
+<p>[!summary] HDP: A Lightweight Cryptographic Protocol for Human Delegation Provenance in Agentic AI Systems</p>
+<p>- <strong>核心</strong>: 用密码学 token 将人类授权绑定到 agentic AI 的多级委托链</p>
+<p>- <strong>方法</strong>: JSON token + Ed25519 签名 + append-only hop chain + 7 步离线验证</p>
+<p>- <strong>结果</strong>: 已发布 IETF Internet-Draft + TypeScript/Python SDK</p>
+<p>- <strong>代码</strong>: <a href="https://www.npmjs.com/package/@helixar_ai/hdp" target="_blank">@helixar_ai/hdp</a></p>
+</blockquote>
+
+
+<p><em>笔记创建时间: 2026-04-05</em></p></div></details>
 
 <li><strong>核心方法</strong>: 用密码学协议解决 agentic AI 的授权溯源问题——在多级 agent 委托链中验证终端动作是否由人类真正授权、经过什么委托路径、在什么范围内。类似给 agent 调用链加了一条加密审计追踪。</li>
 <li><strong>借鉴意义</strong>: 随着 <span class="wikilink">MCP</span> 和 <span class="wikilink">A2A</span> 生态扩展，agent 间的授权验证会越来越重要。</li>
@@ -3854,6 +4240,1399 @@ $$</div>
 
 
 <p><strong>趋势判断</strong>: "Agentic" 已经从热词变成了论文标题的标配——但大部分论文只是在特定场景套用 agent 架构，真正推进 agent 能力边界的工作（如 SandMLE 的训练方法论、ShieldNet 的安全基础设施）仍然稀缺。MCP 安全开始受到关注，预计接下来会有更多工作跟进。</p></div>
+<div class="day-full-content" id="content-2026-04-06" style="display:none;"><h1 id="-今日锐评">🔪 今日锐评</h1>
+
+<p>Agent 训练日：今天的亮点全在 "如何训练 agent" 上。SKILL0 提出了一个让人拍大腿的思路——与其在推理时临时检索技能，不如直接用 RL 把技能内化到模型参数里。Agent Lightning 则是微软出的通用 agent RL 训练框架，140 个 upvote 说明社区对 "万能 agent 训练器" 的需求多强烈。GrandCode 在竞赛编程上用 multi-agent RL 怼到了 Grandmaster 水平。不过今天有不少旧论文上 trending，含金量需要打折扣。</p>
+
+<h2 id="分流表">分流表</h2>
+<table class="paper-table">
+<thead><tr><th>等级</th><th>论文</th></tr></thead>
+<tbody>
+<tr><td>🔥 必读</td><td><span class="wikilink">SKILL0</span>（用 RL 将 agent 技能从 context 内化到参数，ZJU+美团）</td></tr>
+<tr><td>👀 值得看</td><td><span class="wikilink">Agent Lightning</span>（通用 agent RL 训练框架，微软）· <span class="wikilink">GrandCode</span>（multi-agent RL 打竞赛编程 Grandmaster）· <span class="wikilink">SODA</span>（半 on-policy 黑盒蒸馏）· <span class="wikilink">AsymGRPO</span>（RLVR 探索的双向熵调制）</td></tr>
+<tr><td>💤 可跳过</td><td><span class="wikilink">AgentScope</span> 1.0（旧论文重上热榜）· <span class="wikilink">TradingAgents</span>（旧论文）· <span class="wikilink">Agentic-MME</span>（benchmark，无方法创新）· 其余 niche 方向论文</td></tr>
+</tbody></table>
+
+
+
+<div class="tab-bar"><button class="tab-btn active" data-tab="all" onclick="switchTab('all')">📋 全部<span class="tab-count">9</span></button><button class="tab-btn" data-tab="agent训练" onclick="switchTab('agent训练')">🤖 🏋️ Agent 训练<span class="tab-count">3</span></button><button class="tab-btn" data-tab="llm训练与对齐" onclick="switchTab('llm训练与对齐')">🤖 🧪 LLM 训练与对齐<span class="tab-count">2</span></button><button class="tab-btn" data-tab="agent框架" onclick="switchTab('agent框架')">🏗 🔧 Agent 框架<span class="tab-count">2</span></button><button class="tab-btn" data-tab="benchmark评测" onclick="switchTab('benchmark评测')">📄 📊 Benchmark &amp; 评测<span class="tab-count">2</span></button></div>
+<div id="panel-all" class="tab-panel active"><h2 id="-agent-训练">🏋️ Agent 训练</h2><div class="paper-card" data-topic="🏋️ Agent 训练"><h3 id="1-skill0-in-context-agentic-reinforcement-learning-for-skill-internalization">1. SKILL0: In-Context Agentic Reinforcement Learning for Skill Internalization</h3>
+<li><strong>作者</strong>: Zhengxi Lu et al.</li>
+<li><strong>机构</strong>: Zhejiang University, Meituan, Tsinghua University</li>
+<li><strong>链接</strong>: <a href="https://arxiv.org/abs/2604.02268" target="_blank">arXiv</a> | <a href="https://arxiv.org/pdf/2604.02268" target="_blank">PDF</a></li>
+<li><strong>来源</strong>: 🔥 HF Trending，⬆️ 86</li>
+<details class="paper-note"><summary>📒 精读笔记: SKILL0</summary><div class="note-body"><h1 id="skill0-in-context-agentic-reinforcement-learning-for-skill-internalization">SKILL0: In-Context Agentic Reinforcement Learning for Skill Internalization</h1>
+
+<blockquote>
+<p><strong>一句话总结</strong>：提出 "Skills at training, zero at inference" 范式——用渐进式课程学习 RL 将 agent 技能从推理时 context 注入内化到模型参数，实现零检索的自主行为。</p>
+</blockquote>
+
+<h2 id="1-研究动机与问题定义">1. 研究动机与问题定义</h2>
+
+<h3 id="推理时技能增强的三大局限">推理时技能增强的三大局限</h3>
+<p>1. <strong>检索噪声</strong>：不相关技能污染 agent context</p>
+<p>2. <strong>Token 开销</strong>：技能内容在多轮交互中累积，限制可扩展性</p>
+<p>3. <strong>根本问题</strong>：模型在"执行"技能而非"学会"技能——能力在 context 中，不在参数里</p>
+
+<h3 id="类比人类学习">类比人类学习</h3>
+<p>人类技能习得遵循：<strong>显式指导阶段 → 内化阶段</strong>（Anderson, 1982）。推理时技能增强永远锚定在第一阶段。RL 提供了通往第二阶段的路径。</p>
+
+<h2 id="2-方法详解">2. 方法详解</h2>
+
+<h3 id="21-agent-loop-形式化">2.1 Agent Loop 形式化</h3>
+
+<p>任务建模为序列决策：给定指令 $I$，agent 生成动作序列 $\{a_1, a_2, \ldots, a_T\}$。每步 $t$，agent 从策略采样：</p>
+
+<div class="math-block">$$a_t \sim \pi_\theta(a_t | I, h_t), \quad h_t = \{o_1, o_2, \ldots, o_t\}$$</div>
+
+<p>环境转移：$o_{t+1} = \mathcal{E}(o_t, a_t)$</p>
+
+<h3 id="22-skillbank层次化技能库">2.2 SkillBank：层次化技能库</h3>
+
+<p>技能组织为两层结构：</p>
+<li><strong>通用技能</strong>：跨任务的策略原则（探索策略、目标跟踪等）</li>
+<li><strong>任务特定技能</strong>：领域专用知识（动作序列、前置条件等）</li>
+
+<p>目录结构：<code>skills/{task_name}/{skill_category}.md</code></p>
+
+<h3 id="23-relevance-driven-skill-grouping">2.3 Relevance-Driven Skill Grouping</h3>
+
+<p>离线按类别分组技能，与交互历史一起渲染为紧凑的视觉 context，教模型工具调用和多轮任务完成。</p>
+
+<h3 id="24-in-context-reinforcement-learning-icrl">2.4 In-Context Reinforcement Learning (ICRL)</h3>
+
+<p>核心创新——技能在<strong>训练时</strong>作为 in-context 指导提供，在<strong>推理时</strong>完全移除：</p>
+
+<div class="math-block">$$\mathcal{L}_{\text{ICRL}} = \mathbb{E}_{\tau \sim \pi_\theta} \left[ \sum_{t} \min\left( r_t(\theta) \hat{A}_t, \text{clip}(r_t(\theta), 1-\epsilon, 1+\epsilon) \hat{A}_t \right) \right]$$</div>
+
+<p>训练 rollout 中包含技能 context $\mathcal{S}_k$，但推理时 $\mathcal{S}_k = \emptyset$。</p>
+
+<h3 id="25-dynamic-curriculum动态课程">2.5 Dynamic Curriculum（动态课程）</h3>
+
+<p><strong>不是</strong>固定退火计划，而是自适应内化：</p>
+
+<p>对每个技能文件 $\mathcal{S}_k$，评估其<strong>on-policy 有用性</strong>——比较有无该技能时 agent 在匹配验证子任务上的表现：</p>
+
+<div class="math-block">$$\text{Helpfulness}(\mathcal{S}_k) = \text{Perf}(\pi_\theta | \mathcal{S}_k) - \text{Perf}(\pi_\theta | \emptyset)$$</div>
+
+<li>如果 $\text{Helpfulness}(\mathcal{S}_k) > \delta$：保留该技能（模型仍需它）</li>
+<li>如果 $\text{Helpfulness}(\mathcal{S}_k) \leq \delta$：移除该技能（已内化）</li>
+
+<p>预算线性衰减直至归零，agent 最终完全零技能运行。</p>
+
+<h3 id="26-与标准-rl-的区别">2.6 与标准 RL 的区别</h3>
+
+<div class="math-block">$$\text{Standard RL}: \quad \pi_\theta(a_t | I, h_t)$$</div>
+<div class="math-block">$$\text{Skill0 训练}: \quad \pi_\theta(a_t | I, h_t, \mathcal{S}_k)$$</div>
+<div class="math-block">$$\text{Skill0 推理}: \quad \pi_\theta(a_t | I, h_t)$$</div>
+
+<h2 id="3-实验结果">3. 实验结果</h2>
+
+<h3 id="31-主要结果">3.1 主要结果</h3>
+
+<table class="paper-table">
+<thead><tr><th>方法</th><th>ALFWorld</th><th>Search-QA</th><th>推理 Token/Step</th></tr></thead>
+<tbody>
+<tr><td>Standard RL</td><td>baseline</td><td>baseline</td><td>~2k</td></tr>
+<tr><td>Skill Augmentation (SkillRL)</td><td>高</td><td>高</td><td>~3-5k</td></tr>
+<tr><td><strong>Skill0</strong></td><td><strong>+9.7%</strong></td><td><strong>+6.6%</strong></td><td><strong>< 0.5k</strong></td></tr>
+</tbody></table>
+
+
+<p>关键：Skill0 在性能上匹配甚至超过推理时技能增强方法，但推理 token 开销降低 6-10 倍。</p>
+
+<h3 id="32-内化分析">3.2 内化分析</h3>
+
+<li>技能移除的时间点因技能复杂度而异——简单技能早期内化，复杂技能后期内化</li>
+<li>Dynamic Curriculum 比固定退火计划提升 3-5%</li>
+
+<h2 id="4-架构图">4. 架构图</h2>
+
+<div class="paper-figure"><img src="https://arxiv.org/html/2604.02268v1/x1.png" alt="Skill0 总体框架" loading="lazy"></div>
+
+<h2 id="5-核心概念">5. 核心概念</h2>
+
+<li><span class="wikilink">In-Context Learning</span>：上下文学习</li>
+<li><span class="wikilink">Reinforcement Learning</span>：强化学习</li>
+<li><span class="wikilink">Curriculum Learning</span>：课程学习</li>
+<li><span class="wikilink">Agent Skills</span>：agent 技能系统</li>
+<li><span class="wikilink">Skill Augmentation</span>：推理时技能增强</li>
+<li><span class="wikilink">ALFWorld</span>：文本游戏交互环境</li>
+
+<h2 id="6-优缺点分析">6. 优缺点分析</h2>
+
+<h3 id="优点">优点</h3>
+<p>1. <strong>范式转变</strong>：从"推理时检索"到"训练时内化"，思路清晰有说服力</p>
+<p>2. <strong>自适应课程</strong>：Helpfulness-driven 退火比固定计划更优雅</p>
+<p>3. <strong>推理高效</strong>：< 0.5k token/step，大幅降低部署成本</p>
+<p>4. <strong>开源</strong>：代码在 GitHub 上公开</p>
+
+<h3 id="缺点">缺点</h3>
+<p>1. <strong>泛化性</strong>：内化的技能能否迁移到训练时未见过的新任务？</p>
+<p>2. <strong>环境依赖</strong>：ALFWorld 和 Search-QA 相对简单，更复杂环境（如 SWE-bench）效果如何？</p>
+<p>3. <strong>技能质量</strong>：垃圾技能内化了也没用——需要高质量 SkillBank</p>
+<p>4. <strong>训练成本</strong>：RL 训练本身的成本和标准 SFT 相比如何？</p>
+
+<h2 id="7-与相关工作对比">7. 与相关工作对比</h2>
+
+<table class="paper-table">
+<thead><tr><th>方法</th><th>范式</th><th>推理开销</th><th>性能</th><th>技能依赖</th></tr></thead>
+<tbody>
+<tr><td><strong>Skill0</strong></td><td><strong>内化</strong></td><td><strong>低 (< 0.5k)</strong></td><td><strong>高</strong></td><td><strong>无</strong></td></tr>
+<tr><td>SkillRL</td><td>增强</td><td>高 (3-5k)</td><td>高</td><td>有</td></tr>
+<tr><td>EvolveR</td><td>增强+进化</td><td>高</td><td>中-高</td><td>有</td></tr>
+<tr><td>Standard RL</td><td>无技能</td><td>低</td><td>低</td><td>无</td></tr>
+</tbody></table>
+</div></details>
+
+<div class="paper-figure"><img src="https://arxiv.org/html/2604.02268v1/x1.png" alt="" loading="lazy"></div>
+
+<li><strong>核心方法</strong>: 现有 agent 靠推理时检索技能（skill augmentation），但检索噪声大、token 开销高、模型并没有真正学会技能。SKILL0 提出 <strong>Skill Internalization</strong>——用 <span class="wikilink">Reinforcement Learning|RL</span> 将技能知识从 context 内化到模型参数。构建 SkillBank 收集多样化 agent 技能，然后用 RL 训练让模型在不依赖外部检索的情况下掌握这些技能。</li>
+<li><strong>对比方法/Baselines</strong>: 推理时 skill augmentation（<span class="wikilink">EvolveR</span> 等）、标准 <span class="wikilink">SFT</span></li>
+<li><strong>借鉴意义</strong>: "从检索到内化" 的范式转变对任何依赖外部知识的 agent 系统都有参考价值。也可以类比 <span class="wikilink">RAG</span> vs 参数化记忆的讨论。</li>
+<li><strong>锐评</strong>: 今天最值得读的论文。"inference-time skill augmentation is fundamentally limited" 这个 claim 很大胆但有道理——你不能指望一个不会游泳的人拿着游泳教程就能游。86 个 upvote 说明社区买账。关键问题是：RL 训练的技能泛化能力如何？能否内化从未见过的新技能？ 🔥</li></div><div class="paper-card" data-topic="🏋️ Agent 训练"><h3 id="2-agent-lightning-train-any-ai-agents-with-reinforcement-learning">2. Agent Lightning: Train ANY AI Agents with Reinforcement Learning</h3>
+<li><strong>作者</strong>: Xufang Luo, Yuge Zhang et al.</li>
+<li><strong>机构</strong>: Microsoft Research</li>
+<li><strong>链接</strong>: <a href="https://arxiv.org/abs/2508.03680" target="_blank">arXiv</a> | <a href="https://arxiv.org/pdf/2508.03680" target="_blank">PDF</a></li>
+<li><strong>来源</strong>: 🔥 HF Trending，⬆️ 140</li>
+<details class="paper-note"><summary>📒 精读笔记: Agent Lightning - Train AI Agents with RL</summary><div class="note-body"><h1 id="agent-lightning-train-any-ai-agents-with-reinforcement-learning">Agent Lightning: Train ANY AI Agents with Reinforcement Learning</h1>
+
+<h2 id="基本信息">基本信息</h2>
+
+<li><strong>作者</strong>: Xufang Luo, Yuge Zhang, Zhiyuan He, Zilong Wang, Siyun Zhao, Dongsheng Li, Luna K. Qiu, Yuqing Yang</li>
+<li><strong>机构</strong>: Microsoft Research</li>
+<li><strong>时间</strong>: 2025年8月</li>
+<li><strong>链接</strong>:</li>
+<li>arXiv: <a href="https://arxiv.org/abs/2508.03680" target="_blank">2508.03680</a></li>
+<li>GitHub: <a href="https://github.com/microsoft/agent-lightning" target="_blank">microsoft/agent-lightning</a> (16k+ stars)</li>
+<li>项目主页: <a href="https://www.microsoft.com/en-us/research/project/agent-lightning/" target="_blank">Microsoft Research</a></li>
+
+
+<h2 id="研究动机与问题">研究动机与问题</h2>
+
+<h3 id="背景">背景</h3>
+
+<p>近年来 <span class="wikilink">LLM</span> 驱动的 AI Agent 在搜索、代码生成、工具调用等复杂任务中表现出色。然而，LLM 在未经专门训练的场景中（如多轮编码工作流、私有领域数据集、不熟悉的工具）仍然容易出错，无法可靠解决复杂的端到端任务。</p>
+
+<p><span class="wikilink">Reinforcement Learning</span> 已在推理模型（如 <span class="wikilink">DeepSeek-R1</span>、<span class="wikilink">Kimi k1.5</span>）中取得了突破性进展，是优化 Agent 场景中 LLM 的强大范式。相比需要逐步标注的 <span class="wikilink">Supervised Fine-Tuning</span>，RL 仅依赖基于结果的 reward 信号，消除了对任务特定标注数据的需求。</p>
+
+<h3 id="核心问题">核心问题</h3>
+
+<p>将 RL 扩展到 Agent 训练面临两大挑战：</p>
+
+<p>1. <strong>算法层面</strong>：现有 RL 方法主要针对静态、单次调用任务（如数学推理）。Agent 的执行涉及<strong>多次 LLM 调用</strong>（不同 prompt 和 response）以及与外部工具/API 的交互，逻辑远比单轮 RL 复杂。</p>
+<p>2. <strong>系统层面</strong>：现有方法将 RL 训练与 Agent 逻辑<strong>紧密耦合</strong>，或依赖序列拼接加 masking 的方式，难以支持多样化的 Agent 框架（LangChain、AutoGen、OpenAI Agents SDK 等）。</p>
+
+<h3 id="核心思想">核心思想</h3>
+
+<p>Agent Lightning 的核心创新是<strong>完全解耦 Agent 执行与 RL 训练</strong>，让开发者以几乎<strong>零代码修改</strong>的方式，对任意 AI Agent 进行 RL 训练。</p>
+
+<div class="paper-figure"><img src="https://arxiv.org/html/2508.03680v1/figures/overview.png" alt="Overview of Agent Lightning" loading="lazy"></div>
+<p><em>Figure 1: Agent Lightning 框架总览。实现了 Agent 执行与 RL 训练的完全解耦。</em></p>
+
+
+<h2 id="方法详解">方法详解</h2>
+
+<h3 id="31-统一数据接口-unified-data-interface">3.1 统一数据接口 (Unified Data Interface)</h3>
+
+<p>Agent Lightning 定义了一个统一的数据接口，将 Agent 执行过程中的数据标准化为 RL 训练可用的格式。</p>
+
+<p><strong>核心概念</strong>：</p>
+
+<li><strong>State</strong>: Agent 执行的快照，包括程序计数器、变量值、调用栈等。形式化为：</li>
+
+<div class="math-block">$$\texttt{state}_{t}(x,k) = \left\{ \texttt{variable}_{i}^{x,k,t} \right\}_{i=1}^{V}$$</div>
+
+<li><strong>Semantic Variable</strong>: 被组件使用或修改的关键变量，代表关键语义（如程序意图）。不关注循环计数器等辅助变量，只关注语义层面的变化。</li>
+
+<li><strong>Component Invocation (Call)</strong>: 语义变量的变化通过组件调用发生。第 $k$ 次执行任务 $x$ 的所有调用序列为：</li>
+
+<div class="math-block">$$\texttt{execution}(x,k) = \left\{ \texttt{call}_{i}^{x,k} \right\}_{i=1}^{N}$$</div>
+
+<p>其中每个 call 定义为：</p>
+
+<div class="math-block">$$\texttt{call}_{i}^{x,k} = (\texttt{meta}_{i}^{x,k}, \texttt{input}_{i}^{x,k}, \texttt{output}_{i}^{x,k}), \quad \text{with} ~ \texttt{output}_{i}^{x,k} = C_{i}(\texttt{input}_{i}^{x,k})$$</div>
+
+<p>这里 $C_{i} \in \mathcal{M} \cup \mathcal{T}$，即组件可以是 LLM ($\mathcal{M}$) 或工具 ($\mathcal{T}$)。</p>
+
+<li><strong>Reward 标注</strong>: 为每个 call 分配 reward $r_i \in \mathbb{R}$，形成带 reward 的执行序列：</li>
+
+<div class="math-block">$$\texttt{execution}^{R}(x,k) = \left\{ (\texttt{call}_{i}^{x,k}, r_{i}^{x,k}) \right\}_{i=1}^{N}$$</div>
+
+<div class="paper-figure"><img src="https://arxiv.org/html/2508.03680v1/figures/data_interface.png" alt="Data Interface" loading="lazy"></div>
+<p><em>Figure 2: 统一数据接口示意图。左侧展示 Agent 执行流程中语义变量的更新；右侧展示对应的 trajectory 数据收集。</em></p>
+
+<h3 id="32-agent-中的-markov-decision-process">3.2 Agent 中的 Markov Decision Process</h3>
+
+<p>Agent Lightning 将 Agent 执行建模为 <span class="wikilink">Partially Observable Markov Decision Process</span> (POMDP)：</p>
+
+<div class="math-block">$$\mathcal{M} = (\mathcal{S}, \mathcal{O}, \mathcal{A}, \mathcal{P}, \mathcal{R})$$</div>
+
+<p>各元素含义：</p>
+
+<table class="paper-table">
+<thead><tr><th>符号</th><th>含义</th></tr></thead>
+<tbody>
+<tr><td>$\mathcal{S}$</td><td>状态空间，对应所有可能的 $\texttt{state}_{t}$</td></tr>
+<tr><td>$\mathcal{O}$</td><td>观测空间，对应 policy LLM 的所有可能输入 $\texttt{input}_{t}$</td></tr>
+<tr><td>$\mathcal{A}$</td><td>动作空间，单次 LLM 调用生成的完整 token 序列 $\texttt{output}_{t}$</td></tr>
+<tr><td>$\mathcal{T}(s'</td><td>s,a)$</td><td>状态转移动态</td></tr>
+<tr><td>$\mathcal{R}(s,a)$</td><td>奖励函数</td></tr>
+</tbody></table>
+
+
+<p><strong>关键设计</strong>: 将 LLM 的一次完整生成（而非单个 token）作为一个 action，这是与传统 token-level RL 的重要区别。策略模型的目标是最大化累积回报：</p>
+
+<div class="math-block">$$R = \sum_{t=1}^{T} r_t$$</div>
+
+<h3 id="33-lightningrl-层次化-rl-算法">3.3 LightningRL: 层次化 RL 算法</h3>
+
+<p>LightningRL 是论文提出的核心算法，解决了如何将 Agent 的多轮交互数据用于 RL 训练的问题。</p>
+
+<p><strong>单轮 RL 回顾</strong>：现有方法（如 <span class="wikilink">GRPO</span>、<span class="wikilink">REINFORCE++</span>、<span class="wikilink">PPO</span>）主要处理单次 LLM 调用：给定任务 $x$，LLM 生成 response $\texttt{output} = (y_1, \ldots, y_N)$，获得 reward $r(x, \texttt{output}, \hat{y})$。通用训练目标为：</p>
+
+<div class="math-block">$$\mathcal{L}(\theta) = -\mathbb{E}_{x \sim \mathcal{X}, \texttt{output} \sim \pi_{\theta}(\cdot|x)} \left[ \sum_{j=1}^{N} \log \pi_{\theta}(y_j | x, y_{&lt;j}) \cdot A_j \right]$$</div>
+
+<p>其中 $A_j$ 是 token 级别的 advantage 估计。</p>
+
+<p><strong>多轮 Agent 的挑战</strong>：</p>
+
+<p>现有方法将多轮对话拼接为单个长序列并加 mask，存在以下问题：</p>
+<li>仅适用于简单的顺序工作流</li>
+<li>无法处理多 Agent、动态工作流等复杂场景</li>
+<li>序列过长影响训练效率</li>
+
+<p><strong>LightningRL 的解决方案</strong>：</p>
+
+<p>LightningRL 采用<strong>层次化</strong>方法，将 trajectory 分解为独立的 transition：</p>
+
+<div class="math-block">$$\texttt{execution}^{RL}(x,k) = \left\{ (\texttt{input}_{t}^{x,k}, \texttt{output}_{t}^{x,k}, r_{t}^{x,k}) \right\}_{t=1}^{T}$$</div>
+
+<p>包含一个 <strong>Credit Assignment Module</strong>，将 trajectory 级别的 return 分配到每次 LLM 调用的 reward。这使得每个 transition 可以独立用于 RL 优化，与现有的单轮 RL 算法（如 GRPO）无缝集成。</p>
+
+<div class="paper-figure"><img src="https://arxiv.org/html/2508.03680v1/figures/algorithm.png" alt="Algorithm" loading="lazy"></div>
+<p><em>Figure 3: LightningRL 算法示意。(a) 单轮 GRPO；(b) 现有多轮 GRPO（拼接+mask）；(c) LightningRL 将 trajectory 分解为独立 transition 进行训练。</em></p>
+
+<p><strong>Automatic Intermediate Rewarding (AIR)</strong>：AIR 机制可以基于系统监控信号（如工具调用返回状态）自动为中间步骤分配 reward，缓解 Agent 训练中的 <span class="wikilink">Sparse Reward</span> 问题。</p>
+
+<h3 id="34-系统设计-training-agent-disaggregation-架构">3.4 系统设计: Training-Agent Disaggregation 架构</h3>
+
+<p>Agent Lightning 的系统架构实现了训练与 Agent 执行的完全分离（TA Disaggregation）。</p>
+
+<div class="paper-figure"><img src="https://arxiv.org/html/2508.03680v1/figures/agent_lightning_architecture_v3.png" alt="Architecture" loading="lazy"></div>
+<p><em>Figure 4: Training-Agent Disaggregation 架构。</em></p>
+
+<p><strong>两大组件</strong>：</p>
+
+<p>1. <strong>Lightning Server</strong>: 集成 RL 框架（如 <span class="wikilink">VeRL</span>），管理训练过程和 LLM 优化，对外暴露 OpenAI-like API。Server 是 <strong>Agent-agnostic</strong> 的，不关心具体的 Agent 逻辑。</p>
+
+<p>2. <strong>Lightning Client</strong>: 封装 Agent 运行时（agent runtime），包含两个功能模块：</p>
+<li>与 Server 通信，负责数据传输</li>
+<li>运行 Agent 并进行数据收集</li>
+
+<p><strong>关键优势</strong>：</p>
+
+<li><strong>Agent-agnostic 训练</strong>: Server 只关心 LLM 优化和硬件资源管理</li>
+<li><strong>Trainer-agnostic 执行</strong>: Client 端 Agent 不依赖训练框架的实现细节</li>
+<li><strong>利用 Observability 框架</strong>: 将 <span class="wikilink">OpenTelemetry</span> 等可观测性框架引入训练流程，实现标准化的 trajectory 收集</li>
+<li><strong>零代码修改</strong>: 支持 LangChain、OpenAI Agents SDK、AutoGen 等主流框架开发的 Agent</li>
+
+
+<h2 id="实验结果">实验结果</h2>
+
+<p>实验在三个不同任务上验证了 Agent Lightning 的有效性，每个任务使用不同的 Agent 框架实现：</p>
+
+<h3 id="task-1-text-to-sql-langchain">Task 1: Text-to-SQL (LangChain)</h3>
+
+<li><strong>数据集</strong>: Spider（10,000+ 问题，200 数据库，138 领域）</li>
+<li><strong>基座模型</strong>: Llama-3.2-3B-Instruct</li>
+<li><strong>Agent 设计</strong>: 3 个 Agent 的多 Agent 系统</li>
+<li>SQL Writer Agent: 生成 SQL 查询</li>
+<li>Checking Agent: 评估查询正确性</li>
+<li>Re-writing Agent: 根据反馈修正查询或生成答案</li>
+<li><strong>Reward</strong>: 最终答案是否正确</li>
+
+<div class="paper-figure"><img src="https://arxiv.org/html/2508.03680v1/figures/train_spider.png" alt="Text-to-SQL Results" loading="lazy"></div>
+<p><em>Figure 5: Text-to-SQL 任务的 reward 曲线，展示稳定的训练提升。</em></p>
+
+<h3 id="task-2-retrieval-augmented-generation-openai-agents-sdk">Task 2: Retrieval-Augmented Generation (OpenAI Agents SDK)</h3>
+
+<li><strong>数据集</strong>: MuSiQue（多跳问答基准，要求真正的组合推理）</li>
+<li><strong>Agent 设计</strong>: 单 LLM 生成查询 -> 检索 -> 决定是否精炼查询或生成答案</li>
+<li><strong>Reward</strong>: 格式分 + 正确性分的加权组合</li>
+
+<div class="math-block">$$R = 0.9 \times R_{\text{correctness}} + 0.1 \times R_{\text{format}}$$</div>
+
+<p>其中 $R_{\text{correctness}}$ 采用 word-level F1 score。</p>
+
+<div class="paper-figure"><img src="https://arxiv.org/html/2508.03680v1/figures/train_rag_llama.png" alt="RAG Results" loading="lazy"></div>
+<p><em>Figure 6: RAG 任务的 reward 曲线。</em></p>
+
+<h3 id="task-3-math-qa-with-tool-usage-autogen">Task 3: Math QA with Tool Usage (AutoGen)</h3>
+
+<li><strong>数据集</strong>: Calc-X（需要推理和精确计算的数学问题）</li>
+<li><strong>基座模型</strong>: Llama-3.2-3B-Instruct</li>
+<li><strong>Agent 设计</strong>: 单 LLM 调用计算器工具解决数学问题</li>
+<li><strong>Reward</strong>: 最终答案是否正确</li>
+
+<div class="paper-figure"><img src="https://arxiv.org/html/2508.03680v1/figures/train_calc.png" alt="Calculator Results" loading="lazy"></div>
+<p><em>Figure 7: Math QA with Tool Usage 任务的 reward 曲线。</em></p>
+
+<p>三个实验统一表明：Agent Lightning 能够在不同 Agent 场景中实现<strong>稳定且持续的性能提升</strong>。</p>
+
+
+<h2 id="核心贡献">核心贡献</h2>
+
+<p>1. <strong>首个完全解耦的 Agent RL 训练框架</strong>: Agent Lightning 是第一个实现 Agent 执行与 RL 训练完全分离的框架，支持任意 AI Agent 的 RL 训练，几乎零代码修改。</p>
+
+<p>2. <strong>统一数据接口与 MDP 建模</strong>: 通过将 Agent 执行建模为 POMDP，定义了通用的数据接口，抽象了不同 Agent 的执行逻辑差异。</p>
+
+<p>3. <strong>LightningRL 层次化算法</strong>: 提出了基于 transition 分解的层次化 RL 方法，配合 Credit Assignment Module，支持多 Agent、动态工作流等复杂交互逻辑。</p>
+
+<p>4. <strong>Training-Agent Disaggregation 架构</strong>: 通过 Server/Client 分离设计，实现了训练框架与 Agent 框架的双向无关性，并引入可观测性框架提升可扩展性。</p>
+
+<p>5. <strong>跨框架验证</strong>: 在 LangChain、OpenAI Agents SDK、AutoGen 三个主流框架上验证了通用性。</p>
+
+
+<h2 id="局限性与思考">局限性与思考</h2>
+
+<h3 id="局限性">局限性</h3>
+
+<li><strong>实验规模有限</strong>: 仅在 3B 模型上验证，更大规模模型的效果尚未探索</li>
+<li><strong>任务类型覆盖</strong>: 虽然涵盖了 text-to-SQL、RAG、math tool-use，但未涉及 GUI 交互、长期规划等更复杂的 Agent 场景</li>
+<li><strong>Credit Assignment</strong>: 论文提出了 credit assignment module，但具体的分配策略如何影响训练效果缺乏深入分析</li>
+<li><strong>与 concatenation 方法的定量对比</strong>: Discussion 中定性分析了 transition-based 相比 concatenation-based 的优势，但缺少直接的定量 ablation</li>
+
+<h3 id="个人思考">个人思考</h3>
+
+<li>Agent Lightning 的<strong>解耦设计</strong>是其最大亮点。将 Agent 执行视为黑盒、仅通过标准化接口收集数据的思路，极大降低了 RL 训练的工程门槛</li>
+<li><strong>Observability 框架</strong>（OpenTelemetry）的引入很有前瞻性，将生产环境的监控基础设施复用到训练数据收集中</li>
+<li>与 <span class="wikilink">RAGEN</span>、<span class="wikilink">Search-R1</span>、<span class="wikilink">Trinity-RFT</span> 等 concatenation-based 方法的对比是后续工作的重要方向</li>
+<li>在更复杂的 Agent 场景（如 multi-agent debate、code generation pipeline）中的效果值得期待</li>
+
+
+<h2 id="相关工作">相关工作</h2>
+
+<li><strong>RL for LLM 推理</strong>: <span class="wikilink">DeepSeek-R1</span>, <span class="wikilink">Kimi k1.5</span>, <span class="wikilink">GRPO</span>, <span class="wikilink">PPO</span>, <span class="wikilink">REINFORCE++</span></li>
+<li><strong>Agent RL 训练</strong>: <span class="wikilink">RAGEN</span>, <span class="wikilink">Trinity-RFT</span>, <span class="wikilink">rLLM</span>, <span class="wikilink">Search-R1</span>, <span class="wikilink">DigiRL</span></li>
+<li><strong>Agent 框架</strong>: <span class="wikilink">LangChain</span>, <span class="wikilink">AutoGen</span>, <span class="wikilink">OpenAI Agents SDK</span></li>
+<li><strong>RL 训练框架</strong>: <span class="wikilink">VeRL</span></li>
+<li><strong>可观测性</strong>: <span class="wikilink">OpenTelemetry</span></li>
+<li><strong>评估基准</strong>: Spider (text-to-SQL), MuSiQue (multi-hop QA), Calc-X (math tool-use)</li></div></details></div><div class="paper-card" data-topic="🏋️ Agent 训练"><h3 id="3-grandcode-achieving-grandmaster-level-in-competitive-programming-via-agentic-reinforcement-learning">3. GrandCode: Achieving Grandmaster Level in Competitive Programming via Agentic Reinforcement Learning</h3>
+<li><strong>作者</strong>: Xiaoya Li, Xiaofei Sun, Guoyin Wang</li>
+<li><strong>机构</strong>: DeepReinforce Team</li>
+<li><strong>链接</strong>: <a href="https://arxiv.org/abs/2604.02721" target="_blank">arXiv</a> | <a href="https://arxiv.org/pdf/2604.02721" target="_blank">PDF</a></li>
+<li><strong>来源</strong>: 📰 HF Daily，⬆️ 33</li>
+<details class="paper-note"><summary>📒 精读笔记: GrandCode</summary><div class="note-body"><h1 id="grandcode-achieving-grandmaster-level-in-competitive-programming-via-agentic-rl">GrandCode: Achieving Grandmaster Level in Competitive Programming via Agentic RL</h1>
+
+<blockquote>
+<p><strong>一句话总结</strong>：首个在 Codeforces 实时比赛中击败所有人类选手（包括传奇 Grandmaster）的 AI 系统，通过多 agent RL + Agentic GRPO 实现。</p>
+</blockquote>
+
+<h2 id="1-研究动机与问题定义">1. 研究动机与问题定义</h2>
+
+<h3 id="竞赛编程的-ai-进展">竞赛编程的 AI 进展</h3>
+<li>AlphaCode: ~1300 rating (top 54%)</li>
+<li>AlphaCode2: top 15%</li>
+<li>OpenAI o3: 全球第 175 名</li>
+<li>Gemini 3 Deep Think: 第 8 名（但在历史题目上评测，非实时比赛）</li>
+
+<p><strong>关键差距</strong>：此前没有 AI 系统在<strong>实时比赛条件</strong>下持续击败顶级人类选手。</p>
+
+<h2 id="2-方法详解">2. 方法详解</h2>
+
+<h3 id="21-multi-agent-架构">2.1 Multi-Agent 架构</h3>
+
+<p>GrandCode 由多个协作 agent 组成：</p>
+<li><strong>Hypothesis Model</strong>：提出结构性猜想</li>
+<li><strong>Main Solver</strong>：核心推理和解法生成</li>
+<li><strong>Summarization Model</strong>：维护长 context 的紧凑记忆</li>
+<li><strong>Test Case Generator</strong>：生成边界测试用例挑战方案</li>
+
+<p>形成 <strong>推理 → 验证 → 反馈</strong> 的 agentic loop。</p>
+
+<h3 id="22-agentic-grpo">2.2 Agentic GRPO</h3>
+
+<p>针对多阶段 agent rollout 的 <span class="wikilink">GRPO</span> 变体，解决两个问题：</p>
+
+<p><strong>延迟奖励</strong>：竞赛编程中只有最终提交才有反馈，中间步骤无奖励。</p>
+
+<p><strong>Off-policy 漂移</strong>：多轮 agent 交互中，早期步骤的策略与当前策略差异大。</p>
+
+<p>Agentic GRPO 结合<strong>即时奖励更新</strong>和<strong>延迟校正</strong>：</p>
+
+<div class="math-block">$$\mathcal{L}_{\text{Agentic-GRPO}} = \mathcal{L}_{\text{immediate}} + \lambda \cdot \mathcal{L}_{\text{delayed\_correction}}$$</div>
+
+<p>即时奖励部分在每个 agent 阶段提供信号，延迟校正在最终评估后回溯调整。</p>
+
+<h3 id="23-post-training--test-time-rl">2.3 Post-Training + Test-Time RL</h3>
+
+<p><strong>Post-Training</strong>：在大量竞赛编程数据上进行 RL 训练</p>
+<p><strong>Test-Time RL</strong>：在比赛中实时 RL 优化——对候选方案进行 best-of-N 采样，用 code reward 验证：</p>
+
+<div class="math-block">$$R(\text{solution}) = \begin{cases} 1 &amp; \text{if all test cases pass} \\ 0 &amp; \text{otherwise} \end{cases}$$</div>
+
+<p>通过 smoothing best-of-N reward 提升训练稳定性。</p>
+
+<h3 id="24-实时比赛策略">2.4 实时比赛策略</h3>
+
+<p>平衡 <strong>直接生成</strong> 和 <strong>test-time RL</strong>：</p>
+<li>简单题：直接生成，快速提交</li>
+<li>难题：启动 agentic loop + test-time RL</li>
+
+<h2 id="3-实验结果">3. 实验结果</h2>
+
+<h3 id="31-codeforces-实时比赛">3.1 Codeforces 实时比赛</h3>
+
+<table class="paper-table">
+<thead><tr><th>比赛</th><th>日期</th><th>GrandCode 排名</th><th>备注</th></tr></thead>
+<tbody>
+<tr><td>Round 1087</td><td>2026-03-21</td><td><strong>第 1 名</strong></td><td>首个完成所有题目</td></tr>
+<tr><td>Round 1088</td><td>2026-03-28</td><td><strong>第 1 名</strong></td><td>首个完成所有题目</td></tr>
+<tr><td>Round 1089</td><td>2026-03-29</td><td><strong>第 1 名</strong></td><td>首个完成所有题目</td></tr>
+</tbody></table>
+
+
+<p><strong>三场连冠</strong>，均击败所有人类选手，包括多位传奇 Grandmaster。</p>
+
+<h3 id="32-对比">3.2 对比</h3>
+
+<table class="paper-table">
+<thead><tr><th>系统</th><th>评测条件</th><th>最佳排名</th></tr></thead>
+<tbody>
+<tr><td><strong>GrandCode</strong></td><td><strong>实时比赛</strong></td><td><strong>第 1 名 (3连)</strong></td></tr>
+<tr><td>Gemini 3 Deep Think</td><td>历史题目</td><td>第 8 名</td></tr>
+<tr><td>OpenAI o3</td><td>历史题目</td><td>第 175 名</td></tr>
+</tbody></table>
+
+
+<h2 id="4-架构图">4. 架构图</h2>
+
+<div class="paper-figure"><img src="https://arxiv.org/html/2604.02721v1/figs/pipeline-overview-edited.png" alt="GrandCode 流水线概览" loading="lazy"></div>
+
+<h2 id="5-核心概念">5. 核心概念</h2>
+
+<li><span class="wikilink">GRPO</span>：Group Relative Policy Optimization</li>
+<li><span class="wikilink">Test-Time RL</span>：推理时强化学习</li>
+<li><span class="wikilink">Multi-Agent System</span>：多智能体协作</li>
+<li><span class="wikilink">Competitive Programming</span>：竞赛编程</li>
+<li><span class="wikilink">Codeforces</span>：在线编程竞赛平台</li>
+<li><span class="wikilink">Best-of-N Sampling</span>：多方案采样选优</li>
+
+<h2 id="6-优缺点分析">6. 优缺点分析</h2>
+
+<h3 id="优点">优点</h3>
+<p>1. <strong>实时比赛验证</strong>：不是离线评测，是真正的 live competition，说服力极强</p>
+<p>2. <strong>三场连冠</strong>：排除运气因素</p>
+<p>3. <strong>Multi-agent 分工</strong>：比单模型暴力推理更像人类团队协作</p>
+<p>4. <strong>Agentic GRPO</strong>：针对 multi-stage rollout 的实用改进</p>
+
+<h3 id="缺点">缺点</h3>
+<p>1. <strong>计算成本未公开</strong>：跑一场比赛需要多少 GPU？</p>
+<p>2. <strong>可复现性</strong>：DeepReinforce 不是大厂，代码和模型是否开源？</p>
+<p>3. <strong>泛化性</strong>：竞赛编程的能力能否迁移到实际软件工程？</p>
+<p>4. <strong>比赛选择</strong>：只参加了 3 场比赛，样本量有限</p>
+
+<h2 id="7-与相关工作对比">7. 与相关工作对比</h2>
+
+<table class="paper-table">
+<thead><tr><th>系统</th><th>方法</th><th>Agent 架构</th><th>Live 验证</th><th>排名</th></tr></thead>
+<tbody>
+<tr><td><strong>GrandCode</strong></td><td><strong>Multi-agent RL + Test-time RL</strong></td><td><strong>4 modules</strong></td><td><strong>是 (3场)</strong></td><td><strong>#1</strong></td></tr>
+<tr><td>Gemini 3 Deep Think</td><td>单模型</td><td>无</td><td>否</td><td>#8</td></tr>
+<tr><td>OpenAI o3</td><td>单模型</td><td>无</td><td>否</td><td>#175</td></tr>
+<tr><td>AlphaCode2</td><td>搜索+过滤</td><td>无</td><td>否</td><td>top 15%</td></tr>
+</tbody></table>
+</div></details>
+
+<div class="paper-figure"><img src="https://arxiv.org/html/2604.02721v1/figs/pipeline-overview-edited.png" alt="" loading="lazy"></div>
+
+<li><strong>核心方法</strong>: Multi-agent RL 系统用于竞赛编程。用 <span class="wikilink">GRPO</span> 训练，多个 agent 协作解题——规划、编码、调试分工。号称在竞赛编程中达到 Grandmaster 水平，相比 Google Gemini 3 Deep Think（第 8 名）有提升。</li>
+<li><strong>对比方法/Baselines</strong>: Gemini 3 Deep Think, <span class="wikilink">OpenAI</span> o3</li>
+<li><strong>借鉴意义</strong>: Multi-agent RL 在复杂推理任务中的分工协作模式值得参考。</li>
+<li><strong>锐评</strong>: "Grandmaster level" 的 claim 需要仔细看评测条件——是在 live competition 还是离线评测？33 upvote 说明关注度一般。不过 multi-agent 分工（规划+编码+调试）的设计思路比单 agent 暴力推理更接近人类工程师的工作方式。 👀</li>
+</div><h2 id="-llm-训练与对齐">🧪 LLM 训练与对齐</h2><div class="paper-card" data-topic="🧪 LLM 训练与对齐"><h3 id="4-soda-semi-on-policy-black-box-distillation-for-large-language-models">4. SODA: Semi On-Policy Black-Box Distillation for Large Language Models</h3>
+<li><strong>作者</strong>: Xiwen Chen</li>
+<li><strong>机构</strong>: Clemson University, LinkedIn, Washington University, ASU, Columbia</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2604.03873v1" target="_blank">arXiv</a> | <a href="https://arxiv.org/pdf/2604.03873v1" target="_blank">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+<details class="paper-note"><summary>📒 精读笔记: SODA</summary><div class="note-body"><h1 id="soda-semi-on-policy-black-box-distillation-for-llms">SODA: Semi On-Policy Black-Box Distillation for LLMs</h1>
+
+<blockquote>
+<p><strong>一句话总结</strong>：在黑盒 LLM 蒸馏中提出 "Semi On-Policy" 折中——混合使用 on-policy 和 off-policy 数据，平衡训练稳定性和学生模型纠错能力。</p>
+</blockquote>
+
+<h2 id="1-研究动机">1. 研究动机</h2>
+
+<p>黑盒蒸馏的两难：</p>
+<li><strong>Off-policy</strong>（如 <span class="wikilink">SeqKD</span>）：从教师采样，简单稳定，但无法纠正学生固有错误</li>
+<li><strong>On-policy</strong>（如 <span class="wikilink">GAD</span>）：从学生采样+对抗训练，能纠错但不稳定且计算量大</li>
+
+<h2 id="2-方法详解">2. 方法详解</h2>
+
+<h3 id="semi-on-policy-策略">Semi On-Policy 策略</h3>
+
+<p>混合采样：以概率 $\alpha$ 从教师采样，概率 $1-\alpha$ 从学生采样：</p>
+
+<div class="math-block">$$x_t \sim \begin{cases} p_{\text{teacher}}(\cdot | x_{&lt;t}) &amp; \text{w.p. } \alpha \\ p_{\text{student}}(\cdot | x_{&lt;t}) &amp; \text{w.p. } 1-\alpha \end{cases}$$</div>
+
+<p>蒸馏损失：</p>
+
+<div class="math-block">$$\mathcal{L}_{\text{SODA}} = -\mathbb{E}_{x \sim p_{\text{mix}}} \left[ \sum_t \log p_{\text{student}}(x_t | x_{&lt;t}) \right]$$</div>
+
+<p>$\alpha$ 可以是固定值或按训练进度退火（先 off-policy 后逐渐 on-policy）。</p>
+
+<h3 id="与-dpo-的区别">与 DPO 的区别</h3>
+
+<p>SODA 是生成式蒸馏（学生生成 → 教师评分），<span class="wikilink">DPO</span> 是偏好对齐（正负样本对比）。两者互补。</p>
+
+<h2 id="3-核心概念">3. 核心概念</h2>
+
+<li><span class="wikilink">Knowledge Distillation</span>、<span class="wikilink">SeqKD</span>、<span class="wikilink">GAD</span>、<span class="wikilink">DPO</span>、<span class="wikilink">On-Policy Learning</span></li>
+
+<h2 id="4-优缺点">4. 优缺点</h2>
+
+<p><strong>优点</strong>: 思路自然，工程实用，计算成本可控</p>
+<p><strong>缺点</strong>: 创新性有限（mixed policy 不算新），需看实验细节判断贡献大小</p></div></details>
+
+<div class="paper-figure"><img src="https://arxiv.org/html/2604.03873v1/x1.png" alt="" loading="lazy"></div>
+
+<li><strong>核心方法</strong>: 黑盒知识蒸馏的 off-policy vs on-policy 困境——<span class="wikilink">SeqKD</span> 等 off-policy 方法无法纠正学生的固有错误，<span class="wikilink">GAD</span> 等 on-policy 方法训练不稳定且计算量大。SODA 提出 "Semi On-Policy" 折中：部分使用 on-policy 数据，部分使用 off-policy 数据，在稳定性和纠错能力之间取得平衡。</li>
+<li><strong>对比方法/Baselines</strong>: <span class="wikilink">SeqKD</span>, <span class="wikilink">GAD</span>, <span class="wikilink">DPO</span></li>
+<li><strong>借鉴意义</strong>: "Semi On-Policy" 的折中思路在 agent 训练中也适用——完全 on-policy 太贵，完全 off-policy 效果差。</li>
+<li><strong>锐评</strong>: 实际上是蒸馏领域一个很自然的想法——mixed policy。关键看实验是否扎实、和 <span class="wikilink">DPO</span> 系列方法的对比是否公平。多机构合作但论文日期是 2026-04-04，说明刚出来。 👀</li></div><div class="paper-card" data-topic="🧪 LLM 训练与对齐"><h3 id="5-rethinking-exploration-in-rlvr-from-entropy-regularization-to-refinement-via-bidirectional-entropy-modulation">5. Rethinking Exploration in RLVR: From Entropy Regularization to Refinement via Bidirectional Entropy Modulation</h3>
+<li><strong>作者</strong>: Hengrui Gu, Xiaotian Han et al.</li>
+<li><strong>机构</strong>: NC State, Case Western Reserve University</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2604.04894v1" target="_blank">arXiv</a> | <a href="https://arxiv.org/pdf/2604.04894v1" target="_blank">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+
+<div class="paper-figure"><img src="https://arxiv.org/html/2604.04894v1/x1.png" alt="" loading="lazy"></div>
+
+<li><strong>核心方法</strong>: RLVR（Reinforcement Learning with Verifiable Rewards）面临 "restricted exploration" 问题——策略快速收敛到窄解集。传统熵正则化不可靠。AsymGRPO 提出<strong>双向熵调制</strong>：对正确答案降低熵（exploitation），对错误答案提高熵（exploration），在 <span class="wikilink">GRPO</span> 框架上实现非对称探索。</li>
+<li><strong>对比方法/Baselines</strong>: <span class="wikilink">GRPO</span>, <span class="wikilink">REINFORCE</span>, <span class="wikilink">PPO</span>, 标准熵正则化</li>
+<li><strong>借鉴意义</strong>: 对 <span class="wikilink">GRPO</span> 的改进，直接可用于 agent RL 训练。</li>
+<li><strong>锐评</strong>: "正确答案收敛、错误答案发散" 的非对称设计很优雅。MATH-500 上的提升如果显著的话这篇会火。但熵调制的超参数敏感性是个隐忧。 👀</li>
+</div><h2 id="-agent-框架">🔧 Agent 框架</h2><div class="paper-card" data-topic="🔧 Agent 框架"><h3 id="6-agentscope-10-a-developer-centric-framework-for-building-agentic-applications">6. AgentScope 1.0: A Developer-Centric Framework for Building Agentic Applications</h3>
+<li><strong>作者</strong>: Dawei Gao et al.</li>
+<li><strong>机构</strong>: Alibaba Group</li>
+<li><strong>链接</strong>: <a href="https://arxiv.org/abs/2508.16279" target="_blank">arXiv</a> | <a href="https://arxiv.org/pdf/2508.16279" target="_blank">PDF</a></li>
+<li><strong>来源</strong>: 🔥 HF Trending，⬆️ 61</li>
+<details class="paper-note"><summary>📒 精读笔记: AgentScope</summary><div class="note-body"><h1 id="agentscope-10">AgentScope 1.0</h1>
+
+<h2 id="-基本信息">📋 基本信息</h2>
+
+<li><strong>作者</strong>: Dawei Gao, Zitao Li, Yuexiang Xie 等</li>
+<li><strong>机构</strong>: Alibaba Group</li>
+<li><strong>链接</strong>: <a href="https://arxiv.org/abs/2508.16279" target="_blank">arXiv</a> | <a href="https://arxiv.org/pdf/2508.16279" target="_blank">PDF</a></li>
+
+<h2 id="-研究动机与问题">🎯 研究动机与问题</h2>
+
+<p>现有 multi-agent 框架（如 <span class="wikilink">LangChain</span>, <span class="wikilink">AutoGen</span>）在以下方面存在不足：</p>
+<p>1. <strong>工具集成侵入性强</strong>：需要大量修改已有代码</p>
+<p>2. <strong>可观测性差</strong>：大规模部署时难以监控和调试</p>
+<p>3. <strong>长期记忆缺失</strong>：agent 无法保持跨会话的上下文</p>
+<p>4. <strong>分布式支持弱</strong>：难以扩展到大规模 multi-agent 场景</p>
+
+<h2 id="-方法详解">🔧 方法详解</h2>
+
+<h3 id="核心架构">核心架构</h3>
+
+<p>AgentScope 1.0 的核心抽象：</p>
+
+<p>1. <strong><span class="wikilink">MsgHub</span>（消息总线）</strong>：agent 间消息传递的统一接口，支持广播和点对点通信</p>
+<p>2. <strong>StateModule（状态管理）</strong>：统一管理 agent 状态，支持序列化和恢复</p>
+<p>3. <strong>Non-Invasive Monitoring</strong>：基于 <span class="wikilink">OpenTelemetry</span> 的无侵入式监控</p>
+
+<h3 id="mcp-原生支持">MCP 原生支持</h3>
+
+<p>原生集成 <span class="wikilink">MCP</span>（Model Context Protocol）协议：</p>
+<li>Agent 可通过 MCP 协议访问外部工具和数据源</li>
+<li>工具集成不需要修改 agent 代码（non-invasive）</li>
+<li>支持 MCP server 的自动发现和注册</li>
+
+<h3 id="分层记忆系统">分层记忆系统</h3>
+
+<li><strong><span class="wikilink">InMemoryMemory</span></strong>：短期工作记忆，存储当前会话上下文</li>
+<li><strong><span class="wikilink">LongTermMemoryBase</span></strong>：长期记忆，支持跨会话信息持久化</li>
+<li>记忆检索支持语义搜索和结构化查询</li>
+
+<h3 id="react-agent-内置实现">ReAct Agent 内置实现</h3>
+
+<p>内置 <span class="wikilink">ReAct</span> 范式的 agent 实现：</p>
+<li>Thought → Action → Observation 循环</li>
+<li>支持自定义 tool 注册</li>
+<li>内置错误处理和重试机制</li>
+
+<h3 id="分布式调度">分布式调度</h3>
+
+<li>基于 <span class="wikilink">gRPC</span> 的分布式通信</li>
+<li>支持 agent 在多节点间调度</li>
+<li>MsgHub 支持分布式消息广播</li>
+
+<h2 id="-实验结果">📊 实验结果</h2>
+
+<table class="paper-table">
+<thead><tr><th>框架</th><th>MCP支持</th><th>可观测性</th><th>长期记忆</th><th>分布式</th></tr></thead>
+<tbody>
+<tr><td>LangChain</td><td>部分</td><td>弱</td><td>第三方</td><td>弱</td></tr>
+<tr><td>AutoGen</td><td>无</td><td>弱</td><td>无</td><td>部分</td></tr>
+<tr><td>CAMEL</td><td>无</td><td>无</td><td>无</td><td>无</td></tr>
+<tr><td><strong>AgentScope 1.0</strong></td><td><strong>原生</strong></td><td><strong>OpenTelemetry</strong></td><td><strong>内置</strong></td><td><strong>原生</strong></td></tr>
+</tbody></table>
+
+
+<p>61 upvotes 说明社区认可度较高。</p>
+
+<h2 id="-核心贡献">💡 核心贡献</h2>
+
+<p>1. <strong>MCP 原生集成</strong>：首个原生支持 MCP 协议的 multi-agent 框架</p>
+<p>2. <strong>OpenTelemetry 可观测性</strong>：无侵入式监控，适合生产环境</p>
+<p>3. <strong>分层记忆系统</strong>：短期 + 长期记忆，支持跨会话持久化</p>
+<p>4. <strong>大规模部署经验</strong>：阿里内部大规模 multi-agent 部署验证</p>
+
+<h2 id="-局限性与思考">🤔 局限性与思考</h2>
+
+<p>1. <strong>框架评估困难</strong>：benchmark 上的数字不代表实际开发体验</p>
+<p>2. <strong>与 LangChain 对比不够 fair</strong>：只挑了对方弱的场景</p>
+<p>3. <strong>学习曲线</strong>：抽象层较多，新手上手成本可能较高</p>
+<p>4. <strong>MCP 生态尚未成熟</strong>：MCP 协议本身还在快速迭代</p>
+
+<h2 id="-相关工作">📚 相关工作</h2>
+
+<li><span class="wikilink">MCP</span>: Model Context Protocol，agent 工具集成标准</li>
+<li><span class="wikilink">OpenTelemetry</span>: 可观测性标准</li>
+<li><span class="wikilink">ReAct</span>: 推理+行动范式</li>
+<li><span class="wikilink">LangChain</span>: 竞品框架</li>
+<li><span class="wikilink">AutoGen</span>: 微软 multi-agent 框架</li></div></details></div><div class="paper-card" data-topic="🔧 Agent 框架"><h3 id="7-tradingagents-multi-agents-llm-financial-trading-framework">7. TradingAgents: Multi-Agents LLM Financial Trading Framework</h3>
+<li><strong>作者</strong>: Yijia Xiao et al.</li>
+<li><strong>机构</strong>: MIT, UCLA</li>
+<li><strong>链接</strong>: <a href="https://arxiv.org/abs/2412.20138" target="_blank">arXiv</a> | <a href="https://arxiv.org/pdf/2412.20138" target="_blank">PDF</a></li>
+<li><strong>来源</strong>: 🔥 HF Trending，⬆️ 36</li>
+
+<li><strong>核心方法</strong>: 用 multi-agent LLM 框架模拟真实交易公司的协作动态——分析师、交易员、风控各司其职。比单 agent 或独立数据采集的 multi-agent 更接近实际交易流程。</li>
+<li><strong>锐评</strong>: 2024 年 12 月的旧论文又上 trending。MIT+UCLA 的招牌让人点进来，但交易策略的实盘验证才是硬通货。和昨天的 <span class="wikilink">PolySwarm</span> 类似，都是 "agent 做金融" 但缺实盘。 🫠</li>
+</div><h2 id="-benchmark--评测">📊 Benchmark & 评测</h2><div class="paper-card" data-topic="📊 Benchmark &amp; 评测"><h3 id="8-agentic-mme-what-agentic-capability-really-brings-to-multimodal-intelligence">8. Agentic-MME: What Agentic Capability Really Brings to Multimodal Intelligence?</h3>
+<li><strong>作者</strong>: Qianshan Wei et al.</li>
+<li><strong>机构</strong>: CASIA, UCAS, SEU, NJU, PKU, BUAA, NTU, UCLA</li>
+<li><strong>链接</strong>: <a href="https://arxiv.org/abs/2604.03016" target="_blank">arXiv</a> | <a href="https://arxiv.org/pdf/2604.03016" target="_blank">PDF</a></li>
+<li><strong>来源</strong>: 📰 HF Daily，⬆️ 25</li>
+
+<div class="paper-figure"><img src="https://arxiv.org/html/2604.03016v1/x1.png" alt="" loading="lazy"></div>
+
+<li><strong>核心方法</strong>: 评测 MLLM 作为 agent 时的能力——视觉扩展（调用视觉工具）和知识扩展（开放搜索）。现有评测的问题：缺乏灵活工具集成、视觉和搜索分开测、只看最终答案。Agentic-MME 解决这些问题，测了 <span class="wikilink">GPT-5</span> 等模型。</li>
+<li><strong>锐评</strong>: 又一个 benchmark。八家机构联合搞评测说明 MLLM agent 评估标准仍未统一。如果 GPT-5 的数据有亮点可能会火，否则就是又一篇 benchmark paper。 💤</li></div><div class="paper-card" data-topic="📊 Benchmark &amp; 评测"><h3 id="9-combee-scaling-prompt-learning-for-self-improving-language-model-agents">9. Combee: Scaling Prompt Learning for Self-Improving Language Model Agents</h3>
+<li><strong>作者</strong>: Hanchen Li et al.</li>
+<li><strong>机构</strong>: UC Berkeley, Stanford, Tensormesh, Gradient Network</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2604.04247v1" target="_blank">arXiv</a> | <a href="https://arxiv.org/pdf/2604.04247v1" target="_blank">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+
+<div class="paper-figure"><img src="https://arxiv.org/html/2604.04247v1/x1.png" alt="" loading="lazy"></div>
+
+<li><strong>核心方法</strong>: 现有 prompt learning（如 ACE、GEPA）只关注单 agent 或低并行场景。Combee 将 prompt 自优化扩展到高并行 multi-agent 设置。</li>
+<li><strong>借鉴意义</strong>: Prompt 自优化 + 多 agent 并行是一个实用方向。</li>
+<li><strong>锐评</strong>: Berkeley+Stanford 出品，但关键是 "scaling prompt learning" 相比直接 RL 训练有什么不可替代的优势？如果 SKILL0 的参数内化更有效，prompt learning 的天花板在哪？ 💤</li>
+</div></div>
+<div id="panel-agent训练" class="tab-panel"><h2 id="-agent-训练">🏋️ Agent 训练</h2><div class="paper-card" data-topic="🏋️ Agent 训练"><h3 id="1-skill0-in-context-agentic-reinforcement-learning-for-skill-internalization">1. SKILL0: In-Context Agentic Reinforcement Learning for Skill Internalization</h3>
+<li><strong>作者</strong>: Zhengxi Lu et al.</li>
+<li><strong>机构</strong>: Zhejiang University, Meituan, Tsinghua University</li>
+<li><strong>链接</strong>: <a href="https://arxiv.org/abs/2604.02268" target="_blank">arXiv</a> | <a href="https://arxiv.org/pdf/2604.02268" target="_blank">PDF</a></li>
+<li><strong>来源</strong>: 🔥 HF Trending，⬆️ 86</li>
+<details class="paper-note"><summary>📒 精读笔记: SKILL0</summary><div class="note-body"><h1 id="skill0-in-context-agentic-reinforcement-learning-for-skill-internalization">SKILL0: In-Context Agentic Reinforcement Learning for Skill Internalization</h1>
+
+<blockquote>
+<p><strong>一句话总结</strong>：提出 "Skills at training, zero at inference" 范式——用渐进式课程学习 RL 将 agent 技能从推理时 context 注入内化到模型参数，实现零检索的自主行为。</p>
+</blockquote>
+
+<h2 id="1-研究动机与问题定义">1. 研究动机与问题定义</h2>
+
+<h3 id="推理时技能增强的三大局限">推理时技能增强的三大局限</h3>
+<p>1. <strong>检索噪声</strong>：不相关技能污染 agent context</p>
+<p>2. <strong>Token 开销</strong>：技能内容在多轮交互中累积，限制可扩展性</p>
+<p>3. <strong>根本问题</strong>：模型在"执行"技能而非"学会"技能——能力在 context 中，不在参数里</p>
+
+<h3 id="类比人类学习">类比人类学习</h3>
+<p>人类技能习得遵循：<strong>显式指导阶段 → 内化阶段</strong>（Anderson, 1982）。推理时技能增强永远锚定在第一阶段。RL 提供了通往第二阶段的路径。</p>
+
+<h2 id="2-方法详解">2. 方法详解</h2>
+
+<h3 id="21-agent-loop-形式化">2.1 Agent Loop 形式化</h3>
+
+<p>任务建模为序列决策：给定指令 $I$，agent 生成动作序列 $\{a_1, a_2, \ldots, a_T\}$。每步 $t$，agent 从策略采样：</p>
+
+<div class="math-block">$$a_t \sim \pi_\theta(a_t | I, h_t), \quad h_t = \{o_1, o_2, \ldots, o_t\}$$</div>
+
+<p>环境转移：$o_{t+1} = \mathcal{E}(o_t, a_t)$</p>
+
+<h3 id="22-skillbank层次化技能库">2.2 SkillBank：层次化技能库</h3>
+
+<p>技能组织为两层结构：</p>
+<li><strong>通用技能</strong>：跨任务的策略原则（探索策略、目标跟踪等）</li>
+<li><strong>任务特定技能</strong>：领域专用知识（动作序列、前置条件等）</li>
+
+<p>目录结构：<code>skills/{task_name}/{skill_category}.md</code></p>
+
+<h3 id="23-relevance-driven-skill-grouping">2.3 Relevance-Driven Skill Grouping</h3>
+
+<p>离线按类别分组技能，与交互历史一起渲染为紧凑的视觉 context，教模型工具调用和多轮任务完成。</p>
+
+<h3 id="24-in-context-reinforcement-learning-icrl">2.4 In-Context Reinforcement Learning (ICRL)</h3>
+
+<p>核心创新——技能在<strong>训练时</strong>作为 in-context 指导提供，在<strong>推理时</strong>完全移除：</p>
+
+<div class="math-block">$$\mathcal{L}_{\text{ICRL}} = \mathbb{E}_{\tau \sim \pi_\theta} \left[ \sum_{t} \min\left( r_t(\theta) \hat{A}_t, \text{clip}(r_t(\theta), 1-\epsilon, 1+\epsilon) \hat{A}_t \right) \right]$$</div>
+
+<p>训练 rollout 中包含技能 context $\mathcal{S}_k$，但推理时 $\mathcal{S}_k = \emptyset$。</p>
+
+<h3 id="25-dynamic-curriculum动态课程">2.5 Dynamic Curriculum（动态课程）</h3>
+
+<p><strong>不是</strong>固定退火计划，而是自适应内化：</p>
+
+<p>对每个技能文件 $\mathcal{S}_k$，评估其<strong>on-policy 有用性</strong>——比较有无该技能时 agent 在匹配验证子任务上的表现：</p>
+
+<div class="math-block">$$\text{Helpfulness}(\mathcal{S}_k) = \text{Perf}(\pi_\theta | \mathcal{S}_k) - \text{Perf}(\pi_\theta | \emptyset)$$</div>
+
+<li>如果 $\text{Helpfulness}(\mathcal{S}_k) > \delta$：保留该技能（模型仍需它）</li>
+<li>如果 $\text{Helpfulness}(\mathcal{S}_k) \leq \delta$：移除该技能（已内化）</li>
+
+<p>预算线性衰减直至归零，agent 最终完全零技能运行。</p>
+
+<h3 id="26-与标准-rl-的区别">2.6 与标准 RL 的区别</h3>
+
+<div class="math-block">$$\text{Standard RL}: \quad \pi_\theta(a_t | I, h_t)$$</div>
+<div class="math-block">$$\text{Skill0 训练}: \quad \pi_\theta(a_t | I, h_t, \mathcal{S}_k)$$</div>
+<div class="math-block">$$\text{Skill0 推理}: \quad \pi_\theta(a_t | I, h_t)$$</div>
+
+<h2 id="3-实验结果">3. 实验结果</h2>
+
+<h3 id="31-主要结果">3.1 主要结果</h3>
+
+<table class="paper-table">
+<thead><tr><th>方法</th><th>ALFWorld</th><th>Search-QA</th><th>推理 Token/Step</th></tr></thead>
+<tbody>
+<tr><td>Standard RL</td><td>baseline</td><td>baseline</td><td>~2k</td></tr>
+<tr><td>Skill Augmentation (SkillRL)</td><td>高</td><td>高</td><td>~3-5k</td></tr>
+<tr><td><strong>Skill0</strong></td><td><strong>+9.7%</strong></td><td><strong>+6.6%</strong></td><td><strong>< 0.5k</strong></td></tr>
+</tbody></table>
+
+
+<p>关键：Skill0 在性能上匹配甚至超过推理时技能增强方法，但推理 token 开销降低 6-10 倍。</p>
+
+<h3 id="32-内化分析">3.2 内化分析</h3>
+
+<li>技能移除的时间点因技能复杂度而异——简单技能早期内化，复杂技能后期内化</li>
+<li>Dynamic Curriculum 比固定退火计划提升 3-5%</li>
+
+<h2 id="4-架构图">4. 架构图</h2>
+
+<div class="paper-figure"><img src="https://arxiv.org/html/2604.02268v1/x1.png" alt="Skill0 总体框架" loading="lazy"></div>
+
+<h2 id="5-核心概念">5. 核心概念</h2>
+
+<li><span class="wikilink">In-Context Learning</span>：上下文学习</li>
+<li><span class="wikilink">Reinforcement Learning</span>：强化学习</li>
+<li><span class="wikilink">Curriculum Learning</span>：课程学习</li>
+<li><span class="wikilink">Agent Skills</span>：agent 技能系统</li>
+<li><span class="wikilink">Skill Augmentation</span>：推理时技能增强</li>
+<li><span class="wikilink">ALFWorld</span>：文本游戏交互环境</li>
+
+<h2 id="6-优缺点分析">6. 优缺点分析</h2>
+
+<h3 id="优点">优点</h3>
+<p>1. <strong>范式转变</strong>：从"推理时检索"到"训练时内化"，思路清晰有说服力</p>
+<p>2. <strong>自适应课程</strong>：Helpfulness-driven 退火比固定计划更优雅</p>
+<p>3. <strong>推理高效</strong>：< 0.5k token/step，大幅降低部署成本</p>
+<p>4. <strong>开源</strong>：代码在 GitHub 上公开</p>
+
+<h3 id="缺点">缺点</h3>
+<p>1. <strong>泛化性</strong>：内化的技能能否迁移到训练时未见过的新任务？</p>
+<p>2. <strong>环境依赖</strong>：ALFWorld 和 Search-QA 相对简单，更复杂环境（如 SWE-bench）效果如何？</p>
+<p>3. <strong>技能质量</strong>：垃圾技能内化了也没用——需要高质量 SkillBank</p>
+<p>4. <strong>训练成本</strong>：RL 训练本身的成本和标准 SFT 相比如何？</p>
+
+<h2 id="7-与相关工作对比">7. 与相关工作对比</h2>
+
+<table class="paper-table">
+<thead><tr><th>方法</th><th>范式</th><th>推理开销</th><th>性能</th><th>技能依赖</th></tr></thead>
+<tbody>
+<tr><td><strong>Skill0</strong></td><td><strong>内化</strong></td><td><strong>低 (< 0.5k)</strong></td><td><strong>高</strong></td><td><strong>无</strong></td></tr>
+<tr><td>SkillRL</td><td>增强</td><td>高 (3-5k)</td><td>高</td><td>有</td></tr>
+<tr><td>EvolveR</td><td>增强+进化</td><td>高</td><td>中-高</td><td>有</td></tr>
+<tr><td>Standard RL</td><td>无技能</td><td>低</td><td>低</td><td>无</td></tr>
+</tbody></table>
+</div></details>
+
+<div class="paper-figure"><img src="https://arxiv.org/html/2604.02268v1/x1.png" alt="" loading="lazy"></div>
+
+<li><strong>核心方法</strong>: 现有 agent 靠推理时检索技能（skill augmentation），但检索噪声大、token 开销高、模型并没有真正学会技能。SKILL0 提出 <strong>Skill Internalization</strong>——用 <span class="wikilink">Reinforcement Learning|RL</span> 将技能知识从 context 内化到模型参数。构建 SkillBank 收集多样化 agent 技能，然后用 RL 训练让模型在不依赖外部检索的情况下掌握这些技能。</li>
+<li><strong>对比方法/Baselines</strong>: 推理时 skill augmentation（<span class="wikilink">EvolveR</span> 等）、标准 <span class="wikilink">SFT</span></li>
+<li><strong>借鉴意义</strong>: "从检索到内化" 的范式转变对任何依赖外部知识的 agent 系统都有参考价值。也可以类比 <span class="wikilink">RAG</span> vs 参数化记忆的讨论。</li>
+<li><strong>锐评</strong>: 今天最值得读的论文。"inference-time skill augmentation is fundamentally limited" 这个 claim 很大胆但有道理——你不能指望一个不会游泳的人拿着游泳教程就能游。86 个 upvote 说明社区买账。关键问题是：RL 训练的技能泛化能力如何？能否内化从未见过的新技能？ 🔥</li></div><div class="paper-card" data-topic="🏋️ Agent 训练"><h3 id="2-agent-lightning-train-any-ai-agents-with-reinforcement-learning">2. Agent Lightning: Train ANY AI Agents with Reinforcement Learning</h3>
+<li><strong>作者</strong>: Xufang Luo, Yuge Zhang et al.</li>
+<li><strong>机构</strong>: Microsoft Research</li>
+<li><strong>链接</strong>: <a href="https://arxiv.org/abs/2508.03680" target="_blank">arXiv</a> | <a href="https://arxiv.org/pdf/2508.03680" target="_blank">PDF</a></li>
+<li><strong>来源</strong>: 🔥 HF Trending，⬆️ 140</li>
+<details class="paper-note"><summary>📒 精读笔记: Agent Lightning - Train AI Agents with RL</summary><div class="note-body"><h1 id="agent-lightning-train-any-ai-agents-with-reinforcement-learning">Agent Lightning: Train ANY AI Agents with Reinforcement Learning</h1>
+
+<h2 id="基本信息">基本信息</h2>
+
+<li><strong>作者</strong>: Xufang Luo, Yuge Zhang, Zhiyuan He, Zilong Wang, Siyun Zhao, Dongsheng Li, Luna K. Qiu, Yuqing Yang</li>
+<li><strong>机构</strong>: Microsoft Research</li>
+<li><strong>时间</strong>: 2025年8月</li>
+<li><strong>链接</strong>:</li>
+<li>arXiv: <a href="https://arxiv.org/abs/2508.03680" target="_blank">2508.03680</a></li>
+<li>GitHub: <a href="https://github.com/microsoft/agent-lightning" target="_blank">microsoft/agent-lightning</a> (16k+ stars)</li>
+<li>项目主页: <a href="https://www.microsoft.com/en-us/research/project/agent-lightning/" target="_blank">Microsoft Research</a></li>
+
+
+<h2 id="研究动机与问题">研究动机与问题</h2>
+
+<h3 id="背景">背景</h3>
+
+<p>近年来 <span class="wikilink">LLM</span> 驱动的 AI Agent 在搜索、代码生成、工具调用等复杂任务中表现出色。然而，LLM 在未经专门训练的场景中（如多轮编码工作流、私有领域数据集、不熟悉的工具）仍然容易出错，无法可靠解决复杂的端到端任务。</p>
+
+<p><span class="wikilink">Reinforcement Learning</span> 已在推理模型（如 <span class="wikilink">DeepSeek-R1</span>、<span class="wikilink">Kimi k1.5</span>）中取得了突破性进展，是优化 Agent 场景中 LLM 的强大范式。相比需要逐步标注的 <span class="wikilink">Supervised Fine-Tuning</span>，RL 仅依赖基于结果的 reward 信号，消除了对任务特定标注数据的需求。</p>
+
+<h3 id="核心问题">核心问题</h3>
+
+<p>将 RL 扩展到 Agent 训练面临两大挑战：</p>
+
+<p>1. <strong>算法层面</strong>：现有 RL 方法主要针对静态、单次调用任务（如数学推理）。Agent 的执行涉及<strong>多次 LLM 调用</strong>（不同 prompt 和 response）以及与外部工具/API 的交互，逻辑远比单轮 RL 复杂。</p>
+<p>2. <strong>系统层面</strong>：现有方法将 RL 训练与 Agent 逻辑<strong>紧密耦合</strong>，或依赖序列拼接加 masking 的方式，难以支持多样化的 Agent 框架（LangChain、AutoGen、OpenAI Agents SDK 等）。</p>
+
+<h3 id="核心思想">核心思想</h3>
+
+<p>Agent Lightning 的核心创新是<strong>完全解耦 Agent 执行与 RL 训练</strong>，让开发者以几乎<strong>零代码修改</strong>的方式，对任意 AI Agent 进行 RL 训练。</p>
+
+<div class="paper-figure"><img src="https://arxiv.org/html/2508.03680v1/figures/overview.png" alt="Overview of Agent Lightning" loading="lazy"></div>
+<p><em>Figure 1: Agent Lightning 框架总览。实现了 Agent 执行与 RL 训练的完全解耦。</em></p>
+
+
+<h2 id="方法详解">方法详解</h2>
+
+<h3 id="31-统一数据接口-unified-data-interface">3.1 统一数据接口 (Unified Data Interface)</h3>
+
+<p>Agent Lightning 定义了一个统一的数据接口，将 Agent 执行过程中的数据标准化为 RL 训练可用的格式。</p>
+
+<p><strong>核心概念</strong>：</p>
+
+<li><strong>State</strong>: Agent 执行的快照，包括程序计数器、变量值、调用栈等。形式化为：</li>
+
+<div class="math-block">$$\texttt{state}_{t}(x,k) = \left\{ \texttt{variable}_{i}^{x,k,t} \right\}_{i=1}^{V}$$</div>
+
+<li><strong>Semantic Variable</strong>: 被组件使用或修改的关键变量，代表关键语义（如程序意图）。不关注循环计数器等辅助变量，只关注语义层面的变化。</li>
+
+<li><strong>Component Invocation (Call)</strong>: 语义变量的变化通过组件调用发生。第 $k$ 次执行任务 $x$ 的所有调用序列为：</li>
+
+<div class="math-block">$$\texttt{execution}(x,k) = \left\{ \texttt{call}_{i}^{x,k} \right\}_{i=1}^{N}$$</div>
+
+<p>其中每个 call 定义为：</p>
+
+<div class="math-block">$$\texttt{call}_{i}^{x,k} = (\texttt{meta}_{i}^{x,k}, \texttt{input}_{i}^{x,k}, \texttt{output}_{i}^{x,k}), \quad \text{with} ~ \texttt{output}_{i}^{x,k} = C_{i}(\texttt{input}_{i}^{x,k})$$</div>
+
+<p>这里 $C_{i} \in \mathcal{M} \cup \mathcal{T}$，即组件可以是 LLM ($\mathcal{M}$) 或工具 ($\mathcal{T}$)。</p>
+
+<li><strong>Reward 标注</strong>: 为每个 call 分配 reward $r_i \in \mathbb{R}$，形成带 reward 的执行序列：</li>
+
+<div class="math-block">$$\texttt{execution}^{R}(x,k) = \left\{ (\texttt{call}_{i}^{x,k}, r_{i}^{x,k}) \right\}_{i=1}^{N}$$</div>
+
+<div class="paper-figure"><img src="https://arxiv.org/html/2508.03680v1/figures/data_interface.png" alt="Data Interface" loading="lazy"></div>
+<p><em>Figure 2: 统一数据接口示意图。左侧展示 Agent 执行流程中语义变量的更新；右侧展示对应的 trajectory 数据收集。</em></p>
+
+<h3 id="32-agent-中的-markov-decision-process">3.2 Agent 中的 Markov Decision Process</h3>
+
+<p>Agent Lightning 将 Agent 执行建模为 <span class="wikilink">Partially Observable Markov Decision Process</span> (POMDP)：</p>
+
+<div class="math-block">$$\mathcal{M} = (\mathcal{S}, \mathcal{O}, \mathcal{A}, \mathcal{P}, \mathcal{R})$$</div>
+
+<p>各元素含义：</p>
+
+<table class="paper-table">
+<thead><tr><th>符号</th><th>含义</th></tr></thead>
+<tbody>
+<tr><td>$\mathcal{S}$</td><td>状态空间，对应所有可能的 $\texttt{state}_{t}$</td></tr>
+<tr><td>$\mathcal{O}$</td><td>观测空间，对应 policy LLM 的所有可能输入 $\texttt{input}_{t}$</td></tr>
+<tr><td>$\mathcal{A}$</td><td>动作空间，单次 LLM 调用生成的完整 token 序列 $\texttt{output}_{t}$</td></tr>
+<tr><td>$\mathcal{T}(s'</td><td>s,a)$</td><td>状态转移动态</td></tr>
+<tr><td>$\mathcal{R}(s,a)$</td><td>奖励函数</td></tr>
+</tbody></table>
+
+
+<p><strong>关键设计</strong>: 将 LLM 的一次完整生成（而非单个 token）作为一个 action，这是与传统 token-level RL 的重要区别。策略模型的目标是最大化累积回报：</p>
+
+<div class="math-block">$$R = \sum_{t=1}^{T} r_t$$</div>
+
+<h3 id="33-lightningrl-层次化-rl-算法">3.3 LightningRL: 层次化 RL 算法</h3>
+
+<p>LightningRL 是论文提出的核心算法，解决了如何将 Agent 的多轮交互数据用于 RL 训练的问题。</p>
+
+<p><strong>单轮 RL 回顾</strong>：现有方法（如 <span class="wikilink">GRPO</span>、<span class="wikilink">REINFORCE++</span>、<span class="wikilink">PPO</span>）主要处理单次 LLM 调用：给定任务 $x$，LLM 生成 response $\texttt{output} = (y_1, \ldots, y_N)$，获得 reward $r(x, \texttt{output}, \hat{y})$。通用训练目标为：</p>
+
+<div class="math-block">$$\mathcal{L}(\theta) = -\mathbb{E}_{x \sim \mathcal{X}, \texttt{output} \sim \pi_{\theta}(\cdot|x)} \left[ \sum_{j=1}^{N} \log \pi_{\theta}(y_j | x, y_{&lt;j}) \cdot A_j \right]$$</div>
+
+<p>其中 $A_j$ 是 token 级别的 advantage 估计。</p>
+
+<p><strong>多轮 Agent 的挑战</strong>：</p>
+
+<p>现有方法将多轮对话拼接为单个长序列并加 mask，存在以下问题：</p>
+<li>仅适用于简单的顺序工作流</li>
+<li>无法处理多 Agent、动态工作流等复杂场景</li>
+<li>序列过长影响训练效率</li>
+
+<p><strong>LightningRL 的解决方案</strong>：</p>
+
+<p>LightningRL 采用<strong>层次化</strong>方法，将 trajectory 分解为独立的 transition：</p>
+
+<div class="math-block">$$\texttt{execution}^{RL}(x,k) = \left\{ (\texttt{input}_{t}^{x,k}, \texttt{output}_{t}^{x,k}, r_{t}^{x,k}) \right\}_{t=1}^{T}$$</div>
+
+<p>包含一个 <strong>Credit Assignment Module</strong>，将 trajectory 级别的 return 分配到每次 LLM 调用的 reward。这使得每个 transition 可以独立用于 RL 优化，与现有的单轮 RL 算法（如 GRPO）无缝集成。</p>
+
+<div class="paper-figure"><img src="https://arxiv.org/html/2508.03680v1/figures/algorithm.png" alt="Algorithm" loading="lazy"></div>
+<p><em>Figure 3: LightningRL 算法示意。(a) 单轮 GRPO；(b) 现有多轮 GRPO（拼接+mask）；(c) LightningRL 将 trajectory 分解为独立 transition 进行训练。</em></p>
+
+<p><strong>Automatic Intermediate Rewarding (AIR)</strong>：AIR 机制可以基于系统监控信号（如工具调用返回状态）自动为中间步骤分配 reward，缓解 Agent 训练中的 <span class="wikilink">Sparse Reward</span> 问题。</p>
+
+<h3 id="34-系统设计-training-agent-disaggregation-架构">3.4 系统设计: Training-Agent Disaggregation 架构</h3>
+
+<p>Agent Lightning 的系统架构实现了训练与 Agent 执行的完全分离（TA Disaggregation）。</p>
+
+<div class="paper-figure"><img src="https://arxiv.org/html/2508.03680v1/figures/agent_lightning_architecture_v3.png" alt="Architecture" loading="lazy"></div>
+<p><em>Figure 4: Training-Agent Disaggregation 架构。</em></p>
+
+<p><strong>两大组件</strong>：</p>
+
+<p>1. <strong>Lightning Server</strong>: 集成 RL 框架（如 <span class="wikilink">VeRL</span>），管理训练过程和 LLM 优化，对外暴露 OpenAI-like API。Server 是 <strong>Agent-agnostic</strong> 的，不关心具体的 Agent 逻辑。</p>
+
+<p>2. <strong>Lightning Client</strong>: 封装 Agent 运行时（agent runtime），包含两个功能模块：</p>
+<li>与 Server 通信，负责数据传输</li>
+<li>运行 Agent 并进行数据收集</li>
+
+<p><strong>关键优势</strong>：</p>
+
+<li><strong>Agent-agnostic 训练</strong>: Server 只关心 LLM 优化和硬件资源管理</li>
+<li><strong>Trainer-agnostic 执行</strong>: Client 端 Agent 不依赖训练框架的实现细节</li>
+<li><strong>利用 Observability 框架</strong>: 将 <span class="wikilink">OpenTelemetry</span> 等可观测性框架引入训练流程，实现标准化的 trajectory 收集</li>
+<li><strong>零代码修改</strong>: 支持 LangChain、OpenAI Agents SDK、AutoGen 等主流框架开发的 Agent</li>
+
+
+<h2 id="实验结果">实验结果</h2>
+
+<p>实验在三个不同任务上验证了 Agent Lightning 的有效性，每个任务使用不同的 Agent 框架实现：</p>
+
+<h3 id="task-1-text-to-sql-langchain">Task 1: Text-to-SQL (LangChain)</h3>
+
+<li><strong>数据集</strong>: Spider（10,000+ 问题，200 数据库，138 领域）</li>
+<li><strong>基座模型</strong>: Llama-3.2-3B-Instruct</li>
+<li><strong>Agent 设计</strong>: 3 个 Agent 的多 Agent 系统</li>
+<li>SQL Writer Agent: 生成 SQL 查询</li>
+<li>Checking Agent: 评估查询正确性</li>
+<li>Re-writing Agent: 根据反馈修正查询或生成答案</li>
+<li><strong>Reward</strong>: 最终答案是否正确</li>
+
+<div class="paper-figure"><img src="https://arxiv.org/html/2508.03680v1/figures/train_spider.png" alt="Text-to-SQL Results" loading="lazy"></div>
+<p><em>Figure 5: Text-to-SQL 任务的 reward 曲线，展示稳定的训练提升。</em></p>
+
+<h3 id="task-2-retrieval-augmented-generation-openai-agents-sdk">Task 2: Retrieval-Augmented Generation (OpenAI Agents SDK)</h3>
+
+<li><strong>数据集</strong>: MuSiQue（多跳问答基准，要求真正的组合推理）</li>
+<li><strong>Agent 设计</strong>: 单 LLM 生成查询 -> 检索 -> 决定是否精炼查询或生成答案</li>
+<li><strong>Reward</strong>: 格式分 + 正确性分的加权组合</li>
+
+<div class="math-block">$$R = 0.9 \times R_{\text{correctness}} + 0.1 \times R_{\text{format}}$$</div>
+
+<p>其中 $R_{\text{correctness}}$ 采用 word-level F1 score。</p>
+
+<div class="paper-figure"><img src="https://arxiv.org/html/2508.03680v1/figures/train_rag_llama.png" alt="RAG Results" loading="lazy"></div>
+<p><em>Figure 6: RAG 任务的 reward 曲线。</em></p>
+
+<h3 id="task-3-math-qa-with-tool-usage-autogen">Task 3: Math QA with Tool Usage (AutoGen)</h3>
+
+<li><strong>数据集</strong>: Calc-X（需要推理和精确计算的数学问题）</li>
+<li><strong>基座模型</strong>: Llama-3.2-3B-Instruct</li>
+<li><strong>Agent 设计</strong>: 单 LLM 调用计算器工具解决数学问题</li>
+<li><strong>Reward</strong>: 最终答案是否正确</li>
+
+<div class="paper-figure"><img src="https://arxiv.org/html/2508.03680v1/figures/train_calc.png" alt="Calculator Results" loading="lazy"></div>
+<p><em>Figure 7: Math QA with Tool Usage 任务的 reward 曲线。</em></p>
+
+<p>三个实验统一表明：Agent Lightning 能够在不同 Agent 场景中实现<strong>稳定且持续的性能提升</strong>。</p>
+
+
+<h2 id="核心贡献">核心贡献</h2>
+
+<p>1. <strong>首个完全解耦的 Agent RL 训练框架</strong>: Agent Lightning 是第一个实现 Agent 执行与 RL 训练完全分离的框架，支持任意 AI Agent 的 RL 训练，几乎零代码修改。</p>
+
+<p>2. <strong>统一数据接口与 MDP 建模</strong>: 通过将 Agent 执行建模为 POMDP，定义了通用的数据接口，抽象了不同 Agent 的执行逻辑差异。</p>
+
+<p>3. <strong>LightningRL 层次化算法</strong>: 提出了基于 transition 分解的层次化 RL 方法，配合 Credit Assignment Module，支持多 Agent、动态工作流等复杂交互逻辑。</p>
+
+<p>4. <strong>Training-Agent Disaggregation 架构</strong>: 通过 Server/Client 分离设计，实现了训练框架与 Agent 框架的双向无关性，并引入可观测性框架提升可扩展性。</p>
+
+<p>5. <strong>跨框架验证</strong>: 在 LangChain、OpenAI Agents SDK、AutoGen 三个主流框架上验证了通用性。</p>
+
+
+<h2 id="局限性与思考">局限性与思考</h2>
+
+<h3 id="局限性">局限性</h3>
+
+<li><strong>实验规模有限</strong>: 仅在 3B 模型上验证，更大规模模型的效果尚未探索</li>
+<li><strong>任务类型覆盖</strong>: 虽然涵盖了 text-to-SQL、RAG、math tool-use，但未涉及 GUI 交互、长期规划等更复杂的 Agent 场景</li>
+<li><strong>Credit Assignment</strong>: 论文提出了 credit assignment module，但具体的分配策略如何影响训练效果缺乏深入分析</li>
+<li><strong>与 concatenation 方法的定量对比</strong>: Discussion 中定性分析了 transition-based 相比 concatenation-based 的优势，但缺少直接的定量 ablation</li>
+
+<h3 id="个人思考">个人思考</h3>
+
+<li>Agent Lightning 的<strong>解耦设计</strong>是其最大亮点。将 Agent 执行视为黑盒、仅通过标准化接口收集数据的思路，极大降低了 RL 训练的工程门槛</li>
+<li><strong>Observability 框架</strong>（OpenTelemetry）的引入很有前瞻性，将生产环境的监控基础设施复用到训练数据收集中</li>
+<li>与 <span class="wikilink">RAGEN</span>、<span class="wikilink">Search-R1</span>、<span class="wikilink">Trinity-RFT</span> 等 concatenation-based 方法的对比是后续工作的重要方向</li>
+<li>在更复杂的 Agent 场景（如 multi-agent debate、code generation pipeline）中的效果值得期待</li>
+
+
+<h2 id="相关工作">相关工作</h2>
+
+<li><strong>RL for LLM 推理</strong>: <span class="wikilink">DeepSeek-R1</span>, <span class="wikilink">Kimi k1.5</span>, <span class="wikilink">GRPO</span>, <span class="wikilink">PPO</span>, <span class="wikilink">REINFORCE++</span></li>
+<li><strong>Agent RL 训练</strong>: <span class="wikilink">RAGEN</span>, <span class="wikilink">Trinity-RFT</span>, <span class="wikilink">rLLM</span>, <span class="wikilink">Search-R1</span>, <span class="wikilink">DigiRL</span></li>
+<li><strong>Agent 框架</strong>: <span class="wikilink">LangChain</span>, <span class="wikilink">AutoGen</span>, <span class="wikilink">OpenAI Agents SDK</span></li>
+<li><strong>RL 训练框架</strong>: <span class="wikilink">VeRL</span></li>
+<li><strong>可观测性</strong>: <span class="wikilink">OpenTelemetry</span></li>
+<li><strong>评估基准</strong>: Spider (text-to-SQL), MuSiQue (multi-hop QA), Calc-X (math tool-use)</li></div></details></div><div class="paper-card" data-topic="🏋️ Agent 训练"><h3 id="3-grandcode-achieving-grandmaster-level-in-competitive-programming-via-agentic-reinforcement-learning">3. GrandCode: Achieving Grandmaster Level in Competitive Programming via Agentic Reinforcement Learning</h3>
+<li><strong>作者</strong>: Xiaoya Li, Xiaofei Sun, Guoyin Wang</li>
+<li><strong>机构</strong>: DeepReinforce Team</li>
+<li><strong>链接</strong>: <a href="https://arxiv.org/abs/2604.02721" target="_blank">arXiv</a> | <a href="https://arxiv.org/pdf/2604.02721" target="_blank">PDF</a></li>
+<li><strong>来源</strong>: 📰 HF Daily，⬆️ 33</li>
+<details class="paper-note"><summary>📒 精读笔记: GrandCode</summary><div class="note-body"><h1 id="grandcode-achieving-grandmaster-level-in-competitive-programming-via-agentic-rl">GrandCode: Achieving Grandmaster Level in Competitive Programming via Agentic RL</h1>
+
+<blockquote>
+<p><strong>一句话总结</strong>：首个在 Codeforces 实时比赛中击败所有人类选手（包括传奇 Grandmaster）的 AI 系统，通过多 agent RL + Agentic GRPO 实现。</p>
+</blockquote>
+
+<h2 id="1-研究动机与问题定义">1. 研究动机与问题定义</h2>
+
+<h3 id="竞赛编程的-ai-进展">竞赛编程的 AI 进展</h3>
+<li>AlphaCode: ~1300 rating (top 54%)</li>
+<li>AlphaCode2: top 15%</li>
+<li>OpenAI o3: 全球第 175 名</li>
+<li>Gemini 3 Deep Think: 第 8 名（但在历史题目上评测，非实时比赛）</li>
+
+<p><strong>关键差距</strong>：此前没有 AI 系统在<strong>实时比赛条件</strong>下持续击败顶级人类选手。</p>
+
+<h2 id="2-方法详解">2. 方法详解</h2>
+
+<h3 id="21-multi-agent-架构">2.1 Multi-Agent 架构</h3>
+
+<p>GrandCode 由多个协作 agent 组成：</p>
+<li><strong>Hypothesis Model</strong>：提出结构性猜想</li>
+<li><strong>Main Solver</strong>：核心推理和解法生成</li>
+<li><strong>Summarization Model</strong>：维护长 context 的紧凑记忆</li>
+<li><strong>Test Case Generator</strong>：生成边界测试用例挑战方案</li>
+
+<p>形成 <strong>推理 → 验证 → 反馈</strong> 的 agentic loop。</p>
+
+<h3 id="22-agentic-grpo">2.2 Agentic GRPO</h3>
+
+<p>针对多阶段 agent rollout 的 <span class="wikilink">GRPO</span> 变体，解决两个问题：</p>
+
+<p><strong>延迟奖励</strong>：竞赛编程中只有最终提交才有反馈，中间步骤无奖励。</p>
+
+<p><strong>Off-policy 漂移</strong>：多轮 agent 交互中，早期步骤的策略与当前策略差异大。</p>
+
+<p>Agentic GRPO 结合<strong>即时奖励更新</strong>和<strong>延迟校正</strong>：</p>
+
+<div class="math-block">$$\mathcal{L}_{\text{Agentic-GRPO}} = \mathcal{L}_{\text{immediate}} + \lambda \cdot \mathcal{L}_{\text{delayed\_correction}}$$</div>
+
+<p>即时奖励部分在每个 agent 阶段提供信号，延迟校正在最终评估后回溯调整。</p>
+
+<h3 id="23-post-training--test-time-rl">2.3 Post-Training + Test-Time RL</h3>
+
+<p><strong>Post-Training</strong>：在大量竞赛编程数据上进行 RL 训练</p>
+<p><strong>Test-Time RL</strong>：在比赛中实时 RL 优化——对候选方案进行 best-of-N 采样，用 code reward 验证：</p>
+
+<div class="math-block">$$R(\text{solution}) = \begin{cases} 1 &amp; \text{if all test cases pass} \\ 0 &amp; \text{otherwise} \end{cases}$$</div>
+
+<p>通过 smoothing best-of-N reward 提升训练稳定性。</p>
+
+<h3 id="24-实时比赛策略">2.4 实时比赛策略</h3>
+
+<p>平衡 <strong>直接生成</strong> 和 <strong>test-time RL</strong>：</p>
+<li>简单题：直接生成，快速提交</li>
+<li>难题：启动 agentic loop + test-time RL</li>
+
+<h2 id="3-实验结果">3. 实验结果</h2>
+
+<h3 id="31-codeforces-实时比赛">3.1 Codeforces 实时比赛</h3>
+
+<table class="paper-table">
+<thead><tr><th>比赛</th><th>日期</th><th>GrandCode 排名</th><th>备注</th></tr></thead>
+<tbody>
+<tr><td>Round 1087</td><td>2026-03-21</td><td><strong>第 1 名</strong></td><td>首个完成所有题目</td></tr>
+<tr><td>Round 1088</td><td>2026-03-28</td><td><strong>第 1 名</strong></td><td>首个完成所有题目</td></tr>
+<tr><td>Round 1089</td><td>2026-03-29</td><td><strong>第 1 名</strong></td><td>首个完成所有题目</td></tr>
+</tbody></table>
+
+
+<p><strong>三场连冠</strong>，均击败所有人类选手，包括多位传奇 Grandmaster。</p>
+
+<h3 id="32-对比">3.2 对比</h3>
+
+<table class="paper-table">
+<thead><tr><th>系统</th><th>评测条件</th><th>最佳排名</th></tr></thead>
+<tbody>
+<tr><td><strong>GrandCode</strong></td><td><strong>实时比赛</strong></td><td><strong>第 1 名 (3连)</strong></td></tr>
+<tr><td>Gemini 3 Deep Think</td><td>历史题目</td><td>第 8 名</td></tr>
+<tr><td>OpenAI o3</td><td>历史题目</td><td>第 175 名</td></tr>
+</tbody></table>
+
+
+<h2 id="4-架构图">4. 架构图</h2>
+
+<div class="paper-figure"><img src="https://arxiv.org/html/2604.02721v1/figs/pipeline-overview-edited.png" alt="GrandCode 流水线概览" loading="lazy"></div>
+
+<h2 id="5-核心概念">5. 核心概念</h2>
+
+<li><span class="wikilink">GRPO</span>：Group Relative Policy Optimization</li>
+<li><span class="wikilink">Test-Time RL</span>：推理时强化学习</li>
+<li><span class="wikilink">Multi-Agent System</span>：多智能体协作</li>
+<li><span class="wikilink">Competitive Programming</span>：竞赛编程</li>
+<li><span class="wikilink">Codeforces</span>：在线编程竞赛平台</li>
+<li><span class="wikilink">Best-of-N Sampling</span>：多方案采样选优</li>
+
+<h2 id="6-优缺点分析">6. 优缺点分析</h2>
+
+<h3 id="优点">优点</h3>
+<p>1. <strong>实时比赛验证</strong>：不是离线评测，是真正的 live competition，说服力极强</p>
+<p>2. <strong>三场连冠</strong>：排除运气因素</p>
+<p>3. <strong>Multi-agent 分工</strong>：比单模型暴力推理更像人类团队协作</p>
+<p>4. <strong>Agentic GRPO</strong>：针对 multi-stage rollout 的实用改进</p>
+
+<h3 id="缺点">缺点</h3>
+<p>1. <strong>计算成本未公开</strong>：跑一场比赛需要多少 GPU？</p>
+<p>2. <strong>可复现性</strong>：DeepReinforce 不是大厂，代码和模型是否开源？</p>
+<p>3. <strong>泛化性</strong>：竞赛编程的能力能否迁移到实际软件工程？</p>
+<p>4. <strong>比赛选择</strong>：只参加了 3 场比赛，样本量有限</p>
+
+<h2 id="7-与相关工作对比">7. 与相关工作对比</h2>
+
+<table class="paper-table">
+<thead><tr><th>系统</th><th>方法</th><th>Agent 架构</th><th>Live 验证</th><th>排名</th></tr></thead>
+<tbody>
+<tr><td><strong>GrandCode</strong></td><td><strong>Multi-agent RL + Test-time RL</strong></td><td><strong>4 modules</strong></td><td><strong>是 (3场)</strong></td><td><strong>#1</strong></td></tr>
+<tr><td>Gemini 3 Deep Think</td><td>单模型</td><td>无</td><td>否</td><td>#8</td></tr>
+<tr><td>OpenAI o3</td><td>单模型</td><td>无</td><td>否</td><td>#175</td></tr>
+<tr><td>AlphaCode2</td><td>搜索+过滤</td><td>无</td><td>否</td><td>top 15%</td></tr>
+</tbody></table>
+</div></details>
+
+<div class="paper-figure"><img src="https://arxiv.org/html/2604.02721v1/figs/pipeline-overview-edited.png" alt="" loading="lazy"></div>
+
+<li><strong>核心方法</strong>: Multi-agent RL 系统用于竞赛编程。用 <span class="wikilink">GRPO</span> 训练，多个 agent 协作解题——规划、编码、调试分工。号称在竞赛编程中达到 Grandmaster 水平，相比 Google Gemini 3 Deep Think（第 8 名）有提升。</li>
+<li><strong>对比方法/Baselines</strong>: Gemini 3 Deep Think, <span class="wikilink">OpenAI</span> o3</li>
+<li><strong>借鉴意义</strong>: Multi-agent RL 在复杂推理任务中的分工协作模式值得参考。</li>
+<li><strong>锐评</strong>: "Grandmaster level" 的 claim 需要仔细看评测条件——是在 live competition 还是离线评测？33 upvote 说明关注度一般。不过 multi-agent 分工（规划+编码+调试）的设计思路比单 agent 暴力推理更接近人类工程师的工作方式。 👀</li>
+</div></div>
+<div id="panel-llm训练与对齐" class="tab-panel"><h2 id="-llm-训练与对齐">🧪 LLM 训练与对齐</h2><div class="paper-card" data-topic="🧪 LLM 训练与对齐"><h3 id="4-soda-semi-on-policy-black-box-distillation-for-large-language-models">4. SODA: Semi On-Policy Black-Box Distillation for Large Language Models</h3>
+<li><strong>作者</strong>: Xiwen Chen</li>
+<li><strong>机构</strong>: Clemson University, LinkedIn, Washington University, ASU, Columbia</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2604.03873v1" target="_blank">arXiv</a> | <a href="https://arxiv.org/pdf/2604.03873v1" target="_blank">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+<details class="paper-note"><summary>📒 精读笔记: SODA</summary><div class="note-body"><h1 id="soda-semi-on-policy-black-box-distillation-for-llms">SODA: Semi On-Policy Black-Box Distillation for LLMs</h1>
+
+<blockquote>
+<p><strong>一句话总结</strong>：在黑盒 LLM 蒸馏中提出 "Semi On-Policy" 折中——混合使用 on-policy 和 off-policy 数据，平衡训练稳定性和学生模型纠错能力。</p>
+</blockquote>
+
+<h2 id="1-研究动机">1. 研究动机</h2>
+
+<p>黑盒蒸馏的两难：</p>
+<li><strong>Off-policy</strong>（如 <span class="wikilink">SeqKD</span>）：从教师采样，简单稳定，但无法纠正学生固有错误</li>
+<li><strong>On-policy</strong>（如 <span class="wikilink">GAD</span>）：从学生采样+对抗训练，能纠错但不稳定且计算量大</li>
+
+<h2 id="2-方法详解">2. 方法详解</h2>
+
+<h3 id="semi-on-policy-策略">Semi On-Policy 策略</h3>
+
+<p>混合采样：以概率 $\alpha$ 从教师采样，概率 $1-\alpha$ 从学生采样：</p>
+
+<div class="math-block">$$x_t \sim \begin{cases} p_{\text{teacher}}(\cdot | x_{&lt;t}) &amp; \text{w.p. } \alpha \\ p_{\text{student}}(\cdot | x_{&lt;t}) &amp; \text{w.p. } 1-\alpha \end{cases}$$</div>
+
+<p>蒸馏损失：</p>
+
+<div class="math-block">$$\mathcal{L}_{\text{SODA}} = -\mathbb{E}_{x \sim p_{\text{mix}}} \left[ \sum_t \log p_{\text{student}}(x_t | x_{&lt;t}) \right]$$</div>
+
+<p>$\alpha$ 可以是固定值或按训练进度退火（先 off-policy 后逐渐 on-policy）。</p>
+
+<h3 id="与-dpo-的区别">与 DPO 的区别</h3>
+
+<p>SODA 是生成式蒸馏（学生生成 → 教师评分），<span class="wikilink">DPO</span> 是偏好对齐（正负样本对比）。两者互补。</p>
+
+<h2 id="3-核心概念">3. 核心概念</h2>
+
+<li><span class="wikilink">Knowledge Distillation</span>、<span class="wikilink">SeqKD</span>、<span class="wikilink">GAD</span>、<span class="wikilink">DPO</span>、<span class="wikilink">On-Policy Learning</span></li>
+
+<h2 id="4-优缺点">4. 优缺点</h2>
+
+<p><strong>优点</strong>: 思路自然，工程实用，计算成本可控</p>
+<p><strong>缺点</strong>: 创新性有限（mixed policy 不算新），需看实验细节判断贡献大小</p></div></details>
+
+<div class="paper-figure"><img src="https://arxiv.org/html/2604.03873v1/x1.png" alt="" loading="lazy"></div>
+
+<li><strong>核心方法</strong>: 黑盒知识蒸馏的 off-policy vs on-policy 困境——<span class="wikilink">SeqKD</span> 等 off-policy 方法无法纠正学生的固有错误，<span class="wikilink">GAD</span> 等 on-policy 方法训练不稳定且计算量大。SODA 提出 "Semi On-Policy" 折中：部分使用 on-policy 数据，部分使用 off-policy 数据，在稳定性和纠错能力之间取得平衡。</li>
+<li><strong>对比方法/Baselines</strong>: <span class="wikilink">SeqKD</span>, <span class="wikilink">GAD</span>, <span class="wikilink">DPO</span></li>
+<li><strong>借鉴意义</strong>: "Semi On-Policy" 的折中思路在 agent 训练中也适用——完全 on-policy 太贵，完全 off-policy 效果差。</li>
+<li><strong>锐评</strong>: 实际上是蒸馏领域一个很自然的想法——mixed policy。关键看实验是否扎实、和 <span class="wikilink">DPO</span> 系列方法的对比是否公平。多机构合作但论文日期是 2026-04-04，说明刚出来。 👀</li></div><div class="paper-card" data-topic="🧪 LLM 训练与对齐"><h3 id="5-rethinking-exploration-in-rlvr-from-entropy-regularization-to-refinement-via-bidirectional-entropy-modulation">5. Rethinking Exploration in RLVR: From Entropy Regularization to Refinement via Bidirectional Entropy Modulation</h3>
+<li><strong>作者</strong>: Hengrui Gu, Xiaotian Han et al.</li>
+<li><strong>机构</strong>: NC State, Case Western Reserve University</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2604.04894v1" target="_blank">arXiv</a> | <a href="https://arxiv.org/pdf/2604.04894v1" target="_blank">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+
+<div class="paper-figure"><img src="https://arxiv.org/html/2604.04894v1/x1.png" alt="" loading="lazy"></div>
+
+<li><strong>核心方法</strong>: RLVR（Reinforcement Learning with Verifiable Rewards）面临 "restricted exploration" 问题——策略快速收敛到窄解集。传统熵正则化不可靠。AsymGRPO 提出<strong>双向熵调制</strong>：对正确答案降低熵（exploitation），对错误答案提高熵（exploration），在 <span class="wikilink">GRPO</span> 框架上实现非对称探索。</li>
+<li><strong>对比方法/Baselines</strong>: <span class="wikilink">GRPO</span>, <span class="wikilink">REINFORCE</span>, <span class="wikilink">PPO</span>, 标准熵正则化</li>
+<li><strong>借鉴意义</strong>: 对 <span class="wikilink">GRPO</span> 的改进，直接可用于 agent RL 训练。</li>
+<li><strong>锐评</strong>: "正确答案收敛、错误答案发散" 的非对称设计很优雅。MATH-500 上的提升如果显著的话这篇会火。但熵调制的超参数敏感性是个隐忧。 👀</li>
+</div></div>
+<div id="panel-agent框架" class="tab-panel"><h2 id="-agent-框架">🔧 Agent 框架</h2><div class="paper-card" data-topic="🔧 Agent 框架"><h3 id="6-agentscope-10-a-developer-centric-framework-for-building-agentic-applications">6. AgentScope 1.0: A Developer-Centric Framework for Building Agentic Applications</h3>
+<li><strong>作者</strong>: Dawei Gao et al.</li>
+<li><strong>机构</strong>: Alibaba Group</li>
+<li><strong>链接</strong>: <a href="https://arxiv.org/abs/2508.16279" target="_blank">arXiv</a> | <a href="https://arxiv.org/pdf/2508.16279" target="_blank">PDF</a></li>
+<li><strong>来源</strong>: 🔥 HF Trending，⬆️ 61</li>
+<details class="paper-note"><summary>📒 精读笔记: AgentScope</summary><div class="note-body"><h1 id="agentscope-10">AgentScope 1.0</h1>
+
+<h2 id="-基本信息">📋 基本信息</h2>
+
+<li><strong>作者</strong>: Dawei Gao, Zitao Li, Yuexiang Xie 等</li>
+<li><strong>机构</strong>: Alibaba Group</li>
+<li><strong>链接</strong>: <a href="https://arxiv.org/abs/2508.16279" target="_blank">arXiv</a> | <a href="https://arxiv.org/pdf/2508.16279" target="_blank">PDF</a></li>
+
+<h2 id="-研究动机与问题">🎯 研究动机与问题</h2>
+
+<p>现有 multi-agent 框架（如 <span class="wikilink">LangChain</span>, <span class="wikilink">AutoGen</span>）在以下方面存在不足：</p>
+<p>1. <strong>工具集成侵入性强</strong>：需要大量修改已有代码</p>
+<p>2. <strong>可观测性差</strong>：大规模部署时难以监控和调试</p>
+<p>3. <strong>长期记忆缺失</strong>：agent 无法保持跨会话的上下文</p>
+<p>4. <strong>分布式支持弱</strong>：难以扩展到大规模 multi-agent 场景</p>
+
+<h2 id="-方法详解">🔧 方法详解</h2>
+
+<h3 id="核心架构">核心架构</h3>
+
+<p>AgentScope 1.0 的核心抽象：</p>
+
+<p>1. <strong><span class="wikilink">MsgHub</span>（消息总线）</strong>：agent 间消息传递的统一接口，支持广播和点对点通信</p>
+<p>2. <strong>StateModule（状态管理）</strong>：统一管理 agent 状态，支持序列化和恢复</p>
+<p>3. <strong>Non-Invasive Monitoring</strong>：基于 <span class="wikilink">OpenTelemetry</span> 的无侵入式监控</p>
+
+<h3 id="mcp-原生支持">MCP 原生支持</h3>
+
+<p>原生集成 <span class="wikilink">MCP</span>（Model Context Protocol）协议：</p>
+<li>Agent 可通过 MCP 协议访问外部工具和数据源</li>
+<li>工具集成不需要修改 agent 代码（non-invasive）</li>
+<li>支持 MCP server 的自动发现和注册</li>
+
+<h3 id="分层记忆系统">分层记忆系统</h3>
+
+<li><strong><span class="wikilink">InMemoryMemory</span></strong>：短期工作记忆，存储当前会话上下文</li>
+<li><strong><span class="wikilink">LongTermMemoryBase</span></strong>：长期记忆，支持跨会话信息持久化</li>
+<li>记忆检索支持语义搜索和结构化查询</li>
+
+<h3 id="react-agent-内置实现">ReAct Agent 内置实现</h3>
+
+<p>内置 <span class="wikilink">ReAct</span> 范式的 agent 实现：</p>
+<li>Thought → Action → Observation 循环</li>
+<li>支持自定义 tool 注册</li>
+<li>内置错误处理和重试机制</li>
+
+<h3 id="分布式调度">分布式调度</h3>
+
+<li>基于 <span class="wikilink">gRPC</span> 的分布式通信</li>
+<li>支持 agent 在多节点间调度</li>
+<li>MsgHub 支持分布式消息广播</li>
+
+<h2 id="-实验结果">📊 实验结果</h2>
+
+<table class="paper-table">
+<thead><tr><th>框架</th><th>MCP支持</th><th>可观测性</th><th>长期记忆</th><th>分布式</th></tr></thead>
+<tbody>
+<tr><td>LangChain</td><td>部分</td><td>弱</td><td>第三方</td><td>弱</td></tr>
+<tr><td>AutoGen</td><td>无</td><td>弱</td><td>无</td><td>部分</td></tr>
+<tr><td>CAMEL</td><td>无</td><td>无</td><td>无</td><td>无</td></tr>
+<tr><td><strong>AgentScope 1.0</strong></td><td><strong>原生</strong></td><td><strong>OpenTelemetry</strong></td><td><strong>内置</strong></td><td><strong>原生</strong></td></tr>
+</tbody></table>
+
+
+<p>61 upvotes 说明社区认可度较高。</p>
+
+<h2 id="-核心贡献">💡 核心贡献</h2>
+
+<p>1. <strong>MCP 原生集成</strong>：首个原生支持 MCP 协议的 multi-agent 框架</p>
+<p>2. <strong>OpenTelemetry 可观测性</strong>：无侵入式监控，适合生产环境</p>
+<p>3. <strong>分层记忆系统</strong>：短期 + 长期记忆，支持跨会话持久化</p>
+<p>4. <strong>大规模部署经验</strong>：阿里内部大规模 multi-agent 部署验证</p>
+
+<h2 id="-局限性与思考">🤔 局限性与思考</h2>
+
+<p>1. <strong>框架评估困难</strong>：benchmark 上的数字不代表实际开发体验</p>
+<p>2. <strong>与 LangChain 对比不够 fair</strong>：只挑了对方弱的场景</p>
+<p>3. <strong>学习曲线</strong>：抽象层较多，新手上手成本可能较高</p>
+<p>4. <strong>MCP 生态尚未成熟</strong>：MCP 协议本身还在快速迭代</p>
+
+<h2 id="-相关工作">📚 相关工作</h2>
+
+<li><span class="wikilink">MCP</span>: Model Context Protocol，agent 工具集成标准</li>
+<li><span class="wikilink">OpenTelemetry</span>: 可观测性标准</li>
+<li><span class="wikilink">ReAct</span>: 推理+行动范式</li>
+<li><span class="wikilink">LangChain</span>: 竞品框架</li>
+<li><span class="wikilink">AutoGen</span>: 微软 multi-agent 框架</li></div></details></div><div class="paper-card" data-topic="🔧 Agent 框架"><h3 id="7-tradingagents-multi-agents-llm-financial-trading-framework">7. TradingAgents: Multi-Agents LLM Financial Trading Framework</h3>
+<li><strong>作者</strong>: Yijia Xiao et al.</li>
+<li><strong>机构</strong>: MIT, UCLA</li>
+<li><strong>链接</strong>: <a href="https://arxiv.org/abs/2412.20138" target="_blank">arXiv</a> | <a href="https://arxiv.org/pdf/2412.20138" target="_blank">PDF</a></li>
+<li><strong>来源</strong>: 🔥 HF Trending，⬆️ 36</li>
+
+<li><strong>核心方法</strong>: 用 multi-agent LLM 框架模拟真实交易公司的协作动态——分析师、交易员、风控各司其职。比单 agent 或独立数据采集的 multi-agent 更接近实际交易流程。</li>
+<li><strong>锐评</strong>: 2024 年 12 月的旧论文又上 trending。MIT+UCLA 的招牌让人点进来，但交易策略的实盘验证才是硬通货。和昨天的 <span class="wikilink">PolySwarm</span> 类似，都是 "agent 做金融" 但缺实盘。 🫠</li>
+</div></div>
+<div id="panel-benchmark评测" class="tab-panel"><h2 id="-benchmark--评测">📊 Benchmark & 评测</h2><div class="paper-card" data-topic="📊 Benchmark &amp; 评测"><h3 id="8-agentic-mme-what-agentic-capability-really-brings-to-multimodal-intelligence">8. Agentic-MME: What Agentic Capability Really Brings to Multimodal Intelligence?</h3>
+<li><strong>作者</strong>: Qianshan Wei et al.</li>
+<li><strong>机构</strong>: CASIA, UCAS, SEU, NJU, PKU, BUAA, NTU, UCLA</li>
+<li><strong>链接</strong>: <a href="https://arxiv.org/abs/2604.03016" target="_blank">arXiv</a> | <a href="https://arxiv.org/pdf/2604.03016" target="_blank">PDF</a></li>
+<li><strong>来源</strong>: 📰 HF Daily，⬆️ 25</li>
+
+<div class="paper-figure"><img src="https://arxiv.org/html/2604.03016v1/x1.png" alt="" loading="lazy"></div>
+
+<li><strong>核心方法</strong>: 评测 MLLM 作为 agent 时的能力——视觉扩展（调用视觉工具）和知识扩展（开放搜索）。现有评测的问题：缺乏灵活工具集成、视觉和搜索分开测、只看最终答案。Agentic-MME 解决这些问题，测了 <span class="wikilink">GPT-5</span> 等模型。</li>
+<li><strong>锐评</strong>: 又一个 benchmark。八家机构联合搞评测说明 MLLM agent 评估标准仍未统一。如果 GPT-5 的数据有亮点可能会火，否则就是又一篇 benchmark paper。 💤</li></div><div class="paper-card" data-topic="📊 Benchmark &amp; 评测"><h3 id="9-combee-scaling-prompt-learning-for-self-improving-language-model-agents">9. Combee: Scaling Prompt Learning for Self-Improving Language Model Agents</h3>
+<li><strong>作者</strong>: Hanchen Li et al.</li>
+<li><strong>机构</strong>: UC Berkeley, Stanford, Tensormesh, Gradient Network</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2604.04247v1" target="_blank">arXiv</a> | <a href="https://arxiv.org/pdf/2604.04247v1" target="_blank">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+
+<div class="paper-figure"><img src="https://arxiv.org/html/2604.04247v1/x1.png" alt="" loading="lazy"></div>
+
+<li><strong>核心方法</strong>: 现有 prompt learning（如 ACE、GEPA）只关注单 agent 或低并行场景。Combee 将 prompt 自优化扩展到高并行 multi-agent 设置。</li>
+<li><strong>借鉴意义</strong>: Prompt 自优化 + 多 agent 并行是一个实用方向。</li>
+<li><strong>锐评</strong>: Berkeley+Stanford 出品，但关键是 "scaling prompt learning" 相比直接 RL 训练有什么不可替代的优势？如果 SKILL0 的参数内化更有效，prompt learning 的天花板在哪？ 💤</li>
+</div></div>
+<hr>
+<h2 id="被排除的论文">被排除的论文</h2>
+
+<table class="paper-table">
+<thead><tr><th>论文</th><th>排除原因</th></tr></thead>
+<tbody>
+<tr><td>AgentSocialBench</td><td>隐私评测，niche</td></tr>
+<tr><td>LLM Nudging (电力节约)</td><td>行为科学应用，非核心方向</td></tr>
+<tr><td>AI-Trader</td><td>旧论文 (2025-12)，金融 benchmark</td></tr>
+<tr><td>AI Trust OS</td><td>企业合规治理框架，工程为主</td></tr>
+<tr><td>Search Agents for SLM</td><td>检索 agent 蒸馏，常规</td></tr>
+<tr><td>Paper Espresso</td><td>论文发现工具，与核心方向远</td></tr>
+<tr><td>MOC for LLM</td><td>多目标 LLM 对齐，常规</td></tr>
+<tr><td>Stackelberg Q-value</td><td>纯数学理论，MARL</td></tr>
+<tr><td>LIA (推荐系统)</td><td>可解释推荐，逻辑规则自编码器</td></tr>
+<tr><td>APPA</td><td>联邦 RLHF，niche</td></tr>
+<tr><td>Very Large-Scale AgentScope</td><td>旧论文 (2024-07)</td></tr>
+</tbody></table>
+
+
+
+<p><strong>趋势判断</strong>: Agent 训练正在从"推理时增强"走向"参数化内化"——SKILL0 的 skill internalization 和 SandMLE（昨天）的合成训练环境代表了两个互补方向。RL for agents 框架也在快速标准化（Agent Lightning、GrandCode）。不过今天 trending 里旧论文比例偏高（AgentScope、TradingAgents、Agent Lightning），说明社区在 "发现旧宝藏" 而非 "追新论文"。</p></div>
 <div class="day-full-content" id="content-2026-04-03" style="display:none;"><h1 id="-今日锐评">🔪 今日锐评</h1>
 
 <p>今天 arXiv 被 agent 和 multi-agent 的论文淹没了——仿佛全世界都在造"AI 自己干活"的轮子。质量参差不齐：有几篇在 RL for agent、memory 架构上有实质贡献，但也有不少是把 GPT-4 套个壳就发论文的典型操作。推荐系统方向有一篇 multi-agent video recommendation 的 survey 值得关注。</p>

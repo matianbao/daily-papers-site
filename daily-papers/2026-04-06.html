@@ -1,0 +1,1615 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>2026-04-06 论文推荐</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.21/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.21/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.21/dist/contrib/auto-render.min.js"
+  onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}]});"></script>
+<style>
+:root {
+  --bg: #0d1117; --surface: #161b22; --border: #30363d;
+  --text: #e6edf3; --text2: #8b949e; --accent: #58a6ff;
+  --fire: #f85149; --green: #3fb950; --yellow: #d29922;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: -apple-system, 'Segoe UI', Helvetica, Arial, sans-serif;
+  background: var(--bg); color: var(--text); line-height: 1.7;
+  max-width: 1600px; margin: 0 auto; padding: 20px 40px; }
+a { color: var(--accent); text-decoration: none; }
+a:hover { text-decoration: underline; }
+h1 { font-size: 1.8em; margin: 1em 0 0.5em; border-bottom: 1px solid var(--border); padding-bottom: 0.3em; }
+h2 { font-size: 1.4em; margin: 1.2em 0 0.4em; color: var(--accent); }
+h3 { font-size: 1.15em; margin: 1em 0 0.3em; }
+p, li { margin: 0.3em 0; }
+li { margin-left: 1.5em; list-style: disc; }
+hr { border: none; border-top: 1px solid var(--border); margin: 1.5em 0; }
+code { background: var(--surface); padding: 2px 6px; border-radius: 4px; font-size: 0.9em; }
+pre { background: var(--surface); padding: 16px; border-radius: 8px; overflow-x: auto; margin: 1em 0; }
+pre code { padding: 0; background: none; }
+blockquote { border-left: 3px solid var(--accent); padding: 0.5em 1em;
+  margin: 0.8em 0; background: var(--surface); border-radius: 0 8px 8px 0; }
+img { max-width: 100%; border-radius: 8px; margin: 0.5em 0; }
+.paper-figure { text-align: center; margin: 1em 0; }
+.paper-table { width: 100%; border-collapse: collapse; margin: 1em 0; }
+.paper-table th, .paper-table td { padding: 8px 12px; border: 1px solid var(--border); text-align: left; }
+.paper-table th { background: var(--surface); }
+.wikilink { background: var(--surface); padding: 2px 8px; border-radius: 4px;
+  border: 1px solid var(--border); font-size: 0.9em; }
+.nav { display: flex; gap: 12px; align-items: center; margin-bottom: 1.5em;
+  padding: 12px 0; border-bottom: 1px solid var(--border); flex-wrap: wrap; }
+.nav a { padding: 6px 14px; background: var(--surface); border-radius: 6px;
+  border: 1px solid var(--border); font-size: 0.9em; }
+.nav a:hover, .nav a.active { background: var(--accent); color: var(--bg); text-decoration: none; }
+.badge { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 0.8em; margin-right: 4px; }
+.badge-fire { background: rgba(248,81,73,0.2); color: var(--fire); }
+.badge-look { background: rgba(88,166,255,0.2); color: var(--accent); }
+.badge-skip { background: rgba(139,148,158,0.2); color: var(--text2); }
+/* ── Tab system ─────────────────────────────────────────── */
+.tab-bar { display: flex; gap: 0; margin: 1.5em 0 0; border-bottom: 2px solid var(--border);
+  overflow-x: auto; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
+.tab-bar::-webkit-scrollbar { display: none; }
+.tab-btn { padding: 10px 20px; background: none; border: none; color: var(--text2);
+  font-size: 0.95em; cursor: pointer; white-space: nowrap; position: relative;
+  transition: color 0.2s; font-family: inherit; }
+.tab-btn:hover { color: var(--text); }
+.tab-btn.active { color: var(--accent); font-weight: 600; }
+.tab-btn.active::after { content: ''; position: absolute; bottom: -2px; left: 0; right: 0;
+  height: 2px; background: var(--accent); border-radius: 2px 2px 0 0; }
+.tab-btn .tab-count { display: inline-block; background: var(--surface); border: 1px solid var(--border);
+  padding: 0 6px; border-radius: 10px; font-size: 0.8em; margin-left: 6px; min-width: 20px; text-align: center; }
+.tab-btn.active .tab-count { background: rgba(88,166,255,0.15); border-color: var(--accent); color: var(--accent); }
+.tab-panel { display: none; animation: fadeIn 0.25s ease; }
+.tab-panel.active { display: block; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+/* ── Paper card ─────────────────────────────────────────── */
+.paper-card { background: var(--surface); border: 1px solid var(--border);
+  border-radius: 12px; padding: 20px 24px; margin: 16px 0; transition: border-color 0.2s; }
+.paper-card:hover { border-color: var(--accent); }
+.paper-card h3 { margin-top: 0; font-size: 1.1em; }
+.paper-card .paper-figure { margin: 12px 0; }
+.paper-card .paper-figure img { max-height: 280px; object-fit: contain; }
+/* ── Dashboard (index) ──────────────────────────────────── */
+.dashboard { display: grid; grid-template-columns: 300px 1fr; gap: 24px; margin-top: 1em; }
+.sidebar { display: flex; flex-direction: column; gap: 20px;
+  position: sticky; top: 80px; align-self: start; max-height: calc(100vh - 100px); overflow-y: auto; }
+.main-content { min-height: 400px; }
+.panel { background: var(--surface); border: 1px solid var(--border);
+  border-radius: 12px; padding: 16px 20px; }
+.panel h3 { font-size: 1em; margin: 0 0 12px; color: var(--accent); border: none; }
+/* Calendar */
+.cal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+.cal-header span { font-size: 1em; font-weight: 600; }
+.cal-header button { background: none; border: 1px solid var(--border); color: var(--text2);
+  border-radius: 6px; padding: 4px 10px; cursor: pointer; font-size: 0.9em; }
+.cal-header button:hover { background: var(--border); color: var(--text); }
+.cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 2px; text-align: center; }
+.cal-dow { font-size: 0.75em; color: var(--text2); padding: 4px 0; font-weight: 600; }
+.cal-day { position: relative; padding: 6px 0; font-size: 0.85em; border-radius: 6px;
+  cursor: default; color: var(--text2); }
+.cal-day.has-data { color: var(--text); cursor: pointer; font-weight: 500; }
+.cal-day.has-data:hover { background: var(--border); }
+.cal-day.selected { background: var(--accent); color: var(--bg); font-weight: 700; }
+.cal-day .cal-dot { position: absolute; bottom: 2px; left: 50%; transform: translateX(-50%);
+  width: 5px; height: 5px; border-radius: 50%; }
+.cal-dot.fire { background: var(--fire); }
+.cal-dot.look { background: var(--accent); }
+/* Trends */
+.trend-row { display: flex; align-items: center; gap: 8px; margin: 6px 0; font-size: 0.85em; }
+.trend-label { width: 90px; text-align: right; color: var(--text2); white-space: nowrap;
+  overflow: hidden; text-overflow: ellipsis; flex-shrink: 0; cursor: pointer; position: relative;
+  transition: color 0.2s; }
+.trend-row.active-topic .trend-label { color: var(--accent); font-weight: 600; }
+.trend-row.active-topic .trend-bar { opacity: 1; }
+.trend-row:not(.active-topic).dimmed .trend-label { opacity: 0.4; }
+.trend-row:not(.active-topic).dimmed .trend-bar { opacity: 0.3; }
+.topic-filter-bar { display: flex; align-items: center; gap: 10px; padding: 8px 14px;
+  margin-bottom: 12px; background: rgba(88,166,255,0.1); border: 1px solid var(--accent);
+  border-radius: 8px; font-size: 0.9em; animation: fadeIn 0.25s ease; }
+.topic-filter-bar .clear-filter { background: none; border: 1px solid var(--border);
+  color: var(--text2); padding: 2px 10px; border-radius: 4px; cursor: pointer; font-size: 0.85em; margin-left: auto; }
+.topic-filter-bar .clear-filter:hover { background: var(--border); color: var(--text); }
+.topic-page { animation: fadeIn 0.25s ease; }
+.topic-date-group { margin: 16px 0 24px; }
+.topic-date-header { font-size: 1.05em; color: var(--accent); margin: 0 0 8px;
+  padding: 8px 0; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 8px; }
+.topic-date-count { font-size: 0.8em; color: var(--text2); font-weight: 400; }
+.topic-total { font-size: 0.85em; color: var(--text2); font-weight: 400; margin-left: 4px; }
+.trend-label:hover { overflow: visible; z-index: 10; }
+.trend-label:hover::after { content: attr(data-full); position: absolute; right: 0; top: -28px;
+  background: var(--surface); border: 1px solid var(--border); padding: 4px 10px;
+  border-radius: 6px; white-space: nowrap; font-size: 0.85em; color: var(--text);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.4); z-index: 20; }
+.trend-bar-bg { flex: 1; height: 16px; background: var(--bg); border-radius: 4px; overflow: hidden; }
+.trend-bar { height: 100%; border-radius: 4px; transition: width 0.4s ease; min-width: 2px; }
+.trend-bar.fire { background: var(--fire); }
+.trend-bar.accent { background: var(--accent); }
+.trend-bar.green { background: var(--green); }
+.trend-count { width: 24px; font-size: 0.8em; color: var(--text2); }
+/* Quality timeline */
+.qt-row { display: flex; align-items: center; gap: 6px; margin: 4px 0; font-size: 0.8em; cursor: pointer; }
+.qt-row:hover { opacity: 0.8; }
+.qt-row.selected { font-weight: 700; }
+.qt-date { width: 50px; color: var(--text2); text-align: right; flex-shrink: 0; }
+.qt-dots { display: flex; gap: 3px; }
+.qt-dot { width: 10px; height: 10px; border-radius: 50%; }
+.qt-dot.fire { background: var(--fire); }
+.qt-dot.look { background: var(--accent); }
+.qt-dot.skip { background: var(--border); }
+/* Day detail in main area */
+.day-hero { margin-bottom: 20px; }
+.day-hero h2 { font-size: 1.5em; margin: 0 0 8px; color: var(--text); border: none; }
+.day-hero .badges { margin: 8px 0; }
+.day-hero .summary { color: var(--text2); font-size: 0.95em; line-height: 1.6; margin: 12px 0; }
+.day-topics { display: flex; flex-wrap: wrap; gap: 8px; margin: 12px 0; }
+.topic-chip { background: var(--surface); border: 1px solid var(--border);
+  padding: 4px 12px; border-radius: 20px; font-size: 0.8em; color: var(--text2); }
+.view-detail { display: inline-block; margin-top: 16px; padding: 10px 24px;
+  background: var(--accent); color: var(--bg); border-radius: 8px;
+  font-weight: 600; font-size: 0.95em; }
+.view-detail:hover { text-decoration: none; opacity: 0.9; }
+.no-data { color: var(--text2); text-align: center; padding: 60px 20px; font-size: 1.1em; }
+/* ── Collapsible notes ──────────────────────────────────── */
+.math-block { margin: 0.8em 0; text-align: center; overflow-x: auto; }
+details.paper-note { margin: 12px 0; border: 1px solid var(--border); border-radius: 8px;
+  background: var(--surface); }
+details.paper-note summary { padding: 10px 16px; cursor: pointer; font-weight: 600;
+  font-size: 0.95em; color: var(--accent); list-style: none; display: flex; align-items: center; gap: 8px; }
+details.paper-note summary::-webkit-details-marker { display: none; }
+details.paper-note summary::before { content: '▶'; font-size: 0.7em; transition: transform 0.2s; }
+details.paper-note[open] summary::before { transform: rotate(90deg); }
+details.paper-note .note-body { padding: 0 20px 16px; border-top: 1px solid var(--border);
+  max-height: 600px; overflow-y: auto; }
+details.paper-note .note-body h1 { display: none; }
+details.paper-note .note-body h2 { font-size: 1.1em; margin: 1em 0 0.3em; }
+details.paper-note .note-body h3 { font-size: 1em; }
+.day-card { background: var(--surface); border: 1px solid var(--border);
+  border-radius: 10px; padding: 20px; margin: 12px 0; transition: border-color 0.2s; }
+.day-card:hover { border-color: var(--accent); }
+.day-card h3 { margin-top: 0; }
+.day-card .meta { color: var(--text2); font-size: 0.9em; margin-bottom: 0.5em; }
+.day-card .summary { color: var(--text); }
+.header { text-align: center; margin: 0; padding: 12px 0;
+  position: sticky; top: 0; z-index: 100; background: var(--bg);
+  border-bottom: 1px solid var(--border); }
+.header h1 { border: none; font-size: 2em; margin: 0; }
+.header p { color: var(--text2); }
+@media (max-width: 768px) {
+  .dashboard { grid-template-columns: 1fr; }
+  .sidebar { order: 2; }
+  .main-content { order: 1; }
+  body { max-width: 100%; padding: 12px; }
+  h1 { font-size: 1.4em; }
+  .tab-btn { padding: 8px 14px; font-size: 0.85em; }
+  .paper-card { padding: 14px 16px; }
+}
+</style>
+<style>body{max-width:960px;}</style>
+
+</head>
+<body>
+<nav class="nav"><a href="index.html">🏠 首页</a><a href="2026-04-03.html">← 前一天</a><a href="2026-04-07.html">后一天 →</a></nav>
+<div class="detail-page"><h1 id="-今日锐评">🔪 今日锐评</h1>
+
+<p>Agent 训练日：今天的亮点全在 "如何训练 agent" 上。SKILL0 提出了一个让人拍大腿的思路——与其在推理时临时检索技能，不如直接用 RL 把技能内化到模型参数里。Agent Lightning 则是微软出的通用 agent RL 训练框架，140 个 upvote 说明社区对 "万能 agent 训练器" 的需求多强烈。GrandCode 在竞赛编程上用 multi-agent RL 怼到了 Grandmaster 水平。不过今天有不少旧论文上 trending，含金量需要打折扣。</p>
+
+<h2 id="分流表">分流表</h2>
+<table class="paper-table">
+<thead><tr><th>等级</th><th>论文</th></tr></thead>
+<tbody>
+<tr><td>🔥 必读</td><td><span class="wikilink">SKILL0</span>（用 RL 将 agent 技能从 context 内化到参数，ZJU+美团）</td></tr>
+<tr><td>👀 值得看</td><td><span class="wikilink">Agent Lightning</span>（通用 agent RL 训练框架，微软）· <span class="wikilink">GrandCode</span>（multi-agent RL 打竞赛编程 Grandmaster）· <span class="wikilink">SODA</span>（半 on-policy 黑盒蒸馏）· <span class="wikilink">AsymGRPO</span>（RLVR 探索的双向熵调制）</td></tr>
+<tr><td>💤 可跳过</td><td><span class="wikilink">AgentScope</span> 1.0（旧论文重上热榜）· <span class="wikilink">TradingAgents</span>（旧论文）· <span class="wikilink">Agentic-MME</span>（benchmark，无方法创新）· 其余 niche 方向论文</td></tr>
+</tbody></table>
+
+
+
+<div class="tab-bar"><button class="tab-btn active" data-tab="all" onclick="switchTab('all')">📋 全部<span class="tab-count">9</span></button><button class="tab-btn" data-tab="agent训练" onclick="switchTab('agent训练')">🤖 🏋️ Agent 训练<span class="tab-count">3</span></button><button class="tab-btn" data-tab="llm训练与对齐" onclick="switchTab('llm训练与对齐')">🤖 🧪 LLM 训练与对齐<span class="tab-count">2</span></button><button class="tab-btn" data-tab="agent框架" onclick="switchTab('agent框架')">🏗 🔧 Agent 框架<span class="tab-count">2</span></button><button class="tab-btn" data-tab="benchmark评测" onclick="switchTab('benchmark评测')">📄 📊 Benchmark &amp; 评测<span class="tab-count">2</span></button></div>
+<div id="panel-all" class="tab-panel active"><h2 id="-agent-训练">🏋️ Agent 训练</h2><div class="paper-card" data-topic="🏋️ Agent 训练"><h3 id="1-skill0-in-context-agentic-reinforcement-learning-for-skill-internalization">1. SKILL0: In-Context Agentic Reinforcement Learning for Skill Internalization</h3>
+<li><strong>作者</strong>: Zhengxi Lu et al.</li>
+<li><strong>机构</strong>: Zhejiang University, Meituan, Tsinghua University</li>
+<li><strong>链接</strong>: <a href="https://arxiv.org/abs/2604.02268" target="_blank">arXiv</a> | <a href="https://arxiv.org/pdf/2604.02268" target="_blank">PDF</a></li>
+<li><strong>来源</strong>: 🔥 HF Trending，⬆️ 86</li>
+<details class="paper-note"><summary>📒 精读笔记: SKILL0</summary><div class="note-body"><h1 id="skill0-in-context-agentic-reinforcement-learning-for-skill-internalization">SKILL0: In-Context Agentic Reinforcement Learning for Skill Internalization</h1>
+
+<blockquote>
+<p><strong>一句话总结</strong>：提出 "Skills at training, zero at inference" 范式——用渐进式课程学习 RL 将 agent 技能从推理时 context 注入内化到模型参数，实现零检索的自主行为。</p>
+</blockquote>
+
+<h2 id="1-研究动机与问题定义">1. 研究动机与问题定义</h2>
+
+<h3 id="推理时技能增强的三大局限">推理时技能增强的三大局限</h3>
+<p>1. <strong>检索噪声</strong>：不相关技能污染 agent context</p>
+<p>2. <strong>Token 开销</strong>：技能内容在多轮交互中累积，限制可扩展性</p>
+<p>3. <strong>根本问题</strong>：模型在"执行"技能而非"学会"技能——能力在 context 中，不在参数里</p>
+
+<h3 id="类比人类学习">类比人类学习</h3>
+<p>人类技能习得遵循：<strong>显式指导阶段 → 内化阶段</strong>（Anderson, 1982）。推理时技能增强永远锚定在第一阶段。RL 提供了通往第二阶段的路径。</p>
+
+<h2 id="2-方法详解">2. 方法详解</h2>
+
+<h3 id="21-agent-loop-形式化">2.1 Agent Loop 形式化</h3>
+
+<p>任务建模为序列决策：给定指令 $I$，agent 生成动作序列 $\{a_1, a_2, \ldots, a_T\}$。每步 $t$，agent 从策略采样：</p>
+
+<div class="math-block">$$a_t \sim \pi_\theta(a_t | I, h_t), \quad h_t = \{o_1, o_2, \ldots, o_t\}$$</div>
+
+<p>环境转移：$o_{t+1} = \mathcal{E}(o_t, a_t)$</p>
+
+<h3 id="22-skillbank层次化技能库">2.2 SkillBank：层次化技能库</h3>
+
+<p>技能组织为两层结构：</p>
+<li><strong>通用技能</strong>：跨任务的策略原则（探索策略、目标跟踪等）</li>
+<li><strong>任务特定技能</strong>：领域专用知识（动作序列、前置条件等）</li>
+
+<p>目录结构：<code>skills/{task_name}/{skill_category}.md</code></p>
+
+<h3 id="23-relevance-driven-skill-grouping">2.3 Relevance-Driven Skill Grouping</h3>
+
+<p>离线按类别分组技能，与交互历史一起渲染为紧凑的视觉 context，教模型工具调用和多轮任务完成。</p>
+
+<h3 id="24-in-context-reinforcement-learning-icrl">2.4 In-Context Reinforcement Learning (ICRL)</h3>
+
+<p>核心创新——技能在<strong>训练时</strong>作为 in-context 指导提供，在<strong>推理时</strong>完全移除：</p>
+
+<div class="math-block">$$\mathcal{L}_{\text{ICRL}} = \mathbb{E}_{\tau \sim \pi_\theta} \left[ \sum_{t} \min\left( r_t(\theta) \hat{A}_t, \text{clip}(r_t(\theta), 1-\epsilon, 1+\epsilon) \hat{A}_t \right) \right]$$</div>
+
+<p>训练 rollout 中包含技能 context $\mathcal{S}_k$，但推理时 $\mathcal{S}_k = \emptyset$。</p>
+
+<h3 id="25-dynamic-curriculum动态课程">2.5 Dynamic Curriculum（动态课程）</h3>
+
+<p><strong>不是</strong>固定退火计划，而是自适应内化：</p>
+
+<p>对每个技能文件 $\mathcal{S}_k$，评估其<strong>on-policy 有用性</strong>——比较有无该技能时 agent 在匹配验证子任务上的表现：</p>
+
+<div class="math-block">$$\text{Helpfulness}(\mathcal{S}_k) = \text{Perf}(\pi_\theta | \mathcal{S}_k) - \text{Perf}(\pi_\theta | \emptyset)$$</div>
+
+<li>如果 $\text{Helpfulness}(\mathcal{S}_k) > \delta$：保留该技能（模型仍需它）</li>
+<li>如果 $\text{Helpfulness}(\mathcal{S}_k) \leq \delta$：移除该技能（已内化）</li>
+
+<p>预算线性衰减直至归零，agent 最终完全零技能运行。</p>
+
+<h3 id="26-与标准-rl-的区别">2.6 与标准 RL 的区别</h3>
+
+<div class="math-block">$$\text{Standard RL}: \quad \pi_\theta(a_t | I, h_t)$$</div>
+<div class="math-block">$$\text{Skill0 训练}: \quad \pi_\theta(a_t | I, h_t, \mathcal{S}_k)$$</div>
+<div class="math-block">$$\text{Skill0 推理}: \quad \pi_\theta(a_t | I, h_t)$$</div>
+
+<h2 id="3-实验结果">3. 实验结果</h2>
+
+<h3 id="31-主要结果">3.1 主要结果</h3>
+
+<table class="paper-table">
+<thead><tr><th>方法</th><th>ALFWorld</th><th>Search-QA</th><th>推理 Token/Step</th></tr></thead>
+<tbody>
+<tr><td>Standard RL</td><td>baseline</td><td>baseline</td><td>~2k</td></tr>
+<tr><td>Skill Augmentation (SkillRL)</td><td>高</td><td>高</td><td>~3-5k</td></tr>
+<tr><td><strong>Skill0</strong></td><td><strong>+9.7%</strong></td><td><strong>+6.6%</strong></td><td><strong>< 0.5k</strong></td></tr>
+</tbody></table>
+
+
+<p>关键：Skill0 在性能上匹配甚至超过推理时技能增强方法，但推理 token 开销降低 6-10 倍。</p>
+
+<h3 id="32-内化分析">3.2 内化分析</h3>
+
+<li>技能移除的时间点因技能复杂度而异——简单技能早期内化，复杂技能后期内化</li>
+<li>Dynamic Curriculum 比固定退火计划提升 3-5%</li>
+
+<h2 id="4-架构图">4. 架构图</h2>
+
+<div class="paper-figure"><img src="https://arxiv.org/html/2604.02268v1/x1.png" alt="Skill0 总体框架" loading="lazy"></div>
+
+<h2 id="5-核心概念">5. 核心概念</h2>
+
+<li><span class="wikilink">In-Context Learning</span>：上下文学习</li>
+<li><span class="wikilink">Reinforcement Learning</span>：强化学习</li>
+<li><span class="wikilink">Curriculum Learning</span>：课程学习</li>
+<li><span class="wikilink">Agent Skills</span>：agent 技能系统</li>
+<li><span class="wikilink">Skill Augmentation</span>：推理时技能增强</li>
+<li><span class="wikilink">ALFWorld</span>：文本游戏交互环境</li>
+
+<h2 id="6-优缺点分析">6. 优缺点分析</h2>
+
+<h3 id="优点">优点</h3>
+<p>1. <strong>范式转变</strong>：从"推理时检索"到"训练时内化"，思路清晰有说服力</p>
+<p>2. <strong>自适应课程</strong>：Helpfulness-driven 退火比固定计划更优雅</p>
+<p>3. <strong>推理高效</strong>：< 0.5k token/step，大幅降低部署成本</p>
+<p>4. <strong>开源</strong>：代码在 GitHub 上公开</p>
+
+<h3 id="缺点">缺点</h3>
+<p>1. <strong>泛化性</strong>：内化的技能能否迁移到训练时未见过的新任务？</p>
+<p>2. <strong>环境依赖</strong>：ALFWorld 和 Search-QA 相对简单，更复杂环境（如 SWE-bench）效果如何？</p>
+<p>3. <strong>技能质量</strong>：垃圾技能内化了也没用——需要高质量 SkillBank</p>
+<p>4. <strong>训练成本</strong>：RL 训练本身的成本和标准 SFT 相比如何？</p>
+
+<h2 id="7-与相关工作对比">7. 与相关工作对比</h2>
+
+<table class="paper-table">
+<thead><tr><th>方法</th><th>范式</th><th>推理开销</th><th>性能</th><th>技能依赖</th></tr></thead>
+<tbody>
+<tr><td><strong>Skill0</strong></td><td><strong>内化</strong></td><td><strong>低 (< 0.5k)</strong></td><td><strong>高</strong></td><td><strong>无</strong></td></tr>
+<tr><td>SkillRL</td><td>增强</td><td>高 (3-5k)</td><td>高</td><td>有</td></tr>
+<tr><td>EvolveR</td><td>增强+进化</td><td>高</td><td>中-高</td><td>有</td></tr>
+<tr><td>Standard RL</td><td>无技能</td><td>低</td><td>低</td><td>无</td></tr>
+</tbody></table>
+</div></details>
+
+<div class="paper-figure"><img src="https://arxiv.org/html/2604.02268v1/x1.png" alt="" loading="lazy"></div>
+
+<li><strong>核心方法</strong>: 现有 agent 靠推理时检索技能（skill augmentation），但检索噪声大、token 开销高、模型并没有真正学会技能。SKILL0 提出 <strong>Skill Internalization</strong>——用 <span class="wikilink">Reinforcement Learning|RL</span> 将技能知识从 context 内化到模型参数。构建 SkillBank 收集多样化 agent 技能，然后用 RL 训练让模型在不依赖外部检索的情况下掌握这些技能。</li>
+<li><strong>对比方法/Baselines</strong>: 推理时 skill augmentation（<span class="wikilink">EvolveR</span> 等）、标准 <span class="wikilink">SFT</span></li>
+<li><strong>借鉴意义</strong>: "从检索到内化" 的范式转变对任何依赖外部知识的 agent 系统都有参考价值。也可以类比 <span class="wikilink">RAG</span> vs 参数化记忆的讨论。</li>
+<li><strong>锐评</strong>: 今天最值得读的论文。"inference-time skill augmentation is fundamentally limited" 这个 claim 很大胆但有道理——你不能指望一个不会游泳的人拿着游泳教程就能游。86 个 upvote 说明社区买账。关键问题是：RL 训练的技能泛化能力如何？能否内化从未见过的新技能？ 🔥</li></div><div class="paper-card" data-topic="🏋️ Agent 训练"><h3 id="2-agent-lightning-train-any-ai-agents-with-reinforcement-learning">2. Agent Lightning: Train ANY AI Agents with Reinforcement Learning</h3>
+<li><strong>作者</strong>: Xufang Luo, Yuge Zhang et al.</li>
+<li><strong>机构</strong>: Microsoft Research</li>
+<li><strong>链接</strong>: <a href="https://arxiv.org/abs/2508.03680" target="_blank">arXiv</a> | <a href="https://arxiv.org/pdf/2508.03680" target="_blank">PDF</a></li>
+<li><strong>来源</strong>: 🔥 HF Trending，⬆️ 140</li>
+<details class="paper-note"><summary>📒 精读笔记: Agent Lightning - Train AI Agents with RL</summary><div class="note-body"><h1 id="agent-lightning-train-any-ai-agents-with-reinforcement-learning">Agent Lightning: Train ANY AI Agents with Reinforcement Learning</h1>
+
+<h2 id="基本信息">基本信息</h2>
+
+<li><strong>作者</strong>: Xufang Luo, Yuge Zhang, Zhiyuan He, Zilong Wang, Siyun Zhao, Dongsheng Li, Luna K. Qiu, Yuqing Yang</li>
+<li><strong>机构</strong>: Microsoft Research</li>
+<li><strong>时间</strong>: 2025年8月</li>
+<li><strong>链接</strong>:</li>
+<li>arXiv: <a href="https://arxiv.org/abs/2508.03680" target="_blank">2508.03680</a></li>
+<li>GitHub: <a href="https://github.com/microsoft/agent-lightning" target="_blank">microsoft/agent-lightning</a> (16k+ stars)</li>
+<li>项目主页: <a href="https://www.microsoft.com/en-us/research/project/agent-lightning/" target="_blank">Microsoft Research</a></li>
+
+
+<h2 id="研究动机与问题">研究动机与问题</h2>
+
+<h3 id="背景">背景</h3>
+
+<p>近年来 <span class="wikilink">LLM</span> 驱动的 AI Agent 在搜索、代码生成、工具调用等复杂任务中表现出色。然而，LLM 在未经专门训练的场景中（如多轮编码工作流、私有领域数据集、不熟悉的工具）仍然容易出错，无法可靠解决复杂的端到端任务。</p>
+
+<p><span class="wikilink">Reinforcement Learning</span> 已在推理模型（如 <span class="wikilink">DeepSeek-R1</span>、<span class="wikilink">Kimi k1.5</span>）中取得了突破性进展，是优化 Agent 场景中 LLM 的强大范式。相比需要逐步标注的 <span class="wikilink">Supervised Fine-Tuning</span>，RL 仅依赖基于结果的 reward 信号，消除了对任务特定标注数据的需求。</p>
+
+<h3 id="核心问题">核心问题</h3>
+
+<p>将 RL 扩展到 Agent 训练面临两大挑战：</p>
+
+<p>1. <strong>算法层面</strong>：现有 RL 方法主要针对静态、单次调用任务（如数学推理）。Agent 的执行涉及<strong>多次 LLM 调用</strong>（不同 prompt 和 response）以及与外部工具/API 的交互，逻辑远比单轮 RL 复杂。</p>
+<p>2. <strong>系统层面</strong>：现有方法将 RL 训练与 Agent 逻辑<strong>紧密耦合</strong>，或依赖序列拼接加 masking 的方式，难以支持多样化的 Agent 框架（LangChain、AutoGen、OpenAI Agents SDK 等）。</p>
+
+<h3 id="核心思想">核心思想</h3>
+
+<p>Agent Lightning 的核心创新是<strong>完全解耦 Agent 执行与 RL 训练</strong>，让开发者以几乎<strong>零代码修改</strong>的方式，对任意 AI Agent 进行 RL 训练。</p>
+
+<div class="paper-figure"><img src="https://arxiv.org/html/2508.03680v1/figures/overview.png" alt="Overview of Agent Lightning" loading="lazy"></div>
+<p><em>Figure 1: Agent Lightning 框架总览。实现了 Agent 执行与 RL 训练的完全解耦。</em></p>
+
+
+<h2 id="方法详解">方法详解</h2>
+
+<h3 id="31-统一数据接口-unified-data-interface">3.1 统一数据接口 (Unified Data Interface)</h3>
+
+<p>Agent Lightning 定义了一个统一的数据接口，将 Agent 执行过程中的数据标准化为 RL 训练可用的格式。</p>
+
+<p><strong>核心概念</strong>：</p>
+
+<li><strong>State</strong>: Agent 执行的快照，包括程序计数器、变量值、调用栈等。形式化为：</li>
+
+<div class="math-block">$$\texttt{state}_{t}(x,k) = \left\{ \texttt{variable}_{i}^{x,k,t} \right\}_{i=1}^{V}$$</div>
+
+<li><strong>Semantic Variable</strong>: 被组件使用或修改的关键变量，代表关键语义（如程序意图）。不关注循环计数器等辅助变量，只关注语义层面的变化。</li>
+
+<li><strong>Component Invocation (Call)</strong>: 语义变量的变化通过组件调用发生。第 $k$ 次执行任务 $x$ 的所有调用序列为：</li>
+
+<div class="math-block">$$\texttt{execution}(x,k) = \left\{ \texttt{call}_{i}^{x,k} \right\}_{i=1}^{N}$$</div>
+
+<p>其中每个 call 定义为：</p>
+
+<div class="math-block">$$\texttt{call}_{i}^{x,k} = (\texttt{meta}_{i}^{x,k}, \texttt{input}_{i}^{x,k}, \texttt{output}_{i}^{x,k}), \quad \text{with} ~ \texttt{output}_{i}^{x,k} = C_{i}(\texttt{input}_{i}^{x,k})$$</div>
+
+<p>这里 $C_{i} \in \mathcal{M} \cup \mathcal{T}$，即组件可以是 LLM ($\mathcal{M}$) 或工具 ($\mathcal{T}$)。</p>
+
+<li><strong>Reward 标注</strong>: 为每个 call 分配 reward $r_i \in \mathbb{R}$，形成带 reward 的执行序列：</li>
+
+<div class="math-block">$$\texttt{execution}^{R}(x,k) = \left\{ (\texttt{call}_{i}^{x,k}, r_{i}^{x,k}) \right\}_{i=1}^{N}$$</div>
+
+<div class="paper-figure"><img src="https://arxiv.org/html/2508.03680v1/figures/data_interface.png" alt="Data Interface" loading="lazy"></div>
+<p><em>Figure 2: 统一数据接口示意图。左侧展示 Agent 执行流程中语义变量的更新；右侧展示对应的 trajectory 数据收集。</em></p>
+
+<h3 id="32-agent-中的-markov-decision-process">3.2 Agent 中的 Markov Decision Process</h3>
+
+<p>Agent Lightning 将 Agent 执行建模为 <span class="wikilink">Partially Observable Markov Decision Process</span> (POMDP)：</p>
+
+<div class="math-block">$$\mathcal{M} = (\mathcal{S}, \mathcal{O}, \mathcal{A}, \mathcal{P}, \mathcal{R})$$</div>
+
+<p>各元素含义：</p>
+
+<table class="paper-table">
+<thead><tr><th>符号</th><th>含义</th></tr></thead>
+<tbody>
+<tr><td>$\mathcal{S}$</td><td>状态空间，对应所有可能的 $\texttt{state}_{t}$</td></tr>
+<tr><td>$\mathcal{O}$</td><td>观测空间，对应 policy LLM 的所有可能输入 $\texttt{input}_{t}$</td></tr>
+<tr><td>$\mathcal{A}$</td><td>动作空间，单次 LLM 调用生成的完整 token 序列 $\texttt{output}_{t}$</td></tr>
+<tr><td>$\mathcal{T}(s'</td><td>s,a)$</td><td>状态转移动态</td></tr>
+<tr><td>$\mathcal{R}(s,a)$</td><td>奖励函数</td></tr>
+</tbody></table>
+
+
+<p><strong>关键设计</strong>: 将 LLM 的一次完整生成（而非单个 token）作为一个 action，这是与传统 token-level RL 的重要区别。策略模型的目标是最大化累积回报：</p>
+
+<div class="math-block">$$R = \sum_{t=1}^{T} r_t$$</div>
+
+<h3 id="33-lightningrl-层次化-rl-算法">3.3 LightningRL: 层次化 RL 算法</h3>
+
+<p>LightningRL 是论文提出的核心算法，解决了如何将 Agent 的多轮交互数据用于 RL 训练的问题。</p>
+
+<p><strong>单轮 RL 回顾</strong>：现有方法（如 <span class="wikilink">GRPO</span>、<span class="wikilink">REINFORCE++</span>、<span class="wikilink">PPO</span>）主要处理单次 LLM 调用：给定任务 $x$，LLM 生成 response $\texttt{output} = (y_1, \ldots, y_N)$，获得 reward $r(x, \texttt{output}, \hat{y})$。通用训练目标为：</p>
+
+<div class="math-block">$$\mathcal{L}(\theta) = -\mathbb{E}_{x \sim \mathcal{X}, \texttt{output} \sim \pi_{\theta}(\cdot|x)} \left[ \sum_{j=1}^{N} \log \pi_{\theta}(y_j | x, y_{&lt;j}) \cdot A_j \right]$$</div>
+
+<p>其中 $A_j$ 是 token 级别的 advantage 估计。</p>
+
+<p><strong>多轮 Agent 的挑战</strong>：</p>
+
+<p>现有方法将多轮对话拼接为单个长序列并加 mask，存在以下问题：</p>
+<li>仅适用于简单的顺序工作流</li>
+<li>无法处理多 Agent、动态工作流等复杂场景</li>
+<li>序列过长影响训练效率</li>
+
+<p><strong>LightningRL 的解决方案</strong>：</p>
+
+<p>LightningRL 采用<strong>层次化</strong>方法，将 trajectory 分解为独立的 transition：</p>
+
+<div class="math-block">$$\texttt{execution}^{RL}(x,k) = \left\{ (\texttt{input}_{t}^{x,k}, \texttt{output}_{t}^{x,k}, r_{t}^{x,k}) \right\}_{t=1}^{T}$$</div>
+
+<p>包含一个 <strong>Credit Assignment Module</strong>，将 trajectory 级别的 return 分配到每次 LLM 调用的 reward。这使得每个 transition 可以独立用于 RL 优化，与现有的单轮 RL 算法（如 GRPO）无缝集成。</p>
+
+<div class="paper-figure"><img src="https://arxiv.org/html/2508.03680v1/figures/algorithm.png" alt="Algorithm" loading="lazy"></div>
+<p><em>Figure 3: LightningRL 算法示意。(a) 单轮 GRPO；(b) 现有多轮 GRPO（拼接+mask）；(c) LightningRL 将 trajectory 分解为独立 transition 进行训练。</em></p>
+
+<p><strong>Automatic Intermediate Rewarding (AIR)</strong>：AIR 机制可以基于系统监控信号（如工具调用返回状态）自动为中间步骤分配 reward，缓解 Agent 训练中的 <span class="wikilink">Sparse Reward</span> 问题。</p>
+
+<h3 id="34-系统设计-training-agent-disaggregation-架构">3.4 系统设计: Training-Agent Disaggregation 架构</h3>
+
+<p>Agent Lightning 的系统架构实现了训练与 Agent 执行的完全分离（TA Disaggregation）。</p>
+
+<div class="paper-figure"><img src="https://arxiv.org/html/2508.03680v1/figures/agent_lightning_architecture_v3.png" alt="Architecture" loading="lazy"></div>
+<p><em>Figure 4: Training-Agent Disaggregation 架构。</em></p>
+
+<p><strong>两大组件</strong>：</p>
+
+<p>1. <strong>Lightning Server</strong>: 集成 RL 框架（如 <span class="wikilink">VeRL</span>），管理训练过程和 LLM 优化，对外暴露 OpenAI-like API。Server 是 <strong>Agent-agnostic</strong> 的，不关心具体的 Agent 逻辑。</p>
+
+<p>2. <strong>Lightning Client</strong>: 封装 Agent 运行时（agent runtime），包含两个功能模块：</p>
+<li>与 Server 通信，负责数据传输</li>
+<li>运行 Agent 并进行数据收集</li>
+
+<p><strong>关键优势</strong>：</p>
+
+<li><strong>Agent-agnostic 训练</strong>: Server 只关心 LLM 优化和硬件资源管理</li>
+<li><strong>Trainer-agnostic 执行</strong>: Client 端 Agent 不依赖训练框架的实现细节</li>
+<li><strong>利用 Observability 框架</strong>: 将 <span class="wikilink">OpenTelemetry</span> 等可观测性框架引入训练流程，实现标准化的 trajectory 收集</li>
+<li><strong>零代码修改</strong>: 支持 LangChain、OpenAI Agents SDK、AutoGen 等主流框架开发的 Agent</li>
+
+
+<h2 id="实验结果">实验结果</h2>
+
+<p>实验在三个不同任务上验证了 Agent Lightning 的有效性，每个任务使用不同的 Agent 框架实现：</p>
+
+<h3 id="task-1-text-to-sql-langchain">Task 1: Text-to-SQL (LangChain)</h3>
+
+<li><strong>数据集</strong>: Spider（10,000+ 问题，200 数据库，138 领域）</li>
+<li><strong>基座模型</strong>: Llama-3.2-3B-Instruct</li>
+<li><strong>Agent 设计</strong>: 3 个 Agent 的多 Agent 系统</li>
+<li>SQL Writer Agent: 生成 SQL 查询</li>
+<li>Checking Agent: 评估查询正确性</li>
+<li>Re-writing Agent: 根据反馈修正查询或生成答案</li>
+<li><strong>Reward</strong>: 最终答案是否正确</li>
+
+<div class="paper-figure"><img src="https://arxiv.org/html/2508.03680v1/figures/train_spider.png" alt="Text-to-SQL Results" loading="lazy"></div>
+<p><em>Figure 5: Text-to-SQL 任务的 reward 曲线，展示稳定的训练提升。</em></p>
+
+<h3 id="task-2-retrieval-augmented-generation-openai-agents-sdk">Task 2: Retrieval-Augmented Generation (OpenAI Agents SDK)</h3>
+
+<li><strong>数据集</strong>: MuSiQue（多跳问答基准，要求真正的组合推理）</li>
+<li><strong>Agent 设计</strong>: 单 LLM 生成查询 -> 检索 -> 决定是否精炼查询或生成答案</li>
+<li><strong>Reward</strong>: 格式分 + 正确性分的加权组合</li>
+
+<div class="math-block">$$R = 0.9 \times R_{\text{correctness}} + 0.1 \times R_{\text{format}}$$</div>
+
+<p>其中 $R_{\text{correctness}}$ 采用 word-level F1 score。</p>
+
+<div class="paper-figure"><img src="https://arxiv.org/html/2508.03680v1/figures/train_rag_llama.png" alt="RAG Results" loading="lazy"></div>
+<p><em>Figure 6: RAG 任务的 reward 曲线。</em></p>
+
+<h3 id="task-3-math-qa-with-tool-usage-autogen">Task 3: Math QA with Tool Usage (AutoGen)</h3>
+
+<li><strong>数据集</strong>: Calc-X（需要推理和精确计算的数学问题）</li>
+<li><strong>基座模型</strong>: Llama-3.2-3B-Instruct</li>
+<li><strong>Agent 设计</strong>: 单 LLM 调用计算器工具解决数学问题</li>
+<li><strong>Reward</strong>: 最终答案是否正确</li>
+
+<div class="paper-figure"><img src="https://arxiv.org/html/2508.03680v1/figures/train_calc.png" alt="Calculator Results" loading="lazy"></div>
+<p><em>Figure 7: Math QA with Tool Usage 任务的 reward 曲线。</em></p>
+
+<p>三个实验统一表明：Agent Lightning 能够在不同 Agent 场景中实现<strong>稳定且持续的性能提升</strong>。</p>
+
+
+<h2 id="核心贡献">核心贡献</h2>
+
+<p>1. <strong>首个完全解耦的 Agent RL 训练框架</strong>: Agent Lightning 是第一个实现 Agent 执行与 RL 训练完全分离的框架，支持任意 AI Agent 的 RL 训练，几乎零代码修改。</p>
+
+<p>2. <strong>统一数据接口与 MDP 建模</strong>: 通过将 Agent 执行建模为 POMDP，定义了通用的数据接口，抽象了不同 Agent 的执行逻辑差异。</p>
+
+<p>3. <strong>LightningRL 层次化算法</strong>: 提出了基于 transition 分解的层次化 RL 方法，配合 Credit Assignment Module，支持多 Agent、动态工作流等复杂交互逻辑。</p>
+
+<p>4. <strong>Training-Agent Disaggregation 架构</strong>: 通过 Server/Client 分离设计，实现了训练框架与 Agent 框架的双向无关性，并引入可观测性框架提升可扩展性。</p>
+
+<p>5. <strong>跨框架验证</strong>: 在 LangChain、OpenAI Agents SDK、AutoGen 三个主流框架上验证了通用性。</p>
+
+
+<h2 id="局限性与思考">局限性与思考</h2>
+
+<h3 id="局限性">局限性</h3>
+
+<li><strong>实验规模有限</strong>: 仅在 3B 模型上验证，更大规模模型的效果尚未探索</li>
+<li><strong>任务类型覆盖</strong>: 虽然涵盖了 text-to-SQL、RAG、math tool-use，但未涉及 GUI 交互、长期规划等更复杂的 Agent 场景</li>
+<li><strong>Credit Assignment</strong>: 论文提出了 credit assignment module，但具体的分配策略如何影响训练效果缺乏深入分析</li>
+<li><strong>与 concatenation 方法的定量对比</strong>: Discussion 中定性分析了 transition-based 相比 concatenation-based 的优势，但缺少直接的定量 ablation</li>
+
+<h3 id="个人思考">个人思考</h3>
+
+<li>Agent Lightning 的<strong>解耦设计</strong>是其最大亮点。将 Agent 执行视为黑盒、仅通过标准化接口收集数据的思路，极大降低了 RL 训练的工程门槛</li>
+<li><strong>Observability 框架</strong>（OpenTelemetry）的引入很有前瞻性，将生产环境的监控基础设施复用到训练数据收集中</li>
+<li>与 <span class="wikilink">RAGEN</span>、<span class="wikilink">Search-R1</span>、<span class="wikilink">Trinity-RFT</span> 等 concatenation-based 方法的对比是后续工作的重要方向</li>
+<li>在更复杂的 Agent 场景（如 multi-agent debate、code generation pipeline）中的效果值得期待</li>
+
+
+<h2 id="相关工作">相关工作</h2>
+
+<li><strong>RL for LLM 推理</strong>: <span class="wikilink">DeepSeek-R1</span>, <span class="wikilink">Kimi k1.5</span>, <span class="wikilink">GRPO</span>, <span class="wikilink">PPO</span>, <span class="wikilink">REINFORCE++</span></li>
+<li><strong>Agent RL 训练</strong>: <span class="wikilink">RAGEN</span>, <span class="wikilink">Trinity-RFT</span>, <span class="wikilink">rLLM</span>, <span class="wikilink">Search-R1</span>, <span class="wikilink">DigiRL</span></li>
+<li><strong>Agent 框架</strong>: <span class="wikilink">LangChain</span>, <span class="wikilink">AutoGen</span>, <span class="wikilink">OpenAI Agents SDK</span></li>
+<li><strong>RL 训练框架</strong>: <span class="wikilink">VeRL</span></li>
+<li><strong>可观测性</strong>: <span class="wikilink">OpenTelemetry</span></li>
+<li><strong>评估基准</strong>: Spider (text-to-SQL), MuSiQue (multi-hop QA), Calc-X (math tool-use)</li></div></details></div><div class="paper-card" data-topic="🏋️ Agent 训练"><h3 id="3-grandcode-achieving-grandmaster-level-in-competitive-programming-via-agentic-reinforcement-learning">3. GrandCode: Achieving Grandmaster Level in Competitive Programming via Agentic Reinforcement Learning</h3>
+<li><strong>作者</strong>: Xiaoya Li, Xiaofei Sun, Guoyin Wang</li>
+<li><strong>机构</strong>: DeepReinforce Team</li>
+<li><strong>链接</strong>: <a href="https://arxiv.org/abs/2604.02721" target="_blank">arXiv</a> | <a href="https://arxiv.org/pdf/2604.02721" target="_blank">PDF</a></li>
+<li><strong>来源</strong>: 📰 HF Daily，⬆️ 33</li>
+<details class="paper-note"><summary>📒 精读笔记: GrandCode</summary><div class="note-body"><h1 id="grandcode-achieving-grandmaster-level-in-competitive-programming-via-agentic-rl">GrandCode: Achieving Grandmaster Level in Competitive Programming via Agentic RL</h1>
+
+<blockquote>
+<p><strong>一句话总结</strong>：首个在 Codeforces 实时比赛中击败所有人类选手（包括传奇 Grandmaster）的 AI 系统，通过多 agent RL + Agentic GRPO 实现。</p>
+</blockquote>
+
+<h2 id="1-研究动机与问题定义">1. 研究动机与问题定义</h2>
+
+<h3 id="竞赛编程的-ai-进展">竞赛编程的 AI 进展</h3>
+<li>AlphaCode: ~1300 rating (top 54%)</li>
+<li>AlphaCode2: top 15%</li>
+<li>OpenAI o3: 全球第 175 名</li>
+<li>Gemini 3 Deep Think: 第 8 名（但在历史题目上评测，非实时比赛）</li>
+
+<p><strong>关键差距</strong>：此前没有 AI 系统在<strong>实时比赛条件</strong>下持续击败顶级人类选手。</p>
+
+<h2 id="2-方法详解">2. 方法详解</h2>
+
+<h3 id="21-multi-agent-架构">2.1 Multi-Agent 架构</h3>
+
+<p>GrandCode 由多个协作 agent 组成：</p>
+<li><strong>Hypothesis Model</strong>：提出结构性猜想</li>
+<li><strong>Main Solver</strong>：核心推理和解法生成</li>
+<li><strong>Summarization Model</strong>：维护长 context 的紧凑记忆</li>
+<li><strong>Test Case Generator</strong>：生成边界测试用例挑战方案</li>
+
+<p>形成 <strong>推理 → 验证 → 反馈</strong> 的 agentic loop。</p>
+
+<h3 id="22-agentic-grpo">2.2 Agentic GRPO</h3>
+
+<p>针对多阶段 agent rollout 的 <span class="wikilink">GRPO</span> 变体，解决两个问题：</p>
+
+<p><strong>延迟奖励</strong>：竞赛编程中只有最终提交才有反馈，中间步骤无奖励。</p>
+
+<p><strong>Off-policy 漂移</strong>：多轮 agent 交互中，早期步骤的策略与当前策略差异大。</p>
+
+<p>Agentic GRPO 结合<strong>即时奖励更新</strong>和<strong>延迟校正</strong>：</p>
+
+<div class="math-block">$$\mathcal{L}_{\text{Agentic-GRPO}} = \mathcal{L}_{\text{immediate}} + \lambda \cdot \mathcal{L}_{\text{delayed\_correction}}$$</div>
+
+<p>即时奖励部分在每个 agent 阶段提供信号，延迟校正在最终评估后回溯调整。</p>
+
+<h3 id="23-post-training--test-time-rl">2.3 Post-Training + Test-Time RL</h3>
+
+<p><strong>Post-Training</strong>：在大量竞赛编程数据上进行 RL 训练</p>
+<p><strong>Test-Time RL</strong>：在比赛中实时 RL 优化——对候选方案进行 best-of-N 采样，用 code reward 验证：</p>
+
+<div class="math-block">$$R(\text{solution}) = \begin{cases} 1 &amp; \text{if all test cases pass} \\ 0 &amp; \text{otherwise} \end{cases}$$</div>
+
+<p>通过 smoothing best-of-N reward 提升训练稳定性。</p>
+
+<h3 id="24-实时比赛策略">2.4 实时比赛策略</h3>
+
+<p>平衡 <strong>直接生成</strong> 和 <strong>test-time RL</strong>：</p>
+<li>简单题：直接生成，快速提交</li>
+<li>难题：启动 agentic loop + test-time RL</li>
+
+<h2 id="3-实验结果">3. 实验结果</h2>
+
+<h3 id="31-codeforces-实时比赛">3.1 Codeforces 实时比赛</h3>
+
+<table class="paper-table">
+<thead><tr><th>比赛</th><th>日期</th><th>GrandCode 排名</th><th>备注</th></tr></thead>
+<tbody>
+<tr><td>Round 1087</td><td>2026-03-21</td><td><strong>第 1 名</strong></td><td>首个完成所有题目</td></tr>
+<tr><td>Round 1088</td><td>2026-03-28</td><td><strong>第 1 名</strong></td><td>首个完成所有题目</td></tr>
+<tr><td>Round 1089</td><td>2026-03-29</td><td><strong>第 1 名</strong></td><td>首个完成所有题目</td></tr>
+</tbody></table>
+
+
+<p><strong>三场连冠</strong>，均击败所有人类选手，包括多位传奇 Grandmaster。</p>
+
+<h3 id="32-对比">3.2 对比</h3>
+
+<table class="paper-table">
+<thead><tr><th>系统</th><th>评测条件</th><th>最佳排名</th></tr></thead>
+<tbody>
+<tr><td><strong>GrandCode</strong></td><td><strong>实时比赛</strong></td><td><strong>第 1 名 (3连)</strong></td></tr>
+<tr><td>Gemini 3 Deep Think</td><td>历史题目</td><td>第 8 名</td></tr>
+<tr><td>OpenAI o3</td><td>历史题目</td><td>第 175 名</td></tr>
+</tbody></table>
+
+
+<h2 id="4-架构图">4. 架构图</h2>
+
+<div class="paper-figure"><img src="https://arxiv.org/html/2604.02721v1/figs/pipeline-overview-edited.png" alt="GrandCode 流水线概览" loading="lazy"></div>
+
+<h2 id="5-核心概念">5. 核心概念</h2>
+
+<li><span class="wikilink">GRPO</span>：Group Relative Policy Optimization</li>
+<li><span class="wikilink">Test-Time RL</span>：推理时强化学习</li>
+<li><span class="wikilink">Multi-Agent System</span>：多智能体协作</li>
+<li><span class="wikilink">Competitive Programming</span>：竞赛编程</li>
+<li><span class="wikilink">Codeforces</span>：在线编程竞赛平台</li>
+<li><span class="wikilink">Best-of-N Sampling</span>：多方案采样选优</li>
+
+<h2 id="6-优缺点分析">6. 优缺点分析</h2>
+
+<h3 id="优点">优点</h3>
+<p>1. <strong>实时比赛验证</strong>：不是离线评测，是真正的 live competition，说服力极强</p>
+<p>2. <strong>三场连冠</strong>：排除运气因素</p>
+<p>3. <strong>Multi-agent 分工</strong>：比单模型暴力推理更像人类团队协作</p>
+<p>4. <strong>Agentic GRPO</strong>：针对 multi-stage rollout 的实用改进</p>
+
+<h3 id="缺点">缺点</h3>
+<p>1. <strong>计算成本未公开</strong>：跑一场比赛需要多少 GPU？</p>
+<p>2. <strong>可复现性</strong>：DeepReinforce 不是大厂，代码和模型是否开源？</p>
+<p>3. <strong>泛化性</strong>：竞赛编程的能力能否迁移到实际软件工程？</p>
+<p>4. <strong>比赛选择</strong>：只参加了 3 场比赛，样本量有限</p>
+
+<h2 id="7-与相关工作对比">7. 与相关工作对比</h2>
+
+<table class="paper-table">
+<thead><tr><th>系统</th><th>方法</th><th>Agent 架构</th><th>Live 验证</th><th>排名</th></tr></thead>
+<tbody>
+<tr><td><strong>GrandCode</strong></td><td><strong>Multi-agent RL + Test-time RL</strong></td><td><strong>4 modules</strong></td><td><strong>是 (3场)</strong></td><td><strong>#1</strong></td></tr>
+<tr><td>Gemini 3 Deep Think</td><td>单模型</td><td>无</td><td>否</td><td>#8</td></tr>
+<tr><td>OpenAI o3</td><td>单模型</td><td>无</td><td>否</td><td>#175</td></tr>
+<tr><td>AlphaCode2</td><td>搜索+过滤</td><td>无</td><td>否</td><td>top 15%</td></tr>
+</tbody></table>
+</div></details>
+
+<div class="paper-figure"><img src="https://arxiv.org/html/2604.02721v1/figs/pipeline-overview-edited.png" alt="" loading="lazy"></div>
+
+<li><strong>核心方法</strong>: Multi-agent RL 系统用于竞赛编程。用 <span class="wikilink">GRPO</span> 训练，多个 agent 协作解题——规划、编码、调试分工。号称在竞赛编程中达到 Grandmaster 水平，相比 Google Gemini 3 Deep Think（第 8 名）有提升。</li>
+<li><strong>对比方法/Baselines</strong>: Gemini 3 Deep Think, <span class="wikilink">OpenAI</span> o3</li>
+<li><strong>借鉴意义</strong>: Multi-agent RL 在复杂推理任务中的分工协作模式值得参考。</li>
+<li><strong>锐评</strong>: "Grandmaster level" 的 claim 需要仔细看评测条件——是在 live competition 还是离线评测？33 upvote 说明关注度一般。不过 multi-agent 分工（规划+编码+调试）的设计思路比单 agent 暴力推理更接近人类工程师的工作方式。 👀</li>
+</div><h2 id="-llm-训练与对齐">🧪 LLM 训练与对齐</h2><div class="paper-card" data-topic="🧪 LLM 训练与对齐"><h3 id="4-soda-semi-on-policy-black-box-distillation-for-large-language-models">4. SODA: Semi On-Policy Black-Box Distillation for Large Language Models</h3>
+<li><strong>作者</strong>: Xiwen Chen</li>
+<li><strong>机构</strong>: Clemson University, LinkedIn, Washington University, ASU, Columbia</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2604.03873v1" target="_blank">arXiv</a> | <a href="https://arxiv.org/pdf/2604.03873v1" target="_blank">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+<details class="paper-note"><summary>📒 精读笔记: SODA</summary><div class="note-body"><h1 id="soda-semi-on-policy-black-box-distillation-for-llms">SODA: Semi On-Policy Black-Box Distillation for LLMs</h1>
+
+<blockquote>
+<p><strong>一句话总结</strong>：在黑盒 LLM 蒸馏中提出 "Semi On-Policy" 折中——混合使用 on-policy 和 off-policy 数据，平衡训练稳定性和学生模型纠错能力。</p>
+</blockquote>
+
+<h2 id="1-研究动机">1. 研究动机</h2>
+
+<p>黑盒蒸馏的两难：</p>
+<li><strong>Off-policy</strong>（如 <span class="wikilink">SeqKD</span>）：从教师采样，简单稳定，但无法纠正学生固有错误</li>
+<li><strong>On-policy</strong>（如 <span class="wikilink">GAD</span>）：从学生采样+对抗训练，能纠错但不稳定且计算量大</li>
+
+<h2 id="2-方法详解">2. 方法详解</h2>
+
+<h3 id="semi-on-policy-策略">Semi On-Policy 策略</h3>
+
+<p>混合采样：以概率 $\alpha$ 从教师采样，概率 $1-\alpha$ 从学生采样：</p>
+
+<div class="math-block">$$x_t \sim \begin{cases} p_{\text{teacher}}(\cdot | x_{&lt;t}) &amp; \text{w.p. } \alpha \\ p_{\text{student}}(\cdot | x_{&lt;t}) &amp; \text{w.p. } 1-\alpha \end{cases}$$</div>
+
+<p>蒸馏损失：</p>
+
+<div class="math-block">$$\mathcal{L}_{\text{SODA}} = -\mathbb{E}_{x \sim p_{\text{mix}}} \left[ \sum_t \log p_{\text{student}}(x_t | x_{&lt;t}) \right]$$</div>
+
+<p>$\alpha$ 可以是固定值或按训练进度退火（先 off-policy 后逐渐 on-policy）。</p>
+
+<h3 id="与-dpo-的区别">与 DPO 的区别</h3>
+
+<p>SODA 是生成式蒸馏（学生生成 → 教师评分），<span class="wikilink">DPO</span> 是偏好对齐（正负样本对比）。两者互补。</p>
+
+<h2 id="3-核心概念">3. 核心概念</h2>
+
+<li><span class="wikilink">Knowledge Distillation</span>、<span class="wikilink">SeqKD</span>、<span class="wikilink">GAD</span>、<span class="wikilink">DPO</span>、<span class="wikilink">On-Policy Learning</span></li>
+
+<h2 id="4-优缺点">4. 优缺点</h2>
+
+<p><strong>优点</strong>: 思路自然，工程实用，计算成本可控</p>
+<p><strong>缺点</strong>: 创新性有限（mixed policy 不算新），需看实验细节判断贡献大小</p></div></details>
+
+<div class="paper-figure"><img src="https://arxiv.org/html/2604.03873v1/x1.png" alt="" loading="lazy"></div>
+
+<li><strong>核心方法</strong>: 黑盒知识蒸馏的 off-policy vs on-policy 困境——<span class="wikilink">SeqKD</span> 等 off-policy 方法无法纠正学生的固有错误，<span class="wikilink">GAD</span> 等 on-policy 方法训练不稳定且计算量大。SODA 提出 "Semi On-Policy" 折中：部分使用 on-policy 数据，部分使用 off-policy 数据，在稳定性和纠错能力之间取得平衡。</li>
+<li><strong>对比方法/Baselines</strong>: <span class="wikilink">SeqKD</span>, <span class="wikilink">GAD</span>, <span class="wikilink">DPO</span></li>
+<li><strong>借鉴意义</strong>: "Semi On-Policy" 的折中思路在 agent 训练中也适用——完全 on-policy 太贵，完全 off-policy 效果差。</li>
+<li><strong>锐评</strong>: 实际上是蒸馏领域一个很自然的想法——mixed policy。关键看实验是否扎实、和 <span class="wikilink">DPO</span> 系列方法的对比是否公平。多机构合作但论文日期是 2026-04-04，说明刚出来。 👀</li></div><div class="paper-card" data-topic="🧪 LLM 训练与对齐"><h3 id="5-rethinking-exploration-in-rlvr-from-entropy-regularization-to-refinement-via-bidirectional-entropy-modulation">5. Rethinking Exploration in RLVR: From Entropy Regularization to Refinement via Bidirectional Entropy Modulation</h3>
+<li><strong>作者</strong>: Hengrui Gu, Xiaotian Han et al.</li>
+<li><strong>机构</strong>: NC State, Case Western Reserve University</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2604.04894v1" target="_blank">arXiv</a> | <a href="https://arxiv.org/pdf/2604.04894v1" target="_blank">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+
+<div class="paper-figure"><img src="https://arxiv.org/html/2604.04894v1/x1.png" alt="" loading="lazy"></div>
+
+<li><strong>核心方法</strong>: RLVR（Reinforcement Learning with Verifiable Rewards）面临 "restricted exploration" 问题——策略快速收敛到窄解集。传统熵正则化不可靠。AsymGRPO 提出<strong>双向熵调制</strong>：对正确答案降低熵（exploitation），对错误答案提高熵（exploration），在 <span class="wikilink">GRPO</span> 框架上实现非对称探索。</li>
+<li><strong>对比方法/Baselines</strong>: <span class="wikilink">GRPO</span>, <span class="wikilink">REINFORCE</span>, <span class="wikilink">PPO</span>, 标准熵正则化</li>
+<li><strong>借鉴意义</strong>: 对 <span class="wikilink">GRPO</span> 的改进，直接可用于 agent RL 训练。</li>
+<li><strong>锐评</strong>: "正确答案收敛、错误答案发散" 的非对称设计很优雅。MATH-500 上的提升如果显著的话这篇会火。但熵调制的超参数敏感性是个隐忧。 👀</li>
+</div><h2 id="-agent-框架">🔧 Agent 框架</h2><div class="paper-card" data-topic="🔧 Agent 框架"><h3 id="6-agentscope-10-a-developer-centric-framework-for-building-agentic-applications">6. AgentScope 1.0: A Developer-Centric Framework for Building Agentic Applications</h3>
+<li><strong>作者</strong>: Dawei Gao et al.</li>
+<li><strong>机构</strong>: Alibaba Group</li>
+<li><strong>链接</strong>: <a href="https://arxiv.org/abs/2508.16279" target="_blank">arXiv</a> | <a href="https://arxiv.org/pdf/2508.16279" target="_blank">PDF</a></li>
+<li><strong>来源</strong>: 🔥 HF Trending，⬆️ 61</li>
+<details class="paper-note"><summary>📒 精读笔记: AgentScope</summary><div class="note-body"><h1 id="agentscope-10">AgentScope 1.0</h1>
+
+<h2 id="-基本信息">📋 基本信息</h2>
+
+<li><strong>作者</strong>: Dawei Gao, Zitao Li, Yuexiang Xie 等</li>
+<li><strong>机构</strong>: Alibaba Group</li>
+<li><strong>链接</strong>: <a href="https://arxiv.org/abs/2508.16279" target="_blank">arXiv</a> | <a href="https://arxiv.org/pdf/2508.16279" target="_blank">PDF</a></li>
+
+<h2 id="-研究动机与问题">🎯 研究动机与问题</h2>
+
+<p>现有 multi-agent 框架（如 <span class="wikilink">LangChain</span>, <span class="wikilink">AutoGen</span>）在以下方面存在不足：</p>
+<p>1. <strong>工具集成侵入性强</strong>：需要大量修改已有代码</p>
+<p>2. <strong>可观测性差</strong>：大规模部署时难以监控和调试</p>
+<p>3. <strong>长期记忆缺失</strong>：agent 无法保持跨会话的上下文</p>
+<p>4. <strong>分布式支持弱</strong>：难以扩展到大规模 multi-agent 场景</p>
+
+<h2 id="-方法详解">🔧 方法详解</h2>
+
+<h3 id="核心架构">核心架构</h3>
+
+<p>AgentScope 1.0 的核心抽象：</p>
+
+<p>1. <strong><span class="wikilink">MsgHub</span>（消息总线）</strong>：agent 间消息传递的统一接口，支持广播和点对点通信</p>
+<p>2. <strong>StateModule（状态管理）</strong>：统一管理 agent 状态，支持序列化和恢复</p>
+<p>3. <strong>Non-Invasive Monitoring</strong>：基于 <span class="wikilink">OpenTelemetry</span> 的无侵入式监控</p>
+
+<h3 id="mcp-原生支持">MCP 原生支持</h3>
+
+<p>原生集成 <span class="wikilink">MCP</span>（Model Context Protocol）协议：</p>
+<li>Agent 可通过 MCP 协议访问外部工具和数据源</li>
+<li>工具集成不需要修改 agent 代码（non-invasive）</li>
+<li>支持 MCP server 的自动发现和注册</li>
+
+<h3 id="分层记忆系统">分层记忆系统</h3>
+
+<li><strong><span class="wikilink">InMemoryMemory</span></strong>：短期工作记忆，存储当前会话上下文</li>
+<li><strong><span class="wikilink">LongTermMemoryBase</span></strong>：长期记忆，支持跨会话信息持久化</li>
+<li>记忆检索支持语义搜索和结构化查询</li>
+
+<h3 id="react-agent-内置实现">ReAct Agent 内置实现</h3>
+
+<p>内置 <span class="wikilink">ReAct</span> 范式的 agent 实现：</p>
+<li>Thought → Action → Observation 循环</li>
+<li>支持自定义 tool 注册</li>
+<li>内置错误处理和重试机制</li>
+
+<h3 id="分布式调度">分布式调度</h3>
+
+<li>基于 <span class="wikilink">gRPC</span> 的分布式通信</li>
+<li>支持 agent 在多节点间调度</li>
+<li>MsgHub 支持分布式消息广播</li>
+
+<h2 id="-实验结果">📊 实验结果</h2>
+
+<table class="paper-table">
+<thead><tr><th>框架</th><th>MCP支持</th><th>可观测性</th><th>长期记忆</th><th>分布式</th></tr></thead>
+<tbody>
+<tr><td>LangChain</td><td>部分</td><td>弱</td><td>第三方</td><td>弱</td></tr>
+<tr><td>AutoGen</td><td>无</td><td>弱</td><td>无</td><td>部分</td></tr>
+<tr><td>CAMEL</td><td>无</td><td>无</td><td>无</td><td>无</td></tr>
+<tr><td><strong>AgentScope 1.0</strong></td><td><strong>原生</strong></td><td><strong>OpenTelemetry</strong></td><td><strong>内置</strong></td><td><strong>原生</strong></td></tr>
+</tbody></table>
+
+
+<p>61 upvotes 说明社区认可度较高。</p>
+
+<h2 id="-核心贡献">💡 核心贡献</h2>
+
+<p>1. <strong>MCP 原生集成</strong>：首个原生支持 MCP 协议的 multi-agent 框架</p>
+<p>2. <strong>OpenTelemetry 可观测性</strong>：无侵入式监控，适合生产环境</p>
+<p>3. <strong>分层记忆系统</strong>：短期 + 长期记忆，支持跨会话持久化</p>
+<p>4. <strong>大规模部署经验</strong>：阿里内部大规模 multi-agent 部署验证</p>
+
+<h2 id="-局限性与思考">🤔 局限性与思考</h2>
+
+<p>1. <strong>框架评估困难</strong>：benchmark 上的数字不代表实际开发体验</p>
+<p>2. <strong>与 LangChain 对比不够 fair</strong>：只挑了对方弱的场景</p>
+<p>3. <strong>学习曲线</strong>：抽象层较多，新手上手成本可能较高</p>
+<p>4. <strong>MCP 生态尚未成熟</strong>：MCP 协议本身还在快速迭代</p>
+
+<h2 id="-相关工作">📚 相关工作</h2>
+
+<li><span class="wikilink">MCP</span>: Model Context Protocol，agent 工具集成标准</li>
+<li><span class="wikilink">OpenTelemetry</span>: 可观测性标准</li>
+<li><span class="wikilink">ReAct</span>: 推理+行动范式</li>
+<li><span class="wikilink">LangChain</span>: 竞品框架</li>
+<li><span class="wikilink">AutoGen</span>: 微软 multi-agent 框架</li></div></details></div><div class="paper-card" data-topic="🔧 Agent 框架"><h3 id="7-tradingagents-multi-agents-llm-financial-trading-framework">7. TradingAgents: Multi-Agents LLM Financial Trading Framework</h3>
+<li><strong>作者</strong>: Yijia Xiao et al.</li>
+<li><strong>机构</strong>: MIT, UCLA</li>
+<li><strong>链接</strong>: <a href="https://arxiv.org/abs/2412.20138" target="_blank">arXiv</a> | <a href="https://arxiv.org/pdf/2412.20138" target="_blank">PDF</a></li>
+<li><strong>来源</strong>: 🔥 HF Trending，⬆️ 36</li>
+
+<li><strong>核心方法</strong>: 用 multi-agent LLM 框架模拟真实交易公司的协作动态——分析师、交易员、风控各司其职。比单 agent 或独立数据采集的 multi-agent 更接近实际交易流程。</li>
+<li><strong>锐评</strong>: 2024 年 12 月的旧论文又上 trending。MIT+UCLA 的招牌让人点进来，但交易策略的实盘验证才是硬通货。和昨天的 <span class="wikilink">PolySwarm</span> 类似，都是 "agent 做金融" 但缺实盘。 🫠</li>
+</div><h2 id="-benchmark--评测">📊 Benchmark & 评测</h2><div class="paper-card" data-topic="📊 Benchmark &amp; 评测"><h3 id="8-agentic-mme-what-agentic-capability-really-brings-to-multimodal-intelligence">8. Agentic-MME: What Agentic Capability Really Brings to Multimodal Intelligence?</h3>
+<li><strong>作者</strong>: Qianshan Wei et al.</li>
+<li><strong>机构</strong>: CASIA, UCAS, SEU, NJU, PKU, BUAA, NTU, UCLA</li>
+<li><strong>链接</strong>: <a href="https://arxiv.org/abs/2604.03016" target="_blank">arXiv</a> | <a href="https://arxiv.org/pdf/2604.03016" target="_blank">PDF</a></li>
+<li><strong>来源</strong>: 📰 HF Daily，⬆️ 25</li>
+
+<div class="paper-figure"><img src="https://arxiv.org/html/2604.03016v1/x1.png" alt="" loading="lazy"></div>
+
+<li><strong>核心方法</strong>: 评测 MLLM 作为 agent 时的能力——视觉扩展（调用视觉工具）和知识扩展（开放搜索）。现有评测的问题：缺乏灵活工具集成、视觉和搜索分开测、只看最终答案。Agentic-MME 解决这些问题，测了 <span class="wikilink">GPT-5</span> 等模型。</li>
+<li><strong>锐评</strong>: 又一个 benchmark。八家机构联合搞评测说明 MLLM agent 评估标准仍未统一。如果 GPT-5 的数据有亮点可能会火，否则就是又一篇 benchmark paper。 💤</li></div><div class="paper-card" data-topic="📊 Benchmark &amp; 评测"><h3 id="9-combee-scaling-prompt-learning-for-self-improving-language-model-agents">9. Combee: Scaling Prompt Learning for Self-Improving Language Model Agents</h3>
+<li><strong>作者</strong>: Hanchen Li et al.</li>
+<li><strong>机构</strong>: UC Berkeley, Stanford, Tensormesh, Gradient Network</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2604.04247v1" target="_blank">arXiv</a> | <a href="https://arxiv.org/pdf/2604.04247v1" target="_blank">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+
+<div class="paper-figure"><img src="https://arxiv.org/html/2604.04247v1/x1.png" alt="" loading="lazy"></div>
+
+<li><strong>核心方法</strong>: 现有 prompt learning（如 ACE、GEPA）只关注单 agent 或低并行场景。Combee 将 prompt 自优化扩展到高并行 multi-agent 设置。</li>
+<li><strong>借鉴意义</strong>: Prompt 自优化 + 多 agent 并行是一个实用方向。</li>
+<li><strong>锐评</strong>: Berkeley+Stanford 出品，但关键是 "scaling prompt learning" 相比直接 RL 训练有什么不可替代的优势？如果 SKILL0 的参数内化更有效，prompt learning 的天花板在哪？ 💤</li>
+</div></div>
+<div id="panel-agent训练" class="tab-panel"><h2 id="-agent-训练">🏋️ Agent 训练</h2><div class="paper-card" data-topic="🏋️ Agent 训练"><h3 id="1-skill0-in-context-agentic-reinforcement-learning-for-skill-internalization">1. SKILL0: In-Context Agentic Reinforcement Learning for Skill Internalization</h3>
+<li><strong>作者</strong>: Zhengxi Lu et al.</li>
+<li><strong>机构</strong>: Zhejiang University, Meituan, Tsinghua University</li>
+<li><strong>链接</strong>: <a href="https://arxiv.org/abs/2604.02268" target="_blank">arXiv</a> | <a href="https://arxiv.org/pdf/2604.02268" target="_blank">PDF</a></li>
+<li><strong>来源</strong>: 🔥 HF Trending，⬆️ 86</li>
+<details class="paper-note"><summary>📒 精读笔记: SKILL0</summary><div class="note-body"><h1 id="skill0-in-context-agentic-reinforcement-learning-for-skill-internalization">SKILL0: In-Context Agentic Reinforcement Learning for Skill Internalization</h1>
+
+<blockquote>
+<p><strong>一句话总结</strong>：提出 "Skills at training, zero at inference" 范式——用渐进式课程学习 RL 将 agent 技能从推理时 context 注入内化到模型参数，实现零检索的自主行为。</p>
+</blockquote>
+
+<h2 id="1-研究动机与问题定义">1. 研究动机与问题定义</h2>
+
+<h3 id="推理时技能增强的三大局限">推理时技能增强的三大局限</h3>
+<p>1. <strong>检索噪声</strong>：不相关技能污染 agent context</p>
+<p>2. <strong>Token 开销</strong>：技能内容在多轮交互中累积，限制可扩展性</p>
+<p>3. <strong>根本问题</strong>：模型在"执行"技能而非"学会"技能——能力在 context 中，不在参数里</p>
+
+<h3 id="类比人类学习">类比人类学习</h3>
+<p>人类技能习得遵循：<strong>显式指导阶段 → 内化阶段</strong>（Anderson, 1982）。推理时技能增强永远锚定在第一阶段。RL 提供了通往第二阶段的路径。</p>
+
+<h2 id="2-方法详解">2. 方法详解</h2>
+
+<h3 id="21-agent-loop-形式化">2.1 Agent Loop 形式化</h3>
+
+<p>任务建模为序列决策：给定指令 $I$，agent 生成动作序列 $\{a_1, a_2, \ldots, a_T\}$。每步 $t$，agent 从策略采样：</p>
+
+<div class="math-block">$$a_t \sim \pi_\theta(a_t | I, h_t), \quad h_t = \{o_1, o_2, \ldots, o_t\}$$</div>
+
+<p>环境转移：$o_{t+1} = \mathcal{E}(o_t, a_t)$</p>
+
+<h3 id="22-skillbank层次化技能库">2.2 SkillBank：层次化技能库</h3>
+
+<p>技能组织为两层结构：</p>
+<li><strong>通用技能</strong>：跨任务的策略原则（探索策略、目标跟踪等）</li>
+<li><strong>任务特定技能</strong>：领域专用知识（动作序列、前置条件等）</li>
+
+<p>目录结构：<code>skills/{task_name}/{skill_category}.md</code></p>
+
+<h3 id="23-relevance-driven-skill-grouping">2.3 Relevance-Driven Skill Grouping</h3>
+
+<p>离线按类别分组技能，与交互历史一起渲染为紧凑的视觉 context，教模型工具调用和多轮任务完成。</p>
+
+<h3 id="24-in-context-reinforcement-learning-icrl">2.4 In-Context Reinforcement Learning (ICRL)</h3>
+
+<p>核心创新——技能在<strong>训练时</strong>作为 in-context 指导提供，在<strong>推理时</strong>完全移除：</p>
+
+<div class="math-block">$$\mathcal{L}_{\text{ICRL}} = \mathbb{E}_{\tau \sim \pi_\theta} \left[ \sum_{t} \min\left( r_t(\theta) \hat{A}_t, \text{clip}(r_t(\theta), 1-\epsilon, 1+\epsilon) \hat{A}_t \right) \right]$$</div>
+
+<p>训练 rollout 中包含技能 context $\mathcal{S}_k$，但推理时 $\mathcal{S}_k = \emptyset$。</p>
+
+<h3 id="25-dynamic-curriculum动态课程">2.5 Dynamic Curriculum（动态课程）</h3>
+
+<p><strong>不是</strong>固定退火计划，而是自适应内化：</p>
+
+<p>对每个技能文件 $\mathcal{S}_k$，评估其<strong>on-policy 有用性</strong>——比较有无该技能时 agent 在匹配验证子任务上的表现：</p>
+
+<div class="math-block">$$\text{Helpfulness}(\mathcal{S}_k) = \text{Perf}(\pi_\theta | \mathcal{S}_k) - \text{Perf}(\pi_\theta | \emptyset)$$</div>
+
+<li>如果 $\text{Helpfulness}(\mathcal{S}_k) > \delta$：保留该技能（模型仍需它）</li>
+<li>如果 $\text{Helpfulness}(\mathcal{S}_k) \leq \delta$：移除该技能（已内化）</li>
+
+<p>预算线性衰减直至归零，agent 最终完全零技能运行。</p>
+
+<h3 id="26-与标准-rl-的区别">2.6 与标准 RL 的区别</h3>
+
+<div class="math-block">$$\text{Standard RL}: \quad \pi_\theta(a_t | I, h_t)$$</div>
+<div class="math-block">$$\text{Skill0 训练}: \quad \pi_\theta(a_t | I, h_t, \mathcal{S}_k)$$</div>
+<div class="math-block">$$\text{Skill0 推理}: \quad \pi_\theta(a_t | I, h_t)$$</div>
+
+<h2 id="3-实验结果">3. 实验结果</h2>
+
+<h3 id="31-主要结果">3.1 主要结果</h3>
+
+<table class="paper-table">
+<thead><tr><th>方法</th><th>ALFWorld</th><th>Search-QA</th><th>推理 Token/Step</th></tr></thead>
+<tbody>
+<tr><td>Standard RL</td><td>baseline</td><td>baseline</td><td>~2k</td></tr>
+<tr><td>Skill Augmentation (SkillRL)</td><td>高</td><td>高</td><td>~3-5k</td></tr>
+<tr><td><strong>Skill0</strong></td><td><strong>+9.7%</strong></td><td><strong>+6.6%</strong></td><td><strong>< 0.5k</strong></td></tr>
+</tbody></table>
+
+
+<p>关键：Skill0 在性能上匹配甚至超过推理时技能增强方法，但推理 token 开销降低 6-10 倍。</p>
+
+<h3 id="32-内化分析">3.2 内化分析</h3>
+
+<li>技能移除的时间点因技能复杂度而异——简单技能早期内化，复杂技能后期内化</li>
+<li>Dynamic Curriculum 比固定退火计划提升 3-5%</li>
+
+<h2 id="4-架构图">4. 架构图</h2>
+
+<div class="paper-figure"><img src="https://arxiv.org/html/2604.02268v1/x1.png" alt="Skill0 总体框架" loading="lazy"></div>
+
+<h2 id="5-核心概念">5. 核心概念</h2>
+
+<li><span class="wikilink">In-Context Learning</span>：上下文学习</li>
+<li><span class="wikilink">Reinforcement Learning</span>：强化学习</li>
+<li><span class="wikilink">Curriculum Learning</span>：课程学习</li>
+<li><span class="wikilink">Agent Skills</span>：agent 技能系统</li>
+<li><span class="wikilink">Skill Augmentation</span>：推理时技能增强</li>
+<li><span class="wikilink">ALFWorld</span>：文本游戏交互环境</li>
+
+<h2 id="6-优缺点分析">6. 优缺点分析</h2>
+
+<h3 id="优点">优点</h3>
+<p>1. <strong>范式转变</strong>：从"推理时检索"到"训练时内化"，思路清晰有说服力</p>
+<p>2. <strong>自适应课程</strong>：Helpfulness-driven 退火比固定计划更优雅</p>
+<p>3. <strong>推理高效</strong>：< 0.5k token/step，大幅降低部署成本</p>
+<p>4. <strong>开源</strong>：代码在 GitHub 上公开</p>
+
+<h3 id="缺点">缺点</h3>
+<p>1. <strong>泛化性</strong>：内化的技能能否迁移到训练时未见过的新任务？</p>
+<p>2. <strong>环境依赖</strong>：ALFWorld 和 Search-QA 相对简单，更复杂环境（如 SWE-bench）效果如何？</p>
+<p>3. <strong>技能质量</strong>：垃圾技能内化了也没用——需要高质量 SkillBank</p>
+<p>4. <strong>训练成本</strong>：RL 训练本身的成本和标准 SFT 相比如何？</p>
+
+<h2 id="7-与相关工作对比">7. 与相关工作对比</h2>
+
+<table class="paper-table">
+<thead><tr><th>方法</th><th>范式</th><th>推理开销</th><th>性能</th><th>技能依赖</th></tr></thead>
+<tbody>
+<tr><td><strong>Skill0</strong></td><td><strong>内化</strong></td><td><strong>低 (< 0.5k)</strong></td><td><strong>高</strong></td><td><strong>无</strong></td></tr>
+<tr><td>SkillRL</td><td>增强</td><td>高 (3-5k)</td><td>高</td><td>有</td></tr>
+<tr><td>EvolveR</td><td>增强+进化</td><td>高</td><td>中-高</td><td>有</td></tr>
+<tr><td>Standard RL</td><td>无技能</td><td>低</td><td>低</td><td>无</td></tr>
+</tbody></table>
+</div></details>
+
+<div class="paper-figure"><img src="https://arxiv.org/html/2604.02268v1/x1.png" alt="" loading="lazy"></div>
+
+<li><strong>核心方法</strong>: 现有 agent 靠推理时检索技能（skill augmentation），但检索噪声大、token 开销高、模型并没有真正学会技能。SKILL0 提出 <strong>Skill Internalization</strong>——用 <span class="wikilink">Reinforcement Learning|RL</span> 将技能知识从 context 内化到模型参数。构建 SkillBank 收集多样化 agent 技能，然后用 RL 训练让模型在不依赖外部检索的情况下掌握这些技能。</li>
+<li><strong>对比方法/Baselines</strong>: 推理时 skill augmentation（<span class="wikilink">EvolveR</span> 等）、标准 <span class="wikilink">SFT</span></li>
+<li><strong>借鉴意义</strong>: "从检索到内化" 的范式转变对任何依赖外部知识的 agent 系统都有参考价值。也可以类比 <span class="wikilink">RAG</span> vs 参数化记忆的讨论。</li>
+<li><strong>锐评</strong>: 今天最值得读的论文。"inference-time skill augmentation is fundamentally limited" 这个 claim 很大胆但有道理——你不能指望一个不会游泳的人拿着游泳教程就能游。86 个 upvote 说明社区买账。关键问题是：RL 训练的技能泛化能力如何？能否内化从未见过的新技能？ 🔥</li></div><div class="paper-card" data-topic="🏋️ Agent 训练"><h3 id="2-agent-lightning-train-any-ai-agents-with-reinforcement-learning">2. Agent Lightning: Train ANY AI Agents with Reinforcement Learning</h3>
+<li><strong>作者</strong>: Xufang Luo, Yuge Zhang et al.</li>
+<li><strong>机构</strong>: Microsoft Research</li>
+<li><strong>链接</strong>: <a href="https://arxiv.org/abs/2508.03680" target="_blank">arXiv</a> | <a href="https://arxiv.org/pdf/2508.03680" target="_blank">PDF</a></li>
+<li><strong>来源</strong>: 🔥 HF Trending，⬆️ 140</li>
+<details class="paper-note"><summary>📒 精读笔记: Agent Lightning - Train AI Agents with RL</summary><div class="note-body"><h1 id="agent-lightning-train-any-ai-agents-with-reinforcement-learning">Agent Lightning: Train ANY AI Agents with Reinforcement Learning</h1>
+
+<h2 id="基本信息">基本信息</h2>
+
+<li><strong>作者</strong>: Xufang Luo, Yuge Zhang, Zhiyuan He, Zilong Wang, Siyun Zhao, Dongsheng Li, Luna K. Qiu, Yuqing Yang</li>
+<li><strong>机构</strong>: Microsoft Research</li>
+<li><strong>时间</strong>: 2025年8月</li>
+<li><strong>链接</strong>:</li>
+<li>arXiv: <a href="https://arxiv.org/abs/2508.03680" target="_blank">2508.03680</a></li>
+<li>GitHub: <a href="https://github.com/microsoft/agent-lightning" target="_blank">microsoft/agent-lightning</a> (16k+ stars)</li>
+<li>项目主页: <a href="https://www.microsoft.com/en-us/research/project/agent-lightning/" target="_blank">Microsoft Research</a></li>
+
+
+<h2 id="研究动机与问题">研究动机与问题</h2>
+
+<h3 id="背景">背景</h3>
+
+<p>近年来 <span class="wikilink">LLM</span> 驱动的 AI Agent 在搜索、代码生成、工具调用等复杂任务中表现出色。然而，LLM 在未经专门训练的场景中（如多轮编码工作流、私有领域数据集、不熟悉的工具）仍然容易出错，无法可靠解决复杂的端到端任务。</p>
+
+<p><span class="wikilink">Reinforcement Learning</span> 已在推理模型（如 <span class="wikilink">DeepSeek-R1</span>、<span class="wikilink">Kimi k1.5</span>）中取得了突破性进展，是优化 Agent 场景中 LLM 的强大范式。相比需要逐步标注的 <span class="wikilink">Supervised Fine-Tuning</span>，RL 仅依赖基于结果的 reward 信号，消除了对任务特定标注数据的需求。</p>
+
+<h3 id="核心问题">核心问题</h3>
+
+<p>将 RL 扩展到 Agent 训练面临两大挑战：</p>
+
+<p>1. <strong>算法层面</strong>：现有 RL 方法主要针对静态、单次调用任务（如数学推理）。Agent 的执行涉及<strong>多次 LLM 调用</strong>（不同 prompt 和 response）以及与外部工具/API 的交互，逻辑远比单轮 RL 复杂。</p>
+<p>2. <strong>系统层面</strong>：现有方法将 RL 训练与 Agent 逻辑<strong>紧密耦合</strong>，或依赖序列拼接加 masking 的方式，难以支持多样化的 Agent 框架（LangChain、AutoGen、OpenAI Agents SDK 等）。</p>
+
+<h3 id="核心思想">核心思想</h3>
+
+<p>Agent Lightning 的核心创新是<strong>完全解耦 Agent 执行与 RL 训练</strong>，让开发者以几乎<strong>零代码修改</strong>的方式，对任意 AI Agent 进行 RL 训练。</p>
+
+<div class="paper-figure"><img src="https://arxiv.org/html/2508.03680v1/figures/overview.png" alt="Overview of Agent Lightning" loading="lazy"></div>
+<p><em>Figure 1: Agent Lightning 框架总览。实现了 Agent 执行与 RL 训练的完全解耦。</em></p>
+
+
+<h2 id="方法详解">方法详解</h2>
+
+<h3 id="31-统一数据接口-unified-data-interface">3.1 统一数据接口 (Unified Data Interface)</h3>
+
+<p>Agent Lightning 定义了一个统一的数据接口，将 Agent 执行过程中的数据标准化为 RL 训练可用的格式。</p>
+
+<p><strong>核心概念</strong>：</p>
+
+<li><strong>State</strong>: Agent 执行的快照，包括程序计数器、变量值、调用栈等。形式化为：</li>
+
+<div class="math-block">$$\texttt{state}_{t}(x,k) = \left\{ \texttt{variable}_{i}^{x,k,t} \right\}_{i=1}^{V}$$</div>
+
+<li><strong>Semantic Variable</strong>: 被组件使用或修改的关键变量，代表关键语义（如程序意图）。不关注循环计数器等辅助变量，只关注语义层面的变化。</li>
+
+<li><strong>Component Invocation (Call)</strong>: 语义变量的变化通过组件调用发生。第 $k$ 次执行任务 $x$ 的所有调用序列为：</li>
+
+<div class="math-block">$$\texttt{execution}(x,k) = \left\{ \texttt{call}_{i}^{x,k} \right\}_{i=1}^{N}$$</div>
+
+<p>其中每个 call 定义为：</p>
+
+<div class="math-block">$$\texttt{call}_{i}^{x,k} = (\texttt{meta}_{i}^{x,k}, \texttt{input}_{i}^{x,k}, \texttt{output}_{i}^{x,k}), \quad \text{with} ~ \texttt{output}_{i}^{x,k} = C_{i}(\texttt{input}_{i}^{x,k})$$</div>
+
+<p>这里 $C_{i} \in \mathcal{M} \cup \mathcal{T}$，即组件可以是 LLM ($\mathcal{M}$) 或工具 ($\mathcal{T}$)。</p>
+
+<li><strong>Reward 标注</strong>: 为每个 call 分配 reward $r_i \in \mathbb{R}$，形成带 reward 的执行序列：</li>
+
+<div class="math-block">$$\texttt{execution}^{R}(x,k) = \left\{ (\texttt{call}_{i}^{x,k}, r_{i}^{x,k}) \right\}_{i=1}^{N}$$</div>
+
+<div class="paper-figure"><img src="https://arxiv.org/html/2508.03680v1/figures/data_interface.png" alt="Data Interface" loading="lazy"></div>
+<p><em>Figure 2: 统一数据接口示意图。左侧展示 Agent 执行流程中语义变量的更新；右侧展示对应的 trajectory 数据收集。</em></p>
+
+<h3 id="32-agent-中的-markov-decision-process">3.2 Agent 中的 Markov Decision Process</h3>
+
+<p>Agent Lightning 将 Agent 执行建模为 <span class="wikilink">Partially Observable Markov Decision Process</span> (POMDP)：</p>
+
+<div class="math-block">$$\mathcal{M} = (\mathcal{S}, \mathcal{O}, \mathcal{A}, \mathcal{P}, \mathcal{R})$$</div>
+
+<p>各元素含义：</p>
+
+<table class="paper-table">
+<thead><tr><th>符号</th><th>含义</th></tr></thead>
+<tbody>
+<tr><td>$\mathcal{S}$</td><td>状态空间，对应所有可能的 $\texttt{state}_{t}$</td></tr>
+<tr><td>$\mathcal{O}$</td><td>观测空间，对应 policy LLM 的所有可能输入 $\texttt{input}_{t}$</td></tr>
+<tr><td>$\mathcal{A}$</td><td>动作空间，单次 LLM 调用生成的完整 token 序列 $\texttt{output}_{t}$</td></tr>
+<tr><td>$\mathcal{T}(s'</td><td>s,a)$</td><td>状态转移动态</td></tr>
+<tr><td>$\mathcal{R}(s,a)$</td><td>奖励函数</td></tr>
+</tbody></table>
+
+
+<p><strong>关键设计</strong>: 将 LLM 的一次完整生成（而非单个 token）作为一个 action，这是与传统 token-level RL 的重要区别。策略模型的目标是最大化累积回报：</p>
+
+<div class="math-block">$$R = \sum_{t=1}^{T} r_t$$</div>
+
+<h3 id="33-lightningrl-层次化-rl-算法">3.3 LightningRL: 层次化 RL 算法</h3>
+
+<p>LightningRL 是论文提出的核心算法，解决了如何将 Agent 的多轮交互数据用于 RL 训练的问题。</p>
+
+<p><strong>单轮 RL 回顾</strong>：现有方法（如 <span class="wikilink">GRPO</span>、<span class="wikilink">REINFORCE++</span>、<span class="wikilink">PPO</span>）主要处理单次 LLM 调用：给定任务 $x$，LLM 生成 response $\texttt{output} = (y_1, \ldots, y_N)$，获得 reward $r(x, \texttt{output}, \hat{y})$。通用训练目标为：</p>
+
+<div class="math-block">$$\mathcal{L}(\theta) = -\mathbb{E}_{x \sim \mathcal{X}, \texttt{output} \sim \pi_{\theta}(\cdot|x)} \left[ \sum_{j=1}^{N} \log \pi_{\theta}(y_j | x, y_{&lt;j}) \cdot A_j \right]$$</div>
+
+<p>其中 $A_j$ 是 token 级别的 advantage 估计。</p>
+
+<p><strong>多轮 Agent 的挑战</strong>：</p>
+
+<p>现有方法将多轮对话拼接为单个长序列并加 mask，存在以下问题：</p>
+<li>仅适用于简单的顺序工作流</li>
+<li>无法处理多 Agent、动态工作流等复杂场景</li>
+<li>序列过长影响训练效率</li>
+
+<p><strong>LightningRL 的解决方案</strong>：</p>
+
+<p>LightningRL 采用<strong>层次化</strong>方法，将 trajectory 分解为独立的 transition：</p>
+
+<div class="math-block">$$\texttt{execution}^{RL}(x,k) = \left\{ (\texttt{input}_{t}^{x,k}, \texttt{output}_{t}^{x,k}, r_{t}^{x,k}) \right\}_{t=1}^{T}$$</div>
+
+<p>包含一个 <strong>Credit Assignment Module</strong>，将 trajectory 级别的 return 分配到每次 LLM 调用的 reward。这使得每个 transition 可以独立用于 RL 优化，与现有的单轮 RL 算法（如 GRPO）无缝集成。</p>
+
+<div class="paper-figure"><img src="https://arxiv.org/html/2508.03680v1/figures/algorithm.png" alt="Algorithm" loading="lazy"></div>
+<p><em>Figure 3: LightningRL 算法示意。(a) 单轮 GRPO；(b) 现有多轮 GRPO（拼接+mask）；(c) LightningRL 将 trajectory 分解为独立 transition 进行训练。</em></p>
+
+<p><strong>Automatic Intermediate Rewarding (AIR)</strong>：AIR 机制可以基于系统监控信号（如工具调用返回状态）自动为中间步骤分配 reward，缓解 Agent 训练中的 <span class="wikilink">Sparse Reward</span> 问题。</p>
+
+<h3 id="34-系统设计-training-agent-disaggregation-架构">3.4 系统设计: Training-Agent Disaggregation 架构</h3>
+
+<p>Agent Lightning 的系统架构实现了训练与 Agent 执行的完全分离（TA Disaggregation）。</p>
+
+<div class="paper-figure"><img src="https://arxiv.org/html/2508.03680v1/figures/agent_lightning_architecture_v3.png" alt="Architecture" loading="lazy"></div>
+<p><em>Figure 4: Training-Agent Disaggregation 架构。</em></p>
+
+<p><strong>两大组件</strong>：</p>
+
+<p>1. <strong>Lightning Server</strong>: 集成 RL 框架（如 <span class="wikilink">VeRL</span>），管理训练过程和 LLM 优化，对外暴露 OpenAI-like API。Server 是 <strong>Agent-agnostic</strong> 的，不关心具体的 Agent 逻辑。</p>
+
+<p>2. <strong>Lightning Client</strong>: 封装 Agent 运行时（agent runtime），包含两个功能模块：</p>
+<li>与 Server 通信，负责数据传输</li>
+<li>运行 Agent 并进行数据收集</li>
+
+<p><strong>关键优势</strong>：</p>
+
+<li><strong>Agent-agnostic 训练</strong>: Server 只关心 LLM 优化和硬件资源管理</li>
+<li><strong>Trainer-agnostic 执行</strong>: Client 端 Agent 不依赖训练框架的实现细节</li>
+<li><strong>利用 Observability 框架</strong>: 将 <span class="wikilink">OpenTelemetry</span> 等可观测性框架引入训练流程，实现标准化的 trajectory 收集</li>
+<li><strong>零代码修改</strong>: 支持 LangChain、OpenAI Agents SDK、AutoGen 等主流框架开发的 Agent</li>
+
+
+<h2 id="实验结果">实验结果</h2>
+
+<p>实验在三个不同任务上验证了 Agent Lightning 的有效性，每个任务使用不同的 Agent 框架实现：</p>
+
+<h3 id="task-1-text-to-sql-langchain">Task 1: Text-to-SQL (LangChain)</h3>
+
+<li><strong>数据集</strong>: Spider（10,000+ 问题，200 数据库，138 领域）</li>
+<li><strong>基座模型</strong>: Llama-3.2-3B-Instruct</li>
+<li><strong>Agent 设计</strong>: 3 个 Agent 的多 Agent 系统</li>
+<li>SQL Writer Agent: 生成 SQL 查询</li>
+<li>Checking Agent: 评估查询正确性</li>
+<li>Re-writing Agent: 根据反馈修正查询或生成答案</li>
+<li><strong>Reward</strong>: 最终答案是否正确</li>
+
+<div class="paper-figure"><img src="https://arxiv.org/html/2508.03680v1/figures/train_spider.png" alt="Text-to-SQL Results" loading="lazy"></div>
+<p><em>Figure 5: Text-to-SQL 任务的 reward 曲线，展示稳定的训练提升。</em></p>
+
+<h3 id="task-2-retrieval-augmented-generation-openai-agents-sdk">Task 2: Retrieval-Augmented Generation (OpenAI Agents SDK)</h3>
+
+<li><strong>数据集</strong>: MuSiQue（多跳问答基准，要求真正的组合推理）</li>
+<li><strong>Agent 设计</strong>: 单 LLM 生成查询 -> 检索 -> 决定是否精炼查询或生成答案</li>
+<li><strong>Reward</strong>: 格式分 + 正确性分的加权组合</li>
+
+<div class="math-block">$$R = 0.9 \times R_{\text{correctness}} + 0.1 \times R_{\text{format}}$$</div>
+
+<p>其中 $R_{\text{correctness}}$ 采用 word-level F1 score。</p>
+
+<div class="paper-figure"><img src="https://arxiv.org/html/2508.03680v1/figures/train_rag_llama.png" alt="RAG Results" loading="lazy"></div>
+<p><em>Figure 6: RAG 任务的 reward 曲线。</em></p>
+
+<h3 id="task-3-math-qa-with-tool-usage-autogen">Task 3: Math QA with Tool Usage (AutoGen)</h3>
+
+<li><strong>数据集</strong>: Calc-X（需要推理和精确计算的数学问题）</li>
+<li><strong>基座模型</strong>: Llama-3.2-3B-Instruct</li>
+<li><strong>Agent 设计</strong>: 单 LLM 调用计算器工具解决数学问题</li>
+<li><strong>Reward</strong>: 最终答案是否正确</li>
+
+<div class="paper-figure"><img src="https://arxiv.org/html/2508.03680v1/figures/train_calc.png" alt="Calculator Results" loading="lazy"></div>
+<p><em>Figure 7: Math QA with Tool Usage 任务的 reward 曲线。</em></p>
+
+<p>三个实验统一表明：Agent Lightning 能够在不同 Agent 场景中实现<strong>稳定且持续的性能提升</strong>。</p>
+
+
+<h2 id="核心贡献">核心贡献</h2>
+
+<p>1. <strong>首个完全解耦的 Agent RL 训练框架</strong>: Agent Lightning 是第一个实现 Agent 执行与 RL 训练完全分离的框架，支持任意 AI Agent 的 RL 训练，几乎零代码修改。</p>
+
+<p>2. <strong>统一数据接口与 MDP 建模</strong>: 通过将 Agent 执行建模为 POMDP，定义了通用的数据接口，抽象了不同 Agent 的执行逻辑差异。</p>
+
+<p>3. <strong>LightningRL 层次化算法</strong>: 提出了基于 transition 分解的层次化 RL 方法，配合 Credit Assignment Module，支持多 Agent、动态工作流等复杂交互逻辑。</p>
+
+<p>4. <strong>Training-Agent Disaggregation 架构</strong>: 通过 Server/Client 分离设计，实现了训练框架与 Agent 框架的双向无关性，并引入可观测性框架提升可扩展性。</p>
+
+<p>5. <strong>跨框架验证</strong>: 在 LangChain、OpenAI Agents SDK、AutoGen 三个主流框架上验证了通用性。</p>
+
+
+<h2 id="局限性与思考">局限性与思考</h2>
+
+<h3 id="局限性">局限性</h3>
+
+<li><strong>实验规模有限</strong>: 仅在 3B 模型上验证，更大规模模型的效果尚未探索</li>
+<li><strong>任务类型覆盖</strong>: 虽然涵盖了 text-to-SQL、RAG、math tool-use，但未涉及 GUI 交互、长期规划等更复杂的 Agent 场景</li>
+<li><strong>Credit Assignment</strong>: 论文提出了 credit assignment module，但具体的分配策略如何影响训练效果缺乏深入分析</li>
+<li><strong>与 concatenation 方法的定量对比</strong>: Discussion 中定性分析了 transition-based 相比 concatenation-based 的优势，但缺少直接的定量 ablation</li>
+
+<h3 id="个人思考">个人思考</h3>
+
+<li>Agent Lightning 的<strong>解耦设计</strong>是其最大亮点。将 Agent 执行视为黑盒、仅通过标准化接口收集数据的思路，极大降低了 RL 训练的工程门槛</li>
+<li><strong>Observability 框架</strong>（OpenTelemetry）的引入很有前瞻性，将生产环境的监控基础设施复用到训练数据收集中</li>
+<li>与 <span class="wikilink">RAGEN</span>、<span class="wikilink">Search-R1</span>、<span class="wikilink">Trinity-RFT</span> 等 concatenation-based 方法的对比是后续工作的重要方向</li>
+<li>在更复杂的 Agent 场景（如 multi-agent debate、code generation pipeline）中的效果值得期待</li>
+
+
+<h2 id="相关工作">相关工作</h2>
+
+<li><strong>RL for LLM 推理</strong>: <span class="wikilink">DeepSeek-R1</span>, <span class="wikilink">Kimi k1.5</span>, <span class="wikilink">GRPO</span>, <span class="wikilink">PPO</span>, <span class="wikilink">REINFORCE++</span></li>
+<li><strong>Agent RL 训练</strong>: <span class="wikilink">RAGEN</span>, <span class="wikilink">Trinity-RFT</span>, <span class="wikilink">rLLM</span>, <span class="wikilink">Search-R1</span>, <span class="wikilink">DigiRL</span></li>
+<li><strong>Agent 框架</strong>: <span class="wikilink">LangChain</span>, <span class="wikilink">AutoGen</span>, <span class="wikilink">OpenAI Agents SDK</span></li>
+<li><strong>RL 训练框架</strong>: <span class="wikilink">VeRL</span></li>
+<li><strong>可观测性</strong>: <span class="wikilink">OpenTelemetry</span></li>
+<li><strong>评估基准</strong>: Spider (text-to-SQL), MuSiQue (multi-hop QA), Calc-X (math tool-use)</li></div></details></div><div class="paper-card" data-topic="🏋️ Agent 训练"><h3 id="3-grandcode-achieving-grandmaster-level-in-competitive-programming-via-agentic-reinforcement-learning">3. GrandCode: Achieving Grandmaster Level in Competitive Programming via Agentic Reinforcement Learning</h3>
+<li><strong>作者</strong>: Xiaoya Li, Xiaofei Sun, Guoyin Wang</li>
+<li><strong>机构</strong>: DeepReinforce Team</li>
+<li><strong>链接</strong>: <a href="https://arxiv.org/abs/2604.02721" target="_blank">arXiv</a> | <a href="https://arxiv.org/pdf/2604.02721" target="_blank">PDF</a></li>
+<li><strong>来源</strong>: 📰 HF Daily，⬆️ 33</li>
+<details class="paper-note"><summary>📒 精读笔记: GrandCode</summary><div class="note-body"><h1 id="grandcode-achieving-grandmaster-level-in-competitive-programming-via-agentic-rl">GrandCode: Achieving Grandmaster Level in Competitive Programming via Agentic RL</h1>
+
+<blockquote>
+<p><strong>一句话总结</strong>：首个在 Codeforces 实时比赛中击败所有人类选手（包括传奇 Grandmaster）的 AI 系统，通过多 agent RL + Agentic GRPO 实现。</p>
+</blockquote>
+
+<h2 id="1-研究动机与问题定义">1. 研究动机与问题定义</h2>
+
+<h3 id="竞赛编程的-ai-进展">竞赛编程的 AI 进展</h3>
+<li>AlphaCode: ~1300 rating (top 54%)</li>
+<li>AlphaCode2: top 15%</li>
+<li>OpenAI o3: 全球第 175 名</li>
+<li>Gemini 3 Deep Think: 第 8 名（但在历史题目上评测，非实时比赛）</li>
+
+<p><strong>关键差距</strong>：此前没有 AI 系统在<strong>实时比赛条件</strong>下持续击败顶级人类选手。</p>
+
+<h2 id="2-方法详解">2. 方法详解</h2>
+
+<h3 id="21-multi-agent-架构">2.1 Multi-Agent 架构</h3>
+
+<p>GrandCode 由多个协作 agent 组成：</p>
+<li><strong>Hypothesis Model</strong>：提出结构性猜想</li>
+<li><strong>Main Solver</strong>：核心推理和解法生成</li>
+<li><strong>Summarization Model</strong>：维护长 context 的紧凑记忆</li>
+<li><strong>Test Case Generator</strong>：生成边界测试用例挑战方案</li>
+
+<p>形成 <strong>推理 → 验证 → 反馈</strong> 的 agentic loop。</p>
+
+<h3 id="22-agentic-grpo">2.2 Agentic GRPO</h3>
+
+<p>针对多阶段 agent rollout 的 <span class="wikilink">GRPO</span> 变体，解决两个问题：</p>
+
+<p><strong>延迟奖励</strong>：竞赛编程中只有最终提交才有反馈，中间步骤无奖励。</p>
+
+<p><strong>Off-policy 漂移</strong>：多轮 agent 交互中，早期步骤的策略与当前策略差异大。</p>
+
+<p>Agentic GRPO 结合<strong>即时奖励更新</strong>和<strong>延迟校正</strong>：</p>
+
+<div class="math-block">$$\mathcal{L}_{\text{Agentic-GRPO}} = \mathcal{L}_{\text{immediate}} + \lambda \cdot \mathcal{L}_{\text{delayed\_correction}}$$</div>
+
+<p>即时奖励部分在每个 agent 阶段提供信号，延迟校正在最终评估后回溯调整。</p>
+
+<h3 id="23-post-training--test-time-rl">2.3 Post-Training + Test-Time RL</h3>
+
+<p><strong>Post-Training</strong>：在大量竞赛编程数据上进行 RL 训练</p>
+<p><strong>Test-Time RL</strong>：在比赛中实时 RL 优化——对候选方案进行 best-of-N 采样，用 code reward 验证：</p>
+
+<div class="math-block">$$R(\text{solution}) = \begin{cases} 1 &amp; \text{if all test cases pass} \\ 0 &amp; \text{otherwise} \end{cases}$$</div>
+
+<p>通过 smoothing best-of-N reward 提升训练稳定性。</p>
+
+<h3 id="24-实时比赛策略">2.4 实时比赛策略</h3>
+
+<p>平衡 <strong>直接生成</strong> 和 <strong>test-time RL</strong>：</p>
+<li>简单题：直接生成，快速提交</li>
+<li>难题：启动 agentic loop + test-time RL</li>
+
+<h2 id="3-实验结果">3. 实验结果</h2>
+
+<h3 id="31-codeforces-实时比赛">3.1 Codeforces 实时比赛</h3>
+
+<table class="paper-table">
+<thead><tr><th>比赛</th><th>日期</th><th>GrandCode 排名</th><th>备注</th></tr></thead>
+<tbody>
+<tr><td>Round 1087</td><td>2026-03-21</td><td><strong>第 1 名</strong></td><td>首个完成所有题目</td></tr>
+<tr><td>Round 1088</td><td>2026-03-28</td><td><strong>第 1 名</strong></td><td>首个完成所有题目</td></tr>
+<tr><td>Round 1089</td><td>2026-03-29</td><td><strong>第 1 名</strong></td><td>首个完成所有题目</td></tr>
+</tbody></table>
+
+
+<p><strong>三场连冠</strong>，均击败所有人类选手，包括多位传奇 Grandmaster。</p>
+
+<h3 id="32-对比">3.2 对比</h3>
+
+<table class="paper-table">
+<thead><tr><th>系统</th><th>评测条件</th><th>最佳排名</th></tr></thead>
+<tbody>
+<tr><td><strong>GrandCode</strong></td><td><strong>实时比赛</strong></td><td><strong>第 1 名 (3连)</strong></td></tr>
+<tr><td>Gemini 3 Deep Think</td><td>历史题目</td><td>第 8 名</td></tr>
+<tr><td>OpenAI o3</td><td>历史题目</td><td>第 175 名</td></tr>
+</tbody></table>
+
+
+<h2 id="4-架构图">4. 架构图</h2>
+
+<div class="paper-figure"><img src="https://arxiv.org/html/2604.02721v1/figs/pipeline-overview-edited.png" alt="GrandCode 流水线概览" loading="lazy"></div>
+
+<h2 id="5-核心概念">5. 核心概念</h2>
+
+<li><span class="wikilink">GRPO</span>：Group Relative Policy Optimization</li>
+<li><span class="wikilink">Test-Time RL</span>：推理时强化学习</li>
+<li><span class="wikilink">Multi-Agent System</span>：多智能体协作</li>
+<li><span class="wikilink">Competitive Programming</span>：竞赛编程</li>
+<li><span class="wikilink">Codeforces</span>：在线编程竞赛平台</li>
+<li><span class="wikilink">Best-of-N Sampling</span>：多方案采样选优</li>
+
+<h2 id="6-优缺点分析">6. 优缺点分析</h2>
+
+<h3 id="优点">优点</h3>
+<p>1. <strong>实时比赛验证</strong>：不是离线评测，是真正的 live competition，说服力极强</p>
+<p>2. <strong>三场连冠</strong>：排除运气因素</p>
+<p>3. <strong>Multi-agent 分工</strong>：比单模型暴力推理更像人类团队协作</p>
+<p>4. <strong>Agentic GRPO</strong>：针对 multi-stage rollout 的实用改进</p>
+
+<h3 id="缺点">缺点</h3>
+<p>1. <strong>计算成本未公开</strong>：跑一场比赛需要多少 GPU？</p>
+<p>2. <strong>可复现性</strong>：DeepReinforce 不是大厂，代码和模型是否开源？</p>
+<p>3. <strong>泛化性</strong>：竞赛编程的能力能否迁移到实际软件工程？</p>
+<p>4. <strong>比赛选择</strong>：只参加了 3 场比赛，样本量有限</p>
+
+<h2 id="7-与相关工作对比">7. 与相关工作对比</h2>
+
+<table class="paper-table">
+<thead><tr><th>系统</th><th>方法</th><th>Agent 架构</th><th>Live 验证</th><th>排名</th></tr></thead>
+<tbody>
+<tr><td><strong>GrandCode</strong></td><td><strong>Multi-agent RL + Test-time RL</strong></td><td><strong>4 modules</strong></td><td><strong>是 (3场)</strong></td><td><strong>#1</strong></td></tr>
+<tr><td>Gemini 3 Deep Think</td><td>单模型</td><td>无</td><td>否</td><td>#8</td></tr>
+<tr><td>OpenAI o3</td><td>单模型</td><td>无</td><td>否</td><td>#175</td></tr>
+<tr><td>AlphaCode2</td><td>搜索+过滤</td><td>无</td><td>否</td><td>top 15%</td></tr>
+</tbody></table>
+</div></details>
+
+<div class="paper-figure"><img src="https://arxiv.org/html/2604.02721v1/figs/pipeline-overview-edited.png" alt="" loading="lazy"></div>
+
+<li><strong>核心方法</strong>: Multi-agent RL 系统用于竞赛编程。用 <span class="wikilink">GRPO</span> 训练，多个 agent 协作解题——规划、编码、调试分工。号称在竞赛编程中达到 Grandmaster 水平，相比 Google Gemini 3 Deep Think（第 8 名）有提升。</li>
+<li><strong>对比方法/Baselines</strong>: Gemini 3 Deep Think, <span class="wikilink">OpenAI</span> o3</li>
+<li><strong>借鉴意义</strong>: Multi-agent RL 在复杂推理任务中的分工协作模式值得参考。</li>
+<li><strong>锐评</strong>: "Grandmaster level" 的 claim 需要仔细看评测条件——是在 live competition 还是离线评测？33 upvote 说明关注度一般。不过 multi-agent 分工（规划+编码+调试）的设计思路比单 agent 暴力推理更接近人类工程师的工作方式。 👀</li>
+</div></div>
+<div id="panel-llm训练与对齐" class="tab-panel"><h2 id="-llm-训练与对齐">🧪 LLM 训练与对齐</h2><div class="paper-card" data-topic="🧪 LLM 训练与对齐"><h3 id="4-soda-semi-on-policy-black-box-distillation-for-large-language-models">4. SODA: Semi On-Policy Black-Box Distillation for Large Language Models</h3>
+<li><strong>作者</strong>: Xiwen Chen</li>
+<li><strong>机构</strong>: Clemson University, LinkedIn, Washington University, ASU, Columbia</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2604.03873v1" target="_blank">arXiv</a> | <a href="https://arxiv.org/pdf/2604.03873v1" target="_blank">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+<details class="paper-note"><summary>📒 精读笔记: SODA</summary><div class="note-body"><h1 id="soda-semi-on-policy-black-box-distillation-for-llms">SODA: Semi On-Policy Black-Box Distillation for LLMs</h1>
+
+<blockquote>
+<p><strong>一句话总结</strong>：在黑盒 LLM 蒸馏中提出 "Semi On-Policy" 折中——混合使用 on-policy 和 off-policy 数据，平衡训练稳定性和学生模型纠错能力。</p>
+</blockquote>
+
+<h2 id="1-研究动机">1. 研究动机</h2>
+
+<p>黑盒蒸馏的两难：</p>
+<li><strong>Off-policy</strong>（如 <span class="wikilink">SeqKD</span>）：从教师采样，简单稳定，但无法纠正学生固有错误</li>
+<li><strong>On-policy</strong>（如 <span class="wikilink">GAD</span>）：从学生采样+对抗训练，能纠错但不稳定且计算量大</li>
+
+<h2 id="2-方法详解">2. 方法详解</h2>
+
+<h3 id="semi-on-policy-策略">Semi On-Policy 策略</h3>
+
+<p>混合采样：以概率 $\alpha$ 从教师采样，概率 $1-\alpha$ 从学生采样：</p>
+
+<div class="math-block">$$x_t \sim \begin{cases} p_{\text{teacher}}(\cdot | x_{&lt;t}) &amp; \text{w.p. } \alpha \\ p_{\text{student}}(\cdot | x_{&lt;t}) &amp; \text{w.p. } 1-\alpha \end{cases}$$</div>
+
+<p>蒸馏损失：</p>
+
+<div class="math-block">$$\mathcal{L}_{\text{SODA}} = -\mathbb{E}_{x \sim p_{\text{mix}}} \left[ \sum_t \log p_{\text{student}}(x_t | x_{&lt;t}) \right]$$</div>
+
+<p>$\alpha$ 可以是固定值或按训练进度退火（先 off-policy 后逐渐 on-policy）。</p>
+
+<h3 id="与-dpo-的区别">与 DPO 的区别</h3>
+
+<p>SODA 是生成式蒸馏（学生生成 → 教师评分），<span class="wikilink">DPO</span> 是偏好对齐（正负样本对比）。两者互补。</p>
+
+<h2 id="3-核心概念">3. 核心概念</h2>
+
+<li><span class="wikilink">Knowledge Distillation</span>、<span class="wikilink">SeqKD</span>、<span class="wikilink">GAD</span>、<span class="wikilink">DPO</span>、<span class="wikilink">On-Policy Learning</span></li>
+
+<h2 id="4-优缺点">4. 优缺点</h2>
+
+<p><strong>优点</strong>: 思路自然，工程实用，计算成本可控</p>
+<p><strong>缺点</strong>: 创新性有限（mixed policy 不算新），需看实验细节判断贡献大小</p></div></details>
+
+<div class="paper-figure"><img src="https://arxiv.org/html/2604.03873v1/x1.png" alt="" loading="lazy"></div>
+
+<li><strong>核心方法</strong>: 黑盒知识蒸馏的 off-policy vs on-policy 困境——<span class="wikilink">SeqKD</span> 等 off-policy 方法无法纠正学生的固有错误，<span class="wikilink">GAD</span> 等 on-policy 方法训练不稳定且计算量大。SODA 提出 "Semi On-Policy" 折中：部分使用 on-policy 数据，部分使用 off-policy 数据，在稳定性和纠错能力之间取得平衡。</li>
+<li><strong>对比方法/Baselines</strong>: <span class="wikilink">SeqKD</span>, <span class="wikilink">GAD</span>, <span class="wikilink">DPO</span></li>
+<li><strong>借鉴意义</strong>: "Semi On-Policy" 的折中思路在 agent 训练中也适用——完全 on-policy 太贵，完全 off-policy 效果差。</li>
+<li><strong>锐评</strong>: 实际上是蒸馏领域一个很自然的想法——mixed policy。关键看实验是否扎实、和 <span class="wikilink">DPO</span> 系列方法的对比是否公平。多机构合作但论文日期是 2026-04-04，说明刚出来。 👀</li></div><div class="paper-card" data-topic="🧪 LLM 训练与对齐"><h3 id="5-rethinking-exploration-in-rlvr-from-entropy-regularization-to-refinement-via-bidirectional-entropy-modulation">5. Rethinking Exploration in RLVR: From Entropy Regularization to Refinement via Bidirectional Entropy Modulation</h3>
+<li><strong>作者</strong>: Hengrui Gu, Xiaotian Han et al.</li>
+<li><strong>机构</strong>: NC State, Case Western Reserve University</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2604.04894v1" target="_blank">arXiv</a> | <a href="https://arxiv.org/pdf/2604.04894v1" target="_blank">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+
+<div class="paper-figure"><img src="https://arxiv.org/html/2604.04894v1/x1.png" alt="" loading="lazy"></div>
+
+<li><strong>核心方法</strong>: RLVR（Reinforcement Learning with Verifiable Rewards）面临 "restricted exploration" 问题——策略快速收敛到窄解集。传统熵正则化不可靠。AsymGRPO 提出<strong>双向熵调制</strong>：对正确答案降低熵（exploitation），对错误答案提高熵（exploration），在 <span class="wikilink">GRPO</span> 框架上实现非对称探索。</li>
+<li><strong>对比方法/Baselines</strong>: <span class="wikilink">GRPO</span>, <span class="wikilink">REINFORCE</span>, <span class="wikilink">PPO</span>, 标准熵正则化</li>
+<li><strong>借鉴意义</strong>: 对 <span class="wikilink">GRPO</span> 的改进，直接可用于 agent RL 训练。</li>
+<li><strong>锐评</strong>: "正确答案收敛、错误答案发散" 的非对称设计很优雅。MATH-500 上的提升如果显著的话这篇会火。但熵调制的超参数敏感性是个隐忧。 👀</li>
+</div></div>
+<div id="panel-agent框架" class="tab-panel"><h2 id="-agent-框架">🔧 Agent 框架</h2><div class="paper-card" data-topic="🔧 Agent 框架"><h3 id="6-agentscope-10-a-developer-centric-framework-for-building-agentic-applications">6. AgentScope 1.0: A Developer-Centric Framework for Building Agentic Applications</h3>
+<li><strong>作者</strong>: Dawei Gao et al.</li>
+<li><strong>机构</strong>: Alibaba Group</li>
+<li><strong>链接</strong>: <a href="https://arxiv.org/abs/2508.16279" target="_blank">arXiv</a> | <a href="https://arxiv.org/pdf/2508.16279" target="_blank">PDF</a></li>
+<li><strong>来源</strong>: 🔥 HF Trending，⬆️ 61</li>
+<details class="paper-note"><summary>📒 精读笔记: AgentScope</summary><div class="note-body"><h1 id="agentscope-10">AgentScope 1.0</h1>
+
+<h2 id="-基本信息">📋 基本信息</h2>
+
+<li><strong>作者</strong>: Dawei Gao, Zitao Li, Yuexiang Xie 等</li>
+<li><strong>机构</strong>: Alibaba Group</li>
+<li><strong>链接</strong>: <a href="https://arxiv.org/abs/2508.16279" target="_blank">arXiv</a> | <a href="https://arxiv.org/pdf/2508.16279" target="_blank">PDF</a></li>
+
+<h2 id="-研究动机与问题">🎯 研究动机与问题</h2>
+
+<p>现有 multi-agent 框架（如 <span class="wikilink">LangChain</span>, <span class="wikilink">AutoGen</span>）在以下方面存在不足：</p>
+<p>1. <strong>工具集成侵入性强</strong>：需要大量修改已有代码</p>
+<p>2. <strong>可观测性差</strong>：大规模部署时难以监控和调试</p>
+<p>3. <strong>长期记忆缺失</strong>：agent 无法保持跨会话的上下文</p>
+<p>4. <strong>分布式支持弱</strong>：难以扩展到大规模 multi-agent 场景</p>
+
+<h2 id="-方法详解">🔧 方法详解</h2>
+
+<h3 id="核心架构">核心架构</h3>
+
+<p>AgentScope 1.0 的核心抽象：</p>
+
+<p>1. <strong><span class="wikilink">MsgHub</span>（消息总线）</strong>：agent 间消息传递的统一接口，支持广播和点对点通信</p>
+<p>2. <strong>StateModule（状态管理）</strong>：统一管理 agent 状态，支持序列化和恢复</p>
+<p>3. <strong>Non-Invasive Monitoring</strong>：基于 <span class="wikilink">OpenTelemetry</span> 的无侵入式监控</p>
+
+<h3 id="mcp-原生支持">MCP 原生支持</h3>
+
+<p>原生集成 <span class="wikilink">MCP</span>（Model Context Protocol）协议：</p>
+<li>Agent 可通过 MCP 协议访问外部工具和数据源</li>
+<li>工具集成不需要修改 agent 代码（non-invasive）</li>
+<li>支持 MCP server 的自动发现和注册</li>
+
+<h3 id="分层记忆系统">分层记忆系统</h3>
+
+<li><strong><span class="wikilink">InMemoryMemory</span></strong>：短期工作记忆，存储当前会话上下文</li>
+<li><strong><span class="wikilink">LongTermMemoryBase</span></strong>：长期记忆，支持跨会话信息持久化</li>
+<li>记忆检索支持语义搜索和结构化查询</li>
+
+<h3 id="react-agent-内置实现">ReAct Agent 内置实现</h3>
+
+<p>内置 <span class="wikilink">ReAct</span> 范式的 agent 实现：</p>
+<li>Thought → Action → Observation 循环</li>
+<li>支持自定义 tool 注册</li>
+<li>内置错误处理和重试机制</li>
+
+<h3 id="分布式调度">分布式调度</h3>
+
+<li>基于 <span class="wikilink">gRPC</span> 的分布式通信</li>
+<li>支持 agent 在多节点间调度</li>
+<li>MsgHub 支持分布式消息广播</li>
+
+<h2 id="-实验结果">📊 实验结果</h2>
+
+<table class="paper-table">
+<thead><tr><th>框架</th><th>MCP支持</th><th>可观测性</th><th>长期记忆</th><th>分布式</th></tr></thead>
+<tbody>
+<tr><td>LangChain</td><td>部分</td><td>弱</td><td>第三方</td><td>弱</td></tr>
+<tr><td>AutoGen</td><td>无</td><td>弱</td><td>无</td><td>部分</td></tr>
+<tr><td>CAMEL</td><td>无</td><td>无</td><td>无</td><td>无</td></tr>
+<tr><td><strong>AgentScope 1.0</strong></td><td><strong>原生</strong></td><td><strong>OpenTelemetry</strong></td><td><strong>内置</strong></td><td><strong>原生</strong></td></tr>
+</tbody></table>
+
+
+<p>61 upvotes 说明社区认可度较高。</p>
+
+<h2 id="-核心贡献">💡 核心贡献</h2>
+
+<p>1. <strong>MCP 原生集成</strong>：首个原生支持 MCP 协议的 multi-agent 框架</p>
+<p>2. <strong>OpenTelemetry 可观测性</strong>：无侵入式监控，适合生产环境</p>
+<p>3. <strong>分层记忆系统</strong>：短期 + 长期记忆，支持跨会话持久化</p>
+<p>4. <strong>大规模部署经验</strong>：阿里内部大规模 multi-agent 部署验证</p>
+
+<h2 id="-局限性与思考">🤔 局限性与思考</h2>
+
+<p>1. <strong>框架评估困难</strong>：benchmark 上的数字不代表实际开发体验</p>
+<p>2. <strong>与 LangChain 对比不够 fair</strong>：只挑了对方弱的场景</p>
+<p>3. <strong>学习曲线</strong>：抽象层较多，新手上手成本可能较高</p>
+<p>4. <strong>MCP 生态尚未成熟</strong>：MCP 协议本身还在快速迭代</p>
+
+<h2 id="-相关工作">📚 相关工作</h2>
+
+<li><span class="wikilink">MCP</span>: Model Context Protocol，agent 工具集成标准</li>
+<li><span class="wikilink">OpenTelemetry</span>: 可观测性标准</li>
+<li><span class="wikilink">ReAct</span>: 推理+行动范式</li>
+<li><span class="wikilink">LangChain</span>: 竞品框架</li>
+<li><span class="wikilink">AutoGen</span>: 微软 multi-agent 框架</li></div></details></div><div class="paper-card" data-topic="🔧 Agent 框架"><h3 id="7-tradingagents-multi-agents-llm-financial-trading-framework">7. TradingAgents: Multi-Agents LLM Financial Trading Framework</h3>
+<li><strong>作者</strong>: Yijia Xiao et al.</li>
+<li><strong>机构</strong>: MIT, UCLA</li>
+<li><strong>链接</strong>: <a href="https://arxiv.org/abs/2412.20138" target="_blank">arXiv</a> | <a href="https://arxiv.org/pdf/2412.20138" target="_blank">PDF</a></li>
+<li><strong>来源</strong>: 🔥 HF Trending，⬆️ 36</li>
+
+<li><strong>核心方法</strong>: 用 multi-agent LLM 框架模拟真实交易公司的协作动态——分析师、交易员、风控各司其职。比单 agent 或独立数据采集的 multi-agent 更接近实际交易流程。</li>
+<li><strong>锐评</strong>: 2024 年 12 月的旧论文又上 trending。MIT+UCLA 的招牌让人点进来，但交易策略的实盘验证才是硬通货。和昨天的 <span class="wikilink">PolySwarm</span> 类似，都是 "agent 做金融" 但缺实盘。 🫠</li>
+</div></div>
+<div id="panel-benchmark评测" class="tab-panel"><h2 id="-benchmark--评测">📊 Benchmark & 评测</h2><div class="paper-card" data-topic="📊 Benchmark &amp; 评测"><h3 id="8-agentic-mme-what-agentic-capability-really-brings-to-multimodal-intelligence">8. Agentic-MME: What Agentic Capability Really Brings to Multimodal Intelligence?</h3>
+<li><strong>作者</strong>: Qianshan Wei et al.</li>
+<li><strong>机构</strong>: CASIA, UCAS, SEU, NJU, PKU, BUAA, NTU, UCLA</li>
+<li><strong>链接</strong>: <a href="https://arxiv.org/abs/2604.03016" target="_blank">arXiv</a> | <a href="https://arxiv.org/pdf/2604.03016" target="_blank">PDF</a></li>
+<li><strong>来源</strong>: 📰 HF Daily，⬆️ 25</li>
+
+<div class="paper-figure"><img src="https://arxiv.org/html/2604.03016v1/x1.png" alt="" loading="lazy"></div>
+
+<li><strong>核心方法</strong>: 评测 MLLM 作为 agent 时的能力——视觉扩展（调用视觉工具）和知识扩展（开放搜索）。现有评测的问题：缺乏灵活工具集成、视觉和搜索分开测、只看最终答案。Agentic-MME 解决这些问题，测了 <span class="wikilink">GPT-5</span> 等模型。</li>
+<li><strong>锐评</strong>: 又一个 benchmark。八家机构联合搞评测说明 MLLM agent 评估标准仍未统一。如果 GPT-5 的数据有亮点可能会火，否则就是又一篇 benchmark paper。 💤</li></div><div class="paper-card" data-topic="📊 Benchmark &amp; 评测"><h3 id="9-combee-scaling-prompt-learning-for-self-improving-language-model-agents">9. Combee: Scaling Prompt Learning for Self-Improving Language Model Agents</h3>
+<li><strong>作者</strong>: Hanchen Li et al.</li>
+<li><strong>机构</strong>: UC Berkeley, Stanford, Tensormesh, Gradient Network</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2604.04247v1" target="_blank">arXiv</a> | <a href="https://arxiv.org/pdf/2604.04247v1" target="_blank">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+
+<div class="paper-figure"><img src="https://arxiv.org/html/2604.04247v1/x1.png" alt="" loading="lazy"></div>
+
+<li><strong>核心方法</strong>: 现有 prompt learning（如 ACE、GEPA）只关注单 agent 或低并行场景。Combee 将 prompt 自优化扩展到高并行 multi-agent 设置。</li>
+<li><strong>借鉴意义</strong>: Prompt 自优化 + 多 agent 并行是一个实用方向。</li>
+<li><strong>锐评</strong>: Berkeley+Stanford 出品，但关键是 "scaling prompt learning" 相比直接 RL 训练有什么不可替代的优势？如果 SKILL0 的参数内化更有效，prompt learning 的天花板在哪？ 💤</li>
+</div></div>
+<hr>
+<h2 id="被排除的论文">被排除的论文</h2>
+
+<table class="paper-table">
+<thead><tr><th>论文</th><th>排除原因</th></tr></thead>
+<tbody>
+<tr><td>AgentSocialBench</td><td>隐私评测，niche</td></tr>
+<tr><td>LLM Nudging (电力节约)</td><td>行为科学应用，非核心方向</td></tr>
+<tr><td>AI-Trader</td><td>旧论文 (2025-12)，金融 benchmark</td></tr>
+<tr><td>AI Trust OS</td><td>企业合规治理框架，工程为主</td></tr>
+<tr><td>Search Agents for SLM</td><td>检索 agent 蒸馏，常规</td></tr>
+<tr><td>Paper Espresso</td><td>论文发现工具，与核心方向远</td></tr>
+<tr><td>MOC for LLM</td><td>多目标 LLM 对齐，常规</td></tr>
+<tr><td>Stackelberg Q-value</td><td>纯数学理论，MARL</td></tr>
+<tr><td>LIA (推荐系统)</td><td>可解释推荐，逻辑规则自编码器</td></tr>
+<tr><td>APPA</td><td>联邦 RLHF，niche</td></tr>
+<tr><td>Very Large-Scale AgentScope</td><td>旧论文 (2024-07)</td></tr>
+</tbody></table>
+
+
+
+<p><strong>趋势判断</strong>: Agent 训练正在从"推理时增强"走向"参数化内化"——SKILL0 的 skill internalization 和 SandMLE（昨天）的合成训练环境代表了两个互补方向。RL for agents 框架也在快速标准化（Agent Lightning、GrandCode）。不过今天 trending 里旧论文比例偏高（AgentScope、TradingAgents、Agent Lightning），说明社区在 "发现旧宝藏" 而非 "追新论文"。</p></div>
+<footer style="text-align:center;color:var(--text2);margin:3em 0 1em;font-size:0.85em;">
+  Generated by daily-papers-web · Powered by Claude Code
+</footer>
+
+<script>
+function switchTab(tabId) {
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  document.querySelector('[data-tab="'+tabId+'"]').classList.add('active');
+  document.getElementById('panel-'+tabId).classList.add('active');
+  history.replaceState(null,'','#'+tabId);
+}
+document.addEventListener('DOMContentLoaded', function() {
+  var hash = location.hash.slice(1);
+  var target = hash && document.querySelector('[data-tab="'+hash+'"]');
+  if (target) switchTab(hash);
+  // Re-render KaTeX inside <details> when opened
+  document.querySelectorAll('details.paper-note').forEach(function(d) {
+    d.addEventListener('toggle', function() {
+      if (d.open && typeof renderMathInElement === 'function') {
+        renderMathInElement(d, {delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}]});
+      }
+    });
+  });
+});
+</script>
+
+</body>
+</html>
