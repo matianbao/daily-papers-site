@@ -187,14 +187,14 @@ details.paper-note .note-body h3 { font-size: 1em; }
 }
 </style>
 
-<script>const DAYS_DATA = [{"date": "2026-04-03", "weekday": "周五", "counts": {"must": 2, "look": 5, "skip": 3}, "topicCounts": {"🤖 Agent × Tool Use": 3, "📊 推荐系统": 1, "🧠 Agent × Reinforcement Learning": 2, "🔍 RAG × RL": 1, "💾 Memory × Agent": 3}}, {"date": "2026-04-02", "weekday": "周四", "counts": {"must": 4, "look": 4, "skip": 2}, "topicCounts": {"推荐系统": 2, "Agent 训练与框架": 2, "对话与工具使用": 1, "多模态 Agent": 2, "Multi-Agent 协作": 1, "LLM 基础": 2}}];</script>
+<script>const DAYS_DATA = [{"date": "2026-04-07", "weekday": "周二", "counts": {"must": 1, "look": 5, "skip": 3}, "topicCounts": {"🤖 Agent 框架与安全": 3, "🧠 Agent 记忆与推理": 1, "🏋️ Agent 训练": 1, "🤝 Multi-Agent 系统": 3, "🔧 LLM 效率与工具": 2}}, {"date": "2026-04-03", "weekday": "周五", "counts": {"must": 2, "look": 5, "skip": 3}, "topicCounts": {"🤖 Agent × Tool Use": 3, "📊 推荐系统": 1, "🧠 Agent × Reinforcement Learning": 2, "🔍 RAG × RL": 1, "💾 Memory × Agent": 3}}, {"date": "2026-04-02", "weekday": "周四", "counts": {"must": 4, "look": 4, "skip": 2}, "topicCounts": {"推荐系统": 2, "Agent 训练与框架": 2, "对话与工具使用": 1, "多模态 Agent": 2, "Multi-Agent 协作": 1, "LLM 基础": 2}}];</script>
 </head>
 <body>
 
 
 <div class="header">
   <h1>📚 每日论文推荐</h1>
-  <p>共 2 天记录</p>
+  <p>共 3 天记录</p>
 </div>
 <div class="dashboard">
   <div class="sidebar">
@@ -224,6 +224,254 @@ details.paper-note .note-body h3 { font-size: 1em; }
   </div>
 </div>
 <div id="hidden-contents" style="display:none;">
+<div class="day-full-content" id="content-2026-04-07" style="display:none;"><h1 id="-今日锐评">🔪 今日锐评</h1>
+
+<p>Agent 周一：今天的候选池简直是 "Agentic" 关键词的狂欢——30 篇论文里至少 20 篇标题带 agent。但大部分是把 LLM 往某个垂直领域一插就发论文的套路。真正有干货的不多，Meta 的 SandMLE 是今天唯一让我眼前一亮的——终于有人认真解决 MLE agent 训练太贵这个痛点了。MCP 安全方向的 ShieldNet 也值得关注，毕竟工具链投毒是真实威胁。</p>
+
+<h2 id="分流表">分流表</h2>
+<table class="paper-table">
+<thead><tr><th>等级</th><th>论文</th></tr></thead>
+<tbody>
+<tr><td>🔥 必读</td><td><span class="wikilink">SandMLE</span>（首个可规模化的 MLE agent on-policy RL 训练方案，Meta 出品）</td></tr>
+<tr><td>👀 值得看</td><td><span class="wikilink">ShieldNet</span>（MCP 供应链安全 benchmark）· <span class="wikilink">Zep</span>（时序知识图谱做 agent 记忆）· <span class="wikilink">PolySwarm</span>（50 个 LLM 群体智慧做预测市场）· <span class="wikilink">HDP</span>（agentic AI 人类授权溯源协议）· <span class="wikilink">SLaB</span>（LLM 稀疏+低秩+二值压缩）</td></tr>
+<tr><td>💤 可跳过</td><td><span class="wikilink">MetaChain</span>（旧论文重上热榜）· <span class="wikilink">C-MADF</span>（网络安全专用）· <span class="wikilink">Agentic-FL</span>（概念验证阶段）· 其余 niche 方向论文</td></tr>
+</tbody></table>
+
+
+
+<div class="tab-bar"><button class="tab-btn active" data-tab="all" onclick="switchTab('all')">📋 全部<span class="tab-count">10</span></button><button class="tab-btn" data-tab="agent框架与安全" onclick="switchTab('agent框架与安全')">🏗 🤖 Agent 框架与安全<span class="tab-count">3</span></button><button class="tab-btn" data-tab="agent记忆与推理" onclick="switchTab('agent记忆与推理')">🧠 🧠 Agent 记忆与推理<span class="tab-count">1</span></button><button class="tab-btn" data-tab="agent训练" onclick="switchTab('agent训练')">🤖 🏋️ Agent 训练<span class="tab-count">1</span></button><button class="tab-btn" data-tab="multiagent系统" onclick="switchTab('multiagent系统')">🤖 🤝 Multi-Agent 系统<span class="tab-count">3</span></button><button class="tab-btn" data-tab="llm效率与工具" onclick="switchTab('llm效率与工具')">🤖 🔧 LLM 效率与工具<span class="tab-count">2</span></button></div>
+<div id="panel-all" class="tab-panel active"><h2 id="-agent-框架与安全">🤖 Agent 框架与安全</h2><div class="paper-card" data-topic="🤖 Agent 框架与安全"><h3 id="1-shieldnet-network-level-guardrails-against-emerging-supply-chain-injections-in-agentic-systems">1. ShieldNet: Network-Level Guardrails against Emerging Supply-Chain Injections in Agentic Systems</h3>
+<li><strong>作者</strong>: Zhuowen Yuan et al.</li>
+<li><strong>机构</strong>: University of Chicago, University of Georgia, Johns Hopkins University</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2604.04426v1" target="_blank">arXiv</a> | <a href="https://arxiv.org/pdf/2604.04426v1" target="_blank">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+
+<div class="paper-figure"><img src="https://arxiv.org/html/2604.04426v1/x1.png" alt="" loading="lazy"></div>
+
+<li><strong>核心方法</strong>: 提出 SC-Inject-Bench，包含 10,000+ 恶意 <span class="wikilink">MCP</span> 工具的大规模 benchmark，基于 <span class="wikilink">MITRE ATT&CK</span> 分类 25+ 种攻击类型。ShieldNet 通过 MITM 代理拦截网络流量，提取关键行为特征，用轻量分类器检测供应链投毒——F1 达 0.995，误报仅 0.8%。</li>
+<li><strong>对比方法/Baselines</strong>: 现有 MCP scanner、<span class="wikilink">GPT-4</span> 语义防护</li>
+<li><strong>借鉴意义</strong>: MCP 生态的安全问题终于有人系统性地搞了。10k 恶意工具的 benchmark 本身就很有价值。</li>
+<li><strong>锐评</strong>: 思路很实用——别在语义层防，在网络层抓。但 MITM 代理引入的延迟和隐私问题呢？论文说 "limited operational overhead" 但没给具体数字。另外恶意工具是合成的，和野外真实攻击的分布差距有多大？不过作为第一个系统性的 MCP 安全 benchmark，值得收藏。 👀</li></div><div class="paper-card" data-topic="🤖 Agent 框架与安全"><h3 id="2-hdp-a-lightweight-cryptographic-protocol-for-human-delegation-provenance-in-agentic-ai-systems">2. HDP: A Lightweight Cryptographic Protocol for Human Delegation Provenance in Agentic AI Systems</h3>
+<li><strong>作者</strong>: Dalugoda, Asiri</li>
+<li><strong>链接</strong>: <a href="https://arxiv.org/abs/2604.04522" target="_blank">arXiv</a> | <a href="https://arxiv.org/pdf/2604.04522" target="_blank">PDF</a></li>
+<li><strong>来源</strong>: 📰 HF Daily，⬆️ 1</li>
+
+<li><strong>核心方法</strong>: 用密码学协议解决 agentic AI 的授权溯源问题——在多级 agent 委托链中验证终端动作是否由人类真正授权、经过什么委托路径、在什么范围内。类似给 agent 调用链加了一条加密审计追踪。</li>
+<li><strong>借鉴意义</strong>: 随着 <span class="wikilink">MCP</span> 和 <span class="wikilink">A2A</span> 生态扩展，agent 间的授权验证会越来越重要。</li>
+<li><strong>锐评</strong>: 问题很重要，但 HF 只有 1 个 upvote 说明社区还没意识到这事的紧迫性。等到出了大的安全事故大家就会回来找这篇了。 👀</li></div><div class="paper-card" data-topic="🤖 Agent 框架与安全"><h3 id="3-metachain-a-fully-automated-and-zero-code-framework-for-llm-agents">3. MetaChain: A Fully-Automated and Zero-Code Framework for LLM Agents</h3>
+<li><strong>作者</strong>: Tang, Jiabin et al.</li>
+<li><strong>机构</strong>: The University of Hong Kong</li>
+<li><strong>链接</strong>: <a href="https://arxiv.org/abs/2502.05957" target="_blank">arXiv</a> | <a href="https://arxiv.org/pdf/2502.05957" target="_blank">PDF</a></li>
+<li><strong>来源</strong>: 🔥 HF Trending，⬆️ 15</li>
+
+<li><strong>核心方法</strong>: 零代码 LLM agent 框架，通过自然语言创建和部署 agent。包含 Agentic System Utilities、LLM-powered Actionable Engine、Self-Managing File System、Self-Play Agent Customization 四个模块。在 GAIA benchmark 上超过 SOTA。</li>
+<li><strong>锐评</strong>: 这是 2025 年 2 月的论文又上了 trending。"只需自然语言就能造 agent" 的故事很有吸引力，但实际上 <span class="wikilink">LangChain</span>、<span class="wikilink">AutoGen</span> 早就在做类似的事。GAIA benchmark 的 SOTA 在 2026 年 4 月已经不太有说服力了。 🫠</li>
+</div><h2 id="-agent-记忆与推理">🧠 Agent 记忆与推理</h2><div class="paper-card" data-topic="🧠 Agent 记忆与推理"><h3 id="4-zep-a-temporal-knowledge-graph-architecture-for-agent-memory">4. Zep: A Temporal Knowledge Graph Architecture for Agent Memory</h3>
+<li><strong>作者</strong>: Preston Rasmussen, Pavlo Paliychuk (Zep AI)</li>
+<li><strong>链接</strong>: <a href="https://arxiv.org/abs/2501.13956" target="_blank">arXiv</a> | <a href="https://arxiv.org/pdf/2501.13956" target="_blank">PDF</a></li>
+<li><strong>来源</strong>: 🔥 HF Trending，⬆️ 10</li>
+
+<li><strong>核心方法</strong>: 基于时序感知知识图谱 Graphiti 的 agent 记忆系统，动态整合非结构化对话和结构化业务数据，同时维护历史关系。在 DMR benchmark 上超过 <span class="wikilink">MemGPT</span>（94.8% vs 93.4%），在 <span class="wikilink">LongMemEval</span> 上准确率提升 18.5%，延迟降低 90%。</li>
+<li><strong>对比方法/Baselines</strong>: <span class="wikilink">MemGPT</span>, <span class="wikilink">RAG</span> baselines, <span class="wikilink">GraphRAG</span>, <span class="wikilink">LightRAG</span></li>
+<li><strong>借鉴意义</strong>: 和 <span class="wikilink">Mem0</span> 思路不同——Zep 走的是图谱路线而不是向量检索。对需要跨 session 信息整合的场景很有价值。</li>
+<li><strong>锐评</strong>: 2025 年 1 月的论文也在 trending。数据不错但 DMR benchmark 本身就是 MemGPT 团队搞的，1.4% 的提升说服力有限。LongMemEval 上 18.5% 的提升更有意思。不过 Zep 是商业产品，论文天然有 marketing 味道。 👀</li>
+</div><h2 id="-agent-训练">🏋️ Agent 训练</h2><div class="paper-card" data-topic="🏋️ Agent 训练"><h3 id="5-sandmle-synthetic-sandbox-for-training-machine-learning-engineering-agents">5. SandMLE: Synthetic Sandbox for Training Machine Learning Engineering Agents</h3>
+<li><strong>作者</strong>: Yuhang Zhou, Lizhu Zhang et al.</li>
+<li><strong>机构</strong>: Meta AI</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2604.04872v1" target="_blank">arXiv</a> | <a href="https://arxiv.org/pdf/2604.04872v1" target="_blank">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+
+<div class="paper-figure"><img src="https://arxiv.org/html/2604.04872v1/figure/teaser_updated.png" alt="" loading="lazy"></div>
+
+<li><strong>核心方法</strong>: 核心洞察——MLE agent 训练慢的瓶颈是 sandbox 数据集太大。SandMLE 从少量种子任务合成多样化的微型 MLE 环境（每个任务仅 50-200 训练样本），保留真实问题的结构复杂性。执行时间降低 13 倍，首次实现 MLE 领域的大规模 on-policy trajectory-wise <span class="wikilink">RL</span>。用 Trajectory-Level <span class="wikilink">GRPO</span> 训练，在 MLE-bench-lite 上相对 <span class="wikilink">SFT</span> baseline 提升 20.3%–66.9% medal rate。</li>
+<li><strong>对比方法/Baselines</strong>: <span class="wikilink">SFT</span>, <span class="wikilink">AIDE</span>, <span class="wikilink">ReAct</span></li>
+<li><strong>借鉴意义</strong>: 思路可以推广——任何 agent 训练瓶颈是环境执行成本时，都可以考虑合成微型环境。</li>
+<li><strong>锐评</strong>: 这是今天最值得读的论文。问题定义精准（MLE verification 太贵导致 on-policy RL 不可行），解决方案优雅（合成微型环境保留复杂性但降低成本 13x），实验扎实（Qwen3-8B/14B/30B 三个规模都验证了）。跨 scaffold 的泛化能力（HumanRank +32.4%）是真正的亮点。唯一遗憾是没测 Claude 或 GPT 系列。 🔥</li>
+</div><h2 id="-multi-agent-系统">🤝 Multi-Agent 系统</h2><div class="paper-card" data-topic="🤝 Multi-Agent 系统"><h3 id="6-polyswarm-a-multi-agent-llm-framework-for-prediction-market-trading">6. PolySwarm: A Multi-Agent LLM Framework for Prediction Market Trading</h3>
+<li><strong>作者</strong>: Rajat M. Barot, Arjun S. Borkhatariya</li>
+<li><strong>机构</strong>: SUNY Binghamton, Arizona State University</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2604.03888v1" target="_blank">arXiv</a> | <a href="https://arxiv.org/pdf/2604.03888v1" target="_blank">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+
+<div class="paper-figure"><img src="https://arxiv.org/html/2604.03888v1/x1.png" alt="" loading="lazy"></div>
+
+<li><strong>核心方法</strong>: 50 个多样化 LLM persona 并发评估二元预测市场，通过 confidence-weighted Bayesian 聚合与市场隐含概率结合，用 quarter-Kelly 仓位管理。包含基于 KL/JS 散度的跨市场套利检测模块。</li>
+<li><strong>对比方法/Baselines</strong>: 单模型 baseline, human superforecaster</li>
+<li><strong>借鉴意义</strong>: "群体智慧" 思路在推荐系统的 ensemble 策略中也可借鉴。</li>
+<li><strong>锐评</strong>: 50 个 LLM persona 的想法很 bold。Bayesian 聚合优于单模型不奇怪——关键是 50 个 persona 的计算成本值不值得这个提升？论文只有评估方法论没有实盘结果，Polymarket 上实际跑一下再说。 👀</li></div><div class="paper-card" data-topic="🤝 Multi-Agent 系统"><h3 id="7-rethinking-model-efficiency-multi-agent-inference-with-large-models">7. Rethinking Model Efficiency: Multi-Agent Inference with Large Models</h3>
+<li><strong>作者</strong>: Dong, Sixun et al.</li>
+<li><strong>机构</strong>: University of Washington</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2604.04929v1" target="_blank">arXiv</a> | <a href="https://arxiv.org/pdf/2604.04929v1" target="_blank">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+
+<div class="paper-figure"><img src="https://arxiv.org/html/2604.04929v1/fig/fig/new_fig/qwen_latency_curve_single.png" alt="" loading="lazy"></div>
+
+<li><strong>核心方法</strong>: 核心发现——大模型用更少的 output token 可能比小模型用长序列更快。提出 multi-agent inference 框架：大模型出短回答，必要时从小模型转移关键推理 token。</li>
+<li><strong>借鉴意义</strong>: 对 VLM 部署的延迟优化有直接参考价值。</li>
+<li><strong>锐评</strong>: 观察很有意思但不算新——"大模型更高效因为废话少" 这个 intuition 很多人都有。贡献在于系统性地量化了这个现象并给出了一个可用的框架。 👀</li></div><div class="paper-card" data-topic="🤝 Multi-Agent 系统"><h3 id="8-optimizing-service-operations-via-llm-powered-multi-agent-simulation">8. Optimizing Service Operations via LLM-Powered Multi-Agent Simulation</h3>
+<li><strong>作者</strong>: Wang, Yanyuan, Zhang, Xiaowei</li>
+<li><strong>机构</strong>: HKUST</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2604.04383v1" target="_blank">arXiv</a> | <a href="https://arxiv.org/pdf/2604.04383v1" target="_blank">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+
+<li><strong>核心方法</strong>: 把 LLM multi-agent 仿真建模为 controlled Markov chain，用 zeroth-order on-trajectory learning 优化系统设计参数。在可持续供应链和竞赛设计两个场景验证。</li>
+<li><strong>锐评</strong>: 形式化做得漂亮，但 "用 LLM 模拟人类行为" 的假设本身就很脆弱。LLM 的行为分布和真实人类差多少？论文用了真实行为数据做 case study，但没有正面回答这个根本问题。 💤</li>
+</div><h2 id="-llm-效率与工具">🔧 LLM 效率与工具</h2><div class="paper-card" data-topic="🔧 LLM 效率与工具"><h3 id="9-slab-sparse-lowrank-binary-decomposition-for-efficient-llms">9. SLaB: Sparse-Lowrank-Binary Decomposition for Efficient LLMs</h3>
+<li><strong>作者</strong>: Ziwei Li, Yuang Ma, Yi Kang</li>
+<li><strong>机构</strong>: USTC</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2604.04493v1" target="_blank">arXiv</a> | <a href="https://arxiv.org/pdf/2604.04493v1" target="_blank">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+
+<div class="paper-figure"><img src="https://arxiv.org/html/2604.04493v1/x1.png" alt="" loading="lazy"></div>
+
+<li><strong>核心方法</strong>: 把 LLM 线性层权重分解为稀疏矩阵 + 低秩矩阵 + 二值矩阵三部分。不需要重训练，用 activation-aware pruning score 指导分解。在 50% 压缩率下 perplexity 降低 36%，zero-shot 准确率提升 8.98%。</li>
+<li><strong>对比方法/Baselines</strong>: <span class="wikilink">SparseGPT</span>, Wanda, <span class="wikilink">SVD</span>-based methods</li>
+<li><strong>借鉴意义</strong>: 三路分解的思路比单纯剪枝或低秩更灵活。</li>
+<li><strong>锐评</strong>: 方法简洁有效，50% 压缩率下大幅超过现有方法。但只在 Llama 系列上测了，没测 Qwen 或 Mistral。而且 "不需要重训练" 的 claim 在高压缩率下是否还成立需要验证。总体是一篇扎实的工程论文。 👀</li></div><div class="paper-card" data-topic="🔧 LLM 效率与工具"><h3 id="10-encrust-agentic-c-to-rust-translation">10. ENCRUST: Agentic C-to-Rust Translation</h3>
+<li><strong>作者</strong>: HoHyun Sim et al.</li>
+<li><strong>机构</strong>: Korea University, Virginia Tech, University of Houston</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2604.04527v1" target="_blank">arXiv</a> | <a href="https://arxiv.org/pdf/2604.04527v1" target="_blank">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+
+<div class="paper-figure"><img src="https://arxiv.org/html/2604.04527v1/x1.png" alt="" loading="lazy"></div>
+
+<li><strong>核心方法</strong>: 两阶段 C-to-Rust 翻译：Phase 1 用 ABI-preserving wrapper 逐函数翻译（失败自动回滚），Phase 2 用 LLM agent 处理全局 unsafe 构造（static mut、跨单元类型不匹配）。在 7 个 GNU Coreutils + 8 个 Laertes 库上验证。</li>
+<li><strong>锐评</strong>: 解耦 "边界适配" 和 "函数逻辑" 的设计很聪明。ABI wrapper + 自动回滚保证了翻译过程不会破坏现有代码。不过 unsafe construct 的消除率没公布具体数字，只说 "substantial reduction"，有点模糊。 💤</li>
+</div></div>
+<div id="panel-agent框架与安全" class="tab-panel"><h2 id="-agent-框架与安全">🤖 Agent 框架与安全</h2><div class="paper-card" data-topic="🤖 Agent 框架与安全"><h3 id="1-shieldnet-network-level-guardrails-against-emerging-supply-chain-injections-in-agentic-systems">1. ShieldNet: Network-Level Guardrails against Emerging Supply-Chain Injections in Agentic Systems</h3>
+<li><strong>作者</strong>: Zhuowen Yuan et al.</li>
+<li><strong>机构</strong>: University of Chicago, University of Georgia, Johns Hopkins University</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2604.04426v1" target="_blank">arXiv</a> | <a href="https://arxiv.org/pdf/2604.04426v1" target="_blank">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+
+<div class="paper-figure"><img src="https://arxiv.org/html/2604.04426v1/x1.png" alt="" loading="lazy"></div>
+
+<li><strong>核心方法</strong>: 提出 SC-Inject-Bench，包含 10,000+ 恶意 <span class="wikilink">MCP</span> 工具的大规模 benchmark，基于 <span class="wikilink">MITRE ATT&CK</span> 分类 25+ 种攻击类型。ShieldNet 通过 MITM 代理拦截网络流量，提取关键行为特征，用轻量分类器检测供应链投毒——F1 达 0.995，误报仅 0.8%。</li>
+<li><strong>对比方法/Baselines</strong>: 现有 MCP scanner、<span class="wikilink">GPT-4</span> 语义防护</li>
+<li><strong>借鉴意义</strong>: MCP 生态的安全问题终于有人系统性地搞了。10k 恶意工具的 benchmark 本身就很有价值。</li>
+<li><strong>锐评</strong>: 思路很实用——别在语义层防，在网络层抓。但 MITM 代理引入的延迟和隐私问题呢？论文说 "limited operational overhead" 但没给具体数字。另外恶意工具是合成的，和野外真实攻击的分布差距有多大？不过作为第一个系统性的 MCP 安全 benchmark，值得收藏。 👀</li></div><div class="paper-card" data-topic="🤖 Agent 框架与安全"><h3 id="2-hdp-a-lightweight-cryptographic-protocol-for-human-delegation-provenance-in-agentic-ai-systems">2. HDP: A Lightweight Cryptographic Protocol for Human Delegation Provenance in Agentic AI Systems</h3>
+<li><strong>作者</strong>: Dalugoda, Asiri</li>
+<li><strong>链接</strong>: <a href="https://arxiv.org/abs/2604.04522" target="_blank">arXiv</a> | <a href="https://arxiv.org/pdf/2604.04522" target="_blank">PDF</a></li>
+<li><strong>来源</strong>: 📰 HF Daily，⬆️ 1</li>
+
+<li><strong>核心方法</strong>: 用密码学协议解决 agentic AI 的授权溯源问题——在多级 agent 委托链中验证终端动作是否由人类真正授权、经过什么委托路径、在什么范围内。类似给 agent 调用链加了一条加密审计追踪。</li>
+<li><strong>借鉴意义</strong>: 随着 <span class="wikilink">MCP</span> 和 <span class="wikilink">A2A</span> 生态扩展，agent 间的授权验证会越来越重要。</li>
+<li><strong>锐评</strong>: 问题很重要，但 HF 只有 1 个 upvote 说明社区还没意识到这事的紧迫性。等到出了大的安全事故大家就会回来找这篇了。 👀</li></div><div class="paper-card" data-topic="🤖 Agent 框架与安全"><h3 id="3-metachain-a-fully-automated-and-zero-code-framework-for-llm-agents">3. MetaChain: A Fully-Automated and Zero-Code Framework for LLM Agents</h3>
+<li><strong>作者</strong>: Tang, Jiabin et al.</li>
+<li><strong>机构</strong>: The University of Hong Kong</li>
+<li><strong>链接</strong>: <a href="https://arxiv.org/abs/2502.05957" target="_blank">arXiv</a> | <a href="https://arxiv.org/pdf/2502.05957" target="_blank">PDF</a></li>
+<li><strong>来源</strong>: 🔥 HF Trending，⬆️ 15</li>
+
+<li><strong>核心方法</strong>: 零代码 LLM agent 框架，通过自然语言创建和部署 agent。包含 Agentic System Utilities、LLM-powered Actionable Engine、Self-Managing File System、Self-Play Agent Customization 四个模块。在 GAIA benchmark 上超过 SOTA。</li>
+<li><strong>锐评</strong>: 这是 2025 年 2 月的论文又上了 trending。"只需自然语言就能造 agent" 的故事很有吸引力，但实际上 <span class="wikilink">LangChain</span>、<span class="wikilink">AutoGen</span> 早就在做类似的事。GAIA benchmark 的 SOTA 在 2026 年 4 月已经不太有说服力了。 🫠</li>
+</div></div>
+<div id="panel-agent记忆与推理" class="tab-panel"><h2 id="-agent-记忆与推理">🧠 Agent 记忆与推理</h2><div class="paper-card" data-topic="🧠 Agent 记忆与推理"><h3 id="4-zep-a-temporal-knowledge-graph-architecture-for-agent-memory">4. Zep: A Temporal Knowledge Graph Architecture for Agent Memory</h3>
+<li><strong>作者</strong>: Preston Rasmussen, Pavlo Paliychuk (Zep AI)</li>
+<li><strong>链接</strong>: <a href="https://arxiv.org/abs/2501.13956" target="_blank">arXiv</a> | <a href="https://arxiv.org/pdf/2501.13956" target="_blank">PDF</a></li>
+<li><strong>来源</strong>: 🔥 HF Trending，⬆️ 10</li>
+
+<li><strong>核心方法</strong>: 基于时序感知知识图谱 Graphiti 的 agent 记忆系统，动态整合非结构化对话和结构化业务数据，同时维护历史关系。在 DMR benchmark 上超过 <span class="wikilink">MemGPT</span>（94.8% vs 93.4%），在 <span class="wikilink">LongMemEval</span> 上准确率提升 18.5%，延迟降低 90%。</li>
+<li><strong>对比方法/Baselines</strong>: <span class="wikilink">MemGPT</span>, <span class="wikilink">RAG</span> baselines, <span class="wikilink">GraphRAG</span>, <span class="wikilink">LightRAG</span></li>
+<li><strong>借鉴意义</strong>: 和 <span class="wikilink">Mem0</span> 思路不同——Zep 走的是图谱路线而不是向量检索。对需要跨 session 信息整合的场景很有价值。</li>
+<li><strong>锐评</strong>: 2025 年 1 月的论文也在 trending。数据不错但 DMR benchmark 本身就是 MemGPT 团队搞的，1.4% 的提升说服力有限。LongMemEval 上 18.5% 的提升更有意思。不过 Zep 是商业产品，论文天然有 marketing 味道。 👀</li>
+</div></div>
+<div id="panel-agent训练" class="tab-panel"><h2 id="-agent-训练">🏋️ Agent 训练</h2><div class="paper-card" data-topic="🏋️ Agent 训练"><h3 id="5-sandmle-synthetic-sandbox-for-training-machine-learning-engineering-agents">5. SandMLE: Synthetic Sandbox for Training Machine Learning Engineering Agents</h3>
+<li><strong>作者</strong>: Yuhang Zhou, Lizhu Zhang et al.</li>
+<li><strong>机构</strong>: Meta AI</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2604.04872v1" target="_blank">arXiv</a> | <a href="https://arxiv.org/pdf/2604.04872v1" target="_blank">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+
+<div class="paper-figure"><img src="https://arxiv.org/html/2604.04872v1/figure/teaser_updated.png" alt="" loading="lazy"></div>
+
+<li><strong>核心方法</strong>: 核心洞察——MLE agent 训练慢的瓶颈是 sandbox 数据集太大。SandMLE 从少量种子任务合成多样化的微型 MLE 环境（每个任务仅 50-200 训练样本），保留真实问题的结构复杂性。执行时间降低 13 倍，首次实现 MLE 领域的大规模 on-policy trajectory-wise <span class="wikilink">RL</span>。用 Trajectory-Level <span class="wikilink">GRPO</span> 训练，在 MLE-bench-lite 上相对 <span class="wikilink">SFT</span> baseline 提升 20.3%–66.9% medal rate。</li>
+<li><strong>对比方法/Baselines</strong>: <span class="wikilink">SFT</span>, <span class="wikilink">AIDE</span>, <span class="wikilink">ReAct</span></li>
+<li><strong>借鉴意义</strong>: 思路可以推广——任何 agent 训练瓶颈是环境执行成本时，都可以考虑合成微型环境。</li>
+<li><strong>锐评</strong>: 这是今天最值得读的论文。问题定义精准（MLE verification 太贵导致 on-policy RL 不可行），解决方案优雅（合成微型环境保留复杂性但降低成本 13x），实验扎实（Qwen3-8B/14B/30B 三个规模都验证了）。跨 scaffold 的泛化能力（HumanRank +32.4%）是真正的亮点。唯一遗憾是没测 Claude 或 GPT 系列。 🔥</li>
+</div></div>
+<div id="panel-multiagent系统" class="tab-panel"><h2 id="-multi-agent-系统">🤝 Multi-Agent 系统</h2><div class="paper-card" data-topic="🤝 Multi-Agent 系统"><h3 id="6-polyswarm-a-multi-agent-llm-framework-for-prediction-market-trading">6. PolySwarm: A Multi-Agent LLM Framework for Prediction Market Trading</h3>
+<li><strong>作者</strong>: Rajat M. Barot, Arjun S. Borkhatariya</li>
+<li><strong>机构</strong>: SUNY Binghamton, Arizona State University</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2604.03888v1" target="_blank">arXiv</a> | <a href="https://arxiv.org/pdf/2604.03888v1" target="_blank">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+
+<div class="paper-figure"><img src="https://arxiv.org/html/2604.03888v1/x1.png" alt="" loading="lazy"></div>
+
+<li><strong>核心方法</strong>: 50 个多样化 LLM persona 并发评估二元预测市场，通过 confidence-weighted Bayesian 聚合与市场隐含概率结合，用 quarter-Kelly 仓位管理。包含基于 KL/JS 散度的跨市场套利检测模块。</li>
+<li><strong>对比方法/Baselines</strong>: 单模型 baseline, human superforecaster</li>
+<li><strong>借鉴意义</strong>: "群体智慧" 思路在推荐系统的 ensemble 策略中也可借鉴。</li>
+<li><strong>锐评</strong>: 50 个 LLM persona 的想法很 bold。Bayesian 聚合优于单模型不奇怪——关键是 50 个 persona 的计算成本值不值得这个提升？论文只有评估方法论没有实盘结果，Polymarket 上实际跑一下再说。 👀</li></div><div class="paper-card" data-topic="🤝 Multi-Agent 系统"><h3 id="7-rethinking-model-efficiency-multi-agent-inference-with-large-models">7. Rethinking Model Efficiency: Multi-Agent Inference with Large Models</h3>
+<li><strong>作者</strong>: Dong, Sixun et al.</li>
+<li><strong>机构</strong>: University of Washington</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2604.04929v1" target="_blank">arXiv</a> | <a href="https://arxiv.org/pdf/2604.04929v1" target="_blank">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+
+<div class="paper-figure"><img src="https://arxiv.org/html/2604.04929v1/fig/fig/new_fig/qwen_latency_curve_single.png" alt="" loading="lazy"></div>
+
+<li><strong>核心方法</strong>: 核心发现——大模型用更少的 output token 可能比小模型用长序列更快。提出 multi-agent inference 框架：大模型出短回答，必要时从小模型转移关键推理 token。</li>
+<li><strong>借鉴意义</strong>: 对 VLM 部署的延迟优化有直接参考价值。</li>
+<li><strong>锐评</strong>: 观察很有意思但不算新——"大模型更高效因为废话少" 这个 intuition 很多人都有。贡献在于系统性地量化了这个现象并给出了一个可用的框架。 👀</li></div><div class="paper-card" data-topic="🤝 Multi-Agent 系统"><h3 id="8-optimizing-service-operations-via-llm-powered-multi-agent-simulation">8. Optimizing Service Operations via LLM-Powered Multi-Agent Simulation</h3>
+<li><strong>作者</strong>: Wang, Yanyuan, Zhang, Xiaowei</li>
+<li><strong>机构</strong>: HKUST</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2604.04383v1" target="_blank">arXiv</a> | <a href="https://arxiv.org/pdf/2604.04383v1" target="_blank">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+
+<li><strong>核心方法</strong>: 把 LLM multi-agent 仿真建模为 controlled Markov chain，用 zeroth-order on-trajectory learning 优化系统设计参数。在可持续供应链和竞赛设计两个场景验证。</li>
+<li><strong>锐评</strong>: 形式化做得漂亮，但 "用 LLM 模拟人类行为" 的假设本身就很脆弱。LLM 的行为分布和真实人类差多少？论文用了真实行为数据做 case study，但没有正面回答这个根本问题。 💤</li>
+</div></div>
+<div id="panel-llm效率与工具" class="tab-panel"><h2 id="-llm-效率与工具">🔧 LLM 效率与工具</h2><div class="paper-card" data-topic="🔧 LLM 效率与工具"><h3 id="9-slab-sparse-lowrank-binary-decomposition-for-efficient-llms">9. SLaB: Sparse-Lowrank-Binary Decomposition for Efficient LLMs</h3>
+<li><strong>作者</strong>: Ziwei Li, Yuang Ma, Yi Kang</li>
+<li><strong>机构</strong>: USTC</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2604.04493v1" target="_blank">arXiv</a> | <a href="https://arxiv.org/pdf/2604.04493v1" target="_blank">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+
+<div class="paper-figure"><img src="https://arxiv.org/html/2604.04493v1/x1.png" alt="" loading="lazy"></div>
+
+<li><strong>核心方法</strong>: 把 LLM 线性层权重分解为稀疏矩阵 + 低秩矩阵 + 二值矩阵三部分。不需要重训练，用 activation-aware pruning score 指导分解。在 50% 压缩率下 perplexity 降低 36%，zero-shot 准确率提升 8.98%。</li>
+<li><strong>对比方法/Baselines</strong>: <span class="wikilink">SparseGPT</span>, Wanda, <span class="wikilink">SVD</span>-based methods</li>
+<li><strong>借鉴意义</strong>: 三路分解的思路比单纯剪枝或低秩更灵活。</li>
+<li><strong>锐评</strong>: 方法简洁有效，50% 压缩率下大幅超过现有方法。但只在 Llama 系列上测了，没测 Qwen 或 Mistral。而且 "不需要重训练" 的 claim 在高压缩率下是否还成立需要验证。总体是一篇扎实的工程论文。 👀</li></div><div class="paper-card" data-topic="🔧 LLM 效率与工具"><h3 id="10-encrust-agentic-c-to-rust-translation">10. ENCRUST: Agentic C-to-Rust Translation</h3>
+<li><strong>作者</strong>: HoHyun Sim et al.</li>
+<li><strong>机构</strong>: Korea University, Virginia Tech, University of Houston</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2604.04527v1" target="_blank">arXiv</a> | <a href="https://arxiv.org/pdf/2604.04527v1" target="_blank">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+
+<div class="paper-figure"><img src="https://arxiv.org/html/2604.04527v1/x1.png" alt="" loading="lazy"></div>
+
+<li><strong>核心方法</strong>: 两阶段 C-to-Rust 翻译：Phase 1 用 ABI-preserving wrapper 逐函数翻译（失败自动回滚），Phase 2 用 LLM agent 处理全局 unsafe 构造（static mut、跨单元类型不匹配）。在 7 个 GNU Coreutils + 8 个 Laertes 库上验证。</li>
+<li><strong>锐评</strong>: 解耦 "边界适配" 和 "函数逻辑" 的设计很聪明。ABI wrapper + 自动回滚保证了翻译过程不会破坏现有代码。不过 unsafe construct 的消除率没公布具体数字，只说 "substantial reduction"，有点模糊。 💤</li>
+</div></div>
+<hr>
+<h2 id="被排除的论文">被排除的论文</h2>
+
+<table class="paper-table">
+<thead><tr><th>论文</th><th>排除原因</th></tr></thead>
+<tbody>
+<tr><td>C-MADF (Cyber Defense)</td><td>网络安全对抗专用，与推荐/LLM 核心方向距离远</td></tr>
+<tr><td>Agentic FL</td><td>概念验证阶段，只有 PoC 实验</td></tr>
+<tr><td>DIRECT (Video Mashup)</td><td>视频编辑领域</td></tr>
+<tr><td>Governance Wildfire</td><td>区块链+山火监测，niche</td></tr>
+<tr><td>Agentization of Digital Assets</td><td>A2A 协议探索，benchmark 阶段</td></tr>
+<tr><td>Stratifying RL with STL</td><td>纯数学理论，拓扑+信号时序逻辑</td></tr>
+<tr><td>Plausibility as Commonsense</td><td>土耳其语 RC 消歧，太 niche</td></tr>
+<tr><td>Decision-Relevant Concepts in RL</td><td>概念选择理论，CartPole 级别实验</td></tr>
+<tr><td>Anticipatory RL</td><td>纯数学框架，金融场景</td></tr>
+<tr><td>Backdoor Defense in MLLM</td><td>MLLM 安全，不是核心方向</td></tr>
+<tr><td>Learner-Video Interaction</td><td>教育视频预测</td></tr>
+<tr><td>Conversational Control</td><td>LLM 控制生成，常规</td></tr>
+<tr><td>ReinVBC</td><td>车辆制动控制，接近自动驾驶</td></tr>
+<tr><td>Beyond Fluency (Agentic IR)</td><td>Position paper，无实验</td></tr>
+<tr><td>Pedagogical Safety</td><td>教育 RL 奖励 hacking</td></tr>
+<tr><td>TimeSeek</td><td>LLM 预测市场 benchmark</td></tr>
+<tr><td>LOCARD</td><td>区块链取证</td></tr>
+<tr><td>LPBF Defect Reasoning</td><td>激光粉末制造缺陷</td></tr>
+<tr><td>CODE-GEN</td><td>教育 RAG 出题</td></tr>
+<tr><td>Multi-Task RL</td><td>纯 RL 理论，低秩奖励</td></tr>
+<tr><td>LLM Nudging</td><td>社会科学行为实验</td></tr>
+</tbody></table>
+
+
+
+<p><strong>趋势判断</strong>: "Agentic" 已经从热词变成了论文标题的标配——但大部分论文只是在特定场景套用 agent 架构，真正推进 agent 能力边界的工作（如 SandMLE 的训练方法论、ShieldNet 的安全基础设施）仍然稀缺。MCP 安全开始受到关注，预计接下来会有更多工作跟进。</p></div>
 <div class="day-full-content" id="content-2026-04-03" style="display:none;"><h1 id="-今日锐评">🔪 今日锐评</h1>
 
 <p>今天 arXiv 被 agent 和 multi-agent 的论文淹没了——仿佛全世界都在造"AI 自己干活"的轮子。质量参差不齐：有几篇在 RL for agent、memory 架构上有实质贡献，但也有不少是把 GPT-4 套个壳就发论文的典型操作。推荐系统方向有一篇 multi-agent video recommendation 的 survey 值得关注。</p>
