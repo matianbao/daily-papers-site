@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>2026-04-04 论文推荐</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.21/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.21/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.21/dist/contrib/auto-render.min.js"
+  onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}]});"></script>
+<style>
+:root {
+  --bg: #0d1117; --surface: #161b22; --border: #30363d;
+  --text: #e6edf3; --text2: #8b949e; --accent: #58a6ff;
+  --fire: #f85149; --green: #3fb950; --yellow: #d29922;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: -apple-system, 'Segoe UI', Helvetica, Arial, sans-serif;
+  background: var(--bg); color: var(--text); line-height: 1.7;
+  max-width: 1600px; margin: 0 auto; padding: 20px 40px; }
+a { color: var(--accent); text-decoration: none; }
+a:hover { text-decoration: underline; }
+h1 { font-size: 1.8em; margin: 1em 0 0.5em; border-bottom: 1px solid var(--border); padding-bottom: 0.3em; }
+h2 { font-size: 1.4em; margin: 1.2em 0 0.4em; color: var(--accent); }
+h3 { font-size: 1.15em; margin: 1em 0 0.3em; }
+p, li { margin: 0.3em 0; }
+li { margin-left: 1.5em; list-style: disc; }
+hr { border: none; border-top: 1px solid var(--border); margin: 1.5em 0; }
+code { background: var(--surface); padding: 2px 6px; border-radius: 4px; font-size: 0.9em; }
+pre { background: var(--surface); padding: 16px; border-radius: 8px; overflow-x: auto; margin: 1em 0; }
+pre code { padding: 0; background: none; }
+blockquote { border-left: 3px solid var(--accent); padding: 0.5em 1em;
+  margin: 0.8em 0; background: var(--surface); border-radius: 0 8px 8px 0; }
+img { max-width: 100%; border-radius: 8px; margin: 0.5em 0; }
+.paper-figure { text-align: center; margin: 1em 0; }
+.paper-table { width: 100%; border-collapse: collapse; margin: 1em 0; }
+.paper-table th, .paper-table td { padding: 8px 12px; border: 1px solid var(--border); text-align: left; }
+.paper-table th { background: var(--surface); }
+.wikilink { background: var(--surface); padding: 2px 8px; border-radius: 4px;
+  border: 1px solid var(--border); font-size: 0.9em; }
+.nav { display: flex; gap: 12px; align-items: center; margin-bottom: 1.5em;
+  padding: 12px 0; border-bottom: 1px solid var(--border); flex-wrap: wrap; }
+.nav a { padding: 6px 14px; background: var(--surface); border-radius: 6px;
+  border: 1px solid var(--border); font-size: 0.9em; }
+.nav a:hover, .nav a.active { background: var(--accent); color: var(--bg); text-decoration: none; }
+.badge { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 0.8em; margin-right: 4px; }
+.badge-fire { background: rgba(248,81,73,0.2); color: var(--fire); }
+.badge-look { background: rgba(88,166,255,0.2); color: var(--accent); }
+.badge-skip { background: rgba(139,148,158,0.2); color: var(--text2); }
+/* ── Tab system ─────────────────────────────────────────── */
+.tab-bar { display: flex; gap: 0; margin: 1.5em 0 0; border-bottom: 2px solid var(--border);
+  overflow-x: auto; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
+.tab-bar::-webkit-scrollbar { display: none; }
+.tab-btn { padding: 10px 20px; background: none; border: none; color: var(--text2);
+  font-size: 0.95em; cursor: pointer; white-space: nowrap; position: relative;
+  transition: color 0.2s; font-family: inherit; }
+.tab-btn:hover { color: var(--text); }
+.tab-btn.active { color: var(--accent); font-weight: 600; }
+.tab-btn.active::after { content: ''; position: absolute; bottom: -2px; left: 0; right: 0;
+  height: 2px; background: var(--accent); border-radius: 2px 2px 0 0; }
+.tab-btn .tab-count { display: inline-block; background: var(--surface); border: 1px solid var(--border);
+  padding: 0 6px; border-radius: 10px; font-size: 0.8em; margin-left: 6px; min-width: 20px; text-align: center; }
+.tab-btn.active .tab-count { background: rgba(88,166,255,0.15); border-color: var(--accent); color: var(--accent); }
+.tab-panel { display: none; animation: fadeIn 0.25s ease; }
+.tab-panel.active { display: block; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+/* ── Paper card ─────────────────────────────────────────── */
+.paper-card { background: var(--surface); border: 1px solid var(--border);
+  border-radius: 12px; padding: 20px 24px; margin: 16px 0; transition: border-color 0.2s; }
+.paper-card:hover { border-color: var(--accent); }
+.paper-card h3 { margin-top: 0; font-size: 1.1em; }
+.paper-card .paper-figure { margin: 12px 0; }
+.paper-card .paper-figure img { max-height: 280px; object-fit: contain; }
+/* ── Dashboard (index) ──────────────────────────────────── */
+.dashboard { display: grid; grid-template-columns: 300px 1fr; gap: 24px; margin-top: 1em; }
+.sidebar { display: flex; flex-direction: column; gap: 20px;
+  position: sticky; top: 80px; align-self: start; max-height: calc(100vh - 100px); overflow-y: auto; }
+.main-content { min-height: 400px; }
+.panel { background: var(--surface); border: 1px solid var(--border);
+  border-radius: 12px; padding: 16px 20px; }
+.panel h3 { font-size: 1em; margin: 0 0 12px; color: var(--accent); border: none; }
+/* Calendar */
+.cal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+.cal-header span { font-size: 1em; font-weight: 600; }
+.cal-header button { background: none; border: 1px solid var(--border); color: var(--text2);
+  border-radius: 6px; padding: 4px 10px; cursor: pointer; font-size: 0.9em; }
+.cal-header button:hover { background: var(--border); color: var(--text); }
+.cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 2px; text-align: center; }
+.cal-dow { font-size: 0.75em; color: var(--text2); padding: 4px 0; font-weight: 600; }
+.cal-day { position: relative; padding: 6px 0; font-size: 0.85em; border-radius: 6px;
+  cursor: default; color: var(--text2); }
+.cal-day.has-data { color: var(--text); cursor: pointer; font-weight: 500; }
+.cal-day.has-data:hover { background: var(--border); }
+.cal-day.selected { background: var(--accent); color: var(--bg); font-weight: 700; }
+.cal-day .cal-dot { position: absolute; bottom: 2px; left: 50%; transform: translateX(-50%);
+  width: 5px; height: 5px; border-radius: 50%; }
+.cal-dot.fire { background: var(--fire); }
+.cal-dot.look { background: var(--accent); }
+/* Trends */
+.trend-row { display: flex; align-items: center; gap: 8px; margin: 6px 0; font-size: 0.85em; }
+.trend-label { width: 90px; text-align: right; color: var(--text2); white-space: nowrap;
+  overflow: hidden; text-overflow: ellipsis; flex-shrink: 0; cursor: pointer; position: relative;
+  transition: color 0.2s; }
+.trend-row.active-topic .trend-label { color: var(--accent); font-weight: 600; }
+.trend-row.active-topic .trend-bar { opacity: 1; }
+.trend-row:not(.active-topic).dimmed .trend-label { opacity: 0.4; }
+.trend-row:not(.active-topic).dimmed .trend-bar { opacity: 0.3; }
+.topic-filter-bar { display: flex; align-items: center; gap: 10px; padding: 8px 14px;
+  margin-bottom: 12px; background: rgba(88,166,255,0.1); border: 1px solid var(--accent);
+  border-radius: 8px; font-size: 0.9em; animation: fadeIn 0.25s ease; }
+.topic-filter-bar .clear-filter { background: none; border: 1px solid var(--border);
+  color: var(--text2); padding: 2px 10px; border-radius: 4px; cursor: pointer; font-size: 0.85em; margin-left: auto; }
+.topic-filter-bar .clear-filter:hover { background: var(--border); color: var(--text); }
+.topic-page { animation: fadeIn 0.25s ease; }
+.topic-date-group { margin: 16px 0 24px; }
+.topic-date-header { font-size: 1.05em; color: var(--accent); margin: 0 0 8px;
+  padding: 8px 0; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 8px; }
+.topic-date-count { font-size: 0.8em; color: var(--text2); font-weight: 400; }
+.topic-total { font-size: 0.85em; color: var(--text2); font-weight: 400; margin-left: 4px; }
+.trend-label:hover { overflow: visible; z-index: 10; }
+.trend-label:hover::after { content: attr(data-full); position: absolute; right: 0; top: -28px;
+  background: var(--surface); border: 1px solid var(--border); padding: 4px 10px;
+  border-radius: 6px; white-space: nowrap; font-size: 0.85em; color: var(--text);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.4); z-index: 20; }
+.trend-bar-bg { flex: 1; height: 16px; background: var(--bg); border-radius: 4px; overflow: hidden; }
+.trend-bar { height: 100%; border-radius: 4px; transition: width 0.4s ease; min-width: 2px; }
+.trend-bar.fire { background: var(--fire); }
+.trend-bar.accent { background: var(--accent); }
+.trend-bar.green { background: var(--green); }
+.trend-count { width: 24px; font-size: 0.8em; color: var(--text2); }
+/* Quality timeline */
+.qt-row { display: flex; align-items: center; gap: 6px; margin: 4px 0; font-size: 0.8em; cursor: pointer; }
+.qt-row:hover { opacity: 0.8; }
+.qt-row.selected { font-weight: 700; }
+.qt-date { width: 50px; color: var(--text2); text-align: right; flex-shrink: 0; }
+.qt-dots { display: flex; gap: 3px; }
+.qt-dot { width: 10px; height: 10px; border-radius: 50%; }
+.qt-dot.fire { background: var(--fire); }
+.qt-dot.look { background: var(--accent); }
+.qt-dot.skip { background: var(--border); }
+/* Day detail in main area */
+.day-hero { margin-bottom: 20px; }
+.day-hero h2 { font-size: 1.5em; margin: 0 0 8px; color: var(--text); border: none; }
+.day-hero .badges { margin: 8px 0; }
+.day-hero .summary { color: var(--text2); font-size: 0.95em; line-height: 1.6; margin: 12px 0; }
+.day-topics { display: flex; flex-wrap: wrap; gap: 8px; margin: 12px 0; }
+.topic-chip { background: var(--surface); border: 1px solid var(--border);
+  padding: 4px 12px; border-radius: 20px; font-size: 0.8em; color: var(--text2); }
+.view-detail { display: inline-block; margin-top: 16px; padding: 10px 24px;
+  background: var(--accent); color: var(--bg); border-radius: 8px;
+  font-weight: 600; font-size: 0.95em; }
+.view-detail:hover { text-decoration: none; opacity: 0.9; }
+.no-data { color: var(--text2); text-align: center; padding: 60px 20px; font-size: 1.1em; }
+/* ── Collapsible notes ──────────────────────────────────── */
+.math-block { margin: 0.8em 0; text-align: center; overflow-x: auto; }
+details.paper-note { margin: 12px 0; border: 1px solid var(--border); border-radius: 8px;
+  background: var(--surface); }
+details.paper-note summary { padding: 10px 16px; cursor: pointer; font-weight: 600;
+  font-size: 0.95em; color: var(--accent); list-style: none; display: flex; align-items: center; gap: 8px; }
+details.paper-note summary::-webkit-details-marker { display: none; }
+details.paper-note summary::before { content: '▶'; font-size: 0.7em; transition: transform 0.2s; }
+details.paper-note[open] summary::before { transform: rotate(90deg); }
+details.paper-note .note-body { padding: 0 20px 16px; border-top: 1px solid var(--border);
+  max-height: 600px; overflow-y: auto; }
+details.paper-note .note-body h1 { display: none; }
+details.paper-note .note-body h2 { font-size: 1.1em; margin: 1em 0 0.3em; }
+details.paper-note .note-body h3 { font-size: 1em; }
+.day-card { background: var(--surface); border: 1px solid var(--border);
+  border-radius: 10px; padding: 20px; margin: 12px 0; transition: border-color 0.2s; }
+.day-card:hover { border-color: var(--accent); }
+.day-card h3 { margin-top: 0; }
+.day-card .meta { color: var(--text2); font-size: 0.9em; margin-bottom: 0.5em; }
+.day-card .summary { color: var(--text); }
+.header { text-align: center; margin: 0; padding: 12px 0;
+  position: sticky; top: 0; z-index: 100; background: var(--bg);
+  border-bottom: 1px solid var(--border); }
+.header h1 { border: none; font-size: 2em; margin: 0; }
+.header p { color: var(--text2); }
+@media (max-width: 768px) {
+  .dashboard { grid-template-columns: 1fr; }
+  .sidebar { order: 2; }
+  .main-content { order: 1; }
+  body { max-width: 100%; padding: 12px; }
+  h1 { font-size: 1.4em; }
+  .tab-btn { padding: 8px 14px; font-size: 0.85em; }
+  .paper-card { padding: 14px 16px; }
+}
+</style>
+<style>body{max-width:960px;}</style>
+
+</head>
+<body>
+<nav class="nav"><a href="index.html">🏠 首页</a><a href="2026-04-03.html">← 前一天</a><a href="2026-04-05.html">后一天 →</a></nav>
+<div class="detail-page"><h1 id="-今日锐评">🔪 今日锐评</h1>
+
+<p>周六，arXiv 投稿量断崖式下降。筛出来只有 4 篇，其中 2 篇已有笔记。Multi-Task RL 有点理论价值，LLM 行为助推是个应用论文。今天适合补读之前的论文。</p>
+
+<h2 id="分流表">分流表</h2>
+<table class="paper-table">
+<thead><tr><th>等级</th><th>论文</th></tr></thead>
+<tbody>
+<tr><td>👀 值得看</td><td><span class="wikilink">PolySwarm</span>（多 LLM 预测市场交易）</td></tr>
+<tr><td>💤 可跳过</td><td><span class="wikilink">MTRL</span>（多任务 RL 理论）· <span class="wikilink">LLM Nudging</span>（行为助推应用）</td></tr>
+</tbody></table>
+
+
+
+<h3 id="1-polyswarm-a-multi-agent-large-language-model-framework-for-prediction-market-trading-and-latency-arbitrage">1. PolySwarm: A Multi-Agent Large Language Model Framework for Prediction Market Trading and Latency Arbitrage</h3>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2604.03888v1" target="_blank">arXiv</a> | <a href="https://arxiv.org/pdf/2604.03888v1" target="_blank">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+<details class="paper-note"><summary>📒 精读笔记: PolySwarm</summary><div class="note-body"><h1 id="polyswarm-a-multi-agent-llm-framework-for-prediction-market-trading">PolySwarm: A Multi-Agent LLM Framework for Prediction Market Trading</h1>
+
+<blockquote>
+<p><strong>一句话总结</strong>：用 50 个多样化 LLM persona 并发评估二元预测市场，通过 confidence-weighted Bayesian 聚合与市场隐含概率结合，加上 quarter-Kelly 仓位管理进行交易。</p>
+</blockquote>
+
+<h2 id="1-研究动机与问题定义">1. 研究动机与问题定义</h2>
+
+<h3 id="核心问题">核心问题</h3>
+<p><span class="wikilink">预测市场</span>（如 Polymarket）中的价格是否真的反映了事件的真实概率？单个 LLM 存在<strong>幻觉</strong>、<strong>过度自信</strong>和<strong>提示敏感性</strong>三大问题，难以可靠预测。</p>
+
+<h3 id="理论基础">理论基础</h3>
+<li><strong>有效市场假说</strong>：市场价格反映所有可用信息</li>
+<li><strong>Grossman-Stiglitz 悖论</strong>：完全有效的市场不会有人愿意付成本去获取信息</li>
+<li><strong>群体智慧</strong>：多样化个体的独立判断聚合优于单一专家</li>
+
+<h2 id="2-方法详解">2. 方法详解</h2>
+
+<h3 id="21-多样化-persona-设计">2.1 多样化 Persona 设计</h3>
+
+<p>50 个 LLM agent，每个有不同的分析视角和专业背景：</p>
+<li>政治分析师、经济学家、数据科学家、心理学家等</li>
+<li>不同风险偏好：保守、中性、激进</li>
+<li>不同信息侧重：基本面、技术面、情绪面</li>
+
+<h3 id="22-群体共识聚合">2.2 群体共识聚合</h3>
+
+<p>每个 agent $i$ 输出概率估计 $p_i$ 和置信度 $c_i$。加权聚合：</p>
+
+<div class="math-block">$$p_{\text{swarm}} = \frac{\sum_{i=1}^{N} c_i \cdot p_i}{\sum_{i=1}^{N} c_i}$$</div>
+
+<h3 id="23-bayesian-混合">2.3 Bayesian 混合</h3>
+
+<p>将群体共识与市场隐含概率 $p_{\text{market}}$ 结合：</p>
+
+<div class="math-block">$$p_{\text{final}} = \alpha \cdot p_{\text{swarm}} + (1 - \alpha) \cdot p_{\text{market}}$$</div>
+
+<p>其中 $\alpha$ 由群体共识的一致性程度决定。</p>
+
+<h3 id="24-期望价值计算">2.4 期望价值计算</h3>
+
+<div class="math-block">$$\text{EV} = p_{\text{final}} \cdot (\text{payout} - \text{cost}) - (1 - p_{\text{final}}) \cdot \text{cost}$$</div>
+
+<p>只在 $\text{EV} > \text{threshold}$ 时进行交易。</p>
+
+<h3 id="25-跨市场套利检测">2.5 跨市场套利检测</h3>
+
+<p>使用 <span class="wikilink">KL 散度</span> 和 JS 散度检测相关市场间的定价不一致：</p>
+
+<div class="math-block">$$D_{\text{KL}}(P \| Q) = \sum_x P(x) \log \frac{P(x)}{Q(x)}$$</div>
+
+<div class="math-block">$$D_{\text{JS}}(P \| Q) = \frac{1}{2} D_{\text{KL}}(P \| M) + \frac{1}{2} D_{\text{KL}}(Q \| M), \quad M = \frac{P + Q}{2}$$</div>
+
+<p>当 $D_{\text{JS}} > \delta$ 时触发套利信号。</p>
+
+<h3 id="26-仓位管理quarter-kelly">2.6 仓位管理：Quarter-Kelly</h3>
+
+<p><span class="wikilink">Kelly 准则</span> 的保守变体：</p>
+
+<div class="math-block">$$f^* = \frac{p \cdot b - q}{b}, \quad f_{\text{trade}} = \frac{f^*}{4}$$</div>
+
+<p>其中 $p$ 为估计获胜概率，$q = 1 - p$，$b$ 为赔率。使用 1/4 Kelly 以降低波动率。</p>
+
+<h3 id="27-评估指标">2.7 评估指标</h3>
+
+<li><strong>Brier Score</strong>：$\text{BS} = \frac{1}{N} \sum_{i=1}^{N} (p_i - o_i)^2$</li>
+<li><strong>Log-loss</strong>：$\mathcal{L} = -\frac{1}{N} \sum_{i=1}^{N} [o_i \log p_i + (1-o_i) \log(1-p_i)]$</li>
+
+<h2 id="3-实验结果">3. 实验结果</h2>
+
+<h3 id="31-llm-对比">3.1 LLM 对比</h3>
+
+<table class="paper-table">
+<thead><tr><th>模型</th><th>单模型 Brier</th><th>PolySwarm Brier</th><th>改善</th></tr></thead>
+<tbody>
+<tr><td>GPT-4</td><td>0.312</td><td>—</td><td>—</td></tr>
+<tr><td>Claude</td><td>0.298</td><td>—</td><td>—</td></tr>
+<tr><td><strong>PolySwarm (50 agents)</strong></td><td>—</td><td><strong>~0.24</strong></td><td><strong>~20%↓</strong></td></tr>
+</tbody></table>
+
+
+<h3 id="32-关键发现">3.2 关键发现</h3>
+
+<li>50 个 persona 的聚合显著优于单模型预测</li>
+<li>Bayesian 混合优于简单平均</li>
+<li>Quarter-Kelly 在回撤控制上优于 full Kelly</li>
+<li>套利检测模块在 ~15% 的市场对中发现了定价不一致</li>
+
+<h2 id="4-架构图">4. 架构图</h2>
+
+<div class="paper-figure"><img src="https://arxiv.org/html/2604.03888v1/x1.png" alt="PolySwarm 系统架构" loading="lazy"></div>
+
+<h2 id="5-核心概念">5. 核心概念</h2>
+
+<li><span class="wikilink">预测市场</span>：基于事件结果进行交易的市场</li>
+<li><span class="wikilink">Kelly 准则</span>：最优仓位管理公式</li>
+<li><span class="wikilink">KL 散度</span>：衡量概率分布差异</li>
+<li><span class="wikilink">Bayesian Inference</span>：贝叶斯推断框架</li>
+<li><span class="wikilink">Ensemble Methods</span>：集成学习方法</li>
+<li><span class="wikilink">Multi-Agent Systems</span>：多智能体系统</li>
+
+<h2 id="6-优缺点分析">6. 优缺点分析</h2>
+
+<h3 id="优点">优点</h3>
+<p>1. <strong>思路新颖</strong>：50 个 LLM persona 的群体智慧方法很 bold</p>
+<p>2. <strong>理论基础</strong>：有效市场假说 + Grossman-Stiglitz 悖论提供了合理动机</p>
+<p>3. <strong>风险管理</strong>：Quarter-Kelly + 套利检测是实用的工程设计</p>
+<p>4. <strong>多模型对比</strong>：测试了主流 LLM 的预测能力</p>
+
+<h3 id="缺点">缺点</h3>
+<p>1. <strong>无实盘验证</strong>：只有方法论评估，没有 Polymarket 实盘结果</p>
+<p>2. <strong>计算成本</strong>：50 个 LLM 调用的成本是否值得这个提升？</p>
+<p>3. <strong>Persona 设计</strong>：50 个 persona 的多样性如何保证？LLM 的 "角色扮演" 是否真正带来独立视角？</p>
+<p>4. <strong>时效性</strong>：预测市场依赖实时信息，LLM 的知识截止问题如何处理？</p>
+<p>5. <strong>样本量</strong>：评估的市场数量有限，统计显著性存疑</p>
+
+<h2 id="7-与相关工作对比">7. 与相关工作对比</h2>
+
+<table class="paper-table">
+<thead><tr><th>方法</th><th>模型数量</th><th>聚合方式</th><th>仓位管理</th><th>实盘验证</th></tr></thead>
+<tbody>
+<tr><td><strong>PolySwarm</strong></td><td><strong>50</strong></td><td><strong>Bayesian 加权</strong></td><td><strong>Quarter-Kelly</strong></td><td><strong>无</strong></td></tr>
+<tr><td>Lopez-Lira</td><td>1</td><td>单模型</td><td>无</td><td>有</td></tr>
+<tr><td>BloombergGPT</td><td>1</td><td>单模型</td><td>无</td><td>部分</td></tr>
+<tr><td>AutoGen</td><td>多</td><td>对话共识</td><td>无</td><td>无</td></tr>
+</tbody></table>
+</div></details>
+
+<h3 id="2-soda-semi-on-policy-black-box-distillation-for-large-language-models">2. SODA: Semi On-Policy Black-Box Distillation for Large Language Models</h3>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2604.03873v1" target="_blank">arXiv</a> | <a href="https://arxiv.org/pdf/2604.03873v1" target="_blank">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+<details class="paper-note"><summary>📒 精读笔记: SODA</summary><div class="note-body"><h1 id="soda-semi-on-policy-black-box-distillation-for-llms">SODA: Semi On-Policy Black-Box Distillation for LLMs</h1>
+
+<blockquote>
+<p><strong>一句话总结</strong>：在黑盒 LLM 蒸馏中提出 "Semi On-Policy" 折中——混合使用 on-policy 和 off-policy 数据，平衡训练稳定性和学生模型纠错能力。</p>
+</blockquote>
+
+<h2 id="1-研究动机">1. 研究动机</h2>
+
+<p>黑盒蒸馏的两难：</p>
+<li><strong>Off-policy</strong>（如 <span class="wikilink">SeqKD</span>）：从教师采样，简单稳定，但无法纠正学生固有错误</li>
+<li><strong>On-policy</strong>（如 <span class="wikilink">GAD</span>）：从学生采样+对抗训练，能纠错但不稳定且计算量大</li>
+
+<h2 id="2-方法详解">2. 方法详解</h2>
+
+<h3 id="semi-on-policy-策略">Semi On-Policy 策略</h3>
+
+<p>混合采样：以概率 $\alpha$ 从教师采样，概率 $1-\alpha$ 从学生采样：</p>
+
+<div class="math-block">$$x_t \sim \begin{cases} p_{\text{teacher}}(\cdot | x_{&lt;t}) &amp; \text{w.p. } \alpha \\ p_{\text{student}}(\cdot | x_{&lt;t}) &amp; \text{w.p. } 1-\alpha \end{cases}$$</div>
+
+<p>蒸馏损失：</p>
+
+<div class="math-block">$$\mathcal{L}_{\text{SODA}} = -\mathbb{E}_{x \sim p_{\text{mix}}} \left[ \sum_t \log p_{\text{student}}(x_t | x_{&lt;t}) \right]$$</div>
+
+<p>$\alpha$ 可以是固定值或按训练进度退火（先 off-policy 后逐渐 on-policy）。</p>
+
+<h3 id="与-dpo-的区别">与 DPO 的区别</h3>
+
+<p>SODA 是生成式蒸馏（学生生成 → 教师评分），<span class="wikilink">DPO</span> 是偏好对齐（正负样本对比）。两者互补。</p>
+
+<h2 id="3-核心概念">3. 核心概念</h2>
+
+<li><span class="wikilink">Knowledge Distillation</span>、<span class="wikilink">SeqKD</span>、<span class="wikilink">GAD</span>、<span class="wikilink">DPO</span>、<span class="wikilink">On-Policy Learning</span></li>
+
+<h2 id="4-优缺点">4. 优缺点</h2>
+
+<p><strong>优点</strong>: 思路自然，工程实用，计算成本可控</p>
+<p><strong>缺点</strong>: 创新性有限（mixed policy 不算新），需看实验细节判断贡献大小</p></div></details>
+
+<h3 id="3-provable-multi-task-reinforcement-learning-a-representation-learning-framework-with-low-rank-rewards">3. Provable Multi-Task Reinforcement Learning: A Representation Learning Framework with Low Rank Rewards</h3>
+<li><strong>作者</strong>: Yaoze Guo, Shana Moothedath</li>
+<li><strong>机构</strong>: Iowa State University</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2604.03891v1" target="_blank">arXiv</a> | <a href="https://arxiv.org/pdf/2604.03891v1" target="_blank">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+
+<div class="paper-figure"><img src="https://arxiv.org/html/2604.03891v1/sd.png" alt="" loading="lazy"></div>
+
+<li><strong>核心方法</strong>: <span class="wikilink">MTRL</span>（Multi-Task Representation Learning）用低秩 reward 分解做多任务 RL。假设多个 MDP 共享状态-动作空间和转移概率，只有 reward 不同且具有低秩结构。利用这个结构学习共享表示，理论证明了样本复杂度的改进。</li>
+<li><strong>对比方法/Baselines</strong>: 单任务 RL, <span class="wikilink">MoM</span> (Moment of Method)</li>
+<li><strong>借鉴意义</strong>: 多任务 RL 的理论分析对理解 representation learning 的本质有帮助，但实际应用中 "共享转移概率" 的假设太强。</li>
+<li><strong>锐评</strong>: 纯理论工作，Iowa State 的两人团队。低秩 reward 假设倒是合理，但 "相同转移概率" 在实际多任务场景中几乎不可能成立。缺乏任何实验验证——连 toy problem 都没有——让人怀疑理论 bound 的 tightness。典型的 "证明了一个没人会用的 bound" 的理论文。 🫠</li>
+
+<h3 id="4-enhancing-behavioral-nudges-with-large-language-model-based-iterative-personalization">4. Enhancing behavioral nudges with large language model-based iterative personalization</h3>
+<li><strong>作者</strong>: Zonghan Li 等</li>
+<li><strong>机构</strong>: Tsinghua University, University of Toronto, Beijing Normal University</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2604.03881v1" target="_blank">arXiv</a> | <a href="https://arxiv.org/pdf/2604.03881v1" target="_blank">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+
+<div class="paper-figure"><img src="https://arxiv.org/html/2604.03881v1/x1.png" alt="" loading="lazy"></div>
+
+<li><strong>核心方法</strong>: 用 LLM 生成个性化节能建议（behavioral nudge），通过微信迭代推送，做了 RCT（随机对照实验）验证效果。传统 nudge 一刀切，LLM 版本根据用户反馈迭代更新建议。</li>
+<li><strong>锐评</strong>: 是真的做了 field experiment 的论文，这点值得肯定。但核心贡献在于 "LLM 生成个性化文本" 这件早就不新鲜的事情，方法论创新有限。节电效果的 ITE 估计方法也比较标准。清华环境学院出品，更偏社科而非 AI。 💤</li>
+
+
+<h3 id="被排除的论文">被排除的论文</h3>
+
+<p>无额外排除——今天总共只有 4 篇通过分数筛选。</p>
+
+<p><strong>趋势</strong>: 周六投稿极少，反映了学术界的发表节奏。已有笔记的 PolySwarm（多 agent 预测市场）和 SODA（半在策蒸馏）仍是这两天最有技术含量的工作。</p></div>
+<footer style="text-align:center;color:var(--text2);margin:3em 0 1em;font-size:0.85em;">
+  Generated by daily-papers-web · Powered by Claude Code
+</footer>
+
+<script>
+function switchTab(tabId) {
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  document.querySelector('[data-tab="'+tabId+'"]').classList.add('active');
+  document.getElementById('panel-'+tabId).classList.add('active');
+  history.replaceState(null,'','#'+tabId);
+}
+document.addEventListener('DOMContentLoaded', function() {
+  var hash = location.hash.slice(1);
+  var target = hash && document.querySelector('[data-tab="'+hash+'"]');
+  if (target) switchTab(hash);
+  // Re-render KaTeX inside <details> when opened
+  document.querySelectorAll('details.paper-note').forEach(function(d) {
+    d.addEventListener('toggle', function() {
+      if (d.open && typeof renderMathInElement === 'function') {
+        renderMathInElement(d, {delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}]});
+      }
+    });
+  });
+});
+</script>
+
+</body>
+</html>

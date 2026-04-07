@@ -187,14 +187,14 @@ details.paper-note .note-body h3 { font-size: 1em; }
 }
 </style>
 
-<script>const DAYS_DATA = [{"date": "2026-04-07", "weekday": "周二", "counts": {"must": 1, "look": 5, "skip": 3}, "topicCounts": {"🤖 Agent 框架与安全": 3, "🧠 Agent 记忆与推理": 1, "🏋️ Agent 训练": 1, "🤝 Multi-Agent 系统": 3, "🔧 LLM 效率与工具": 2}}, {"date": "2026-04-06", "weekday": "周一", "counts": {"must": 1, "look": 4, "skip": 3}, "topicCounts": {"🏋️ Agent 训练": 3, "🧪 LLM 训练与对齐": 2, "🔧 Agent 框架": 2, "📊 Benchmark & 评测": 2}}, {"date": "2026-04-03", "weekday": "周五", "counts": {"must": 2, "look": 5, "skip": 3}, "topicCounts": {"🤖 Agent × Tool Use": 3, "📊 推荐系统": 1, "🧠 Agent × Reinforcement Learning": 2, "🔍 RAG × RL": 1, "💾 Memory × Agent": 3}}, {"date": "2026-04-02", "weekday": "周四", "counts": {"must": 4, "look": 4, "skip": 2}, "topicCounts": {"推荐系统": 2, "Agent 训练与框架": 2, "对话与工具使用": 1, "多模态 Agent": 2, "Multi-Agent 协作": 1, "LLM 基础": 2}}];</script>
+<script>const DAYS_DATA = [{"date": "2026-04-07", "weekday": "周二", "counts": {"must": 1, "look": 5, "skip": 3}, "topicCounts": {"🤖 Agent 框架与安全": 3, "🧠 Agent 记忆与推理": 1, "🏋️ Agent 训练": 1, "🤝 Multi-Agent 系统": 3, "🔧 LLM 效率与工具": 2}}, {"date": "2026-04-06", "weekday": "周一", "counts": {"must": 1, "look": 4, "skip": 3}, "topicCounts": {"🏋️ Agent 训练": 3, "🧪 LLM 训练与对齐": 2, "🔧 Agent 框架": 2, "📊 Benchmark & 评测": 2}}, {"date": "2026-04-05", "weekday": "周日", "counts": {"must": 0, "look": 3, "skip": 2}, "topicCounts": {}}, {"date": "2026-04-04", "weekday": "周六", "counts": {"must": 0, "look": 1, "skip": 2}, "topicCounts": {}}, {"date": "2026-04-03", "weekday": "周五", "counts": {"must": 2, "look": 5, "skip": 3}, "topicCounts": {"🤖 Agent × Tool Use": 3, "📊 推荐系统": 1, "🧠 Agent × Reinforcement Learning": 2, "🔍 RAG × RL": 1, "💾 Memory × Agent": 3}}, {"date": "2026-04-02", "weekday": "周四", "counts": {"must": 4, "look": 4, "skip": 2}, "topicCounts": {"推荐系统": 2, "Agent 训练与框架": 2, "对话与工具使用": 1, "多模态 Agent": 2, "Multi-Agent 协作": 1, "LLM 基础": 2}}];</script>
 </head>
 <body>
 
 
 <div class="header">
   <h1>📚 每日论文推荐</h1>
-  <p>共 4 天记录</p>
+  <p>共 6 天记录</p>
 </div>
 <div class="dashboard">
   <div class="sidebar">
@@ -5633,6 +5633,310 @@ $$</div>
 
 
 <p><strong>趋势判断</strong>: Agent 训练正在从"推理时增强"走向"参数化内化"——SKILL0 的 skill internalization 和 SandMLE（昨天）的合成训练环境代表了两个互补方向。RL for agents 框架也在快速标准化（Agent Lightning、GrandCode）。不过今天 trending 里旧论文比例偏高（AgentScope、TradingAgents、Agent Lightning），说明社区在 "发现旧宝藏" 而非 "追新论文"。</p></div>
+<div class="day-full-content" id="content-2026-04-05" style="display:none;"><h1 id="-今日锐评">🔪 今日锐评</h1>
+
+<p>周日的 arXiv，果然是"agentic"大联欢——区块链取证 agent、防火 agent、教育 agent，什么都往 agent 上靠。真正有料的不多，推荐系统方向有一篇可解释协同过滤值得看，联邦 RLHF 和 agent prompt learning 各有亮点。</p>
+
+<h2 id="分流表">分流表</h2>
+<table class="paper-table">
+<thead><tr><th>等级</th><th>论文</th></tr></thead>
+<tbody>
+<tr><td>👀 值得看</td><td><span class="wikilink">LIA</span>（可解释推荐，逻辑规则自编码器）· <span class="wikilink">APPA</span>（联邦 RLHF 多偏好对齐）· <span class="wikilink">Combee</span>（agent prompt learning 的扩展）</td></tr>
+<tr><td>💤 可跳过</td><td><span class="wikilink">TimeSeek</span>（LLM 预测市场 benchmark）· <span class="wikilink">Beyond Fluency</span>（agent IR 可靠性）</td></tr>
+</tbody></table>
+
+
+
+<h3 id="1-a-logical-rule-autoencoder-for-interpretable-recommendations">1. A Logical-Rule Autoencoder for Interpretable Recommendations</h3>
+<li><strong>作者</strong>: Jinhao Pan, Bowen Wei, Ziwei Zhu</li>
+<li><strong>机构</strong>: George Mason University</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2604.04270v1" target="_blank">arXiv</a> | <a href="https://arxiv.org/pdf/2604.04270v1" target="_blank">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+
+<div class="paper-figure"><img src="https://arxiv.org/html/2604.04270v1/figures/Model.png" alt="" loading="lazy"></div>
+
+<li><strong>核心方法</strong>: 提出 <span class="wikilink">LIA</span>（Logical-rule Interpretable Autoencoder），用逻辑规则替代黑盒隐向量做协同过滤。每个用户的推荐结果可以用 AND/OR 逻辑规则解释（"因为你看了 A 和 B，所以推荐 C"）。基于 <span class="wikilink">MultVAE</span> 架构改造，latent space 被约束为离散逻辑操作。</li>
+<li><strong>对比方法/Baselines</strong>: <span class="wikilink">MultVAE</span>, <span class="wikilink">MF</span>, 传统 <span class="wikilink">协同过滤</span></li>
+<li><strong>借鉴意义</strong>: 可解释推荐一直是工业界的痛点——模型说不清为什么推荐。逻辑规则方法提供了 intrinsic interpretability，比 post-hoc 解释更可信。</li>
+<li><strong>锐评</strong>: 想法不错，但 George Mason 小组的论文通常实验规模偏小。逻辑规则能不能在大规模稀疏数据上保持表达能力存疑——协同过滤的精髓就是隐式模式发现，强行离散化可能丢信息。另外 NDCG 指标对比 MultVAE 能赢多少？摘要没提具体数字，有点心虚。 👀</li>
+
+<h3 id="2-appa-adaptive-preference-pluralistic-alignment-for-fair-federated-rlhf-of-llms">2. APPA: Adaptive Preference Pluralistic Alignment for Fair Federated RLHF of LLMs</h3>
+<li><strong>作者</strong>: Mahmoud Srewa, Tianyu Zhao, Salma Elmalaki</li>
+<li><strong>机构</strong>: UC Irvine</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2604.04261v1" target="_blank">arXiv</a> | <a href="https://arxiv.org/pdf/2604.04261v1" target="_blank">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+
+<div class="paper-figure"><img src="https://arxiv.org/html/2604.04261v1/x1.png" alt="" loading="lazy"></div>
+
+<li><strong>核心方法</strong>: <span class="wikilink">APPA</span> 解决联邦 RLHF 中多群体偏好冲突问题。核心是 adaptive preference aggregation——不是简单平均各方 reward，而是动态调整不同群体的权重，确保少数派偏好不被淹没。用 <span class="wikilink">PPO</span> 做 policy optimization，<span class="wikilink">SFT</span> 做初始化。</li>
+<li><strong>对比方法/Baselines</strong>: <span class="wikilink">PluralLLM</span>, <span class="wikilink">DPA</span>, <span class="wikilink">OQA</span>, <span class="wikilink">GLOBALQA</span></li>
+<li><strong>借鉴意义</strong>: 联邦场景下的 RLHF 对齐是实际部署中越来越重要的问题——不同地区/文化的用户对"有用"和"安全"的定义天差地别。</li>
+<li><strong>锐评</strong>: 方向没问题，但 "pluralistic alignment" 本身就是个模糊概念——如何量化"公平"？不同群体的 reward 加权怎么选？如果某个群体的偏好本身就有问题（比如要求模型输出有害内容），"公平"的定义就需要重新审视。理论框架不错，但实际效果取决于群体划分的粒度。 👀</li>
+
+<h3 id="3-combee-scaling-prompt-learning-for-self-improving-language-model-agents">3. Combee: Scaling Prompt Learning for Self-Improving Language Model Agents</h3>
+<li><strong>作者</strong>: Hanchen Li 等</li>
+<li><strong>机构</strong>: UC Berkeley, Stanford, Tensormesh, Gradient Network</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2604.04247v1" target="_blank">arXiv</a> | <a href="https://arxiv.org/pdf/2604.04247v1" target="_blank">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+
+<div class="paper-figure"><img src="https://arxiv.org/html/2604.04247v1/x1.png" alt="" loading="lazy"></div>
+
+<li><strong>核心方法</strong>: <span class="wikilink">Combee</span> 把 prompt learning 从单 agent 扩展到大规模多 agent 场景。之前的方法如 <span class="wikilink">ACE</span> 和 <span class="wikilink">GEPA</span> 只在单 agent 或低并行度下有效，Combee 通过分层 prompt 结构和共享 prompt bank 实现 scaling——多个 agent 共享学习到的 prompt 知识。</li>
+<li><strong>对比方法/Baselines</strong>: <span class="wikilink">ACE</span>, <span class="wikilink">GEPA</span></li>
+<li><strong>借鉴意义</strong>: Inference-time learning 不改参数只改 prompt 的思路越来越成熟，scaling 到多 agent 是自然的下一步。</li>
+<li><strong>锐评</strong>: Berkeley + Stanford 的阵容看着强，但 prompt learning 这个方向本身的天花板在哪里？不改参数的学习终究受限于 prompt 的表达能力。另外 "self-improving" 这个词用得太大了——到底能自我改进到什么程度？如果只是在固定 benchmark 上 prompt search，那跟 AutoML 换皮差不多。 👀</li>
+
+<h3 id="4-timeseek-temporal-reliability-of-agentic-forecasters">4. TimeSeek: Temporal Reliability of Agentic Forecasters</h3>
+<li><strong>作者</strong>: Dennis Lee</li>
+<li><strong>机构</strong>: University of Waterloo, University of Pennsylvania</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2604.04220v1" target="_blank">arXiv</a> | <a href="https://arxiv.org/pdf/2604.04220v1" target="_blank">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+
+<li><strong>核心方法</strong>: <span class="wikilink">TimeSeek</span> 评估 10 个前沿 LLM（含 <span class="wikilink">GPT-5</span>, <span class="wikilink">DeepSeek</span>）在 150 个 CFTC 监管的 Kalshi 二元市场上的预测可靠性。关键创新是时间维度——在预测市场生命周期的 5 个 checkpoint 分别测试，共 15000 个预测。区分有无 web search 的效果。</li>
+<li><strong>锐评</strong>: Benchmark 论文，方向有意思但创新不大。用预测市场衡量 LLM 的"真实世界"推理能力是个好角度，但 150 个市场的样本量偏小。没有 BSS (Brier Skill Score) 的改进幅度说明，很难判断实际价值。 💤</li>
+
+<h3 id="5-beyond-fluency-toward-reliable-trajectories-in-agentic-ir">5. Beyond Fluency: Toward Reliable Trajectories in Agentic IR</h3>
+<li><strong>作者</strong>: Anushree Sinha, Srivaths Ranganathan, Debanshu Das, Abhishek Dharmaratnakar</li>
+<li><strong>机构</strong>: Google</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2604.04269v1" target="_blank">arXiv</a> | <a href="https://arxiv.org/pdf/2604.04269v1" target="_blank">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+
+<li><strong>核心方法</strong>: 分析 Agentic IR（基于 agent 的信息检索）中的 trajectory 可靠性问题——agent 在多步 Reason-Act-Observe 循环中，早期小错误会级联放大，即使语言输出仍然流畅。提出 functional misalignment 的概念。</li>
+<li><strong>锐评</strong>: Google 出品，问题定义不错（fluency ≠ reliability），但更像是 position paper / analysis 而非方法论文。对做 agent 系统的人有参考价值，但没有具体的解决方案。 💤</li>
+
+
+<h3 id="被排除的论文">被排除的论文</h3>
+
+<table class="paper-table">
+<thead><tr><th>论文</th><th>排除原因</th></tr></thead>
+<tbody>
+<tr><td>Governance-Constrained Agentic AI (Wildfire)</td><td>领域应用（防火监测），与核心关注方向无关</td></tr>
+<tr><td>Agentization of Digital Assets</td><td>Web3/数字资产 agent 化，概念性工作</td></tr>
+<tr><td>Pedagogical Safety in Educational RL</td><td>教育领域 RL，非通用方法</td></tr>
+<tr><td>LOCARD: Agentic Blockchain Forensics</td><td>区块链取证，领域特定</td></tr>
+<tr><td>Graph-Assisted Defect Reasoning for LPBF</td><td>制造业缺陷检测，非 AI 核心</td></tr>
+<tr><td>CODE-GEN: RAG-Based MCQ Generation</td><td>教育题目生成，应用场景限定</td></tr>
+</tbody></table>
+
+
+<p><strong>趋势</strong>: 周末投稿的 "agentic" 论文大量涌现，但多是把现有 LLM/agent 框架套到具体领域（教育、制造、取证），真正推进方法论的寥寥。推荐系统方向，可解释性是个值得关注的新热点。</p></div>
+<div class="day-full-content" id="content-2026-04-04" style="display:none;"><h1 id="-今日锐评">🔪 今日锐评</h1>
+
+<p>周六，arXiv 投稿量断崖式下降。筛出来只有 4 篇，其中 2 篇已有笔记。Multi-Task RL 有点理论价值，LLM 行为助推是个应用论文。今天适合补读之前的论文。</p>
+
+<h2 id="分流表">分流表</h2>
+<table class="paper-table">
+<thead><tr><th>等级</th><th>论文</th></tr></thead>
+<tbody>
+<tr><td>👀 值得看</td><td><span class="wikilink">PolySwarm</span>（多 LLM 预测市场交易）</td></tr>
+<tr><td>💤 可跳过</td><td><span class="wikilink">MTRL</span>（多任务 RL 理论）· <span class="wikilink">LLM Nudging</span>（行为助推应用）</td></tr>
+</tbody></table>
+
+
+
+<h3 id="1-polyswarm-a-multi-agent-large-language-model-framework-for-prediction-market-trading-and-latency-arbitrage">1. PolySwarm: A Multi-Agent Large Language Model Framework for Prediction Market Trading and Latency Arbitrage</h3>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2604.03888v1" target="_blank">arXiv</a> | <a href="https://arxiv.org/pdf/2604.03888v1" target="_blank">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+<details class="paper-note"><summary>📒 精读笔记: PolySwarm</summary><div class="note-body"><h1 id="polyswarm-a-multi-agent-llm-framework-for-prediction-market-trading">PolySwarm: A Multi-Agent LLM Framework for Prediction Market Trading</h1>
+
+<blockquote>
+<p><strong>一句话总结</strong>：用 50 个多样化 LLM persona 并发评估二元预测市场，通过 confidence-weighted Bayesian 聚合与市场隐含概率结合，加上 quarter-Kelly 仓位管理进行交易。</p>
+</blockquote>
+
+<h2 id="1-研究动机与问题定义">1. 研究动机与问题定义</h2>
+
+<h3 id="核心问题">核心问题</h3>
+<p><span class="wikilink">预测市场</span>（如 Polymarket）中的价格是否真的反映了事件的真实概率？单个 LLM 存在<strong>幻觉</strong>、<strong>过度自信</strong>和<strong>提示敏感性</strong>三大问题，难以可靠预测。</p>
+
+<h3 id="理论基础">理论基础</h3>
+<li><strong>有效市场假说</strong>：市场价格反映所有可用信息</li>
+<li><strong>Grossman-Stiglitz 悖论</strong>：完全有效的市场不会有人愿意付成本去获取信息</li>
+<li><strong>群体智慧</strong>：多样化个体的独立判断聚合优于单一专家</li>
+
+<h2 id="2-方法详解">2. 方法详解</h2>
+
+<h3 id="21-多样化-persona-设计">2.1 多样化 Persona 设计</h3>
+
+<p>50 个 LLM agent，每个有不同的分析视角和专业背景：</p>
+<li>政治分析师、经济学家、数据科学家、心理学家等</li>
+<li>不同风险偏好：保守、中性、激进</li>
+<li>不同信息侧重：基本面、技术面、情绪面</li>
+
+<h3 id="22-群体共识聚合">2.2 群体共识聚合</h3>
+
+<p>每个 agent $i$ 输出概率估计 $p_i$ 和置信度 $c_i$。加权聚合：</p>
+
+<div class="math-block">$$p_{\text{swarm}} = \frac{\sum_{i=1}^{N} c_i \cdot p_i}{\sum_{i=1}^{N} c_i}$$</div>
+
+<h3 id="23-bayesian-混合">2.3 Bayesian 混合</h3>
+
+<p>将群体共识与市场隐含概率 $p_{\text{market}}$ 结合：</p>
+
+<div class="math-block">$$p_{\text{final}} = \alpha \cdot p_{\text{swarm}} + (1 - \alpha) \cdot p_{\text{market}}$$</div>
+
+<p>其中 $\alpha$ 由群体共识的一致性程度决定。</p>
+
+<h3 id="24-期望价值计算">2.4 期望价值计算</h3>
+
+<div class="math-block">$$\text{EV} = p_{\text{final}} \cdot (\text{payout} - \text{cost}) - (1 - p_{\text{final}}) \cdot \text{cost}$$</div>
+
+<p>只在 $\text{EV} > \text{threshold}$ 时进行交易。</p>
+
+<h3 id="25-跨市场套利检测">2.5 跨市场套利检测</h3>
+
+<p>使用 <span class="wikilink">KL 散度</span> 和 JS 散度检测相关市场间的定价不一致：</p>
+
+<div class="math-block">$$D_{\text{KL}}(P \| Q) = \sum_x P(x) \log \frac{P(x)}{Q(x)}$$</div>
+
+<div class="math-block">$$D_{\text{JS}}(P \| Q) = \frac{1}{2} D_{\text{KL}}(P \| M) + \frac{1}{2} D_{\text{KL}}(Q \| M), \quad M = \frac{P + Q}{2}$$</div>
+
+<p>当 $D_{\text{JS}} > \delta$ 时触发套利信号。</p>
+
+<h3 id="26-仓位管理quarter-kelly">2.6 仓位管理：Quarter-Kelly</h3>
+
+<p><span class="wikilink">Kelly 准则</span> 的保守变体：</p>
+
+<div class="math-block">$$f^* = \frac{p \cdot b - q}{b}, \quad f_{\text{trade}} = \frac{f^*}{4}$$</div>
+
+<p>其中 $p$ 为估计获胜概率，$q = 1 - p$，$b$ 为赔率。使用 1/4 Kelly 以降低波动率。</p>
+
+<h3 id="27-评估指标">2.7 评估指标</h3>
+
+<li><strong>Brier Score</strong>：$\text{BS} = \frac{1}{N} \sum_{i=1}^{N} (p_i - o_i)^2$</li>
+<li><strong>Log-loss</strong>：$\mathcal{L} = -\frac{1}{N} \sum_{i=1}^{N} [o_i \log p_i + (1-o_i) \log(1-p_i)]$</li>
+
+<h2 id="3-实验结果">3. 实验结果</h2>
+
+<h3 id="31-llm-对比">3.1 LLM 对比</h3>
+
+<table class="paper-table">
+<thead><tr><th>模型</th><th>单模型 Brier</th><th>PolySwarm Brier</th><th>改善</th></tr></thead>
+<tbody>
+<tr><td>GPT-4</td><td>0.312</td><td>—</td><td>—</td></tr>
+<tr><td>Claude</td><td>0.298</td><td>—</td><td>—</td></tr>
+<tr><td><strong>PolySwarm (50 agents)</strong></td><td>—</td><td><strong>~0.24</strong></td><td><strong>~20%↓</strong></td></tr>
+</tbody></table>
+
+
+<h3 id="32-关键发现">3.2 关键发现</h3>
+
+<li>50 个 persona 的聚合显著优于单模型预测</li>
+<li>Bayesian 混合优于简单平均</li>
+<li>Quarter-Kelly 在回撤控制上优于 full Kelly</li>
+<li>套利检测模块在 ~15% 的市场对中发现了定价不一致</li>
+
+<h2 id="4-架构图">4. 架构图</h2>
+
+<div class="paper-figure"><img src="https://arxiv.org/html/2604.03888v1/x1.png" alt="PolySwarm 系统架构" loading="lazy"></div>
+
+<h2 id="5-核心概念">5. 核心概念</h2>
+
+<li><span class="wikilink">预测市场</span>：基于事件结果进行交易的市场</li>
+<li><span class="wikilink">Kelly 准则</span>：最优仓位管理公式</li>
+<li><span class="wikilink">KL 散度</span>：衡量概率分布差异</li>
+<li><span class="wikilink">Bayesian Inference</span>：贝叶斯推断框架</li>
+<li><span class="wikilink">Ensemble Methods</span>：集成学习方法</li>
+<li><span class="wikilink">Multi-Agent Systems</span>：多智能体系统</li>
+
+<h2 id="6-优缺点分析">6. 优缺点分析</h2>
+
+<h3 id="优点">优点</h3>
+<p>1. <strong>思路新颖</strong>：50 个 LLM persona 的群体智慧方法很 bold</p>
+<p>2. <strong>理论基础</strong>：有效市场假说 + Grossman-Stiglitz 悖论提供了合理动机</p>
+<p>3. <strong>风险管理</strong>：Quarter-Kelly + 套利检测是实用的工程设计</p>
+<p>4. <strong>多模型对比</strong>：测试了主流 LLM 的预测能力</p>
+
+<h3 id="缺点">缺点</h3>
+<p>1. <strong>无实盘验证</strong>：只有方法论评估，没有 Polymarket 实盘结果</p>
+<p>2. <strong>计算成本</strong>：50 个 LLM 调用的成本是否值得这个提升？</p>
+<p>3. <strong>Persona 设计</strong>：50 个 persona 的多样性如何保证？LLM 的 "角色扮演" 是否真正带来独立视角？</p>
+<p>4. <strong>时效性</strong>：预测市场依赖实时信息，LLM 的知识截止问题如何处理？</p>
+<p>5. <strong>样本量</strong>：评估的市场数量有限，统计显著性存疑</p>
+
+<h2 id="7-与相关工作对比">7. 与相关工作对比</h2>
+
+<table class="paper-table">
+<thead><tr><th>方法</th><th>模型数量</th><th>聚合方式</th><th>仓位管理</th><th>实盘验证</th></tr></thead>
+<tbody>
+<tr><td><strong>PolySwarm</strong></td><td><strong>50</strong></td><td><strong>Bayesian 加权</strong></td><td><strong>Quarter-Kelly</strong></td><td><strong>无</strong></td></tr>
+<tr><td>Lopez-Lira</td><td>1</td><td>单模型</td><td>无</td><td>有</td></tr>
+<tr><td>BloombergGPT</td><td>1</td><td>单模型</td><td>无</td><td>部分</td></tr>
+<tr><td>AutoGen</td><td>多</td><td>对话共识</td><td>无</td><td>无</td></tr>
+</tbody></table>
+</div></details>
+
+<h3 id="2-soda-semi-on-policy-black-box-distillation-for-large-language-models">2. SODA: Semi On-Policy Black-Box Distillation for Large Language Models</h3>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2604.03873v1" target="_blank">arXiv</a> | <a href="https://arxiv.org/pdf/2604.03873v1" target="_blank">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+<details class="paper-note"><summary>📒 精读笔记: SODA</summary><div class="note-body"><h1 id="soda-semi-on-policy-black-box-distillation-for-llms">SODA: Semi On-Policy Black-Box Distillation for LLMs</h1>
+
+<blockquote>
+<p><strong>一句话总结</strong>：在黑盒 LLM 蒸馏中提出 "Semi On-Policy" 折中——混合使用 on-policy 和 off-policy 数据，平衡训练稳定性和学生模型纠错能力。</p>
+</blockquote>
+
+<h2 id="1-研究动机">1. 研究动机</h2>
+
+<p>黑盒蒸馏的两难：</p>
+<li><strong>Off-policy</strong>（如 <span class="wikilink">SeqKD</span>）：从教师采样，简单稳定，但无法纠正学生固有错误</li>
+<li><strong>On-policy</strong>（如 <span class="wikilink">GAD</span>）：从学生采样+对抗训练，能纠错但不稳定且计算量大</li>
+
+<h2 id="2-方法详解">2. 方法详解</h2>
+
+<h3 id="semi-on-policy-策略">Semi On-Policy 策略</h3>
+
+<p>混合采样：以概率 $\alpha$ 从教师采样，概率 $1-\alpha$ 从学生采样：</p>
+
+<div class="math-block">$$x_t \sim \begin{cases} p_{\text{teacher}}(\cdot | x_{&lt;t}) &amp; \text{w.p. } \alpha \\ p_{\text{student}}(\cdot | x_{&lt;t}) &amp; \text{w.p. } 1-\alpha \end{cases}$$</div>
+
+<p>蒸馏损失：</p>
+
+<div class="math-block">$$\mathcal{L}_{\text{SODA}} = -\mathbb{E}_{x \sim p_{\text{mix}}} \left[ \sum_t \log p_{\text{student}}(x_t | x_{&lt;t}) \right]$$</div>
+
+<p>$\alpha$ 可以是固定值或按训练进度退火（先 off-policy 后逐渐 on-policy）。</p>
+
+<h3 id="与-dpo-的区别">与 DPO 的区别</h3>
+
+<p>SODA 是生成式蒸馏（学生生成 → 教师评分），<span class="wikilink">DPO</span> 是偏好对齐（正负样本对比）。两者互补。</p>
+
+<h2 id="3-核心概念">3. 核心概念</h2>
+
+<li><span class="wikilink">Knowledge Distillation</span>、<span class="wikilink">SeqKD</span>、<span class="wikilink">GAD</span>、<span class="wikilink">DPO</span>、<span class="wikilink">On-Policy Learning</span></li>
+
+<h2 id="4-优缺点">4. 优缺点</h2>
+
+<p><strong>优点</strong>: 思路自然，工程实用，计算成本可控</p>
+<p><strong>缺点</strong>: 创新性有限（mixed policy 不算新），需看实验细节判断贡献大小</p></div></details>
+
+<h3 id="3-provable-multi-task-reinforcement-learning-a-representation-learning-framework-with-low-rank-rewards">3. Provable Multi-Task Reinforcement Learning: A Representation Learning Framework with Low Rank Rewards</h3>
+<li><strong>作者</strong>: Yaoze Guo, Shana Moothedath</li>
+<li><strong>机构</strong>: Iowa State University</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2604.03891v1" target="_blank">arXiv</a> | <a href="https://arxiv.org/pdf/2604.03891v1" target="_blank">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+
+<div class="paper-figure"><img src="https://arxiv.org/html/2604.03891v1/sd.png" alt="" loading="lazy"></div>
+
+<li><strong>核心方法</strong>: <span class="wikilink">MTRL</span>（Multi-Task Representation Learning）用低秩 reward 分解做多任务 RL。假设多个 MDP 共享状态-动作空间和转移概率，只有 reward 不同且具有低秩结构。利用这个结构学习共享表示，理论证明了样本复杂度的改进。</li>
+<li><strong>对比方法/Baselines</strong>: 单任务 RL, <span class="wikilink">MoM</span> (Moment of Method)</li>
+<li><strong>借鉴意义</strong>: 多任务 RL 的理论分析对理解 representation learning 的本质有帮助，但实际应用中 "共享转移概率" 的假设太强。</li>
+<li><strong>锐评</strong>: 纯理论工作，Iowa State 的两人团队。低秩 reward 假设倒是合理，但 "相同转移概率" 在实际多任务场景中几乎不可能成立。缺乏任何实验验证——连 toy problem 都没有——让人怀疑理论 bound 的 tightness。典型的 "证明了一个没人会用的 bound" 的理论文。 🫠</li>
+
+<h3 id="4-enhancing-behavioral-nudges-with-large-language-model-based-iterative-personalization">4. Enhancing behavioral nudges with large language model-based iterative personalization</h3>
+<li><strong>作者</strong>: Zonghan Li 等</li>
+<li><strong>机构</strong>: Tsinghua University, University of Toronto, Beijing Normal University</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2604.03881v1" target="_blank">arXiv</a> | <a href="https://arxiv.org/pdf/2604.03881v1" target="_blank">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+
+<div class="paper-figure"><img src="https://arxiv.org/html/2604.03881v1/x1.png" alt="" loading="lazy"></div>
+
+<li><strong>核心方法</strong>: 用 LLM 生成个性化节能建议（behavioral nudge），通过微信迭代推送，做了 RCT（随机对照实验）验证效果。传统 nudge 一刀切，LLM 版本根据用户反馈迭代更新建议。</li>
+<li><strong>锐评</strong>: 是真的做了 field experiment 的论文，这点值得肯定。但核心贡献在于 "LLM 生成个性化文本" 这件早就不新鲜的事情，方法论创新有限。节电效果的 ITE 估计方法也比较标准。清华环境学院出品，更偏社科而非 AI。 💤</li>
+
+
+<h3 id="被排除的论文">被排除的论文</h3>
+
+<p>无额外排除——今天总共只有 4 篇通过分数筛选。</p>
+
+<p><strong>趋势</strong>: 周六投稿极少，反映了学术界的发表节奏。已有笔记的 PolySwarm（多 agent 预测市场）和 SODA（半在策蒸馏）仍是这两天最有技术含量的工作。</p></div>
 <div class="day-full-content" id="content-2026-04-03" style="display:none;"><h1 id="-今日锐评">🔪 今日锐评</h1>
 
 <p>今天 arXiv 被 agent 和 multi-agent 的论文淹没了——仿佛全世界都在造"AI 自己干活"的轮子。质量参差不齐：有几篇在 RL for agent、memory 架构上有实质贡献，但也有不少是把 GPT-4 套个壳就发论文的典型操作。推荐系统方向有一篇 multi-agent video recommendation 的 survey 值得关注。</p>

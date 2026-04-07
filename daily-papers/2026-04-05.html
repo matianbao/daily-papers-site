@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>2026-04-05 论文推荐</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.21/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.21/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.21/dist/contrib/auto-render.min.js"
+  onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}]});"></script>
+<style>
+:root {
+  --bg: #0d1117; --surface: #161b22; --border: #30363d;
+  --text: #e6edf3; --text2: #8b949e; --accent: #58a6ff;
+  --fire: #f85149; --green: #3fb950; --yellow: #d29922;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: -apple-system, 'Segoe UI', Helvetica, Arial, sans-serif;
+  background: var(--bg); color: var(--text); line-height: 1.7;
+  max-width: 1600px; margin: 0 auto; padding: 20px 40px; }
+a { color: var(--accent); text-decoration: none; }
+a:hover { text-decoration: underline; }
+h1 { font-size: 1.8em; margin: 1em 0 0.5em; border-bottom: 1px solid var(--border); padding-bottom: 0.3em; }
+h2 { font-size: 1.4em; margin: 1.2em 0 0.4em; color: var(--accent); }
+h3 { font-size: 1.15em; margin: 1em 0 0.3em; }
+p, li { margin: 0.3em 0; }
+li { margin-left: 1.5em; list-style: disc; }
+hr { border: none; border-top: 1px solid var(--border); margin: 1.5em 0; }
+code { background: var(--surface); padding: 2px 6px; border-radius: 4px; font-size: 0.9em; }
+pre { background: var(--surface); padding: 16px; border-radius: 8px; overflow-x: auto; margin: 1em 0; }
+pre code { padding: 0; background: none; }
+blockquote { border-left: 3px solid var(--accent); padding: 0.5em 1em;
+  margin: 0.8em 0; background: var(--surface); border-radius: 0 8px 8px 0; }
+img { max-width: 100%; border-radius: 8px; margin: 0.5em 0; }
+.paper-figure { text-align: center; margin: 1em 0; }
+.paper-table { width: 100%; border-collapse: collapse; margin: 1em 0; }
+.paper-table th, .paper-table td { padding: 8px 12px; border: 1px solid var(--border); text-align: left; }
+.paper-table th { background: var(--surface); }
+.wikilink { background: var(--surface); padding: 2px 8px; border-radius: 4px;
+  border: 1px solid var(--border); font-size: 0.9em; }
+.nav { display: flex; gap: 12px; align-items: center; margin-bottom: 1.5em;
+  padding: 12px 0; border-bottom: 1px solid var(--border); flex-wrap: wrap; }
+.nav a { padding: 6px 14px; background: var(--surface); border-radius: 6px;
+  border: 1px solid var(--border); font-size: 0.9em; }
+.nav a:hover, .nav a.active { background: var(--accent); color: var(--bg); text-decoration: none; }
+.badge { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 0.8em; margin-right: 4px; }
+.badge-fire { background: rgba(248,81,73,0.2); color: var(--fire); }
+.badge-look { background: rgba(88,166,255,0.2); color: var(--accent); }
+.badge-skip { background: rgba(139,148,158,0.2); color: var(--text2); }
+/* ── Tab system ─────────────────────────────────────────── */
+.tab-bar { display: flex; gap: 0; margin: 1.5em 0 0; border-bottom: 2px solid var(--border);
+  overflow-x: auto; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
+.tab-bar::-webkit-scrollbar { display: none; }
+.tab-btn { padding: 10px 20px; background: none; border: none; color: var(--text2);
+  font-size: 0.95em; cursor: pointer; white-space: nowrap; position: relative;
+  transition: color 0.2s; font-family: inherit; }
+.tab-btn:hover { color: var(--text); }
+.tab-btn.active { color: var(--accent); font-weight: 600; }
+.tab-btn.active::after { content: ''; position: absolute; bottom: -2px; left: 0; right: 0;
+  height: 2px; background: var(--accent); border-radius: 2px 2px 0 0; }
+.tab-btn .tab-count { display: inline-block; background: var(--surface); border: 1px solid var(--border);
+  padding: 0 6px; border-radius: 10px; font-size: 0.8em; margin-left: 6px; min-width: 20px; text-align: center; }
+.tab-btn.active .tab-count { background: rgba(88,166,255,0.15); border-color: var(--accent); color: var(--accent); }
+.tab-panel { display: none; animation: fadeIn 0.25s ease; }
+.tab-panel.active { display: block; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+/* ── Paper card ─────────────────────────────────────────── */
+.paper-card { background: var(--surface); border: 1px solid var(--border);
+  border-radius: 12px; padding: 20px 24px; margin: 16px 0; transition: border-color 0.2s; }
+.paper-card:hover { border-color: var(--accent); }
+.paper-card h3 { margin-top: 0; font-size: 1.1em; }
+.paper-card .paper-figure { margin: 12px 0; }
+.paper-card .paper-figure img { max-height: 280px; object-fit: contain; }
+/* ── Dashboard (index) ──────────────────────────────────── */
+.dashboard { display: grid; grid-template-columns: 300px 1fr; gap: 24px; margin-top: 1em; }
+.sidebar { display: flex; flex-direction: column; gap: 20px;
+  position: sticky; top: 80px; align-self: start; max-height: calc(100vh - 100px); overflow-y: auto; }
+.main-content { min-height: 400px; }
+.panel { background: var(--surface); border: 1px solid var(--border);
+  border-radius: 12px; padding: 16px 20px; }
+.panel h3 { font-size: 1em; margin: 0 0 12px; color: var(--accent); border: none; }
+/* Calendar */
+.cal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+.cal-header span { font-size: 1em; font-weight: 600; }
+.cal-header button { background: none; border: 1px solid var(--border); color: var(--text2);
+  border-radius: 6px; padding: 4px 10px; cursor: pointer; font-size: 0.9em; }
+.cal-header button:hover { background: var(--border); color: var(--text); }
+.cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 2px; text-align: center; }
+.cal-dow { font-size: 0.75em; color: var(--text2); padding: 4px 0; font-weight: 600; }
+.cal-day { position: relative; padding: 6px 0; font-size: 0.85em; border-radius: 6px;
+  cursor: default; color: var(--text2); }
+.cal-day.has-data { color: var(--text); cursor: pointer; font-weight: 500; }
+.cal-day.has-data:hover { background: var(--border); }
+.cal-day.selected { background: var(--accent); color: var(--bg); font-weight: 700; }
+.cal-day .cal-dot { position: absolute; bottom: 2px; left: 50%; transform: translateX(-50%);
+  width: 5px; height: 5px; border-radius: 50%; }
+.cal-dot.fire { background: var(--fire); }
+.cal-dot.look { background: var(--accent); }
+/* Trends */
+.trend-row { display: flex; align-items: center; gap: 8px; margin: 6px 0; font-size: 0.85em; }
+.trend-label { width: 90px; text-align: right; color: var(--text2); white-space: nowrap;
+  overflow: hidden; text-overflow: ellipsis; flex-shrink: 0; cursor: pointer; position: relative;
+  transition: color 0.2s; }
+.trend-row.active-topic .trend-label { color: var(--accent); font-weight: 600; }
+.trend-row.active-topic .trend-bar { opacity: 1; }
+.trend-row:not(.active-topic).dimmed .trend-label { opacity: 0.4; }
+.trend-row:not(.active-topic).dimmed .trend-bar { opacity: 0.3; }
+.topic-filter-bar { display: flex; align-items: center; gap: 10px; padding: 8px 14px;
+  margin-bottom: 12px; background: rgba(88,166,255,0.1); border: 1px solid var(--accent);
+  border-radius: 8px; font-size: 0.9em; animation: fadeIn 0.25s ease; }
+.topic-filter-bar .clear-filter { background: none; border: 1px solid var(--border);
+  color: var(--text2); padding: 2px 10px; border-radius: 4px; cursor: pointer; font-size: 0.85em; margin-left: auto; }
+.topic-filter-bar .clear-filter:hover { background: var(--border); color: var(--text); }
+.topic-page { animation: fadeIn 0.25s ease; }
+.topic-date-group { margin: 16px 0 24px; }
+.topic-date-header { font-size: 1.05em; color: var(--accent); margin: 0 0 8px;
+  padding: 8px 0; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 8px; }
+.topic-date-count { font-size: 0.8em; color: var(--text2); font-weight: 400; }
+.topic-total { font-size: 0.85em; color: var(--text2); font-weight: 400; margin-left: 4px; }
+.trend-label:hover { overflow: visible; z-index: 10; }
+.trend-label:hover::after { content: attr(data-full); position: absolute; right: 0; top: -28px;
+  background: var(--surface); border: 1px solid var(--border); padding: 4px 10px;
+  border-radius: 6px; white-space: nowrap; font-size: 0.85em; color: var(--text);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.4); z-index: 20; }
+.trend-bar-bg { flex: 1; height: 16px; background: var(--bg); border-radius: 4px; overflow: hidden; }
+.trend-bar { height: 100%; border-radius: 4px; transition: width 0.4s ease; min-width: 2px; }
+.trend-bar.fire { background: var(--fire); }
+.trend-bar.accent { background: var(--accent); }
+.trend-bar.green { background: var(--green); }
+.trend-count { width: 24px; font-size: 0.8em; color: var(--text2); }
+/* Quality timeline */
+.qt-row { display: flex; align-items: center; gap: 6px; margin: 4px 0; font-size: 0.8em; cursor: pointer; }
+.qt-row:hover { opacity: 0.8; }
+.qt-row.selected { font-weight: 700; }
+.qt-date { width: 50px; color: var(--text2); text-align: right; flex-shrink: 0; }
+.qt-dots { display: flex; gap: 3px; }
+.qt-dot { width: 10px; height: 10px; border-radius: 50%; }
+.qt-dot.fire { background: var(--fire); }
+.qt-dot.look { background: var(--accent); }
+.qt-dot.skip { background: var(--border); }
+/* Day detail in main area */
+.day-hero { margin-bottom: 20px; }
+.day-hero h2 { font-size: 1.5em; margin: 0 0 8px; color: var(--text); border: none; }
+.day-hero .badges { margin: 8px 0; }
+.day-hero .summary { color: var(--text2); font-size: 0.95em; line-height: 1.6; margin: 12px 0; }
+.day-topics { display: flex; flex-wrap: wrap; gap: 8px; margin: 12px 0; }
+.topic-chip { background: var(--surface); border: 1px solid var(--border);
+  padding: 4px 12px; border-radius: 20px; font-size: 0.8em; color: var(--text2); }
+.view-detail { display: inline-block; margin-top: 16px; padding: 10px 24px;
+  background: var(--accent); color: var(--bg); border-radius: 8px;
+  font-weight: 600; font-size: 0.95em; }
+.view-detail:hover { text-decoration: none; opacity: 0.9; }
+.no-data { color: var(--text2); text-align: center; padding: 60px 20px; font-size: 1.1em; }
+/* ── Collapsible notes ──────────────────────────────────── */
+.math-block { margin: 0.8em 0; text-align: center; overflow-x: auto; }
+details.paper-note { margin: 12px 0; border: 1px solid var(--border); border-radius: 8px;
+  background: var(--surface); }
+details.paper-note summary { padding: 10px 16px; cursor: pointer; font-weight: 600;
+  font-size: 0.95em; color: var(--accent); list-style: none; display: flex; align-items: center; gap: 8px; }
+details.paper-note summary::-webkit-details-marker { display: none; }
+details.paper-note summary::before { content: '▶'; font-size: 0.7em; transition: transform 0.2s; }
+details.paper-note[open] summary::before { transform: rotate(90deg); }
+details.paper-note .note-body { padding: 0 20px 16px; border-top: 1px solid var(--border);
+  max-height: 600px; overflow-y: auto; }
+details.paper-note .note-body h1 { display: none; }
+details.paper-note .note-body h2 { font-size: 1.1em; margin: 1em 0 0.3em; }
+details.paper-note .note-body h3 { font-size: 1em; }
+.day-card { background: var(--surface); border: 1px solid var(--border);
+  border-radius: 10px; padding: 20px; margin: 12px 0; transition: border-color 0.2s; }
+.day-card:hover { border-color: var(--accent); }
+.day-card h3 { margin-top: 0; }
+.day-card .meta { color: var(--text2); font-size: 0.9em; margin-bottom: 0.5em; }
+.day-card .summary { color: var(--text); }
+.header { text-align: center; margin: 0; padding: 12px 0;
+  position: sticky; top: 0; z-index: 100; background: var(--bg);
+  border-bottom: 1px solid var(--border); }
+.header h1 { border: none; font-size: 2em; margin: 0; }
+.header p { color: var(--text2); }
+@media (max-width: 768px) {
+  .dashboard { grid-template-columns: 1fr; }
+  .sidebar { order: 2; }
+  .main-content { order: 1; }
+  body { max-width: 100%; padding: 12px; }
+  h1 { font-size: 1.4em; }
+  .tab-btn { padding: 8px 14px; font-size: 0.85em; }
+  .paper-card { padding: 14px 16px; }
+}
+</style>
+<style>body{max-width:960px;}</style>
+
+</head>
+<body>
+<nav class="nav"><a href="index.html">🏠 首页</a><a href="2026-04-04.html">← 前一天</a><a href="2026-04-06.html">后一天 →</a></nav>
+<div class="detail-page"><h1 id="-今日锐评">🔪 今日锐评</h1>
+
+<p>周日的 arXiv，果然是"agentic"大联欢——区块链取证 agent、防火 agent、教育 agent，什么都往 agent 上靠。真正有料的不多，推荐系统方向有一篇可解释协同过滤值得看，联邦 RLHF 和 agent prompt learning 各有亮点。</p>
+
+<h2 id="分流表">分流表</h2>
+<table class="paper-table">
+<thead><tr><th>等级</th><th>论文</th></tr></thead>
+<tbody>
+<tr><td>👀 值得看</td><td><span class="wikilink">LIA</span>（可解释推荐，逻辑规则自编码器）· <span class="wikilink">APPA</span>（联邦 RLHF 多偏好对齐）· <span class="wikilink">Combee</span>（agent prompt learning 的扩展）</td></tr>
+<tr><td>💤 可跳过</td><td><span class="wikilink">TimeSeek</span>（LLM 预测市场 benchmark）· <span class="wikilink">Beyond Fluency</span>（agent IR 可靠性）</td></tr>
+</tbody></table>
+
+
+
+<h3 id="1-a-logical-rule-autoencoder-for-interpretable-recommendations">1. A Logical-Rule Autoencoder for Interpretable Recommendations</h3>
+<li><strong>作者</strong>: Jinhao Pan, Bowen Wei, Ziwei Zhu</li>
+<li><strong>机构</strong>: George Mason University</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2604.04270v1" target="_blank">arXiv</a> | <a href="https://arxiv.org/pdf/2604.04270v1" target="_blank">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+
+<div class="paper-figure"><img src="https://arxiv.org/html/2604.04270v1/figures/Model.png" alt="" loading="lazy"></div>
+
+<li><strong>核心方法</strong>: 提出 <span class="wikilink">LIA</span>（Logical-rule Interpretable Autoencoder），用逻辑规则替代黑盒隐向量做协同过滤。每个用户的推荐结果可以用 AND/OR 逻辑规则解释（"因为你看了 A 和 B，所以推荐 C"）。基于 <span class="wikilink">MultVAE</span> 架构改造，latent space 被约束为离散逻辑操作。</li>
+<li><strong>对比方法/Baselines</strong>: <span class="wikilink">MultVAE</span>, <span class="wikilink">MF</span>, 传统 <span class="wikilink">协同过滤</span></li>
+<li><strong>借鉴意义</strong>: 可解释推荐一直是工业界的痛点——模型说不清为什么推荐。逻辑规则方法提供了 intrinsic interpretability，比 post-hoc 解释更可信。</li>
+<li><strong>锐评</strong>: 想法不错，但 George Mason 小组的论文通常实验规模偏小。逻辑规则能不能在大规模稀疏数据上保持表达能力存疑——协同过滤的精髓就是隐式模式发现，强行离散化可能丢信息。另外 NDCG 指标对比 MultVAE 能赢多少？摘要没提具体数字，有点心虚。 👀</li>
+
+<h3 id="2-appa-adaptive-preference-pluralistic-alignment-for-fair-federated-rlhf-of-llms">2. APPA: Adaptive Preference Pluralistic Alignment for Fair Federated RLHF of LLMs</h3>
+<li><strong>作者</strong>: Mahmoud Srewa, Tianyu Zhao, Salma Elmalaki</li>
+<li><strong>机构</strong>: UC Irvine</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2604.04261v1" target="_blank">arXiv</a> | <a href="https://arxiv.org/pdf/2604.04261v1" target="_blank">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+
+<div class="paper-figure"><img src="https://arxiv.org/html/2604.04261v1/x1.png" alt="" loading="lazy"></div>
+
+<li><strong>核心方法</strong>: <span class="wikilink">APPA</span> 解决联邦 RLHF 中多群体偏好冲突问题。核心是 adaptive preference aggregation——不是简单平均各方 reward，而是动态调整不同群体的权重，确保少数派偏好不被淹没。用 <span class="wikilink">PPO</span> 做 policy optimization，<span class="wikilink">SFT</span> 做初始化。</li>
+<li><strong>对比方法/Baselines</strong>: <span class="wikilink">PluralLLM</span>, <span class="wikilink">DPA</span>, <span class="wikilink">OQA</span>, <span class="wikilink">GLOBALQA</span></li>
+<li><strong>借鉴意义</strong>: 联邦场景下的 RLHF 对齐是实际部署中越来越重要的问题——不同地区/文化的用户对"有用"和"安全"的定义天差地别。</li>
+<li><strong>锐评</strong>: 方向没问题，但 "pluralistic alignment" 本身就是个模糊概念——如何量化"公平"？不同群体的 reward 加权怎么选？如果某个群体的偏好本身就有问题（比如要求模型输出有害内容），"公平"的定义就需要重新审视。理论框架不错，但实际效果取决于群体划分的粒度。 👀</li>
+
+<h3 id="3-combee-scaling-prompt-learning-for-self-improving-language-model-agents">3. Combee: Scaling Prompt Learning for Self-Improving Language Model Agents</h3>
+<li><strong>作者</strong>: Hanchen Li 等</li>
+<li><strong>机构</strong>: UC Berkeley, Stanford, Tensormesh, Gradient Network</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2604.04247v1" target="_blank">arXiv</a> | <a href="https://arxiv.org/pdf/2604.04247v1" target="_blank">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+
+<div class="paper-figure"><img src="https://arxiv.org/html/2604.04247v1/x1.png" alt="" loading="lazy"></div>
+
+<li><strong>核心方法</strong>: <span class="wikilink">Combee</span> 把 prompt learning 从单 agent 扩展到大规模多 agent 场景。之前的方法如 <span class="wikilink">ACE</span> 和 <span class="wikilink">GEPA</span> 只在单 agent 或低并行度下有效，Combee 通过分层 prompt 结构和共享 prompt bank 实现 scaling——多个 agent 共享学习到的 prompt 知识。</li>
+<li><strong>对比方法/Baselines</strong>: <span class="wikilink">ACE</span>, <span class="wikilink">GEPA</span></li>
+<li><strong>借鉴意义</strong>: Inference-time learning 不改参数只改 prompt 的思路越来越成熟，scaling 到多 agent 是自然的下一步。</li>
+<li><strong>锐评</strong>: Berkeley + Stanford 的阵容看着强，但 prompt learning 这个方向本身的天花板在哪里？不改参数的学习终究受限于 prompt 的表达能力。另外 "self-improving" 这个词用得太大了——到底能自我改进到什么程度？如果只是在固定 benchmark 上 prompt search，那跟 AutoML 换皮差不多。 👀</li>
+
+<h3 id="4-timeseek-temporal-reliability-of-agentic-forecasters">4. TimeSeek: Temporal Reliability of Agentic Forecasters</h3>
+<li><strong>作者</strong>: Dennis Lee</li>
+<li><strong>机构</strong>: University of Waterloo, University of Pennsylvania</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2604.04220v1" target="_blank">arXiv</a> | <a href="https://arxiv.org/pdf/2604.04220v1" target="_blank">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+
+<li><strong>核心方法</strong>: <span class="wikilink">TimeSeek</span> 评估 10 个前沿 LLM（含 <span class="wikilink">GPT-5</span>, <span class="wikilink">DeepSeek</span>）在 150 个 CFTC 监管的 Kalshi 二元市场上的预测可靠性。关键创新是时间维度——在预测市场生命周期的 5 个 checkpoint 分别测试，共 15000 个预测。区分有无 web search 的效果。</li>
+<li><strong>锐评</strong>: Benchmark 论文，方向有意思但创新不大。用预测市场衡量 LLM 的"真实世界"推理能力是个好角度，但 150 个市场的样本量偏小。没有 BSS (Brier Skill Score) 的改进幅度说明，很难判断实际价值。 💤</li>
+
+<h3 id="5-beyond-fluency-toward-reliable-trajectories-in-agentic-ir">5. Beyond Fluency: Toward Reliable Trajectories in Agentic IR</h3>
+<li><strong>作者</strong>: Anushree Sinha, Srivaths Ranganathan, Debanshu Das, Abhishek Dharmaratnakar</li>
+<li><strong>机构</strong>: Google</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2604.04269v1" target="_blank">arXiv</a> | <a href="https://arxiv.org/pdf/2604.04269v1" target="_blank">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+
+<li><strong>核心方法</strong>: 分析 Agentic IR（基于 agent 的信息检索）中的 trajectory 可靠性问题——agent 在多步 Reason-Act-Observe 循环中，早期小错误会级联放大，即使语言输出仍然流畅。提出 functional misalignment 的概念。</li>
+<li><strong>锐评</strong>: Google 出品，问题定义不错（fluency ≠ reliability），但更像是 position paper / analysis 而非方法论文。对做 agent 系统的人有参考价值，但没有具体的解决方案。 💤</li>
+
+
+<h3 id="被排除的论文">被排除的论文</h3>
+
+<table class="paper-table">
+<thead><tr><th>论文</th><th>排除原因</th></tr></thead>
+<tbody>
+<tr><td>Governance-Constrained Agentic AI (Wildfire)</td><td>领域应用（防火监测），与核心关注方向无关</td></tr>
+<tr><td>Agentization of Digital Assets</td><td>Web3/数字资产 agent 化，概念性工作</td></tr>
+<tr><td>Pedagogical Safety in Educational RL</td><td>教育领域 RL，非通用方法</td></tr>
+<tr><td>LOCARD: Agentic Blockchain Forensics</td><td>区块链取证，领域特定</td></tr>
+<tr><td>Graph-Assisted Defect Reasoning for LPBF</td><td>制造业缺陷检测，非 AI 核心</td></tr>
+<tr><td>CODE-GEN: RAG-Based MCQ Generation</td><td>教育题目生成，应用场景限定</td></tr>
+</tbody></table>
+
+
+<p><strong>趋势</strong>: 周末投稿的 "agentic" 论文大量涌现，但多是把现有 LLM/agent 框架套到具体领域（教育、制造、取证），真正推进方法论的寥寥。推荐系统方向，可解释性是个值得关注的新热点。</p></div>
+<footer style="text-align:center;color:var(--text2);margin:3em 0 1em;font-size:0.85em;">
+  Generated by daily-papers-web · Powered by Claude Code
+</footer>
+
+<script>
+function switchTab(tabId) {
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  document.querySelector('[data-tab="'+tabId+'"]').classList.add('active');
+  document.getElementById('panel-'+tabId).classList.add('active');
+  history.replaceState(null,'','#'+tabId);
+}
+document.addEventListener('DOMContentLoaded', function() {
+  var hash = location.hash.slice(1);
+  var target = hash && document.querySelector('[data-tab="'+hash+'"]');
+  if (target) switchTab(hash);
+  // Re-render KaTeX inside <details> when opened
+  document.querySelectorAll('details.paper-note').forEach(function(d) {
+    d.addEventListener('toggle', function() {
+      if (d.open && typeof renderMathInElement === 'function') {
+        renderMathInElement(d, {delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}]});
+      }
+    });
+  });
+});
+</script>
+
+</body>
+</html>
