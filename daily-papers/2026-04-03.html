@@ -1026,103 +1026,22 @@ $$</div>
 <li><strong>借鉴意义</strong>: Agent memory 管理是个实际问题，Mem0 的 CRUD 抽象比较工程友好。</li>
 <li><strong>锐评</strong>: 50 个 upvote 主要因为开源项目本身的热度。论文本身就是把已有产品写成 paper 的操作——技术深度有限，"production-ready" 这词用得太轻巧。和 MemGPT 的对比只在一个 benchmark 上做，不够 convincing。💤</li>
 </ul>
-<details class="paper-note"><summary>📒 精读笔记: Mem0</summary><div class="note-body"><h1>Mem0: Scalable Long-Term Memory for AI Agents</h1>
-<h2>📋 基本信息</h2>
-<ul>
-<li><strong>来源</strong>: HF Trending，⬆️ 50</li>
-</ul>
-<h2>🎯 研究动机与问题</h2>
-<p>AI agent 需要长期记忆来维持跨会话的上下文，但现有方案（如简单 RAG）缺乏结构化的记忆管理。</p>
-<h2>🔧 方法详解</h2>
-<h3>CRUD 记忆管理</h3>
-<p>Mem0 提供四个核心操作：</p>
-<ul>
-<li><strong>ADD</strong>：添加新记忆</li>
-<li><strong>UPDATE</strong>：更新已有记忆</li>
-<li><strong>DELETE</strong>：删除过时记忆</li>
-<li><strong>CORRECT</strong>：纠正错误记忆</li>
-</ul>
-<h3>与 RAG 的区别</h3>
-<table>
-<thead>
-<tr>
-<th>特性</th>
-<th>RAG</th>
-<th>Mem0</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>存储方式</td>
-<td>文档块</td>
-<td>结构化记忆</td>
-</tr>
-<tr>
-<td>管理</td>
-<td>静态索引</td>
-<td>CRUD 动态管理</td>
-</tr>
-<tr>
-<td>更新</td>
-<td>重建索引</td>
-<td>增量更新</td>
-</tr>
-<tr>
-<td>冲突处理</td>
-<td>无</td>
-<td>CORRECT 操作</td>
-</tr>
-</tbody>
-</table>
-<h2>📊 实验结果</h2>
-<p>在 <span class="wikilink">LOCOMO</span> benchmark 上的评测：</p>
-<table>
-<thead>
-<tr>
-<th>方法</th>
-<th>性能</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Full-Context</td>
-<td>upper bound</td>
-</tr>
-<tr>
-<td><span class="wikilink">MemGPT</span></td>
-<td>moderate</td>
-</tr>
-<tr>
-<td><span class="wikilink">LangMem</span></td>
-<td>moderate</td>
-</tr>
-<tr>
-<td><span class="wikilink">ReadAgent</span></td>
-<td>moderate</td>
-</tr>
-<tr>
-<td><strong>Mem0</strong></td>
-<td><strong>competitive</strong></td>
-</tr>
-</tbody>
-</table>
-<h2>💡 核心贡献</h2>
+<details class="paper-note"><summary>📒 精读笔记: Mem0</summary><div class="note-body"><h1>Mem0</h1>
+<h2>定义</h2>
+<p>一个开源的 AI 记忆层框架，为 LLM 应用提供持久化的用户/会话记忆管理，支持记忆的自动提取、存储、检索和更新。</p>
+<h2>核心要点</h2>
 <ol>
-<li><strong>CRUD 抽象</strong>：工程友好的记忆管理接口</li>
-<li><strong>Production-ready</strong>：面向生产环境的设计</li>
+<li>从对话中自动提取关键信息并存储为结构化记忆</li>
+<li>支持多级记忆：用户级、会话级、Agent 级</li>
+<li>基于向量检索实现相关记忆的上下文注入</li>
+<li>与 Zep 等系统的区别：更轻量，侧重 key-value 式记忆而非图结构</li>
 </ol>
-<h2>🤔 局限性与思考</h2>
-<ol>
-<li>50 个 upvote 主要因为开源项目热度，论文本身技术深度有限</li>
-<li>"Production-ready" 用词太轻巧</li>
-<li>只在一个 benchmark 上对比，不够 convincing</li>
-<li>本质是把已有产品写成 paper</li>
-</ol>
-<h2>📚 相关工作</h2>
+<h2>相关概念</h2>
 <ul>
-<li><span class="wikilink">MemGPT</span>: 主要对比方法</li>
-<li><span class="wikilink">LangMem</span>: 记忆管理方案</li>
-<li><span class="wikilink">RAG</span>: 传统检索增强方案</li>
+<li><span class="wikilink">RAG</span></li>
+<li><span class="wikilink">Episodic Memory</span></li>
+<li><span class="wikilink">Semantic Memory</span></li>
+<li><span class="wikilink">LLM Agent</span></li>
 </ul></div></details></div><div class="paper-card" data-topic="💾 Memory × Agent"><h3>10. MemOS: A Memory OS for AI System</h3>
 <ul>
 <li><strong>作者</strong>: Unknown</li>
@@ -2211,103 +2130,22 @@ $$</div>
 <li><strong>借鉴意义</strong>: Agent memory 管理是个实际问题，Mem0 的 CRUD 抽象比较工程友好。</li>
 <li><strong>锐评</strong>: 50 个 upvote 主要因为开源项目本身的热度。论文本身就是把已有产品写成 paper 的操作——技术深度有限，"production-ready" 这词用得太轻巧。和 MemGPT 的对比只在一个 benchmark 上做，不够 convincing。💤</li>
 </ul>
-<details class="paper-note"><summary>📒 精读笔记: Mem0</summary><div class="note-body"><h1>Mem0: Scalable Long-Term Memory for AI Agents</h1>
-<h2>📋 基本信息</h2>
-<ul>
-<li><strong>来源</strong>: HF Trending，⬆️ 50</li>
-</ul>
-<h2>🎯 研究动机与问题</h2>
-<p>AI agent 需要长期记忆来维持跨会话的上下文，但现有方案（如简单 RAG）缺乏结构化的记忆管理。</p>
-<h2>🔧 方法详解</h2>
-<h3>CRUD 记忆管理</h3>
-<p>Mem0 提供四个核心操作：</p>
-<ul>
-<li><strong>ADD</strong>：添加新记忆</li>
-<li><strong>UPDATE</strong>：更新已有记忆</li>
-<li><strong>DELETE</strong>：删除过时记忆</li>
-<li><strong>CORRECT</strong>：纠正错误记忆</li>
-</ul>
-<h3>与 RAG 的区别</h3>
-<table>
-<thead>
-<tr>
-<th>特性</th>
-<th>RAG</th>
-<th>Mem0</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>存储方式</td>
-<td>文档块</td>
-<td>结构化记忆</td>
-</tr>
-<tr>
-<td>管理</td>
-<td>静态索引</td>
-<td>CRUD 动态管理</td>
-</tr>
-<tr>
-<td>更新</td>
-<td>重建索引</td>
-<td>增量更新</td>
-</tr>
-<tr>
-<td>冲突处理</td>
-<td>无</td>
-<td>CORRECT 操作</td>
-</tr>
-</tbody>
-</table>
-<h2>📊 实验结果</h2>
-<p>在 <span class="wikilink">LOCOMO</span> benchmark 上的评测：</p>
-<table>
-<thead>
-<tr>
-<th>方法</th>
-<th>性能</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Full-Context</td>
-<td>upper bound</td>
-</tr>
-<tr>
-<td><span class="wikilink">MemGPT</span></td>
-<td>moderate</td>
-</tr>
-<tr>
-<td><span class="wikilink">LangMem</span></td>
-<td>moderate</td>
-</tr>
-<tr>
-<td><span class="wikilink">ReadAgent</span></td>
-<td>moderate</td>
-</tr>
-<tr>
-<td><strong>Mem0</strong></td>
-<td><strong>competitive</strong></td>
-</tr>
-</tbody>
-</table>
-<h2>💡 核心贡献</h2>
+<details class="paper-note"><summary>📒 精读笔记: Mem0</summary><div class="note-body"><h1>Mem0</h1>
+<h2>定义</h2>
+<p>一个开源的 AI 记忆层框架，为 LLM 应用提供持久化的用户/会话记忆管理，支持记忆的自动提取、存储、检索和更新。</p>
+<h2>核心要点</h2>
 <ol>
-<li><strong>CRUD 抽象</strong>：工程友好的记忆管理接口</li>
-<li><strong>Production-ready</strong>：面向生产环境的设计</li>
+<li>从对话中自动提取关键信息并存储为结构化记忆</li>
+<li>支持多级记忆：用户级、会话级、Agent 级</li>
+<li>基于向量检索实现相关记忆的上下文注入</li>
+<li>与 Zep 等系统的区别：更轻量，侧重 key-value 式记忆而非图结构</li>
 </ol>
-<h2>🤔 局限性与思考</h2>
-<ol>
-<li>50 个 upvote 主要因为开源项目热度，论文本身技术深度有限</li>
-<li>"Production-ready" 用词太轻巧</li>
-<li>只在一个 benchmark 上对比，不够 convincing</li>
-<li>本质是把已有产品写成 paper</li>
-</ol>
-<h2>📚 相关工作</h2>
+<h2>相关概念</h2>
 <ul>
-<li><span class="wikilink">MemGPT</span>: 主要对比方法</li>
-<li><span class="wikilink">LangMem</span>: 记忆管理方案</li>
-<li><span class="wikilink">RAG</span>: 传统检索增强方案</li>
+<li><span class="wikilink">RAG</span></li>
+<li><span class="wikilink">Episodic Memory</span></li>
+<li><span class="wikilink">Semantic Memory</span></li>
+<li><span class="wikilink">LLM Agent</span></li>
 </ul></div></details></div><div class="paper-card" data-topic="💾 Memory × Agent"><h3>10. MemOS: A Memory OS for AI System</h3>
 <ul>
 <li><strong>作者</strong>: Unknown</li>

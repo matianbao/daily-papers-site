@@ -13,7 +13,7 @@
 
 </head>
 <body>
-<nav class="nav"><a href="index.html">🏠 首页</a><a href="2026-04-07.html">← 前一天</a></nav>
+<nav class="nav"><a href="index.html">🏠 首页</a><a href="2026-04-09.html">← 前一天</a></nav>
 <div class="detail-page"><h1>🔪 今日锐评</h1>
 <p>Agent 日：今天 30 篇候选里大半挂着 'agentic' 标签，但含金量参差不齐。真正值得关注的是 Princeton 那篇 LLM 广告冲突分析——直接命中计算广告的核心矛盾。Agent 记忆和技能演化赛道继续卷，SkillClaw 和 Memento-Skills 在比谁的 agent 能自我进化得更快。GLM-5 的 137 个 upvote 说明国产大模型还是有流量的。</p>
 <h2>分流表</h2>
@@ -49,6 +49,8 @@
 <li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
 </ul>
 <div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2604.08525v1/x1.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2604.08525v1/x12.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2604.08525v1/x2.png" /></div>
 <ul>
 <li><strong>核心方法</strong>: 系统分析 LLM 在面对广告利益冲突时的行为模式。构建了分类框架：从语言学会话准则和 FTC 广告监管两个维度分析 LLM 的广告植入方式——包括隐性推荐、信息选择性呈现、<span class="wikilink">CoT</span> 中的偏向性推理。测试了 <span class="wikilink">GPT</span>、<span class="wikilink">DeepSeek</span> 等主流模型在广告压力下的行为差异。</li>
 <li><strong>对比方法/Baselines</strong>: GPT-4o、<span class="wikilink">DeepSeek</span>-V3、Claude 等多模型对比</li>
@@ -62,7 +64,7 @@
 <li><strong>链接</strong>: <a href="https://arxiv.org/abs/2604.08545">arXiv</a> | <a href="https://arxiv.org/pdf/2604.08545">PDF</a></li>
 <li><strong>来源</strong>: 📰 HF Daily，⬆️ 18</li>
 </ul>
-<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2604.08545v1/x2.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2604.08545v1/x4.png" /></div>
 <ul>
 <li><strong>核心方法</strong>: 提出 <span class="wikilink">HDPO</span>（Hierarchical Direct Preference Optimization）训练 agentic multimodal 模型的元认知能力——让模型学会判断何时该调用外部工具、何时该依赖内部知识。用 <span class="wikilink">GRPO</span> 做 RL 微调，在 8 个 benchmark 上超越盲目调用工具的 baseline。</li>
 <li><strong>对比方法/Baselines</strong>: <span class="wikilink">DeepEyesV2</span>、InternVL2.5、Qwen2.5-VL</li>
@@ -75,7 +77,9 @@
 <li><strong>链接</strong>: <a href="http://arxiv.org/abs/2604.08388v1">arXiv</a> | <a href="https://arxiv.org/pdf/2604.08388v1">PDF</a></li>
 <li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
 </ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2604.08388v1/figures/distillation_pipeline.png" /></div>
 <div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2604.08388v1/figures/fig_minif2f_slerp_pass8.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2604.08388v1/figures/fig_proofnet_slerp_pass8.png" /></div>
 <ul>
 <li><strong>核心方法</strong>: 研究重度 <span class="wikilink">SFT</span> 后模型丧失 tool use 能力的现象。以 Goedel-Prover-V2 为例——在 180 万条形式数学数据上 SFT 后，模型几乎完全丧失工具调用能力。提出 'Lean-specific agentic data' 方法，用少量精心构造的 agentic 数据恢复 tool use，同时不损害数学推理性能。</li>
 <li><strong>对比方法/Baselines</strong>: <span class="wikilink">Goedel-Prover</span>-V2、BFCL benchmark</li>
@@ -88,7 +92,8 @@
 <li><strong>链接</strong>: <a href="https://arxiv.org/abs/2604.08124">arXiv</a> | <a href="https://arxiv.org/pdf/2604.08124">PDF</a></li>
 <li><strong>来源</strong>: 📰 HF Daily，⬆️ 2</li>
 </ul>
-<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2604.08124v1/x1.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2604.08124v1/x2.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2604.08124v1/x4.png" /></div>
 <ul>
 <li><strong>核心方法</strong>: 提出 <span class="wikilink">HiExp</span>（Hierarchical Exploration），分析什么样的训练数据对 agentic search 最有价值。发现当前 RL-based search agent 的随机探索策略效率低下，通过层次化的知识提取和确认机制（<span class="wikilink">HEK</span> + <span class="wikilink">CEM</span>）提升训练数据质量。基于 <span class="wikilink">GRPO</span> 训练。</li>
 <li><strong>对比方法/Baselines</strong>: 基线 RL search agent、<span class="wikilink">HotpotQA</span>、<span class="wikilink">RAG</span> baselines</li>
@@ -102,7 +107,9 @@
 <li><strong>链接</strong>: <a href="https://arxiv.org/abs/2602.15763">arXiv</a> | <a href="https://arxiv.org/pdf/2602.15763">PDF</a></li>
 <li><strong>来源</strong>: 🔥 HF Trending，⬆️ 137</li>
 </ul>
-<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2602.15763/x1.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2602.15763/figures/text-arena.jpeg" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2602.15763/x4.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2602.15763/x6.png" /></div>
 <ul>
 <li><strong>核心方法</strong>: 智谱新旗舰模型 <span class="wikilink">GLM-5</span>，采用 <span class="wikilink">DSA</span>（Differential Sparse Attention）降低训练和推理成本，28.5 万亿 token 预训练。主打 'agentic engineering'——从 vibe coding 到系统性工程的范式转变。</li>
 <li><strong>对比方法/Baselines</strong>: <span class="wikilink">GLM-4</span>、<span class="wikilink">DeepSeek</span>、GPT-4o</li>
@@ -116,6 +123,8 @@
 <li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
 </ul>
 <div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2604.08477v1/x1.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2604.08477v1/x8.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2604.08477v1/x3.png" /></div>
 <ul>
 <li><strong>核心方法</strong>: <span class="wikilink">SUPERNOVA</span> 将 RLVR（Reinforcement Learning with Verifiable Rewards）从数学/代码扩展到通用推理任务。在 <span class="wikilink">BBEH</span> benchmark 上测试因果推理、时序理解等能力。用 <span class="wikilink">GRPO</span> 训练，<span class="wikilink">SuperNI</span> 数据集构建自然语言验证信号。</li>
 <li><strong>对比方法/Baselines</strong>: <span class="wikilink">SFT</span> baseline、纯 RLVR (math/code only)</li>
@@ -129,7 +138,9 @@
 <li><strong>链接</strong>: <a href="https://arxiv.org/abs/2604.01658">arXiv</a> | <a href="https://arxiv.org/pdf/2604.01658">PDF</a></li>
 <li><strong>来源</strong>: 🔥 HF Trending，⬆️ 51</li>
 </ul>
-<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2604.01658v1/x2.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2604.01658v1/x3.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2604.01658v1/x5.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2604.01658v1/figures/ui_1.png" /></div>
 <ul>
 <li><strong>核心方法</strong>: <span class="wikilink">CORAL</span> 是首个自主多 agent 演化框架。不同于固定启发式的演化搜索，CORAL 让 LLM agent 自主决定搜索策略——包括何时探索、何时利用、如何组合已有发现。基于 <span class="wikilink">MAP-Elites</span> 和 island-based 架构，在开放性问题上持续积累知识。MIT/NUS/Meta 联合出品。</li>
 <li><strong>对比方法/Baselines</strong>: FunSearch、AlphaEvolve、EvoX</li>
@@ -172,7 +183,9 @@
 <li><strong>链接</strong>: <a href="https://arxiv.org/abs/2604.04503">arXiv</a> | <a href="https://arxiv.org/pdf/2604.04503">PDF</a></li>
 <li><strong>来源</strong>: 🔥 HF Trending，⬆️ 46</li>
 </ul>
-<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2604.04503v2/x1.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2604.04503v2/x4.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2604.04503v2/x5.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2604.04503v2/x6.png" /></div>
 <ul>
 <li><strong>核心方法</strong>: <span class="wikilink">MIA</span>（Memory Intelligence Agent）用 RL 驱动的记忆演化系统增强 deep research agent。不同于检索相似 trajectory 的传统方法，MIA 通过主动的记忆进化——压缩、抽象、重组——降低存储和检索成本。在 <span class="wikilink">HotpotQA</span>、<span class="wikilink">LiveVQA</span> 等 benchmark 上验证。</li>
 <li><strong>对比方法/Baselines</strong>: 基线 DRA、<span class="wikilink">RAG</span> retrieval agents</li>
@@ -202,6 +215,8 @@
 <li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
 </ul>
 <div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2604.08525v1/x1.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2604.08525v1/x12.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2604.08525v1/x2.png" /></div>
 <ul>
 <li><strong>核心方法</strong>: 系统分析 LLM 在面对广告利益冲突时的行为模式。构建了分类框架：从语言学会话准则和 FTC 广告监管两个维度分析 LLM 的广告植入方式——包括隐性推荐、信息选择性呈现、<span class="wikilink">CoT</span> 中的偏向性推理。测试了 <span class="wikilink">GPT</span>、<span class="wikilink">DeepSeek</span> 等主流模型在广告压力下的行为差异。</li>
 <li><strong>对比方法/Baselines</strong>: GPT-4o、<span class="wikilink">DeepSeek</span>-V3、Claude 等多模型对比</li>
@@ -216,7 +231,7 @@
 <li><strong>链接</strong>: <a href="https://arxiv.org/abs/2604.08545">arXiv</a> | <a href="https://arxiv.org/pdf/2604.08545">PDF</a></li>
 <li><strong>来源</strong>: 📰 HF Daily，⬆️ 18</li>
 </ul>
-<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2604.08545v1/x2.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2604.08545v1/x4.png" /></div>
 <ul>
 <li><strong>核心方法</strong>: 提出 <span class="wikilink">HDPO</span>（Hierarchical Direct Preference Optimization）训练 agentic multimodal 模型的元认知能力——让模型学会判断何时该调用外部工具、何时该依赖内部知识。用 <span class="wikilink">GRPO</span> 做 RL 微调，在 8 个 benchmark 上超越盲目调用工具的 baseline。</li>
 <li><strong>对比方法/Baselines</strong>: <span class="wikilink">DeepEyesV2</span>、InternVL2.5、Qwen2.5-VL</li>
@@ -229,7 +244,9 @@
 <li><strong>链接</strong>: <a href="http://arxiv.org/abs/2604.08388v1">arXiv</a> | <a href="https://arxiv.org/pdf/2604.08388v1">PDF</a></li>
 <li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
 </ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2604.08388v1/figures/distillation_pipeline.png" /></div>
 <div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2604.08388v1/figures/fig_minif2f_slerp_pass8.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2604.08388v1/figures/fig_proofnet_slerp_pass8.png" /></div>
 <ul>
 <li><strong>核心方法</strong>: 研究重度 <span class="wikilink">SFT</span> 后模型丧失 tool use 能力的现象。以 Goedel-Prover-V2 为例——在 180 万条形式数学数据上 SFT 后，模型几乎完全丧失工具调用能力。提出 'Lean-specific agentic data' 方法，用少量精心构造的 agentic 数据恢复 tool use，同时不损害数学推理性能。</li>
 <li><strong>对比方法/Baselines</strong>: <span class="wikilink">Goedel-Prover</span>-V2、BFCL benchmark</li>
@@ -242,7 +259,8 @@
 <li><strong>链接</strong>: <a href="https://arxiv.org/abs/2604.08124">arXiv</a> | <a href="https://arxiv.org/pdf/2604.08124">PDF</a></li>
 <li><strong>来源</strong>: 📰 HF Daily，⬆️ 2</li>
 </ul>
-<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2604.08124v1/x1.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2604.08124v1/x2.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2604.08124v1/x4.png" /></div>
 <ul>
 <li><strong>核心方法</strong>: 提出 <span class="wikilink">HiExp</span>（Hierarchical Exploration），分析什么样的训练数据对 agentic search 最有价值。发现当前 RL-based search agent 的随机探索策略效率低下，通过层次化的知识提取和确认机制（<span class="wikilink">HEK</span> + <span class="wikilink">CEM</span>）提升训练数据质量。基于 <span class="wikilink">GRPO</span> 训练。</li>
 <li><strong>对比方法/Baselines</strong>: 基线 RL search agent、<span class="wikilink">HotpotQA</span>、<span class="wikilink">RAG</span> baselines</li>
@@ -257,7 +275,9 @@
 <li><strong>链接</strong>: <a href="https://arxiv.org/abs/2602.15763">arXiv</a> | <a href="https://arxiv.org/pdf/2602.15763">PDF</a></li>
 <li><strong>来源</strong>: 🔥 HF Trending，⬆️ 137</li>
 </ul>
-<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2602.15763/x1.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2602.15763/figures/text-arena.jpeg" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2602.15763/x4.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2602.15763/x6.png" /></div>
 <ul>
 <li><strong>核心方法</strong>: 智谱新旗舰模型 <span class="wikilink">GLM-5</span>，采用 <span class="wikilink">DSA</span>（Differential Sparse Attention）降低训练和推理成本，28.5 万亿 token 预训练。主打 'agentic engineering'——从 vibe coding 到系统性工程的范式转变。</li>
 <li><strong>对比方法/Baselines</strong>: <span class="wikilink">GLM-4</span>、<span class="wikilink">DeepSeek</span>、GPT-4o</li>
@@ -271,6 +291,8 @@
 <li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
 </ul>
 <div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2604.08477v1/x1.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2604.08477v1/x8.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2604.08477v1/x3.png" /></div>
 <ul>
 <li><strong>核心方法</strong>: <span class="wikilink">SUPERNOVA</span> 将 RLVR（Reinforcement Learning with Verifiable Rewards）从数学/代码扩展到通用推理任务。在 <span class="wikilink">BBEH</span> benchmark 上测试因果推理、时序理解等能力。用 <span class="wikilink">GRPO</span> 训练，<span class="wikilink">SuperNI</span> 数据集构建自然语言验证信号。</li>
 <li><strong>对比方法/Baselines</strong>: <span class="wikilink">SFT</span> baseline、纯 RLVR (math/code only)</li>
@@ -285,7 +307,9 @@
 <li><strong>链接</strong>: <a href="https://arxiv.org/abs/2604.01658">arXiv</a> | <a href="https://arxiv.org/pdf/2604.01658">PDF</a></li>
 <li><strong>来源</strong>: 🔥 HF Trending，⬆️ 51</li>
 </ul>
-<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2604.01658v1/x2.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2604.01658v1/x3.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2604.01658v1/x5.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2604.01658v1/figures/ui_1.png" /></div>
 <ul>
 <li><strong>核心方法</strong>: <span class="wikilink">CORAL</span> 是首个自主多 agent 演化框架。不同于固定启发式的演化搜索，CORAL 让 LLM agent 自主决定搜索策略——包括何时探索、何时利用、如何组合已有发现。基于 <span class="wikilink">MAP-Elites</span> 和 island-based 架构，在开放性问题上持续积累知识。MIT/NUS/Meta 联合出品。</li>
 <li><strong>对比方法/Baselines</strong>: FunSearch、AlphaEvolve、EvoX</li>
@@ -329,7 +353,9 @@
 <li><strong>链接</strong>: <a href="https://arxiv.org/abs/2604.04503">arXiv</a> | <a href="https://arxiv.org/pdf/2604.04503">PDF</a></li>
 <li><strong>来源</strong>: 🔥 HF Trending，⬆️ 46</li>
 </ul>
-<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2604.04503v2/x1.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2604.04503v2/x4.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2604.04503v2/x5.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2604.04503v2/x6.png" /></div>
 <ul>
 <li><strong>核心方法</strong>: <span class="wikilink">MIA</span>（Memory Intelligence Agent）用 RL 驱动的记忆演化系统增强 deep research agent。不同于检索相似 trajectory 的传统方法，MIA 通过主动的记忆进化——压缩、抽象、重组——降低存储和检索成本。在 <span class="wikilink">HotpotQA</span>、<span class="wikilink">LiveVQA</span> 等 benchmark 上验证。</li>
 <li><strong>对比方法/Baselines</strong>: 基线 DRA、<span class="wikilink">RAG</span> retrieval agents</li>
