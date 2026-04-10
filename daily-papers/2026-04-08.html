@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>2026-04-08 论文推荐</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.21/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.21/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.21/dist/contrib/auto-render.min.js"
+  onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}]});"></script>
+<link rel="stylesheet" href="style.css">
+<style>body{max-width:960px;}</style>
+
+</head>
+<body>
+<nav class="nav"><a href="index.html">🏠 首页</a><a href="2026-04-07.html">← 前一天</a><a href="2026-04-09.html">后一天 →</a></nav>
+<div class="detail-page"><h1>🔪 今日锐评</h1>
+<p>小日子：8号只有16篇候选，质量中规中矩。最大惊喜是63个upvote的LRAT——教检索系统从agent轨迹而非人类点击中学习，直接改写IR训练范式。ThinkTwice用GRPO联合优化推理和自修正也值得关注。其余多数是'有意思但不够深'的那类。</p>
+<h2>分流表</h2>
+<table>
+<thead>
+<tr>
+<th>等级</th>
+<th>论文</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>🔥 必读</td>
+<td><span class="wikilink">LRAT</span>（从agent轨迹训练检索模型，IR范式转变）</td>
+</tr>
+<tr>
+<td>👀 值得看</td>
+<td><span class="wikilink">ThinkTwice</span>（GRPO联合优化推理+自修正） · <span class="wikilink">SkillsBench</span>（agent技能使用的野外benchmark） · <span class="wikilink">DARE</span>（扩散LLM的RL对齐） · <span class="wikilink">PRIME</span>（无需训练的主动推理记忆演化） · <span class="wikilink">Paper-Circle</span>（多agent研究发现框架） · <span class="wikilink">ReflectRM</span>（生成式reward model自反思增强）</td>
+</tr>
+<tr>
+<td>💤 可跳过</td>
+<td><span class="wikilink">GBQA</span>（游戏QA benchmark，太niche） · <span class="wikilink">CVA</span>（心理学角度的agent架构，偏理论） · <span class="wikilink">MegaTrain</span>（工程有趣但非核心） · 其余论文与核心关注领域交集不足</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<div class="tab-bar"><button class="tab-btn active" data-tab="all" onclick="switchTab('all')">📋 全部<span class="tab-count">7</span></button><button class="tab-btn" data-tab="检索与搜索" onclick="switchTab('检索与搜索')">📄 🔍 检索与搜索<span class="tab-count">1</span></button><button class="tab-btn" data-tab="推理与自修正" onclick="switchTab('推理与自修正')">📄 🧠 推理与自修正<span class="tab-count">2</span></button><button class="tab-btn" data-tab="agent工具与技能" onclick="switchTab('agent工具与技能')">🔧 🤖 Agent 工具与技能<span class="tab-count">1</span></button><button class="tab-btn" data-tab="llm训练与架构" onclick="switchTab('llm训练与架构')">🤖 🔬 LLM 训练与架构<span class="tab-count">2</span></button><button class="tab-btn" data-tab="multiagent系统" onclick="switchTab('multiagent系统')">🤖 🤝 Multi-Agent 系统<span class="tab-count">1</span></button></div>
+<div id="panel-all" class="tab-panel active"><h2>🔍 检索与搜索</h2><div class="paper-card" data-topic="🔍 检索与搜索"><h3>1. Learning to Retrieve from Agent Trajectories</h3>
+<ul>
+<li><strong>作者</strong>: Yuqi Zhou<em>, Sunhao Dai</em>†, Changle Qu, Liang Pang, Jun Xu✉, Ji-Rong Wen</li>
+<li><strong>机构</strong>: Gaoling School of Artificial Intelligence, Renmin University of China, CAS Key Laboratory of AI Safety, Institute of Computing Technology, Chinese Academy of Sciences111, Gaoling School of Artificial Intelligence, Renmin University of China
+, CAS Key Laboratory of AI Safety, Institute of Computing Technology, Chinese Academy of Sciences111*Equal contribution. †Project Leader. ✉Corresponding author</li>
+<li><strong>链接</strong>: <a href="https://arxiv.org/abs/2604.04949">arXiv</a> | <a href="https://arxiv.org/pdf/2604.04949">PDF</a></li>
+<li><strong>来源</strong>: 📰 HF Daily，⬆️ 63</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2604.04949v1/x1.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: <span class="wikilink">LRAT</span>（Learning to Retrieve from Agent Trajectories）颠覆了传统IR的训练范式：不再依赖人类点击日志，而是从LLM agent的搜索轨迹中学习检索排序。在<span class="wikilink">BrowseComp</span>和InfoSeekQA上验证，证明agent轨迹信号可以替代甚至超越人类行为信号。</li>
+<li><strong>对比方法/Baselines</strong>: 传统learning-to-rank、<span class="wikilink">DeepResearch</span>风格搜索agent</li>
+<li><strong>借鉴意义</strong>: 当LLM agent成为信息检索的主要消费者时，IR系统应该从agent行为而非人类行为中学习。这对搜索引擎和<span class="wikilink">RAG</span>系统的训练范式有根本性影响。</li>
+<li><strong>锐评</strong>: 63个upvote不是没有原因的。这篇直接回答了一个被忽视的问题：当IR系统的用户从人类变成agent，训练信号也该跟着变。从agent轨迹中提取的偏好信号比人类点击更结构化、更可解释。唯一的问题是agent轨迹本身的质量——garbage in garbage out。如果agent本身就在瞎搜，学出来的检索器只会更瞎。 🔥</li>
+</ul>
+<hr /></div><h2>🧠 推理与自修正</h2><div class="paper-card" data-topic="🧠 推理与自修正"><h3>2. ThinkTwice: Jointly Optimizing Large Language Models for Reasoning and Self-Refinement</h3>
+<ul>
+<li><strong>作者</strong>: Difan Jiao1†</li>
+<li><strong>机构</strong>: 1Department of Computer Science, University of Toronto  2Coolwei AI Lab</li>
+<li><strong>链接</strong>: <a href="https://arxiv.org/abs/2604.01591">arXiv</a> | <a href="https://arxiv.org/pdf/2604.01591">PDF</a></li>
+<li><strong>来源</strong>: 📰 HF Daily，⬆️ 35</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2604.01591v2/x1.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: <span class="wikilink">ThinkTwice</span> 用<span class="wikilink">GRPO</span>联合优化LLM的推理能力和自修正能力。两阶段框架：Phase 1 生成初始答案，Phase 2 基于Phase 1的输出进行自修正。关键创新是让两个阶段共享梯度更新，避免分离训练导致的目标不一致。</li>
+<li><strong>对比方法/Baselines</strong>: <span class="wikilink">GRPO</span>、<span class="wikilink">RLVR</span>单阶段baseline、Self-Refine、<span class="wikilink">DAPO</span></li>
+<li><strong>借鉴意义</strong>: 自修正是agent系统的核心能力之一。把推理和修正联合优化比分离训练更合理。</li>
+<li><strong>锐评</strong>: 35个upvote，思路简洁有效——推理和自修正本来就不该分开训练。在<span class="wikilink">AIME</span>上的提升说明联合优化确实能捕捉到分离训练丢失的信号。但'ThinkTwice'这个名字太朴素了，而且只在数学推理上验证，通用推理场景的迁移性存疑。 👀</li>
+</ul></div><div class="paper-card" data-topic="🧠 推理与自修正"><h3>3. PRIME: Training Free Proactive Reasoning via Iterative Memory Evolution for User-Centric Agent</h3>
+<ul>
+<li><strong>作者</strong>: Wang, Prince Zizhuang, Jiang, Shuli</li>
+<li><strong>机构</strong>: shulij@alumni.cmu.edu, Carnegie Mellon University, princewang@cmu.edu</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2604.07645v1">arXiv</a> | <a href="https://arxiv.org/pdf/2604.07645v1">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2604.07645v1/figures/ai.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: <span class="wikilink">PRIME</span>（Proactive Reasoning via Iterative Memory Evolution）是一个无需训练的主动推理框架。通过迭代式记忆演化，让agent在多轮对话中主动预测用户意图并提前准备工具调用。在IntentionGym等benchmark上验证。</li>
+<li><strong>对比方法/Baselines</strong>: 被动响应式agent、<span class="wikilink">GRPO</span> RL微调agent</li>
+<li><strong>借鉴意义</strong>: 主动推理是agent从'被动应答'到'主动服务'的关键。training-free的方案降低了部署门槛。</li>
+<li><strong>锐评</strong>: 无需训练就能让agent主动预测意图——这个卖点够吸引人。但'iterative memory evolution'在多轮对话中的计算开销是多少？如果每轮都要更新记忆，延迟可能不可接受。另外IntentionGym这个benchmark太合成了，真实用户的意图比这复杂得多。 👀</li>
+</ul>
+<hr /></div><h2>🤖 Agent 工具与技能</h2><div class="paper-card" data-topic="🤖 Agent 工具与技能"><h3>4. How Well Do Agentic Skills Work in the Wild: Benchmarking LLM Skill Usage in Realistic Settings</h3>
+<ul>
+<li><strong>作者</strong>: Yujian Liu1</li>
+<li><strong>机构</strong>: 1UC Santa Barbara   2MIT CSAIL   3MIT-IBM Watson AI Lab, tommi@csail.mit.edu, yang.zhang2@ibm.com</li>
+<li><strong>链接</strong>: <a href="https://arxiv.org/abs/2604.04323">arXiv</a> | <a href="https://arxiv.org/pdf/2604.04323">PDF</a></li>
+<li><strong>来源</strong>: 📰 HF Daily，⬆️ 32</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2604.04323v1/x1.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: <span class="wikilink">SkillsBench</span> 是首个评估LLM agent技能使用的benchmark。不同于合成环境测试，SkillsBench在真实场景中评估agent对可复用技能的发现、选择和组合能力。覆盖Terminal-Bench等多个场景。</li>
+<li><strong>对比方法/Baselines</strong>: OpenAI GPT-5、通用agent baseline</li>
+<li><strong>借鉴意义</strong>: 和4月10日的<span class="wikilink">SkillClaw</span>形成互补——一个测评技能使用，一个进化技能本身。</li>
+<li><strong>锐评</strong>: 32个upvote。'技能在实际场景中到底好不好用'是个很实际的问题。但benchmark本身的覆盖面存疑——Terminal-Bench够通用吗？如果技能的定义和粒度不统一，benchmark结果的可比性就打折扣了。方向对，执行需要更多社区共建。 👀</li>
+</ul>
+<hr /></div><h2>🔬 LLM 训练与架构</h2><div class="paper-card" data-topic="🔬 LLM 训练与架构"><h3>5. DARE: Diffusion Large Language Models Alignment and Reinforcement Executor</h3>
+<ul>
+<li><strong>作者</strong>: Jingyi Yang   &amp;
+Yuxian Jiang11footnotemark:</li>
+<li><strong>机构</strong>: Zhejiang University, Fudan University, Shanghai Artificial Intelligence Laboratory, Shanghai AI Laboratory</li>
+<li><strong>链接</strong>: <a href="https://arxiv.org/abs/2604.04215">arXiv</a> | <a href="https://arxiv.org/pdf/2604.04215">PDF</a></li>
+<li><strong>来源</strong>: 📰 HF Daily，⬆️ 18</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2604.04215v1/figures/system_overview.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: <span class="wikilink">DARE</span> 首次将RL对齐方法应用到扩散语言模型（dLLM）。提出<span class="wikilink">BGPO</span>和<span class="wikilink">SDAR</span>等适配扩散过程的策略优化方法，解决dLLM无法直接用PPO/<span class="wikilink">GRPO</span>训练的问题。在HumanEval上验证。</li>
+<li><strong>对比方法/Baselines</strong>: MDLM、SEDD等自回归LLM对齐方法</li>
+<li><strong>借鉴意义</strong>: 扩散LLM是自回归范式的潜在替代方案。如果dLLM也能被有效对齐，多样性生成和并行解码的优势就能真正发挥。</li>
+<li><strong>锐评</strong>: 18个upvote，做了一件该做的事——扩散LLM不能一直是'训不动'的状态。BGPO把GRPO的思路迁移到扩散过程，工程上有难度但概念上不算新。关键看dLLM本身能不能在质量上追上自回归模型，否则对齐方法再好也是锦上添花。 👀</li>
+</ul></div><div class="paper-card" data-topic="🔬 LLM 训练与架构"><h3>6. ReflectRM: Boosting Generative Reward Models via Self-Reflection within a Unified Judgment Framework</h3>
+<ul>
+<li><strong>作者</strong>: Kai Qin1,2,†\dagger</li>
+<li><strong>机构</strong>: 2Baidu Inc., Beijing, China, 1Shenzhen International Graduate School, Tsinghua University</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2604.07506v1">arXiv</a> | <a href="https://arxiv.org/pdf/2604.07506v1">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2604.07506v1/figures/intro.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: <span class="wikilink">ReflectRM</span> 通过自反思机制增强生成式Reward Model。在统一的判断框架中，RM先生成初始评价，再通过Self-Reflection修正偏差。在<span class="wikilink">RewardBench</span>和HelpSteer3上验证。</li>
+<li><strong>对比方法/Baselines</strong>: 标量RM、传统生成式RM（GRM）</li>
+<li><strong>借鉴意义</strong>: Reward Model的质量直接决定<span class="wikilink">RLHF</span>的效果。让RM自我反思修正偏差，比简单增大模型更高效。</li>
+<li><strong>锐评</strong>: 思路合理——RM也可以'三思而后行'。但Self-Reflection的计算成本翻倍了，在大规模RLHF训练中这个开销可能不可接受。而且RM自反思的质量上限受限于RM本身的能力——你不能指望一个不够好的RM能正确反思出自己哪里不好。 👀</li>
+</ul>
+<hr /></div><h2>🤝 Multi-Agent 系统</h2><div class="paper-card" data-topic="🤝 Multi-Agent 系统"><h3>7. Paper Circle: An Open-source Multi-agent Research Discovery and Analysis Framework</h3>
+<ul>
+<li><strong>作者</strong>: Komal Kumar1</li>
+<li><strong>机构</strong>: 1 Mohamed bin Zayed University of Artificial Intelligence, 2 AWS Generative AI Innovation Center, Amazon Web Services</li>
+<li><strong>链接</strong>: <a href="https://arxiv.org/abs/2604.06170">arXiv</a> | <a href="https://arxiv.org/pdf/2604.06170">PDF</a></li>
+<li><strong>来源</strong>: 📰 HF Daily，⬆️ 21</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2604.06170v1/x4.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: <span class="wikilink">Paper-Circle</span> 是开源多agent研究发现与分析框架。多个agent分工合作——文献检索、评估、综合——模拟研究团队的协作流程。基于GitHub开源。</li>
+<li><strong>对比方法/Baselines</strong>: 单agent文献综述、手动文献调研</li>
+<li><strong>借鉴意义</strong>: 和<span class="wikilink">CORAL</span>（4月10日）走类似路线——用multi-agent解决开放式发现问题。Paper Circle聚焦学术文献场景。</li>
+<li><strong>锐评</strong>: 21个upvote。又一个'多agent做研究'的框架。概念上和Semantic Scholar的AI助手、Google的NotebookLM竞争。开源是亮点，但多agent文献综述的核心瓶颈不在框架设计，而在agent对论文内容的深度理解能力。框架再漂亮，如果agent只会复述摘要，那和TF-IDF检索有什么区别？ 👀</li>
+</ul>
+<hr /></div></div>
+<div id="panel-检索与搜索" class="tab-panel"><h2>🔍 检索与搜索</h2><div class="paper-card" data-topic="🔍 检索与搜索"><h3>1. Learning to Retrieve from Agent Trajectories</h3>
+<ul>
+<li><strong>作者</strong>: Yuqi Zhou<em>, Sunhao Dai</em>†, Changle Qu, Liang Pang, Jun Xu✉, Ji-Rong Wen</li>
+<li><strong>机构</strong>: Gaoling School of Artificial Intelligence, Renmin University of China, CAS Key Laboratory of AI Safety, Institute of Computing Technology, Chinese Academy of Sciences111, Gaoling School of Artificial Intelligence, Renmin University of China
+, CAS Key Laboratory of AI Safety, Institute of Computing Technology, Chinese Academy of Sciences111*Equal contribution. †Project Leader. ✉Corresponding author</li>
+<li><strong>链接</strong>: <a href="https://arxiv.org/abs/2604.04949">arXiv</a> | <a href="https://arxiv.org/pdf/2604.04949">PDF</a></li>
+<li><strong>来源</strong>: 📰 HF Daily，⬆️ 63</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2604.04949v1/x1.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: <span class="wikilink">LRAT</span>（Learning to Retrieve from Agent Trajectories）颠覆了传统IR的训练范式：不再依赖人类点击日志，而是从LLM agent的搜索轨迹中学习检索排序。在<span class="wikilink">BrowseComp</span>和InfoSeekQA上验证，证明agent轨迹信号可以替代甚至超越人类行为信号。</li>
+<li><strong>对比方法/Baselines</strong>: 传统learning-to-rank、<span class="wikilink">DeepResearch</span>风格搜索agent</li>
+<li><strong>借鉴意义</strong>: 当LLM agent成为信息检索的主要消费者时，IR系统应该从agent行为而非人类行为中学习。这对搜索引擎和<span class="wikilink">RAG</span>系统的训练范式有根本性影响。</li>
+<li><strong>锐评</strong>: 63个upvote不是没有原因的。这篇直接回答了一个被忽视的问题：当IR系统的用户从人类变成agent，训练信号也该跟着变。从agent轨迹中提取的偏好信号比人类点击更结构化、更可解释。唯一的问题是agent轨迹本身的质量——garbage in garbage out。如果agent本身就在瞎搜，学出来的检索器只会更瞎。 🔥</li>
+</ul>
+<hr /></div></div>
+<div id="panel-推理与自修正" class="tab-panel"><h2>🧠 推理与自修正</h2><div class="paper-card" data-topic="🧠 推理与自修正"><h3>2. ThinkTwice: Jointly Optimizing Large Language Models for Reasoning and Self-Refinement</h3>
+<ul>
+<li><strong>作者</strong>: Difan Jiao1†</li>
+<li><strong>机构</strong>: 1Department of Computer Science, University of Toronto  2Coolwei AI Lab</li>
+<li><strong>链接</strong>: <a href="https://arxiv.org/abs/2604.01591">arXiv</a> | <a href="https://arxiv.org/pdf/2604.01591">PDF</a></li>
+<li><strong>来源</strong>: 📰 HF Daily，⬆️ 35</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2604.01591v2/x1.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: <span class="wikilink">ThinkTwice</span> 用<span class="wikilink">GRPO</span>联合优化LLM的推理能力和自修正能力。两阶段框架：Phase 1 生成初始答案，Phase 2 基于Phase 1的输出进行自修正。关键创新是让两个阶段共享梯度更新，避免分离训练导致的目标不一致。</li>
+<li><strong>对比方法/Baselines</strong>: <span class="wikilink">GRPO</span>、<span class="wikilink">RLVR</span>单阶段baseline、Self-Refine、<span class="wikilink">DAPO</span></li>
+<li><strong>借鉴意义</strong>: 自修正是agent系统的核心能力之一。把推理和修正联合优化比分离训练更合理。</li>
+<li><strong>锐评</strong>: 35个upvote，思路简洁有效——推理和自修正本来就不该分开训练。在<span class="wikilink">AIME</span>上的提升说明联合优化确实能捕捉到分离训练丢失的信号。但'ThinkTwice'这个名字太朴素了，而且只在数学推理上验证，通用推理场景的迁移性存疑。 👀</li>
+</ul></div><div class="paper-card" data-topic="🧠 推理与自修正"><h3>3. PRIME: Training Free Proactive Reasoning via Iterative Memory Evolution for User-Centric Agent</h3>
+<ul>
+<li><strong>作者</strong>: Wang, Prince Zizhuang, Jiang, Shuli</li>
+<li><strong>机构</strong>: shulij@alumni.cmu.edu, Carnegie Mellon University, princewang@cmu.edu</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2604.07645v1">arXiv</a> | <a href="https://arxiv.org/pdf/2604.07645v1">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2604.07645v1/figures/ai.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: <span class="wikilink">PRIME</span>（Proactive Reasoning via Iterative Memory Evolution）是一个无需训练的主动推理框架。通过迭代式记忆演化，让agent在多轮对话中主动预测用户意图并提前准备工具调用。在IntentionGym等benchmark上验证。</li>
+<li><strong>对比方法/Baselines</strong>: 被动响应式agent、<span class="wikilink">GRPO</span> RL微调agent</li>
+<li><strong>借鉴意义</strong>: 主动推理是agent从'被动应答'到'主动服务'的关键。training-free的方案降低了部署门槛。</li>
+<li><strong>锐评</strong>: 无需训练就能让agent主动预测意图——这个卖点够吸引人。但'iterative memory evolution'在多轮对话中的计算开销是多少？如果每轮都要更新记忆，延迟可能不可接受。另外IntentionGym这个benchmark太合成了，真实用户的意图比这复杂得多。 👀</li>
+</ul>
+<hr /></div></div>
+<div id="panel-agent工具与技能" class="tab-panel"><h2>🤖 Agent 工具与技能</h2><div class="paper-card" data-topic="🤖 Agent 工具与技能"><h3>4. How Well Do Agentic Skills Work in the Wild: Benchmarking LLM Skill Usage in Realistic Settings</h3>
+<ul>
+<li><strong>作者</strong>: Yujian Liu1</li>
+<li><strong>机构</strong>: 1UC Santa Barbara   2MIT CSAIL   3MIT-IBM Watson AI Lab, tommi@csail.mit.edu, yang.zhang2@ibm.com</li>
+<li><strong>链接</strong>: <a href="https://arxiv.org/abs/2604.04323">arXiv</a> | <a href="https://arxiv.org/pdf/2604.04323">PDF</a></li>
+<li><strong>来源</strong>: 📰 HF Daily，⬆️ 32</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2604.04323v1/x1.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: <span class="wikilink">SkillsBench</span> 是首个评估LLM agent技能使用的benchmark。不同于合成环境测试，SkillsBench在真实场景中评估agent对可复用技能的发现、选择和组合能力。覆盖Terminal-Bench等多个场景。</li>
+<li><strong>对比方法/Baselines</strong>: OpenAI GPT-5、通用agent baseline</li>
+<li><strong>借鉴意义</strong>: 和4月10日的<span class="wikilink">SkillClaw</span>形成互补——一个测评技能使用，一个进化技能本身。</li>
+<li><strong>锐评</strong>: 32个upvote。'技能在实际场景中到底好不好用'是个很实际的问题。但benchmark本身的覆盖面存疑——Terminal-Bench够通用吗？如果技能的定义和粒度不统一，benchmark结果的可比性就打折扣了。方向对，执行需要更多社区共建。 👀</li>
+</ul>
+<hr /></div></div>
+<div id="panel-llm训练与架构" class="tab-panel"><h2>🔬 LLM 训练与架构</h2><div class="paper-card" data-topic="🔬 LLM 训练与架构"><h3>5. DARE: Diffusion Large Language Models Alignment and Reinforcement Executor</h3>
+<ul>
+<li><strong>作者</strong>: Jingyi Yang   &amp;
+Yuxian Jiang11footnotemark:</li>
+<li><strong>机构</strong>: Zhejiang University, Fudan University, Shanghai Artificial Intelligence Laboratory, Shanghai AI Laboratory</li>
+<li><strong>链接</strong>: <a href="https://arxiv.org/abs/2604.04215">arXiv</a> | <a href="https://arxiv.org/pdf/2604.04215">PDF</a></li>
+<li><strong>来源</strong>: 📰 HF Daily，⬆️ 18</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2604.04215v1/figures/system_overview.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: <span class="wikilink">DARE</span> 首次将RL对齐方法应用到扩散语言模型（dLLM）。提出<span class="wikilink">BGPO</span>和<span class="wikilink">SDAR</span>等适配扩散过程的策略优化方法，解决dLLM无法直接用PPO/<span class="wikilink">GRPO</span>训练的问题。在HumanEval上验证。</li>
+<li><strong>对比方法/Baselines</strong>: MDLM、SEDD等自回归LLM对齐方法</li>
+<li><strong>借鉴意义</strong>: 扩散LLM是自回归范式的潜在替代方案。如果dLLM也能被有效对齐，多样性生成和并行解码的优势就能真正发挥。</li>
+<li><strong>锐评</strong>: 18个upvote，做了一件该做的事——扩散LLM不能一直是'训不动'的状态。BGPO把GRPO的思路迁移到扩散过程，工程上有难度但概念上不算新。关键看dLLM本身能不能在质量上追上自回归模型，否则对齐方法再好也是锦上添花。 👀</li>
+</ul></div><div class="paper-card" data-topic="🔬 LLM 训练与架构"><h3>6. ReflectRM: Boosting Generative Reward Models via Self-Reflection within a Unified Judgment Framework</h3>
+<ul>
+<li><strong>作者</strong>: Kai Qin1,2,†\dagger</li>
+<li><strong>机构</strong>: 2Baidu Inc., Beijing, China, 1Shenzhen International Graduate School, Tsinghua University</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2604.07506v1">arXiv</a> | <a href="https://arxiv.org/pdf/2604.07506v1">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2604.07506v1/figures/intro.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: <span class="wikilink">ReflectRM</span> 通过自反思机制增强生成式Reward Model。在统一的判断框架中，RM先生成初始评价，再通过Self-Reflection修正偏差。在<span class="wikilink">RewardBench</span>和HelpSteer3上验证。</li>
+<li><strong>对比方法/Baselines</strong>: 标量RM、传统生成式RM（GRM）</li>
+<li><strong>借鉴意义</strong>: Reward Model的质量直接决定<span class="wikilink">RLHF</span>的效果。让RM自我反思修正偏差，比简单增大模型更高效。</li>
+<li><strong>锐评</strong>: 思路合理——RM也可以'三思而后行'。但Self-Reflection的计算成本翻倍了，在大规模RLHF训练中这个开销可能不可接受。而且RM自反思的质量上限受限于RM本身的能力——你不能指望一个不够好的RM能正确反思出自己哪里不好。 👀</li>
+</ul>
+<hr /></div></div>
+<div id="panel-multiagent系统" class="tab-panel"><h2>🤝 Multi-Agent 系统</h2><div class="paper-card" data-topic="🤝 Multi-Agent 系统"><h3>7. Paper Circle: An Open-source Multi-agent Research Discovery and Analysis Framework</h3>
+<ul>
+<li><strong>作者</strong>: Komal Kumar1</li>
+<li><strong>机构</strong>: 1 Mohamed bin Zayed University of Artificial Intelligence, 2 AWS Generative AI Innovation Center, Amazon Web Services</li>
+<li><strong>链接</strong>: <a href="https://arxiv.org/abs/2604.06170">arXiv</a> | <a href="https://arxiv.org/pdf/2604.06170">PDF</a></li>
+<li><strong>来源</strong>: 📰 HF Daily，⬆️ 21</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2604.06170v1/x4.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: <span class="wikilink">Paper-Circle</span> 是开源多agent研究发现与分析框架。多个agent分工合作——文献检索、评估、综合——模拟研究团队的协作流程。基于GitHub开源。</li>
+<li><strong>对比方法/Baselines</strong>: 单agent文献综述、手动文献调研</li>
+<li><strong>借鉴意义</strong>: 和<span class="wikilink">CORAL</span>（4月10日）走类似路线——用multi-agent解决开放式发现问题。Paper Circle聚焦学术文献场景。</li>
+<li><strong>锐评</strong>: 21个upvote。又一个'多agent做研究'的框架。概念上和Semantic Scholar的AI助手、Google的NotebookLM竞争。开源是亮点，但多agent文献综述的核心瓶颈不在框架设计，而在agent对论文内容的深度理解能力。框架再漂亮，如果agent只会复述摘要，那和TF-IDF检索有什么区别？ 👀</li>
+</ul>
+<hr /></div></div>
+<hr>
+<h2>被排除的论文</h2>
+<ul>
+<li>Scientific Graphics Program Synthesis via Dual Self-Consistency RL — TikZ代码生成，太niche</li>
+<li>Agentic Copyright, Data Scraping &amp; AI Governance — 法律/版权论文，非技术研究</li>
+<li>GBQA: A Game Benchmark for Evaluating LLMs as QA Engineers — 游戏QA benchmark，应用场景太窄</li>
+<li>Context-Value-Action Architecture for Value-Driven LLM Agents — 心理学驱动的agent架构，偏理论</li>
+<li>How Independent are Large Language Models? — LLM独立性统计分析，偏方法论</li>
+<li>Robust Multi-Agent Target Tracking — 目标追踪，非AI agent</li>
+<li>RL-ASL: Dynamic Listening for TSCH Networks — IoT网络协议，非核心方向</li>
+<li>Beyond Human-Readable: Rethinking Software Engineering Conventions — 思辨性论文，无实验验证</li>
+<li>MegaTrain: Full Precision Training of 100B+ on Single GPU — 工程有趣但非核心研究方向</li>
+</ul>
+<p>检索系统的训练信号正在从人类行为转向agent行为——LRAT代表了这个趋势的开端。</p></div>
+<footer style="text-align:center;color:var(--text2);margin:3em 0 1em;font-size:0.85em;">
+  Generated by daily-papers-web &middot; Powered by Claude Code
+</footer>
+<script src="tabs.js"></script>
+
+</body>
+</html>

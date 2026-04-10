@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>2026-04-09 论文推荐</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.21/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.21/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.21/dist/contrib/auto-render.min.js"
+  onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}]});"></script>
+<link rel="stylesheet" href="style.css">
+<style>body{max-width:960px;}</style>
+
+</head>
+<body>
+<nav class="nav"><a href="index.html">🏠 首页</a><a href="2026-04-08.html">← 前一天</a><a href="2026-04-10.html">后一天 →</a></nav>
+<div class="detail-page"><h1>🔪 今日锐评</h1>
+<p>Self-Evolving日：9号的主旋律是'自我进化'——SEVerA用形式化验证保证agent进化的安全性，SEARL联合优化策略和工具图谱记忆，AgentGL用RL让LLM学会图推理。另外Depth Ceiling那篇挑战了CoT监控的基本假设，值得警惕。30篇里大半是agent相关，但真正有洞察的不超过一半。</p>
+<h2>分流表</h2>
+<table>
+<thead>
+<tr>
+<th>等级</th>
+<th>论文</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>🔥 必读</td>
+<td><span class="wikilink">SEARL</span>（自进化agent的策略+工具图谱联合优化，直击agent记忆痛点）</td>
+</tr>
+<tr>
+<td>👀 值得看</td>
+<td><span class="wikilink">SEVerA</span>（形式化验证的自进化agent合成） · <span class="wikilink">AgentGL</span>（RL驱动的agentic图学习） · <span class="wikilink">Depth-Ceiling</span>（LLM隐式推理能力的天花板） · <span class="wikilink">HiLL</span>（GRPO的advantage collapse修复） · <span class="wikilink">ImplicitMemBench</span>（agent隐式记忆benchmark） · <span class="wikilink">ACGM</span>（agentic多模态历史检索） · <span class="wikilink">Imperfect-Verifier</span>（噪声reward下的RLVR）</td>
+</tr>
+<tr>
+<td>💤 可跳过</td>
+<td><span class="wikilink">FlowInOne</span>（多模态生成，非核心方向） · <span class="wikilink">Q-Zoom</span>（MLLM视觉优化，非核心） · <span class="wikilink">ABMAMBA</span>（视频字幕，非核心） · <span class="wikilink">MIMIC-Py</span>（游戏测试工具，太niche） · <span class="wikilink">GRASS</span>（参数高效微调，非核心） · 其余论文相关性不足</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<div class="tab-bar"><button class="tab-btn active" data-tab="all" onclick="switchTab('all')">📋 全部<span class="tab-count">8</span></button><button class="tab-btn" data-tab="agent记忆与自进化" onclick="switchTab('agent记忆与自进化')">🧠 🧠 Agent 记忆与自进化<span class="tab-count">3</span></button><button class="tab-btn" data-tab="图学习与推理" onclick="switchTab('图学习与推理')">📄 📊 图学习与推理<span class="tab-count">1</span></button><button class="tab-btn" data-tab="llm能力边界" onclick="switchTab('llm能力边界')">🤖 🔬 LLM 能力边界<span class="tab-count">1</span></button><button class="tab-btn" data-tab="llm训练与架构" onclick="switchTab('llm训练与架构')">🤖 🔬 LLM 训练与架构<span class="tab-count">2</span></button><button class="tab-btn" data-tab="检索与搜索" onclick="switchTab('检索与搜索')">📄 🔍 检索与搜索<span class="tab-count">1</span></button></div>
+<div id="panel-all" class="tab-panel active"><h2>🧠 Agent 记忆与自进化</h2><div class="paper-card" data-topic="🧠 Agent 记忆与自进化"><h3>1. SEARL: Joint Optimization of Policy and Tool Graph Memory for Self-Evolving Agents</h3>
+<ul>
+<li><strong>作者</strong>: Xinshun Feng1</li>
+<li><strong>机构</strong>: lgshen@sjtu.edu.cn, 1Shanghai Artificial Intelligence Laboratory  2Shanghai Jiaotong University</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2604.07791v1">arXiv</a> | <a href="https://arxiv.org/pdf/2604.07791v1">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2604.07791v1/x1.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: <span class="wikilink">SEARL</span>（Self-Evolving Agent with RL）联合优化agent的策略和工具图谱记忆（Tool Graph Memory）。不同于只优化策略或只优化记忆的方法，SEARL把工具调用关系建模为图结构，用<span class="wikilink">GRPO</span>同时优化策略选择和图谱更新。在<span class="wikilink">HotpotQA</span>等benchmark上验证。</li>
+<li><strong>对比方法/Baselines</strong>: 固定工具集agent、<span class="wikilink">GRPO</span>纯策略优化、静态记忆agent</li>
+<li><strong>借鉴意义</strong>: 直接解决agent系统的核心矛盾：策略优化和记忆优化不应该是独立的。工具图谱记忆是比flat memory更结构化的方案。</li>
+<li><strong>锐评</strong>: 这篇切中要害——agent的策略和记忆本来就是耦合的，分开优化是工程妥协不是正确方向。Tool Graph Memory把工具间的调用关系显式建模，比把所有工具塞进prompt里优雅得多。但图结构的维护成本是多少？当工具集动态变化时图谱怎么更新？这些实际部署问题论文没充分讨论。 🔥</li>
+</ul></div><div class="paper-card" data-topic="🧠 Agent 记忆与自进化"><h3>2. SEVerA: Verified Synthesis of Self-Evolving Agents</h3>
+<ul>
+<li><strong>作者</strong>: Debangshu Banerjee, Changming Xu, Gagandeep Singh</li>
+<li>
+<p><strong>机构</strong>: University of Illinois Urbana-ChampaignUSA, cx23@illinois.edu
+, University of Illinois Urbana-Champaign, db21@illinois.edu
+, ggnds@illinois.edu</p>
+</li>
+<li>
+<p><strong>链接</strong>: <a href="https://arxiv.org/abs/2603.25111">arXiv</a> | <a href="https://arxiv.org/pdf/2603.25111">PDF</a></p>
+</li>
+<li><strong>来源</strong>: 📰 HF Daily，⬆️ 23</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2603.25111v1/figs/agentassure_overview.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: <span class="wikilink">SEVerA</span>（Verified Synthesis of Self-Evolving Agents）用形式化验证（<span class="wikilink">SMT</span>求解器、Dafny语言）保证自进化agent的安全性。Planner LLM生成agent程序，verifier检查程序是否满足预定义的安全规约。在DafnyBench上验证。</li>
+<li><strong>对比方法/Baselines</strong>: 无验证的self-evolving agent、纯LLM代码生成</li>
+<li><strong>借鉴意义</strong>: 自进化agent的安全性是未解决的关键问题。形式化验证提供了比测试用例更强的保证。</li>
+<li><strong>锐评</strong>: 23个upvote。终于有人认真对待self-evolving agent的安全问题了——你不能让agent自己进化然后祈祷它不会搞砸。用Dafny做形式化验证是正统路线，但实际可用性堪忧：有多少agent开发者会写Dafny规约？安全性和可用性的trade-off是这条路线的永恒难题。 👀</li>
+</ul></div><div class="paper-card" data-topic="🧠 Agent 记忆与自进化"><h3>3. ImplicitMemBench: Measuring Unconscious Behavioral Adaptation in Large Language Models</h3>
+<ul>
+<li><strong>作者</strong>: Qin, Chonghan, Feng, Xiachong, Ma, Weitao, Feng, Xiaocheng, Kong, Lingpeng</li>
+<li><strong>机构</strong>: 1The University of Hong Kong, 2Harbin Institute of Technology</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2604.08064v1">arXiv</a> | <a href="https://arxiv.org/pdf/2604.08064v1">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2604.08064v1/x1.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: <span class="wikilink">ImplicitMemBench</span> 首次评估LLM agent的隐式记忆——不是'你记得X吗'的显式回忆，而是经验内化为行为习惯的无意识适应。设计了多个场景测试agent是否能从过去交互中自动调整行为模式。</li>
+<li><strong>对比方法/Baselines</strong>: <span class="wikilink">LongMemEval</span>等显式记忆benchmark、GPT、<span class="wikilink">DeepSeek</span></li>
+<li><strong>借鉴意义</strong>: 隐式记忆是agent长期部署的关键能力。现有benchmark只测显式记忆，忽视了更重要的行为适应。</li>
+<li><strong>锐评</strong>: 问题定义很有洞察力——agent的记忆不应该只是'能不能回忆事实'，更应该是'能不能从经验中改变行为'。这和认知心理学中程序性记忆vs陈述性记忆的区分一致。但测量隐式记忆本身就很难——你怎么确定行为变化是因为'记住了'还是因为prompt的统计偏差？ 👀</li>
+</ul>
+<hr /></div><h2>📊 图学习与推理</h2><div class="paper-card" data-topic="📊 图学习与推理"><h3>4. AgentGL: Towards Agentic Graph Learning with LLMs via Reinforcement Learning</h3>
+<ul>
+<li><strong>作者</strong>: Yuanfu Sun1,2</li>
+<li><strong>机构</strong>: {yuanfu.sun, qiaoyu.tan}@nyu.edu, lik24@mails.tsinghua.edu.cn, 3Tsinghua University, 1New York University Shanghai, 2New York University</li>
+<li><strong>链接</strong>: <a href="https://arxiv.org/abs/2604.05846">arXiv</a> | <a href="https://arxiv.org/pdf/2604.05846">PDF</a></li>
+<li><strong>来源</strong>: 📰 HF Daily，⬆️ 4</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2604.05846v1/x1.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: <span class="wikilink">AgentGL</span> 让LLM通过agentic方式学习图结构数据。用RL训练LLM agent进行迭代式图探索——检索子图、分析节点、更新推理。不同于一次性把图结构塞进prompt，AgentGL让agent自主决定探索策略。</li>
+<li><strong>对比方法/Baselines</strong>: <span class="wikilink">GraphRAG</span>、OGB上的GNN baseline、静态prompt图推理</li>
+<li><strong>借鉴意义</strong>: 图数据是推荐系统和知识图谱的基础。让LLM agent学会主动探索图结构，比被动接收图特征更灵活。</li>
+<li><strong>锐评</strong>: Score 8的高分论文。把图学习从'一次性编码'变成'迭代式探索'，思路和agentic search在文本领域的成功类似。但图的规模问题怎么解决？当图有百万节点时，agent探索的效率和GNN相比如何？另外只有4个upvote说明社区还没注意到这篇。 👀</li>
+</ul>
+<hr /></div><h2>🔬 LLM 能力边界</h2><div class="paper-card" data-topic="🔬 LLM 能力边界"><h3>5. The Depth Ceiling: On the Limits of Large Language Models in Discovering Latent Planning</h3>
+<ul>
+<li><strong>作者</strong>: Xu, Yi, Jettkant, Philipp, Ruis, Laura</li>
+<li><strong>机构</strong>: University of Cambridge, Imperial College London</li>
+<li><strong>链接</strong>: <a href="https://arxiv.org/abs/2604.06427">arXiv</a> | <a href="https://arxiv.org/pdf/2604.06427">PDF</a></li>
+<li><strong>来源</strong>: 📰 HF Daily，⬆️ 4</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2604.06427v1/x1.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: <span class="wikilink">Depth-Ceiling</span> 研究LLM在隐式表示中进行规划的能力上限。发现<span class="wikilink">CoT</span>监控的基本假设——'模型无法在latent space有效推理'——可能不成立。通过实验测量LLM隐式推理的深度天花板。</li>
+<li><strong>对比方法/Baselines</strong>: <span class="wikilink">GPT-5</span>、CoT显式推理、latent reasoning baseline</li>
+<li><strong>借鉴意义</strong>: 如果LLM能在隐式空间进行深度推理，那CoT作为可解释性和安全监控工具的价值就要打折扣——你看到的chain可能不是模型真正的推理过程。</li>
+<li><strong>锐评</strong>: 这篇挑战了一个被广泛接受的假设：'模型的真实推理过程反映在CoT中'。如果模型能在latent space做规划，那CoT就只是模型'说给你听'的故事，不是它实际的思考过程。对AI安全和可解释性的影响深远。但实验设计是否能真正区分'latent planning'和'pattern matching'还有争议。 👀</li>
+</ul>
+<hr /></div><h2>🔬 LLM 训练与架构</h2><div class="paper-card" data-topic="🔬 LLM 训练与架构"><h3>6. Learning to Hint for Reinforcement Learning</h3>
+<ul>
+<li><strong>作者</strong>: Xia, Yu, Xu, Canwen, Yao, Zhewei, McAuley, Julian, He, Yuxiong</li>
+<li><strong>机构</strong>: 1University of California, San Diego  2Snowflake AI Research</li>
+<li><strong>链接</strong>: <a href="https://arxiv.org/abs/2604.00698">arXiv</a> | <a href="https://arxiv.org/pdf/2604.00698">PDF</a></li>
+<li><strong>来源</strong>: 📰 HF Daily，⬆️ 3</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2604.00698v1/x1.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: <span class="wikilink">HiLL</span>（Hint-guided Learning for LLM）解决<span class="wikilink">GRPO</span>的advantage collapse问题——当一个group内所有rollout都对或都错时，相对优势信号消失。HiLL通过提供适度的hint引导部分rollout改变正确性，恢复有效的梯度信号。</li>
+<li><strong>对比方法/Baselines</strong>: 标准<span class="wikilink">GRPO</span>、<span class="wikilink">DAPO</span>、过滤策略</li>
+<li><strong>借鉴意义</strong>: advantage collapse是RLVR实践中的真实痛点。HiLL提供了一个简洁的解法。</li>
+<li><strong>锐评</strong>: 问题定义精准——GRPO训练中确实经常遇到全对或全错的group，导致训练信号消失。用hint来打破这种对称性比简单丢弃这些group更高效。但hint的质量和粒度怎么控制？太强的hint等于直接给答案，太弱又打不破collapse。 👀</li>
+</ul></div><div class="paper-card" data-topic="🔬 LLM 训练与架构"><h3>7. An Imperfect Verifier is Good Enough: Learning with Noisy Rewards</h3>
+<ul>
+<li><strong>作者</strong>: Andreas Plesner, Francisco Guzmán, Anish Athalye</li>
+<li><strong>机构</strong>: ETH Zurich
+, Handshake AI
+, ETH Zurich</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2604.07666v1">arXiv</a> | <a href="https://arxiv.org/pdf/2604.07666v1">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2604.07666v1/x2.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: 研究在verifier不完美时<span class="wikilink">RLVR</span>的鲁棒性。发现即使reward信号有噪声（verifier有错误率），RLVR训练仍然可以收敛到合理的策略。提出<span class="wikilink">GSPO</span>等方法处理噪声reward，在GPQA和MBPP上验证。</li>
+<li><strong>对比方法/Baselines</strong>: 完美verifier <span class="wikilink">RLVR</span>、<span class="wikilink">GRPO</span>、<span class="wikilink">DeepSeek</span></li>
+<li><strong>借鉴意义</strong>: 实际部署中verifier不可能完美——这篇证明了RLVR对噪声的鲁棒性，降低了落地门槛。</li>
+<li><strong>锐评</strong>: 务实的工作。学术界习惯假设verifier是完美的，但工程实践中verifier本身就是近似的。证明RLVR在噪声下仍然work，对推动RLVR在非数学领域的应用很重要。但'多少噪声是可接受的'这个边界分析还不够系统。 👀</li>
+</ul>
+<hr /></div><h2>🔍 检索与搜索</h2><div class="paper-card" data-topic="🔍 检索与搜索"><h3>8. Task-Adaptive Retrieval over Agentic Multi-Modal Web Histories via Learned Graph Memory</h3>
+<ul>
+<li><strong>作者</strong>: Saman Forouzandeh, Kamal Berahmand, Mahdi Jalili</li>
+<li><strong>机构</strong>: saman.forouzandeh@rmit.edu.au
+, kamal.berahmand@rmit.edu.au
+, mahdi.jalili@rmit.edu.au
+, School of Engineering, Royal Melbourne Institute of Technology University, School of Engineering, Royal Melbourne Institute of Technology UniversityMelbourneAustralia</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2604.07863v1">arXiv</a> | <a href="https://arxiv.org/pdf/2604.07863v1">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2604.07863v1/x1.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: <span class="wikilink">ACGM</span>（Adaptive Context Graph Memory）为agentic多模态网页交互提供结构化记忆检索。把agent的浏览历史（截图、HTML、操作序列）建模为图，根据当前任务状态自适应检索相关历史片段。在<span class="wikilink">WebShop</span>和VisualWebArena上验证。</li>
+<li><strong>对比方法/Baselines</strong>: 相似度检索、固定窗口记忆、<span class="wikilink">RAG</span></li>
+<li><strong>借鉴意义</strong>: web agent的历史记忆是多模态的——截图、DOM、操作记录。图结构比flat history更适合建模这种异构数据。</li>
+<li><strong>锐评</strong>: 把web agent的交互历史建模为图是合理的选择——操作之间有时序和因果关系，flat list丢失了这些信息。但图的构建和维护成本呢？每次浏览操作都要更新图结构，在实时场景中延迟可能是瓶颈。 👀</li>
+</ul>
+<hr /></div></div>
+<div id="panel-agent记忆与自进化" class="tab-panel"><h2>🧠 Agent 记忆与自进化</h2><div class="paper-card" data-topic="🧠 Agent 记忆与自进化"><h3>1. SEARL: Joint Optimization of Policy and Tool Graph Memory for Self-Evolving Agents</h3>
+<ul>
+<li><strong>作者</strong>: Xinshun Feng1</li>
+<li><strong>机构</strong>: lgshen@sjtu.edu.cn, 1Shanghai Artificial Intelligence Laboratory  2Shanghai Jiaotong University</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2604.07791v1">arXiv</a> | <a href="https://arxiv.org/pdf/2604.07791v1">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2604.07791v1/x1.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: <span class="wikilink">SEARL</span>（Self-Evolving Agent with RL）联合优化agent的策略和工具图谱记忆（Tool Graph Memory）。不同于只优化策略或只优化记忆的方法，SEARL把工具调用关系建模为图结构，用<span class="wikilink">GRPO</span>同时优化策略选择和图谱更新。在<span class="wikilink">HotpotQA</span>等benchmark上验证。</li>
+<li><strong>对比方法/Baselines</strong>: 固定工具集agent、<span class="wikilink">GRPO</span>纯策略优化、静态记忆agent</li>
+<li><strong>借鉴意义</strong>: 直接解决agent系统的核心矛盾：策略优化和记忆优化不应该是独立的。工具图谱记忆是比flat memory更结构化的方案。</li>
+<li><strong>锐评</strong>: 这篇切中要害——agent的策略和记忆本来就是耦合的，分开优化是工程妥协不是正确方向。Tool Graph Memory把工具间的调用关系显式建模，比把所有工具塞进prompt里优雅得多。但图结构的维护成本是多少？当工具集动态变化时图谱怎么更新？这些实际部署问题论文没充分讨论。 🔥</li>
+</ul></div><div class="paper-card" data-topic="🧠 Agent 记忆与自进化"><h3>2. SEVerA: Verified Synthesis of Self-Evolving Agents</h3>
+<ul>
+<li><strong>作者</strong>: Debangshu Banerjee, Changming Xu, Gagandeep Singh</li>
+<li>
+<p><strong>机构</strong>: University of Illinois Urbana-ChampaignUSA, cx23@illinois.edu
+, University of Illinois Urbana-Champaign, db21@illinois.edu
+, ggnds@illinois.edu</p>
+</li>
+<li>
+<p><strong>链接</strong>: <a href="https://arxiv.org/abs/2603.25111">arXiv</a> | <a href="https://arxiv.org/pdf/2603.25111">PDF</a></p>
+</li>
+<li><strong>来源</strong>: 📰 HF Daily，⬆️ 23</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2603.25111v1/figs/agentassure_overview.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: <span class="wikilink">SEVerA</span>（Verified Synthesis of Self-Evolving Agents）用形式化验证（<span class="wikilink">SMT</span>求解器、Dafny语言）保证自进化agent的安全性。Planner LLM生成agent程序，verifier检查程序是否满足预定义的安全规约。在DafnyBench上验证。</li>
+<li><strong>对比方法/Baselines</strong>: 无验证的self-evolving agent、纯LLM代码生成</li>
+<li><strong>借鉴意义</strong>: 自进化agent的安全性是未解决的关键问题。形式化验证提供了比测试用例更强的保证。</li>
+<li><strong>锐评</strong>: 23个upvote。终于有人认真对待self-evolving agent的安全问题了——你不能让agent自己进化然后祈祷它不会搞砸。用Dafny做形式化验证是正统路线，但实际可用性堪忧：有多少agent开发者会写Dafny规约？安全性和可用性的trade-off是这条路线的永恒难题。 👀</li>
+</ul></div><div class="paper-card" data-topic="🧠 Agent 记忆与自进化"><h3>3. ImplicitMemBench: Measuring Unconscious Behavioral Adaptation in Large Language Models</h3>
+<ul>
+<li><strong>作者</strong>: Qin, Chonghan, Feng, Xiachong, Ma, Weitao, Feng, Xiaocheng, Kong, Lingpeng</li>
+<li><strong>机构</strong>: 1The University of Hong Kong, 2Harbin Institute of Technology</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2604.08064v1">arXiv</a> | <a href="https://arxiv.org/pdf/2604.08064v1">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2604.08064v1/x1.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: <span class="wikilink">ImplicitMemBench</span> 首次评估LLM agent的隐式记忆——不是'你记得X吗'的显式回忆，而是经验内化为行为习惯的无意识适应。设计了多个场景测试agent是否能从过去交互中自动调整行为模式。</li>
+<li><strong>对比方法/Baselines</strong>: <span class="wikilink">LongMemEval</span>等显式记忆benchmark、GPT、<span class="wikilink">DeepSeek</span></li>
+<li><strong>借鉴意义</strong>: 隐式记忆是agent长期部署的关键能力。现有benchmark只测显式记忆，忽视了更重要的行为适应。</li>
+<li><strong>锐评</strong>: 问题定义很有洞察力——agent的记忆不应该只是'能不能回忆事实'，更应该是'能不能从经验中改变行为'。这和认知心理学中程序性记忆vs陈述性记忆的区分一致。但测量隐式记忆本身就很难——你怎么确定行为变化是因为'记住了'还是因为prompt的统计偏差？ 👀</li>
+</ul>
+<hr /></div></div>
+<div id="panel-图学习与推理" class="tab-panel"><h2>📊 图学习与推理</h2><div class="paper-card" data-topic="📊 图学习与推理"><h3>4. AgentGL: Towards Agentic Graph Learning with LLMs via Reinforcement Learning</h3>
+<ul>
+<li><strong>作者</strong>: Yuanfu Sun1,2</li>
+<li><strong>机构</strong>: {yuanfu.sun, qiaoyu.tan}@nyu.edu, lik24@mails.tsinghua.edu.cn, 3Tsinghua University, 1New York University Shanghai, 2New York University</li>
+<li><strong>链接</strong>: <a href="https://arxiv.org/abs/2604.05846">arXiv</a> | <a href="https://arxiv.org/pdf/2604.05846">PDF</a></li>
+<li><strong>来源</strong>: 📰 HF Daily，⬆️ 4</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2604.05846v1/x1.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: <span class="wikilink">AgentGL</span> 让LLM通过agentic方式学习图结构数据。用RL训练LLM agent进行迭代式图探索——检索子图、分析节点、更新推理。不同于一次性把图结构塞进prompt，AgentGL让agent自主决定探索策略。</li>
+<li><strong>对比方法/Baselines</strong>: <span class="wikilink">GraphRAG</span>、OGB上的GNN baseline、静态prompt图推理</li>
+<li><strong>借鉴意义</strong>: 图数据是推荐系统和知识图谱的基础。让LLM agent学会主动探索图结构，比被动接收图特征更灵活。</li>
+<li><strong>锐评</strong>: Score 8的高分论文。把图学习从'一次性编码'变成'迭代式探索'，思路和agentic search在文本领域的成功类似。但图的规模问题怎么解决？当图有百万节点时，agent探索的效率和GNN相比如何？另外只有4个upvote说明社区还没注意到这篇。 👀</li>
+</ul>
+<hr /></div></div>
+<div id="panel-llm能力边界" class="tab-panel"><h2>🔬 LLM 能力边界</h2><div class="paper-card" data-topic="🔬 LLM 能力边界"><h3>5. The Depth Ceiling: On the Limits of Large Language Models in Discovering Latent Planning</h3>
+<ul>
+<li><strong>作者</strong>: Xu, Yi, Jettkant, Philipp, Ruis, Laura</li>
+<li><strong>机构</strong>: University of Cambridge, Imperial College London</li>
+<li><strong>链接</strong>: <a href="https://arxiv.org/abs/2604.06427">arXiv</a> | <a href="https://arxiv.org/pdf/2604.06427">PDF</a></li>
+<li><strong>来源</strong>: 📰 HF Daily，⬆️ 4</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2604.06427v1/x1.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: <span class="wikilink">Depth-Ceiling</span> 研究LLM在隐式表示中进行规划的能力上限。发现<span class="wikilink">CoT</span>监控的基本假设——'模型无法在latent space有效推理'——可能不成立。通过实验测量LLM隐式推理的深度天花板。</li>
+<li><strong>对比方法/Baselines</strong>: <span class="wikilink">GPT-5</span>、CoT显式推理、latent reasoning baseline</li>
+<li><strong>借鉴意义</strong>: 如果LLM能在隐式空间进行深度推理，那CoT作为可解释性和安全监控工具的价值就要打折扣——你看到的chain可能不是模型真正的推理过程。</li>
+<li><strong>锐评</strong>: 这篇挑战了一个被广泛接受的假设：'模型的真实推理过程反映在CoT中'。如果模型能在latent space做规划，那CoT就只是模型'说给你听'的故事，不是它实际的思考过程。对AI安全和可解释性的影响深远。但实验设计是否能真正区分'latent planning'和'pattern matching'还有争议。 👀</li>
+</ul>
+<hr /></div></div>
+<div id="panel-llm训练与架构" class="tab-panel"><h2>🔬 LLM 训练与架构</h2><div class="paper-card" data-topic="🔬 LLM 训练与架构"><h3>6. Learning to Hint for Reinforcement Learning</h3>
+<ul>
+<li><strong>作者</strong>: Xia, Yu, Xu, Canwen, Yao, Zhewei, McAuley, Julian, He, Yuxiong</li>
+<li><strong>机构</strong>: 1University of California, San Diego  2Snowflake AI Research</li>
+<li><strong>链接</strong>: <a href="https://arxiv.org/abs/2604.00698">arXiv</a> | <a href="https://arxiv.org/pdf/2604.00698">PDF</a></li>
+<li><strong>来源</strong>: 📰 HF Daily，⬆️ 3</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2604.00698v1/x1.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: <span class="wikilink">HiLL</span>（Hint-guided Learning for LLM）解决<span class="wikilink">GRPO</span>的advantage collapse问题——当一个group内所有rollout都对或都错时，相对优势信号消失。HiLL通过提供适度的hint引导部分rollout改变正确性，恢复有效的梯度信号。</li>
+<li><strong>对比方法/Baselines</strong>: 标准<span class="wikilink">GRPO</span>、<span class="wikilink">DAPO</span>、过滤策略</li>
+<li><strong>借鉴意义</strong>: advantage collapse是RLVR实践中的真实痛点。HiLL提供了一个简洁的解法。</li>
+<li><strong>锐评</strong>: 问题定义精准——GRPO训练中确实经常遇到全对或全错的group，导致训练信号消失。用hint来打破这种对称性比简单丢弃这些group更高效。但hint的质量和粒度怎么控制？太强的hint等于直接给答案，太弱又打不破collapse。 👀</li>
+</ul></div><div class="paper-card" data-topic="🔬 LLM 训练与架构"><h3>7. An Imperfect Verifier is Good Enough: Learning with Noisy Rewards</h3>
+<ul>
+<li><strong>作者</strong>: Andreas Plesner, Francisco Guzmán, Anish Athalye</li>
+<li><strong>机构</strong>: ETH Zurich
+, Handshake AI
+, ETH Zurich</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2604.07666v1">arXiv</a> | <a href="https://arxiv.org/pdf/2604.07666v1">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2604.07666v1/x2.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: 研究在verifier不完美时<span class="wikilink">RLVR</span>的鲁棒性。发现即使reward信号有噪声（verifier有错误率），RLVR训练仍然可以收敛到合理的策略。提出<span class="wikilink">GSPO</span>等方法处理噪声reward，在GPQA和MBPP上验证。</li>
+<li><strong>对比方法/Baselines</strong>: 完美verifier <span class="wikilink">RLVR</span>、<span class="wikilink">GRPO</span>、<span class="wikilink">DeepSeek</span></li>
+<li><strong>借鉴意义</strong>: 实际部署中verifier不可能完美——这篇证明了RLVR对噪声的鲁棒性，降低了落地门槛。</li>
+<li><strong>锐评</strong>: 务实的工作。学术界习惯假设verifier是完美的，但工程实践中verifier本身就是近似的。证明RLVR在噪声下仍然work，对推动RLVR在非数学领域的应用很重要。但'多少噪声是可接受的'这个边界分析还不够系统。 👀</li>
+</ul>
+<hr /></div></div>
+<div id="panel-检索与搜索" class="tab-panel"><h2>🔍 检索与搜索</h2><div class="paper-card" data-topic="🔍 检索与搜索"><h3>8. Task-Adaptive Retrieval over Agentic Multi-Modal Web Histories via Learned Graph Memory</h3>
+<ul>
+<li><strong>作者</strong>: Saman Forouzandeh, Kamal Berahmand, Mahdi Jalili</li>
+<li><strong>机构</strong>: saman.forouzandeh@rmit.edu.au
+, kamal.berahmand@rmit.edu.au
+, mahdi.jalili@rmit.edu.au
+, School of Engineering, Royal Melbourne Institute of Technology University, School of Engineering, Royal Melbourne Institute of Technology UniversityMelbourneAustralia</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2604.07863v1">arXiv</a> | <a href="https://arxiv.org/pdf/2604.07863v1">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2604.07863v1/x1.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: <span class="wikilink">ACGM</span>（Adaptive Context Graph Memory）为agentic多模态网页交互提供结构化记忆检索。把agent的浏览历史（截图、HTML、操作序列）建模为图，根据当前任务状态自适应检索相关历史片段。在<span class="wikilink">WebShop</span>和VisualWebArena上验证。</li>
+<li><strong>对比方法/Baselines</strong>: 相似度检索、固定窗口记忆、<span class="wikilink">RAG</span></li>
+<li><strong>借鉴意义</strong>: web agent的历史记忆是多模态的——截图、DOM、操作记录。图结构比flat history更适合建模这种异构数据。</li>
+<li><strong>锐评</strong>: 把web agent的交互历史建模为图是合理的选择——操作之间有时序和因果关系，flat list丢失了这些信息。但图的构建和维护成本呢？每次浏览操作都要更新图结构，在实时场景中延迟可能是瓶颈。 👀</li>
+</ul>
+<hr /></div></div>
+<hr>
+<h2>被排除的论文</h2>
+<ul>
+<li>FP4 Explore, BF16 Train: Diffusion RL — 推理加速工程，非核心</li>
+<li>FlowInOne: Unifying Multimodal Generation — 多模态生成，非核心方向</li>
+<li>Q-Zoom: Query-Aware Adaptive Perception — MLLM视觉优化，非核心</li>
+<li>Aligning Agents via Planning — trajectory-level RM，与4月10日Post-Training综述重叠</li>
+<li>ABMAMBA: Video Captioning — 视频字幕，非核心领域</li>
+<li>PriPG-RL: Privileged Planner-Guided RL — 部分可观测控制，非AI agent</li>
+<li>LogAct: Agentic Reliability via Shared Logs — 工程实践论文，缺乏技术创新</li>
+<li>Rethinking Data Mixing — 数据混合策略，偏训练工程</li>
+<li>DACS: Dynamic Attentional Context Scoping — multi-agent上下文管理，偏工程</li>
+<li>Agentic Evaluation for Historical Bias — 教育偏见检测，非核心领域</li>
+<li>More Capable, Less Cooperative — LLM合作博弈分析，偏理论</li>
+<li>GRASS: Gradient-based Layer-wise Importance Sampling — 参数高效微调，非核心</li>
+<li>MIMIC-Py: Personality-Driven Game Testing — 游戏测试工具，太niche</li>
+<li>The Cartesian Cut in Agentic AI — 哲学思辨，无实验</li>
+<li>Emotion Concepts in LLMs — LLM情感分析，偏认知科学</li>
+<li>Detecting HIV-Related Stigma — 医学NLP应用，非核心</li>
+<li>Reset-Free RL for Agile Driving — 自动驾驶RL，非核心</li>
+<li>Conformal Social Choice for Multi-Agent — 社会选择理论，偏理论</li>
+<li>DeonticBench: Reasoning over Rules — 规范推理benchmark，偏法律</li>
+<li>OpenVLThinkerV2 — 多模态推理模型，非核心方向</li>
+<li>Less Approximates More: Confidence Faithfulness — 置信度校准，偏方法论</li>
+<li>Verify Before You Commit: Self-Auditing — agent自审计，方法偏增量</li>
+</ul>
+<p>Self-evolving agent从概念走向工程——SEARL解决策略-记忆联合优化，SEVerA解决安全验证，ImplicitMemBench解决评测。三件套齐了。</p></div>
+<footer style="text-align:center;color:var(--text2);margin:3em 0 1em;font-size:0.85em;">
+  Generated by daily-papers-web &middot; Powered by Claude Code
+</footer>
+<script src="tabs.js"></script>
+
+</body>
+</html>
