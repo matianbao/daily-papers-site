@@ -1,0 +1,2743 @@
+<h1>🔪 今日锐评</h1>
+<p>工具日：11号被框架论文占领了——AgentScope 1.0做了该做的工程活，TradingAgents用multi-agent炒股但回测太短，AI Scientist-v2号称自动写论文拿workshop oral。真正值得关注的是TriAttention用三角函数压KV cache到1/8，和Rethinking SFT那篇160 upvote的实验发现：SFT泛化能力取决于条件复杂度而非数据量。其余大半是已有工作的升级版或工程包装。</p>
+<h2>分流表</h2>
+<table>
+<thead>
+<tr>
+<th>等级</th>
+<th>论文</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>🔥 必读</td>
+<td><span class="wikilink">TriAttention</span>（三角函数压缩KV cache到1/8，推理效率飞跃） · <span class="wikilink">Rethinking-SFT</span>（160 upvote，SFT泛化的条件复杂度假说）</td>
+</tr>
+<tr>
+<td>👀 值得看</td>
+<td><span class="wikilink">AgentScope</span> 1.0（agent框架工程标杆） · <span class="wikilink">AI-Scientist-v2</span>（自动科研，workshop oral） · <span class="wikilink">VRAG-RL</span>（视觉RAG+RL对齐） · <span class="wikilink">TradingAgents</span>（多agent金融交易） · <span class="wikilink">Agent-READMEs</span>（agentic coding的上下文文件实证） · <span class="wikilink">DFlash</span>（扩散+投机解码加速） · <span class="wikilink">QaRL</span>（量化感知RL训练） · <span class="wikilink">Long-Context-Decomposition</span>（长上下文推理分解）</td>
+</tr>
+<tr>
+<td>💤 可跳过</td>
+<td><span class="wikilink">CutClaw</span>（视频编辑，非核心） · <span class="wikilink">MegaTrain</span>（训练工程，非核心研究） · <span class="wikilink">LlamaFactory</span>（微调工具升级版） · <span class="wikilink">OmniFlatten</span>（语音对话，非核心） · 其余论文与核心关注领域交集不足</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<div class="tab-bar"><button class="tab-btn active" data-tab="all" onclick="switchTab('all')">📋 全部<span class="tab-count">10</span></button><button class="tab-btn" data-tab="llm训练与架构" onclick="switchTab('llm训练与架构')">🤖 🔬 LLM 训练与架构<span class="tab-count">4</span></button><button class="tab-btn" data-tab="agent框架" onclick="switchTab('agent框架')">🏗 🤖 Agent 框架<span class="tab-count">4</span></button><button class="tab-btn" data-tab="检索与rag" onclick="switchTab('检索与rag')">📄 🔍 检索与RAG<span class="tab-count">1</span></button><button class="tab-btn" data-tab="推理与记忆" onclick="switchTab('推理与记忆')">🧠 🧠 推理与记忆<span class="tab-count">1</span></button></div>
+<div id="panel-all" class="tab-panel active"><h2>🔬 LLM 训练与架构</h2><div class="paper-card" data-topic="🔬 LLM 训练与架构"><h3>1. TriAttention: Efficient Long Reasoning with Trigonometric KV Compression</h3>
+<ul>
+<li><strong>作者</strong>: Weian Mao 1∗, Xi Lin 3∗, Wei Huang 2∗, Yuxin Xie, Tianfu Fu 1, Bohan Zhuang 3, Song Han 1 2, Yukang Chen 2</li>
+<li><strong>链接</strong>: <a href="https://arxiv.org/abs/2604.04921">arXiv</a> | <a href="https://arxiv.org/pdf/2604.04921">PDF</a></li>
+<li><strong>来源</strong>: 🔥 HF Trending，⬆️ 98</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2604.04921v1/fig/fig_openclaw_demo.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: <span class="wikilink">TriAttention</span> 用三角函数（sin/cos）对KV cache进行周期性压缩。核心思路：利用<span class="wikilink">RoPE</span>的旋转性质，将key/value向量投影到低维三角基上，实现8:1压缩比。在<span class="wikilink">MATH</span>等benchmark上验证，几乎无损。</li>
+<li><strong>对比方法/Baselines</strong>: 标准KV cache、<span class="wikilink">GQA</span>、量化KV、<span class="wikilink">StreamingLLM</span></li>
+<li><strong>借鉴意义</strong>: KV cache是长序列推理的核心瓶颈。8:1无损压缩直接将可处理上下文长度提升8倍，对部署成本影响巨大。</li>
+<li><strong>锐评</strong>: 98个upvote。用三角函数压KV cache是优雅的数学直觉——RoPE本身就是旋转变换，用三角基做压缩是自然的延伸。8:1压缩比如果真的无损，这是今年最实用的效率改进之一。但'几乎无损'的定义很关键——在长文本生成和多跳推理上的降级需要更细致的ablation。 🔥</li>
+</ul></div><div class="paper-card" data-topic="🔬 LLM 训练与架构"><h3>2. Rethinking Generalization in Reasoning SFT: A Conditional Analysis on Optimization, Data, and Model Capability</h3>
+<ul>
+<li><strong>作者</strong>: Ren, Qihan, Wang, Peng, Cai, Ruikun, Shao, Shuai, Guo, Dadi, Xie, Yuejin, Li, Yafu, Zhang, Quanshi, Hu, Xia, Shao, Jing, Liu, Dongrui</li>
+<li><strong>机构</strong>: Shanghai Artificial Intelligence Laboratory, Shanghai Jiao Tong University, University of Science and Technology of China</li>
+<li><strong>链接</strong>: <a href="https://arxiv.org/abs/2604.06628">arXiv</a> | <a href="https://arxiv.org/pdf/2604.06628">PDF</a></li>
+<li>
+<p><strong>来源</strong>: 🔥 HF Trending，⬆️ 160</p>
+</li>
+<li>
+<p><strong>核心方法</strong>: 研究<span class="wikilink">SFT</span>泛化能力的条件复杂度假说：SFT的泛化不取决于训练数据量，而取决于目标任务的条件复杂度（conditional complexity）。高条件复杂度任务（如数学推理）需要更多推理步骤，SFT难以泛化；低条件复杂度任务SFT容易泛化。</p>
+</li>
+<li><strong>对比方法/Baselines</strong>: 标准SFT、<span class="wikilink">GRPO</span>、<span class="wikilink">RLVR</span></li>
+<li><strong>借鉴意义</strong>: 直接回答了'SFT到底能不能教会模型推理'这个根本问题。条件复杂度框架为SFT vs RL的选择提供了理论依据。</li>
+<li><strong>锐评</strong>: 160个upvote说明社区很渴望这类基础性实验分析。条件复杂度假说解释了一个广泛观察到的现象：SFT在简单任务上泛化良好，但在复杂推理上完全失败。这为'什么时候用SFT、什么时候必须用RL'提供了清晰的判断标准。但'条件复杂度'本身怎么测量？如果没有可操作的度量方法，这个理论框架的实用价值就打折扣。 🔥</li>
+</ul></div><div class="paper-card" data-topic="🔬 LLM 训练与架构"><h3>3. DFlash: Block Diffusion for Flash Speculative Decoding</h3>
+<ul>
+<li><strong>作者</strong>: Jian Chen, Yesheng Liang, Zhijian Liu</li>
+<li><strong>链接</strong>: <a href="https://arxiv.org/abs/2602.06036">arXiv</a> | <a href="https://arxiv.org/pdf/2602.06036">PDF</a></li>
+<li><strong>来源</strong>: 🔥 HF Trending，⬆️ 46</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2602.06036/x2.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2602.06036/x3.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: <span class="wikilink">DFlash</span> 将block diffusion与投机解码结合。用小型diffusion模型生成draft tokens，大模型验证。在<span class="wikilink">HumanEval</span>等代码生成任务上实现2-3x加速。</li>
+<li><strong>对比方法/Baselines</strong>: <span class="wikilink">EAGLE-3</span>、Medusa、标准自回归解码</li>
+<li><strong>借鉴意义</strong>: 扩散LLM的解码加速是实用化的关键一步。投机解码思路的跨范式迁移值得关注。</li>
+<li><strong>锐评</strong>: 46个upvote。把投机解码从自回归迁移到扩散模型，思路简洁。但2-3x加速相比自回归投机解码的改进并不突出（EAGLE-3在自回归上也能做到类似加速）。关键问题是扩散LLM本身的生成质量是否已经追上自回归模型。 👀</li>
+</ul></div><div class="paper-card" data-topic="🔬 LLM 训练与架构"><h3>4. QaRL: Rollout-Aligned Quantization-Aware RL for Fast and Stable Training under Training--Inference Mismatch</h3>
+<ul>
+<li><strong>作者</strong>: Hao Gu1</li>
+<li><strong>机构</strong>: 3Zhejiang University, 2City University of Hong Kong, 1The Hong Kong University of Science and Technology</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2604.07853v1">arXiv</a> | <a href="https://arxiv.org/pdf/2604.07853v1">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2604.07853v1/fig/app_speed.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: <span class="wikilink">QaRL</span> 提出量化感知的RL训练框架。在<span class="wikilink">GRPO</span>训练过程中同步进行量化，让模型在量化约束下学习推理策略。提出<span class="wikilink">TBPO</span>等适配量化的策略优化方法。</li>
+<li><strong>对比方法/Baselines</strong>: 训练后量化 + RL、标准<span class="wikilink">GRPO</span></li>
+<li><strong>借鉴意义</strong>: RL训练的模型最终要部署在量化环境中。训练时就考虑量化约束比训后量化更合理。</li>
+<li><strong>锐评</strong>: 量化和RL的交叉点，解决了一个实际工程问题：GRPO训好的模型量化后性能降多少？如果在训练时就引入量化约束，降级能控制在什么范围？思路正确但arxiv得分只有2，说明实验说服力可能不够。 👀</li>
+</ul>
+<hr /></div><h2>🤖 Agent 框架</h2><div class="paper-card" data-topic="🤖 Agent 框架"><h3>5. AgentScope 1.0: A Developer-Centric Framework for Building Agentic</h3>
+<p>Applications
+- <strong>作者</strong>: Gao, Dawei, Li, Zitao, Xie, Yuexiang, Kuang, Weirui, Yao, Liuyi, Qian, Bingchen, Ma, Zhijian, Cui, Yue, Luo, Haohao, Li, Shen, Yi, Lu, Yu, Yi, He, Shiqi, Luo, Zhiling, Zhou, Wenmeng, Zhang, Zhicheng, He, Xuguang, Chen, Ziqian, Liao, Weikai, Kushnazarov, Farruh Isakulovich, Li, Yaliang, Ding, Bolin, Zhou, Jingren
+- <strong>机构</strong>: Alibaba Group
+- <strong>链接</strong>: <a href="https://arxiv.org/abs/2508.16279">arXiv</a> | <a href="https://arxiv.org/pdf/2508.16279">PDF</a>
+- <strong>来源</strong>: 🔥 HF Trending，⬆️ 61</p>
+<details class="paper-note"><summary>📒 精读笔记: AgentScope</summary><div class="note-body"><h1>AgentScope 1.0</h1>
+<h2>📋 基本信息</h2>
+<ul>
+<li><strong>作者</strong>: Dawei Gao, Zitao Li, Yuexiang Xie 等</li>
+<li><strong>机构</strong>: Alibaba Group</li>
+<li><strong>链接</strong>: <a href="https://arxiv.org/abs/2508.16279">arXiv</a> | <a href="https://arxiv.org/pdf/2508.16279">PDF</a></li>
+</ul>
+<h2>🎯 研究动机与问题</h2>
+<p>现有 multi-agent 框架（如 <span class="wikilink">LangChain</span>, <span class="wikilink">AutoGen</span>）在以下方面存在不足：
+1. <strong>工具集成侵入性强</strong>：需要大量修改已有代码
+2. <strong>可观测性差</strong>：大规模部署时难以监控和调试
+3. <strong>长期记忆缺失</strong>：agent 无法保持跨会话的上下文
+4. <strong>分布式支持弱</strong>：难以扩展到大规模 multi-agent 场景</p>
+<h2>🔧 方法详解</h2>
+<h3>核心架构</h3>
+<p>AgentScope 1.0 的核心抽象：</p>
+<ol>
+<li><strong><span class="wikilink">MsgHub</span>（消息总线）</strong>：agent 间消息传递的统一接口，支持广播和点对点通信</li>
+<li><strong>StateModule（状态管理）</strong>：统一管理 agent 状态，支持序列化和恢复</li>
+<li><strong>Non-Invasive Monitoring</strong>：基于 <span class="wikilink">OpenTelemetry</span> 的无侵入式监控</li>
+</ol>
+<h3>MCP 原生支持</h3>
+<p>原生集成 <span class="wikilink">MCP</span>（Model Context Protocol）协议：
+- Agent 可通过 MCP 协议访问外部工具和数据源
+- 工具集成不需要修改 agent 代码（non-invasive）
+- 支持 MCP server 的自动发现和注册</p>
+<h3>分层记忆系统</h3>
+<ul>
+<li><strong><span class="wikilink">InMemoryMemory</span></strong>：短期工作记忆，存储当前会话上下文</li>
+<li><strong><span class="wikilink">LongTermMemoryBase</span></strong>：长期记忆，支持跨会话信息持久化</li>
+<li>记忆检索支持语义搜索和结构化查询</li>
+</ul>
+<h3>ReAct Agent 内置实现</h3>
+<p>内置 <span class="wikilink">ReAct</span> 范式的 agent 实现：
+- Thought → Action → Observation 循环
+- 支持自定义 tool 注册
+- 内置错误处理和重试机制</p>
+<h3>分布式调度</h3>
+<ul>
+<li>基于 <span class="wikilink">gRPC</span> 的分布式通信</li>
+<li>支持 agent 在多节点间调度</li>
+<li>MsgHub 支持分布式消息广播</li>
+</ul>
+<h2>📊 实验结果</h2>
+<table>
+<thead>
+<tr>
+<th>框架</th>
+<th>MCP支持</th>
+<th>可观测性</th>
+<th>长期记忆</th>
+<th>分布式</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>LangChain</td>
+<td>部分</td>
+<td>弱</td>
+<td>第三方</td>
+<td>弱</td>
+</tr>
+<tr>
+<td>AutoGen</td>
+<td>无</td>
+<td>弱</td>
+<td>无</td>
+<td>部分</td>
+</tr>
+<tr>
+<td>CAMEL</td>
+<td>无</td>
+<td>无</td>
+<td>无</td>
+<td>无</td>
+</tr>
+<tr>
+<td><strong>AgentScope 1.0</strong></td>
+<td><strong>原生</strong></td>
+<td><strong>OpenTelemetry</strong></td>
+<td><strong>内置</strong></td>
+<td><strong>原生</strong></td>
+</tr>
+</tbody>
+</table>
+<p>61 upvotes 说明社区认可度较高。</p>
+<h2>💡 核心贡献</h2>
+<ol>
+<li><strong>MCP 原生集成</strong>：首个原生支持 MCP 协议的 multi-agent 框架</li>
+<li><strong>OpenTelemetry 可观测性</strong>：无侵入式监控，适合生产环境</li>
+<li><strong>分层记忆系统</strong>：短期 + 长期记忆，支持跨会话持久化</li>
+<li><strong>大规模部署经验</strong>：阿里内部大规模 multi-agent 部署验证</li>
+</ol>
+<h2>🤔 局限性与思考</h2>
+<ol>
+<li><strong>框架评估困难</strong>：benchmark 上的数字不代表实际开发体验</li>
+<li><strong>与 LangChain 对比不够 fair</strong>：只挑了对方弱的场景</li>
+<li><strong>学习曲线</strong>：抽象层较多，新手上手成本可能较高</li>
+<li><strong>MCP 生态尚未成熟</strong>：MCP 协议本身还在快速迭代</li>
+</ol>
+<h2>📚 相关工作</h2>
+<ul>
+<li><span class="wikilink">MCP</span>: Model Context Protocol，agent 工具集成标准</li>
+<li><span class="wikilink">OpenTelemetry</span>: 可观测性标准</li>
+<li><span class="wikilink">ReAct</span>: 推理+行动范式</li>
+<li><span class="wikilink">LangChain</span>: 竞品框架</li>
+<li><span class="wikilink">AutoGen</span>: 微软 multi-agent 框架</li>
+</ul></div></details>
+
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2508.16279v1/figures/agentscope_v1_0822.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2508.16279v1/figures/agent.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2508.16279v1/x1.png" /></div>
+<ul>
+<li><strong>锐评</strong>: 61个upvote的1.0版本。AgentScope做了agent框架该做的所有工程活——<span class="wikilink">MCP</span>集成、分布式部署、可视化监控。和LangChain相比更注重多agent协调。作为框架论文，技术创新有限但工程完成度高。已有笔记覆盖核心架构。 👀</li>
+</ul></div><div class="paper-card" data-topic="🤖 Agent 框架"><h3>6. The AI Scientist-v2: Workshop-Level Automated Scientific Discovery via</h3>
+<p>Agentic Tree Search
+- <strong>作者</strong>: Yamada, Yutaro, Lange, Robert Tjarko, Lu, Cong, Hu, Shengran, Lu, Chris, Foerster, Jakob, Clune, Jeff, Ha, David
+- <strong>机构</strong>: FLAIR, University of Oxford, University of British Columbia, Vector Institute
+- <strong>链接</strong>: <a href="https://arxiv.org/abs/2504.08066">arXiv</a> | <a href="https://arxiv.org/pdf/2504.08066">PDF</a>
+- <strong>来源</strong>: 🔥 HF Trending，⬆️ 22</p>
+<ul>
+<li><strong>核心方法</strong>: <span class="wikilink">AI-Scientist-v2</span> 是全自动科研系统的升级版。从idea生成到实验执行到论文撰写全自动化，声称在多个workshop上获得oral acceptance。使用多agent架构：Ideation Agent、Experiment Agent、Writing Agent协同工作。</li>
+<li><strong>对比方法/Baselines</strong>: AI Scientist v1、人类研究者baseline</li>
+<li><strong>借鉴意义</strong>: 如果自动生成的论文能过同行评审，这对学术生态的冲击是根本性的。但workshop level和top venue level差距巨大。</li>
+<li><strong>锐评</strong>: 22个upvote。'自动写论文拿oral'是个很好的标题——但workshop oral的bar和ICML oral的bar差了好几个数量级。更值得关注的是它暴露的问题：自动生成的论文是否只是在重组已有知识？能不能产生genuinely novel的insight？目前看不到。 👀
+  Agentic Tree Search`</li>
+</ul></div><div class="paper-card" data-topic="🤖 Agent 框架"><h3>7. TradingAgents: Multi-Agents LLM Financial Trading Framework</h3>
+<ul>
+<li><strong>作者</strong>: Xiao, Yijia, Sun, Edward, Luo, Di, Wang, Wei</li>
+<li><strong>机构</strong>: Massachusetts Institute of Technology (MIT), University of California, Los Angeles (UCLA)</li>
+<li><strong>链接</strong>: <a href="https://arxiv.org/abs/2412.20138">arXiv</a> | <a href="https://arxiv.org/pdf/2412.20138">PDF</a></li>
+<li><strong>来源</strong>: 🔥 HF Trending，⬆️ 41</li>
+</ul>
+<details class="paper-note"><summary>📒 精读笔记: TradingAgents</summary><div class="note-body"><h1>论文笔记：TradingAgents: Multi-Agents LLM Financial Trading Framework</h1>
+<h2>元信息</h2>
+<table>
+<thead>
+<tr>
+<th>项目</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>机构</td>
+<td>UCLA, MIT</td>
+</tr>
+<tr>
+<td>日期</td>
+<td>December 2024</td>
+</tr>
+<tr>
+<td>项目主页</td>
+<td>https://github.com/TauricResearch/TradingAgents</td>
+</tr>
+<tr>
+<td>对比基线</td>
+<td>Buy&amp;Hold, <span class="wikilink">MACD</span>, <span class="wikilink">KDJ</span>, <span class="wikilink">RSI</span>, <span class="wikilink">SMA</span></td>
+</tr>
+<tr>
+<td>链接</td>
+<td><a href="https://arxiv.org/abs/2412.20138">arXiv</a> / <a href="https://github.com/TauricResearch/TradingAgents">Code</a></td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2>一句话总结</h2>
+<blockquote>
+<p>模拟真实交易公司组织架构，用多角色 LLM Agent 协作辩论实现股票交易决策。</p>
+</blockquote>
+<hr />
+<h2>核心贡献</h2>
+<ol>
+<li><strong>仿真交易公司的多智能体框架</strong>: 首次模拟真实交易公司的组织架构，设计包含分析师团队、研究员团队、交易员和风控团队的 <span class="wikilink">多智能体系统</span></li>
+<li><strong>结构化通信协议</strong>: 用结构化文档（而非纯自然语言对话）作为主要通信方式，解决长对话中的信息丢失问题（"telephone effect"）</li>
+<li><strong>辩论驱动的决策机制</strong>: 通过 Bull/Bear 研究员和多风险偏好风控团队的辩论机制，增强交易决策的鲁棒性和可解释性</li>
+</ol>
+<hr />
+<h2>问题背景</h2>
+<h3>要解决的问题</h3>
+<p>如何利用 <span class="wikilink">LLM</span> 驱动的 <span class="wikilink">多智能体系统</span> 在金融交易中做出高质量的交易决策，同时保持决策的可解释性。</p>
+<h3>现有方法的局限</h3>
+<ol>
+<li><strong>缺乏真实组织建模</strong>: 现有框架未能捕捉真实交易公司中 Agent 之间的复杂协作关系，局限于单任务或独立数据收集</li>
+<li><strong>低效的通信接口</strong>: 大多数系统依赖自然语言消息历史或非结构化信息池，导致"telephone effect"——随着对话变长，细节丢失、状态损坏，Agent 难以维持上下文</li>
+</ol>
+<h3>本文的动机</h3>
+<p>真实交易公司依赖专家团队协作决策——基本面分析师、情绪分析师、技术分析师、交易员、风控经理各司其职。这种组织结构已被证明有效，可以用 LLM Agent 来模拟复现。</p>
+<hr />
+<h2>方法详解</h2>
+<h3>模型架构</h3>
+<p>TradingAgents 采用 <strong>层级化多智能体</strong> 架构，模拟交易公司工作流：</p>
+<ul>
+<li><strong>输入</strong>: 历史股价、新闻、社交媒体情绪、财报、技术指标等多模态金融数据</li>
+<li><strong>Backbone</strong>: <span class="wikilink">GPT-4o</span> / <span class="wikilink">GPT-4o-mini</span> (快速任务) + <span class="wikilink">o1-preview</span> (深度推理任务)</li>
+<li><strong>核心模块</strong>: 4 个团队按流水线协作——分析师团队 → 研究员团队 → 交易员 → 风控团队</li>
+<li><strong>输出</strong>: 买入/卖出/持有交易信号</li>
+<li><strong>框架</strong>: 基于 <span class="wikilink">ReAct</span> prompting framework</li>
+</ul>
+<h3>核心模块</h3>
+<h4>模块1: Analyst Team（分析师团队）</h4>
+<p><strong>设计动机</strong>: 利用 <span class="wikilink">LLM Agent</span> 的专业化分工，并行收集和分析市场多维数据</p>
+<p><strong>具体实现</strong>:
+- <strong><span class="wikilink">基本面分析师</span></strong>: 评估公司财报、盈利报告、内部交易等，判断内在价值
+- <strong><span class="wikilink">情绪分析师</span></strong>: 处理社交媒体帖子、情绪评分，预测投资者行为对股价的短期影响
+- <strong>新闻分析师</strong>: 分析新闻文章、政府公告、宏观经济指标，识别影响市场的事件
+- <strong><span class="wikilink">技术分析师</span></strong>: 计算 <span class="wikilink">MACD</span>、<span class="wikilink">RSI</span> 等技术指标，分析价格模式和交易量，预测价格走势</p>
+<p>四位分析师<strong>并行</strong>工作，各自输出结构化分析报告。</p>
+<h4>模块2: Researcher Team（研究员团队）</h4>
+<p><strong>设计动机</strong>: 通过对立观点的 <span class="wikilink">辩论</span> 机制，确保分析全面平衡</p>
+<p><strong>具体实现</strong>:
+- <strong>Bullish Researcher</strong>: 倡导投资机会，突出积极指标、增长潜力和有利市场条件
+- <strong>Bearish Researcher</strong>: 聚焦潜在风险和不利信号，质疑投资策略的可行性
+- 两方进行 <span class="math-inline">$n$</span> 轮自然语言辩论，由 <strong>facilitator agent</strong> 主持
+- 辩论结束后 facilitator 选择占优观点，记录为结构化条目</p>
+<h4>模块3: Trader Agents（交易员）</h4>
+<p><strong>设计动机</strong>: 综合分析师和研究员的全部输入，做出最终交易决策</p>
+<p><strong>具体实现</strong>:
+- 评估分析师和研究员的建议与洞察
+- 决定交易时机和规模以最大化收益
+- 下达买入/卖出指令
+- 根据市场变化和新信息调整投资组合配置
+- 输出交易决策及详细理由报告</p>
+<h4>模块4: Risk Management Team（风控团队）</h4>
+<p><strong>设计动机</strong>: 确保交易活动在预设风险参数内，避免过度暴露</p>
+<p><strong>具体实现</strong>:
+- 评估市场波动性、流动性和对手方风险
+- 实施风险缓解策略（如止损、分散持仓）
+- 三个视角辩论：<strong>risk-seeking</strong>、<strong>neutral</strong>、<strong>risk-conservative</strong>，进行 <span class="math-inline">$n$</span> 轮讨论
+- <strong>Fund Manager</strong> 审核风控讨论结果，确定风险调整并最终执行交易</p>
+<h4>Communication Protocol（通信协议）</h4>
+<p><strong>设计动机</strong>: 解决纯自然语言通信在长任务中的信息丢失问题</p>
+<p><strong>具体实现</strong>:
+- <strong>结构化文档通信</strong>: 分析师和交易员通过结构化报告交流（而非对话），每个角色只提取/查询必要信息
+- <strong>自然语言辩论</strong>: 仅在研究员辩论和风控讨论中使用自然语言对话
+- <strong>全局状态共享</strong>: 所有 Agent 共享并监控环境状态
+- 混合方式兼顾精确性（结构化）和灵活性（自然语言）</p>
+<hr />
+<h2>关键公式</h2>
+<h3>公式1: <span class="wikilink">累计收益率 (CR)</span></h3>
+<div class="math-block">$$
+\text{CR} = \left(\frac{V_{\text{end}} - V_{\text{start}}}{V_{\text{start}}}\right) \times 100\%
+$$</div>
+
+<p><strong>含义</strong>: 衡量整个模拟期间产生的总收益</p>
+<p><strong>符号说明</strong>:
+- <span class="math-inline">$V_{\text{end}}$</span>: 模拟结束时的投资组合价值
+- <span class="math-inline">$V_{\text{start}}$</span>: 初始投资组合价值</p>
+<h3>公式2: <span class="wikilink">年化收益率 (AR)</span></h3>
+<div class="math-block">$$
+\text{AR} = \left(\left(\frac{V_{\text{end}}}{V_{\text{start}}}\right)^{\frac{1}{N}} - 1\right) \times 100\%
+$$</div>
+
+<p><strong>含义</strong>: 将累计收益率标准化到年度维度进行对比</p>
+<p><strong>符号说明</strong>:
+- <span class="math-inline">$V_{\text{end}}$</span>: 模拟结束时的投资组合价值
+- <span class="math-inline">$V_{\text{start}}$</span>: 初始投资组合价值
+- <span class="math-inline">$N$</span>: 模拟的年数</p>
+<h3>公式3: <span class="wikilink">夏普比率 (SR)</span></h3>
+<div class="math-block">$$
+\text{SR} = \frac{\bar{R} - R_f}{\sigma}
+$$</div>
+
+<p><strong>含义</strong>: 衡量风险调整后收益，将超额收益与投资组合波动性进行比较</p>
+<p><strong>符号说明</strong>:
+- <span class="math-inline">$\bar{R}$</span>: 投资组合平均收益率
+- <span class="math-inline">$R_f$</span>: 无风险利率（如 3 个月国债收益率）
+- <span class="math-inline">$\sigma$</span>: 投资组合收益率的标准差</p>
+<h3>公式4: <span class="wikilink">最大回撤 (MDD)</span></h3>
+<div class="math-block">$$
+\text{MDD} = \max_{t \in [0, T]} \left(\frac{\text{Peak}_t - \text{Trough}_t}{\text{Peak}_t}\right) \times 100\%
+$$</div>
+
+<p><strong>含义</strong>: 衡量投资组合价值从峰值到谷值的最大跌幅，反映最坏情况下的损失</p>
+<p><strong>符号说明</strong>:
+- <span class="math-inline">$\text{Peak}_t$</span>: 时间 <span class="math-inline">$t$</span> 之前的投资组合最高价值
+- <span class="math-inline">$\text{Trough}_t$</span>: 峰值之后的投资组合最低价值
+- <span class="math-inline">$T$</span>: 模拟总时长</p>
+<hr />
+<h2>关键图表</h2>
+<h3>Figure 1: Overall Framework / 整体框架</h3>
+<div class="paper-figure"><img alt="Figure 1" loading="lazy" src="https://ar5iv.labs.arxiv.org/html/2412.20138/assets/x1.png" /></div>
+<p><strong>说明</strong>: TradingAgents 整体框架组织。I. <strong>分析师团队</strong>: 四位分析师并行收集市场信息。II. <strong>研究员团队</strong>: 通过 Bull/Bear 辩论评估数据。III. <strong>交易员</strong>: 基于研究分析做出交易决策。IV. <strong>风控团队</strong>: 评估决策的风险并缓解。V. <strong>基金经理</strong>: 审批并执行交易。</p>
+<h3>Figure 2: Analyst Team / 分析师团队</h3>
+<div class="paper-figure"><img alt="Figure 2" loading="lazy" src="https://ar5iv.labs.arxiv.org/html/2412.20138/assets/x2.png" /></div>
+<p><strong>说明</strong>: 展示分析师团队的四个专业角色——基本面分析师、情绪分析师、新闻分析师和技术分析师，各自使用专属工具并行工作，产出结构化分析报告。</p>
+<h3>Figure 3: Researcher Team / 研究员团队</h3>
+<div class="paper-figure"><img alt="Figure 3" loading="lazy" src="https://ar5iv.labs.arxiv.org/html/2412.20138/assets/x3.png" /></div>
+<p><strong>说明</strong>: 研究员团队包含 Bullish（看涨）和 Bearish（看跌）两个视角的 Agent，通过多轮辩论评估市场状况，由 facilitator 总结并选择占优观点。</p>
+<h3>Figure 4: Trader Decision-Making / 交易员决策流程</h3>
+<div class="paper-figure"><img alt="Figure 4" loading="lazy" src="https://ar5iv.labs.arxiv.org/html/2412.20138/assets/x4.png" /></div>
+<p><strong>说明</strong>: 交易员综合分析师报告和研究员辩论结论，评估各方建议后决定交易时机、规模和方向，输出决策信号与详细理由报告。</p>
+<h3>Figure 5: Risk Management and Fund Manager / 风控与基金经理</h3>
+<div class="paper-figure"><img alt="Figure 5" loading="lazy" src="https://ar5iv.labs.arxiv.org/html/2412.20138/assets/x5.png" /></div>
+<p><strong>说明</strong>: 风控团队从三个风险偏好视角（risk-seeking / neutral / risk-conservative）审核交易决策，进行多轮讨论。基金经理最终审批并确定风险调整方案。</p>
+<h3>Table 1: Performance Comparison / 性能对比</h3>
+<table>
+<thead>
+<tr>
+<th>Categories</th>
+<th>Models</th>
+<th>AAPL CR%</th>
+<th>AAPL ARR%</th>
+<th>AAPL SR</th>
+<th>AAPL MDD%</th>
+<th>GOOGL CR%</th>
+<th>GOOGL ARR%</th>
+<th>GOOGL SR</th>
+<th>GOOGL MDD%</th>
+<th>AMZN CR%</th>
+<th>AMZN ARR%</th>
+<th>AMZN SR</th>
+<th>AMZN MDD%</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Market</td>
+<td>B&amp;H</td>
+<td>-5.23</td>
+<td>-5.09</td>
+<td>-1.29</td>
+<td>11.90</td>
+<td>7.78</td>
+<td>8.09</td>
+<td>1.35</td>
+<td>13.04</td>
+<td>17.1</td>
+<td>17.6</td>
+<td>3.53</td>
+<td>3.80</td>
+</tr>
+<tr>
+<td>Rule-based</td>
+<td>MACD</td>
+<td>-1.49</td>
+<td>-1.48</td>
+<td>-0.81</td>
+<td>4.53</td>
+<td>6.20</td>
+<td>6.26</td>
+<td>2.31</td>
+<td>1.22</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+</tr>
+<tr>
+<td>Rule-based</td>
+<td>KDJ&amp;RSI</td>
+<td>2.05</td>
+<td>2.07</td>
+<td>1.64</td>
+<td>1.09</td>
+<td>0.4</td>
+<td>0.4</td>
+<td>0.02</td>
+<td>1.58</td>
+<td>-0.77</td>
+<td>-0.76</td>
+<td>-2.25</td>
+<td>1.08</td>
+</tr>
+<tr>
+<td>Rule-based</td>
+<td>ZMR</td>
+<td>0.57</td>
+<td>0.57</td>
+<td>0.17</td>
+<td>0.86</td>
+<td>-0.58</td>
+<td>0.58</td>
+<td>2.12</td>
+<td>2.34</td>
+<td>-0.77</td>
+<td>-0.77</td>
+<td>-2.45</td>
+<td>0.82</td>
+</tr>
+<tr>
+<td>Rule-based</td>
+<td>SMA</td>
+<td>-3.2</td>
+<td>-2.97</td>
+<td>-1.72</td>
+<td>3.67</td>
+<td>6.23</td>
+<td>6.43</td>
+<td>2.12</td>
+<td>2.34</td>
+<td>11.01</td>
+<td>11.6</td>
+<td>2.22</td>
+<td>3.97</td>
+</tr>
+<tr>
+<td><strong>Ours</strong></td>
+<td><strong>TradingAgents</strong></td>
+<td><strong>26.62</strong></td>
+<td><strong>30.5</strong></td>
+<td><strong>8.21</strong></td>
+<td><strong>0.91</strong></td>
+<td><strong>24.36</strong></td>
+<td><strong>27.58</strong></td>
+<td><strong>6.39</strong></td>
+<td><strong>1.69</strong></td>
+<td><strong>23.21</strong></td>
+<td><strong>24.90</strong></td>
+<td><strong>5.60</strong></td>
+<td><strong>2.11</strong></td>
+</tr>
+<tr>
+<td></td>
+<td>Improvement(%)</td>
+<td>24.57</td>
+<td>28.43</td>
+<td>6.57</td>
+<td>-</td>
+<td>16.58</td>
+<td>19.49</td>
+<td>4.26</td>
+<td>-</td>
+<td>6.10</td>
+<td>7.30</td>
+<td>2.07</td>
+<td>-</td>
+</tr>
+</tbody>
+</table>
+<p><strong>说明</strong>: TradingAgents 在三只股票上全面超越所有 baseline。AAPL 上累计收益率 26.62%（基线最佳仅 2.05%），夏普比率 8.21（基线最佳 1.64），最大回撤仅 0.91%。</p>
+<h3>Figure 6: AAPL Results / AAPL 实验结果</h3>
+<div class="paper-figure"><img alt="Figure 6a" loading="lazy" src="https://ar5iv.labs.arxiv.org/html/2412.20138/assets/x6.png" /></div>
+<p><strong>说明</strong>: (a) AAPL 各方法的累计收益率对比。TradingAgents 显著领先所有基线方法。</p>
+<div class="paper-figure"><img alt="Figure 6b" loading="lazy" src="https://ar5iv.labs.arxiv.org/html/2412.20138/assets/x7.png" /></div>
+<p><strong>说明</strong>: (b) TradingAgents 在 AAPL 上的交易记录。绿色箭头表示做多，红色箭头表示做空。</p>
+<h3>Figure 7: AMZN Results / AMZN 实验结果</h3>
+<div class="paper-figure"><img alt="Figure 7a" loading="lazy" src="https://ar5iv.labs.arxiv.org/html/2412.20138/assets/x8.png" /></div>
+<p><strong>说明</strong>: (a) AMZN 各方法的累计收益率对比。</p>
+<div class="paper-figure"><img alt="Figure 7b" loading="lazy" src="https://ar5iv.labs.arxiv.org/html/2412.20138/assets/x9.png" /></div>
+<p><strong>说明</strong>: (b) TradingAgents 在 AMZN 上的详细交易记录。</p>
+<h3>Figure 8: GOOGL Results / GOOGL 实验结果</h3>
+<div class="paper-figure"><img alt="Figure 8a" loading="lazy" src="https://ar5iv.labs.arxiv.org/html/2412.20138/assets/x10.png" /></div>
+<p><strong>说明</strong>: (a) GOOGL 各方法的累计收益率对比。</p>
+<div class="paper-figure"><img alt="Figure 8b" loading="lazy" src="https://ar5iv.labs.arxiv.org/html/2412.20138/assets/x11.png" /></div>
+<p><strong>说明</strong>: (b) TradingAgents 在 GOOGL 上的详细交易记录。</p>
+<hr />
+<h2>实验</h2>
+<h3>数据集</h3>
+<table>
+<thead>
+<tr>
+<th>数据集</th>
+<th>规模</th>
+<th>特点</th>
+<th>用途</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>历史股价</td>
+<td>2024.01.01 - 2024.03.29 (训练)</td>
+<td>OHLCV + Adjusted Close</td>
+<td>训练/回测</td>
+</tr>
+<tr>
+<td>新闻数据</td>
+<td>Bloomberg, Yahoo, EODHD, FinnHub, Reddit</td>
+<td>公司新闻/全球事件/宏观趋势</td>
+<td>新闻分析</td>
+</tr>
+<tr>
+<td>社交媒体</td>
+<td>Reddit, X/Twitter</td>
+<td>情绪评分由辅助语言模型计算</td>
+<td>情绪分析</td>
+</tr>
+<tr>
+<td>内部交易数据</td>
+<td>SEDI, 公司文件</td>
+<td>内部人情绪和交易</td>
+<td>基本面分析</td>
+</tr>
+<tr>
+<td>财报</td>
+<td>季度/年度报告</td>
+<td>上市公司财务报告</td>
+<td>基本面分析</td>
+</tr>
+<tr>
+<td>技术指标</td>
+<td>60 种标准指标</td>
+<td>MACD, RSI, Bollinger Bands 等</td>
+<td>技术分析</td>
+</tr>
+</tbody>
+</table>
+<h3>实现细节</h3>
+<ul>
+<li><strong>模拟周期</strong>: 2024.06.19 - 2024.11.19（5 个月）</li>
+<li><strong>测试股票</strong>: AAPL, GOOGL, AMZN</li>
+<li><strong>快速思考模型</strong>: <span class="wikilink">GPT-4o-mini</span>, <span class="wikilink">GPT-4o</span>（数据检索、摘要等）</li>
+<li><strong>深度思考模型</strong>: <span class="wikilink">o1-preview</span>（决策、推理、报告撰写）</li>
+<li><strong>辅助模型</strong>: 专用情绪分析模型</li>
+<li><strong>硬件</strong>: 无需 GPU，仅需 API credits</li>
+<li><strong>无前瞻偏差</strong>: Agent 仅使用当天及之前的数据</li>
+</ul>
+<h3>可视化结果</h3>
+<p>TradingAgents 在 AAPL 上表现尤为突出——该股在测试期内波动剧烈，传统规则方法几乎全部亏损，而 TradingAgents 在不到 3 个月内实现超过 26% 的收益。交易记录显示 Agent 能精准捕捉趋势反转点，在市场下行前及时减仓。</p>
+<hr />
+<h2>批判性思考</h2>
+<h3>优点</h3>
+<ol>
+<li><strong>组织架构设计合理</strong>: 模拟真实交易公司的角色分工和协作流程，比单一 Agent 或简单并行 Agent 更符合实际</li>
+<li><strong>辩论机制有效</strong>: Bull/Bear 辩论和多风险偏好风控讨论提供了对立视角，有助于避免单一偏见</li>
+<li><strong>高可解释性</strong>: 每个决策都有自然语言推理过程、工具使用记录和思考链，远优于黑盒 DL 交易系统</li>
+<li><strong>即插即用</strong>: 框架支持替换任意 backbone LLM，无需 GPU，高度可扩展</li>
+<li><strong>结构化通信</strong>: 避免了纯对话式 Agent 系统中的信息衰减问题</li>
+</ol>
+<h3>局限性</h3>
+<ol>
+<li><strong>Baseline 过弱</strong>: 仅对比了简单的规则策略（MACD, SMA 等），未与其他 LLM 交易系统（如 FinMem, FinAgent）或深度学习交易模型进行对比</li>
+<li><strong>测试规模有限</strong>: 仅在 3 只股票上测试了 5 个月，统计显著性不足，存在过拟合可能</li>
+<li><strong>API 成本未提及</strong>: 使用 o1-preview 等顶级模型进行逐日决策，API 成本可能极高，论文未讨论</li>
+<li><strong>无消融实验</strong>: 缺乏对各模块（辩论轮数、Agent 数量、通信协议类型）的消融分析</li>
+<li><strong>无滑点/手续费建模</strong>: 未提及交易成本、滑点、流动性限制等现实因素</li>
+<li><strong>存活偏差风险</strong>: 仅展示大盘科技股，未验证在小盘股或波动更大的市场中的表现</li>
+</ol>
+<h3>潜在改进方向</h3>
+<ol>
+<li>增加对其他 LLM 交易框架的对比实验</li>
+<li>补充消融实验，验证各组件（辩论机制、风控团队、通信协议）的边际贡献</li>
+<li>加入真实交易环境部署测试（live trading）</li>
+<li>考虑交易成本建模，使回测更贴近现实</li>
+<li>扩展到更多资产类别（加密货币、期货、外汇）和更长时间跨度</li>
+</ol>
+<h3>可复现性评估</h3>
+<ul>
+<li>[x] 代码开源</li>
+<li>[ ] 预训练模型（基于 API 调用，无需预训练）</li>
+<li>[x] 训练细节完整</li>
+<li>[x] 数据集可获取</li>
+</ul>
+<hr />
+<h2>关联笔记</h2>
+<h3>基于</h3>
+<ul>
+<li><span class="wikilink">MetaGPT</span>: 结构化通信协议的灵感来源</li>
+<li><span class="wikilink">ReAct</span>: Agent 使用的 prompting framework</li>
+<li><span class="wikilink">FinMem</span>: 反思驱动的 LLM 交易 Agent</li>
+<li><span class="wikilink">FinAgent</span>: 多模态分层记忆 LLM 交易 Agent</li>
+</ul>
+<h3>对比</h3>
+<ul>
+<li><span class="wikilink">FinGPT</span>: 金融领域微调 LLM</li>
+<li><span class="wikilink">BloombergGPT</span>: 从零训练的金融 LLM</li>
+<li><span class="wikilink">TradingGPT</span>: 另一个 LLM 辩论驱动的交易框架</li>
+</ul>
+<h3>方法相关</h3>
+<ul>
+<li><span class="wikilink">Multi-Agent System</span>: 多智能体系统架构</li>
+<li><span class="wikilink">Agent Debate</span>: 多 Agent 辩论提升推理质量</li>
+<li><span class="wikilink">Fundamental Analysis</span>: 基本面分析</li>
+<li><span class="wikilink">Sentiment Analysis</span>: 情绪分析</li>
+<li><span class="wikilink">Technical Analysis</span>: 技术分析</li>
+<li><span class="wikilink">Sharpe Ratio</span>: 风险调整收益衡量指标</li>
+<li><span class="wikilink">Maximum Drawdown</span>: 最大回撤</li>
+</ul>
+<h3>硬件/数据相关</h3>
+<ul>
+<li><span class="wikilink">GPT-4o</span>: 快速推理 backbone</li>
+<li><span class="wikilink">o1-preview</span>: 深度推理 backbone</li>
+</ul>
+<hr />
+<h2>速查卡片</h2>
+<blockquote>
+<p>[!summary] TradingAgents: Multi-Agents LLM Financial Trading Framework
+- <strong>核心</strong>: 模拟交易公司组织架构的多 LLM Agent 股票交易框架
+- <strong>方法</strong>: 分析师(4角色)并行分析 → Bull/Bear 辩论 → 交易员决策 → 风控审批
+- <strong>结果</strong>: AAPL CR 26.62%, SR 8.21; GOOGL CR 24.36%; AMZN CR 23.21%，全面超越规则策略
+- <strong>代码</strong>: https://github.com/TauricResearch/TradingAgents</p>
+</blockquote>
+<hr />
+<p><em>笔记创建时间: 2026-04-11</em></p></div></details>
+
+<ul>
+<li><strong>核心方法</strong>: <span class="wikilink">TradingAgents</span> 用multi-agent框架做金融交易。包含Market Analyst、Risk Manager、Trader等角色分工。在美股数据上回测验证。</li>
+<li><strong>对比方法/Baselines</strong>: 单agent交易、传统量化策略</li>
+<li><strong>借鉴意义</strong>: 金融领域是multi-agent的天然应用场景——不同角色处理不同信息源。但回测=/=实盘。</li>
+<li><strong>锐评</strong>: 41个upvote。用multi-agent炒股的想法不新，但角色分工的设计还算合理。核心问题：回测period多长？有没有包含2022年这种极端下跌行情？如果只在牛市回测，任何策略都能赚钱。另外交易频率和手续费的影响完全没提。 👀</li>
+</ul></div><div class="paper-card" data-topic="🤖 Agent 框架"><h3>8. Agent READMEs: An Empirical Study of Context Files for Agentic Coding</h3>
+<ul>
+<li><strong>作者</strong>: Worawalan Chatlatanagulchai, Hao Li, Yutaro Kashiwa, Brittany Reid, Kundjanasith Thonglek, Pattara Leelaprute, Arnon Rungsawang, Bundit Manaskasemsak, Bram Adams, Ahmed E. Hassan, Hajimu Iida</li>
+<li><strong>机构</strong>: Queen’s University, yutaro.kashiwa@is.naist.jp
+, Nara Institute of Science and TechnologyIkomaJapan, Queen’s UniversityKingstonCanada, Faculty of Engineering, Kasetsart University, Faculty of Engineering, Kasetsart UniversityBangkokThailand, Nara Institute of Science and Technology</li>
+<li><strong>链接</strong>: <a href="https://arxiv.org/abs/2511.12884">arXiv</a> | <a href="https://arxiv.org/pdf/2511.12884">PDF</a></li>
+<li><strong>来源</strong>: 🔥 HF Trending，⬆️ 28</li>
+</ul>
+<details class="paper-note"><summary>📒 精读笔记: Agent READMEs</summary><div class="note-body"><h1>论文笔记：Agent READMEs: An Empirical Study of Context Files for Agentic Coding</h1>
+<h2>元信息</h2>
+<table>
+<thead>
+<tr>
+<th>项目</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>机构</td>
+<td>Kasetsart University / Queen's University / Nara Institute of Science and Technology</td>
+</tr>
+<tr>
+<td>日期</td>
+<td>November 2025</td>
+</tr>
+<tr>
+<td>项目主页</td>
+<td>https://github.com/woraamy/Agent-Context-File-Analysis</td>
+</tr>
+<tr>
+<td>对比基线</td>
+<td>前序工作 (Chatlatanagulchai et al., 2025) 253 文件 → 本文 2,303 文件</td>
+</tr>
+<tr>
+<td>链接</td>
+<td><a href="https://arxiv.org/abs/2511.12884">arXiv</a> / <a href="https://github.com/woraamy/Agent-Context-File-Analysis">Code</a></td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2>一句话总结</h2>
+<blockquote>
+<p>首个大规模实证研究，分析 2,303 个 Agent 上下文文件（CLAUDE.md/AGENTS.md/copilot-instructions.md）的结构、维护模式与指令内容，揭示功能性指令主导而安全/性能等非功能性需求严重缺失的现状。</p>
+</blockquote>
+<hr />
+<h2>核心贡献</h2>
+<ol>
+<li><strong>首个大规模 Agent 上下文文件实证研究</strong>: 收集 1,925 个仓库中的 2,303 个 Agent 上下文文件（ACF），覆盖 Claude Code、OpenAI Codex、GitHub Copilot 三大工具</li>
+<li><strong>16 类指令分类体系</strong>: 通过人工标注构建 Agent 上下文文件的指令分类 taxonomy，发现功能性指令（Build and Run 62.3%、Implementation Details 69.9%）远多于非功能性需求（Security 14.5%、Performance 14.5%）</li>
+<li><strong>自动分类可行性验证</strong>: 使用 <span class="wikilink">GPT-5</span> 实现 0.79 F1-score 的自动分类，证明大规模监控 Agent 上下文文件的可行性</li>
+</ol>
+<hr />
+<h2>问题背景</h2>
+<h3>要解决的问题</h3>
+<p><span class="wikilink">Agentic Coding</span> 工具（如 <span class="wikilink">Claude Code</span>、<span class="wikilink">OpenAI Codex</span>、<span class="wikilink">GitHub Copilot</span>）依赖 Agent 上下文文件（ACF）来理解项目架构、遵循编码规范、执行构建测试。但目前缺乏关于这些文件结构、演化方式和实际内容的系统性实证证据。</p>
+<h3>现有方法的局限</h3>
+<ul>
+<li>官方文档仅提供高层指导（如"描述架构和工作流"），开发者只能通过试错来设计这些文件</li>
+<li>已有研究主要关注 <span class="wikilink">LLM</span> 的模型能力、交互模式和即时提示，而非持久化的项目级上下文配置</li>
+<li>前序工作 (Chatlatanagulchai et al., 2025) 仅研究了 253 个 Claude Code 文件，范围有限</li>
+</ul>
+<h3>本文的动机</h3>
+<p>Agent 上下文文件作为一种新型软件工件（"READMEs for agents"），在 Agentic Coding 生态中扮演关键角色，但学术界对其缺乏基本的经验性认知。本文旨在通过大规模实证分析填补这一空白。</p>
+<hr />
+<h2>方法详解</h2>
+<h3>研究设计</h3>
+<p>本文围绕四个研究问题（RQ）展开：</p>
+<ul>
+<li><strong>RQ1</strong>: Agent 上下文文件的特征（大小、可读性、结构）是什么？</li>
+<li><strong>RQ2</strong>: 开发者维护 Agent 上下文文件的频率如何？</li>
+<li><strong>RQ3</strong>: Agent 上下文文件包含哪些指令？</li>
+<li><strong>RQ4</strong>: 能否自动分类 Agent 上下文文件中的指令？</li>
+</ul>
+<h3>数据收集</h3>
+<p><strong>数据来源</strong>: AIDev 数据集 (Li et al., 2025b)，筛选 GitHub Stars ≥ 5 的 8,370 个仓库</p>
+<p><strong>文件检索</strong>: 通过 GitHub API 扫描仓库根目录，按官方命名规范检索：
+- <code>CLAUDE.md</code> → Claude Code（922 个）
+- <code>AGENTS.md</code> → OpenAI Codex（694 个）
+- <code>copilot-instructions.md</code> → GitHub Copilot（687 个）
+- 总计: <strong>2,303 个文件来自 1,925 个仓库</strong></p>
+<h3>RQ1: 特征分析方法</h3>
+<ul>
+<li><strong>大小</strong>: 正则表达式 <code>\w+</code> 匹配单词数</li>
+<li><strong>可读性</strong>: <span class="wikilink">FRE</span> 指标（越高越易读）</li>
+<li><strong>结构</strong>: 统计 Markdown 标题层级（H1-H5）分布</li>
+<li><strong>统计检验</strong>: <span class="wikilink">Mann-Whitney U Test</span> + <span class="wikilink">Cliff&#x27;s Delta</span> 效应量</li>
+</ul>
+<h3>RQ2: 维护模式分析</h3>
+<ul>
+<li>提取所有修改 ACF 的 commit 历史</li>
+<li>统计 commit 数量、时间间隔、增删行数</li>
+<li>总计分析 5,655（Claude Code）+ 2,767（Codex）+ 2,237（Copilot）= 10,659 次 commit</li>
+</ul>
+<h3>RQ3: 内容分类方法</h3>
+<p><strong>两阶段人工标注</strong>:</p>
+<ol>
+<li><strong>标签创建阶段</strong>: 提取 H1/H2 标题 → 3 个 LLM（<span class="wikilink">Claude Opus 4.1</span>、<span class="wikilink">Gemini 2.5 Pro</span>、GPT-5）生成候选标签 → 人工筛选 → 80 个初始标签 → 合并为 <strong>16 个核心类别</strong></li>
+<li><strong>标签分配阶段</strong>: 2 位标注员独立标注 332 个 Claude Code 文件 → 80.3% 一致率 → 第 3 位标注员调解分歧 → 最终 2,069 个标签分配</li>
+</ol>
+<h3>RQ4: 自动分类方法</h3>
+<ul>
+<li><strong>任务</strong>: 多标签分类（16 个类别）</li>
+<li><strong>模型</strong>: GPT-5</li>
+<li><strong>输入</strong>: 完整 ACF 内容 + 每个类别的描述和示例</li>
+<li><strong>评估</strong>: Precision / Recall / F1-score（per-category + micro average）</li>
+</ul>
+<hr />
+<h2>关键公式</h2>
+<h3>公式1: <span class="wikilink">效应量判断标准</span></h3>
+<div class="math-block">$$
+\text{Effect size} = \begin{cases}
+\text{negligible}, &amp; \text{if } |d| \leq 0.147 \\
+\text{small}, &amp; \text{if } 0.147 &lt; |d| \leq 0.33 \\
+\text{medium}, &amp; \text{if } 0.33 &lt; |d| \leq 0.474 \\
+\text{large}, &amp; \text{if } 0.474 &lt; |d| \leq 1
+\end{cases}
+$$</div>
+
+<p><strong>含义</strong>: 用 Cliff's delta <span class="math-inline">$d$</span> 量化两组样本之间差异的实际显著性，补充 <span class="wikilink">Mann-Whitney U Test</span> 的统计显著性判断</p>
+<p><strong>符号说明</strong>:
+- <span class="math-inline">$d$</span>: Cliff's delta 值，范围 <span class="math-inline">$[-1, 1]$</span>
+- <span class="math-inline">$|d|$</span>: delta 的绝对值</p>
+<h3>公式2: <span class="wikilink">Flesch Reading Ease</span></h3>
+<div class="math-block">$$
+FRE = 206.835 - 1.015 \times \frac{\text{total words}}{\text{total sentences}} - 84.6 \times \frac{\text{total syllables}}{\text{total words}}
+$$</div>
+
+<p><strong>含义</strong>: 衡量文本可读性，分数越高越容易阅读（0-100 范围）</p>
+<p><strong>符号说明</strong>:
+- <span class="math-inline">$FRE$</span>: Flesch Reading Ease 分数
+- 低于 30 为 "Very Difficult"（大学毕业生水平）
+- 30-50 为 "Difficult"（大学水平）</p>
+<hr />
+<h2>关键图表</h2>
+<h3>Figure 1: Agent 上下文文件示例</h3>
+<div class="paper-figure"><img alt="Figure 1" loading="lazy" src="https://arxiv.org/html/2511.12884v1/x1.png" /></div>
+<p><strong>说明</strong>: 展示两个真实世界 Agent 上下文文件的对比。左侧为一个 Web 框架项目的精简 AGENTS.md（仅 20 行，3 个章节），右侧为一个 Agent 工具开发项目的 329 行综合性 CLAUDE.md（74 个章节），说明 ACF 不是标准化模板文档而是高度定制化的配置机制。</p>
+<h3>Figure 2: 研究方法论总览</h3>
+<div class="paper-figure"><img alt="Figure 2" loading="lazy" src="https://arxiv.org/html/2511.12884v1/x2.png" /></div>
+<p><strong>说明</strong>: 数据收集流水线：从 AIDev 数据集获取仓库列表 → 筛选 Stars ≥ 5 → GitHub API 扫描 → 按文件名规范检索 CLAUDE.md / AGENTS.md / copilot-instructions.md → 收集 2,303 个 ACF。</p>
+<h3>Figure 3: ACF 大小与可读性分布</h3>
+<div class="paper-figure"><img alt="Figure 3a" loading="lazy" src="https://arxiv.org/html/2511.12884v1/x3.png" /></div>
+<p><strong>(a) 文件字数分布</strong>: GitHub Copilot（中位数 535 词）和 Claude Code（中位数 485 词）显著长于 OpenAI Codex（中位数 335.5 词），Cliff's delta <span class="math-inline">$d = 0.21$</span> 和 <span class="math-inline">$d = 0.22$</span>（small effect size）。</p>
+<div class="paper-figure"><img alt="Figure 3b" loading="lazy" src="https://arxiv.org/html/2511.12884v1/x4.png" /></div>
+<p><strong>(b) FRE 可读性分布</strong>: Claude Code 最难读（中位数 FRE 16.6，"Very Difficult"），OpenAI Codex 最易读（中位数 FRE 39.6，"Difficult"），GitHub Copilot 居中（中位数 FRE 26.6）。</p>
+<h3>Figure 4: ACF 标题层级分布</h3>
+<div class="paper-figure"><img alt="Figure 4" loading="lazy" src="https://arxiv.org/html/2511.12884v1/x5.png" /></div>
+<p><strong>说明</strong>: ACF 普遍遵循浅层层级结构：单一 H1 标题 + 6-7 个 H2 标题 + 中等数量 H3/H4 子章节。H5 及更深层级极为罕见。GitHub Copilot 和 Claude Code 在 H3 层级上比 OpenAI Codex 更精细（中位数 12.0 和 11.0 vs 9.0）。</p>
+<h3>Figure 5: ACF 维护活动分布</h3>
+<div class="paper-figure"><img alt="Figure 5a" loading="lazy" src="https://arxiv.org/html/2511.12884v1/x6.png" /></div>
+<p><strong>(a) Commit 次数分布</strong>: 67.4% 的 Claude Code ACF 经历多次 commit 修改，GitHub Copilot 59.7%，OpenAI Codex 59.2%。Claude Code ACF 显著接收更多 commit（<span class="math-inline">$d = 0.35$</span>，medium effect size vs Copilot）。</p>
+<div class="paper-figure"><img alt="Figure 5b" loading="lazy" src="https://arxiv.org/html/2511.12884v1/x7.png" /></div>
+<p><strong>(b) Commit 间隔分布</strong>: Claude Code 中位间隔 24.1 小时，OpenAI Codex 22.0 小时，GitHub Copilot 70.7 小时。开发者以短时间突发模式维护 ACF。</p>
+<h3>Figure 6: ACF 增删行数分布</h3>
+<div class="paper-figure"><img alt="Figure 6" loading="lazy" src="https://arxiv.org/html/2511.12884v1/x8.png" /></div>
+<p><strong>说明</strong>: 删除行数一致地很少（中位数 &lt; 15 词），而添加行数更多且更具变化性。Claude Code 每次 commit 的中位添加为 57 词。ACF 的演化主要由小规模增量添加驱动，而非大规模删除或重写。</p>
+<h3>Table 1: 仓库概况统计</h3>
+<table>
+<thead>
+<tr>
+<th>Agent</th>
+<th>ACF Name</th>
+<th># Files</th>
+<th>Median Stars</th>
+<th>Median Forks</th>
+<th>Avg. Days Until ACF Adoption</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Claude Code</td>
+<td>CLAUDE.md</td>
+<td>922</td>
+<td>51.0</td>
+<td>10.5</td>
+<td>1099.7</td>
+</tr>
+<tr>
+<td>OpenAI Codex</td>
+<td>AGENTS.md</td>
+<td>694</td>
+<td>56.0</td>
+<td>12.0</td>
+<td>994.4</td>
+</tr>
+<tr>
+<td>GitHub Copilot</td>
+<td>copilot-instructions.md</td>
+<td>687</td>
+<td>96.0</td>
+<td>31.0</td>
+<td>1567.4</td>
+</tr>
+</tbody>
+</table>
+<p><strong>说明</strong>: GitHub Copilot 仓库的 Stars 和 Forks 中位数最高（96.0 / 31.0），但采纳 ACF 的平均天数也最长（1567.4 天）。</p>
+<h3>Table 2: FRE 分数解读</h3>
+<table>
+<thead>
+<tr>
+<th>FRE Score</th>
+<th>School Level</th>
+<th>Reading Difficulty</th>
+<th>Example Text Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>&lt; 0</td>
+<td>Highly Specialized</td>
+<td>Extremely Difficult</td>
+<td>Academic or legal documents</td>
+</tr>
+<tr>
+<td>[0, 30)</td>
+<td>College Graduate</td>
+<td>Very Difficult</td>
+<td>Technical reports</td>
+</tr>
+<tr>
+<td>[30, 50)</td>
+<td>College</td>
+<td>Difficult</td>
+<td>High school-level material</td>
+</tr>
+<tr>
+<td>[50, 60)</td>
+<td>10th to 12th grade</td>
+<td>Fairly Difficult</td>
+<td>Consumer information</td>
+</tr>
+<tr>
+<td>[60, 70)</td>
+<td>8th and 9th grade</td>
+<td>Plain English</td>
+<td>Average newspapers</td>
+</tr>
+<tr>
+<td>[70, 80)</td>
+<td>7th grade</td>
+<td>Fairly Easy</td>
+<td>Magazines</td>
+</tr>
+<tr>
+<td>[80, 90)</td>
+<td>6th grade</td>
+<td>Easy</td>
+<td>Popular magazines</td>
+</tr>
+<tr>
+<td>[90, 100)</td>
+<td>5th grade</td>
+<td>Very Easy</td>
+<td>Children's books</td>
+</tr>
+<tr>
+<td>≥ 100</td>
+<td>Pre-school</td>
+<td>Extremely Easy</td>
+<td>Picture books</td>
+</tr>
+</tbody>
+</table>
+<p><strong>说明</strong>: FRE 分数解读标准。Claude Code ACF 中位数 16.6 落入 "Very Difficult" 区间，与学术论文和法律文书难度相当。</p>
+<h3>Table 3: 16 类指令分类及其分布</h3>
+<table>
+<thead>
+<tr>
+<th>Category</th>
+<th>Label</th>
+<th>Description</th>
+<th>% ACFs</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>General</td>
+<td>System Overview</td>
+<td>系统概述和关键特性</td>
+<td>59.0</td>
+</tr>
+<tr>
+<td>General</td>
+<td>AI Integration</td>
+<td>Agent 行为角色定义和 AI 工具集成</td>
+<td>24.4</td>
+</tr>
+<tr>
+<td>General</td>
+<td>Documentation</td>
+<td>补充文档、链接和参考</td>
+<td>26.8</td>
+</tr>
+<tr>
+<td>Implementation</td>
+<td>Architecture</td>
+<td>高层架构、设计原则、关键组件</td>
+<td>67.7</td>
+</tr>
+<tr>
+<td>Implementation</td>
+<td>Impl. Details</td>
+<td>代码实现细节和编码风格指南</td>
+<td>69.9</td>
+</tr>
+<tr>
+<td>Build</td>
+<td>Build and Run</td>
+<td>编译和运行命令</td>
+<td>62.3</td>
+</tr>
+<tr>
+<td>Build</td>
+<td>Testing</td>
+<td>自动化测试流程和命令</td>
+<td>75.0</td>
+</tr>
+<tr>
+<td>Build</td>
+<td>Conf. &amp; Env.</td>
+<td>系统配置和开发环境设置</td>
+<td>38.0</td>
+</tr>
+<tr>
+<td>Build</td>
+<td>DevOps</td>
+<td>部署、发布和 CI/CD</td>
+<td>18.1</td>
+</tr>
+<tr>
+<td>Management</td>
+<td>Development Process</td>
+<td>开发工作流和 Git 规范</td>
+<td>63.3</td>
+</tr>
+<tr>
+<td>Management</td>
+<td>Project Management</td>
+<td>项目规划和管理</td>
+<td>5.4</td>
+</tr>
+<tr>
+<td>Quality</td>
+<td>Maintenance</td>
+<td>系统维护、可读性改进、Bug 修复</td>
+<td>43.7</td>
+</tr>
+<tr>
+<td>Quality</td>
+<td>Debugging</td>
+<td>错误处理和问题排查</td>
+<td>24.4</td>
+</tr>
+<tr>
+<td>Quality</td>
+<td>Performance</td>
+<td>系统性能和优化</td>
+<td><strong>14.5</strong></td>
+</tr>
+<tr>
+<td>Quality</td>
+<td>Security</td>
+<td>安全考虑和最佳实践</td>
+<td><strong>14.5</strong></td>
+</tr>
+<tr>
+<td>Quality</td>
+<td>UI/UX</td>
+<td>用户界面和体验指南</td>
+<td><strong>8.7</strong></td>
+</tr>
+</tbody>
+</table>
+<p><strong>关键发现</strong>: 功能性指令（Testing 75.0%、Implementation Details 69.9%、Architecture 67.7%、Development Process 63.3%、Build and Run 62.3%）占主导地位；非功能性需求（Security 14.5%、Performance 14.5%、UI/UX 8.7%）严重不足。</p>
+<h3>Table 4: GPT-5 自动分类性能</h3>
+<table>
+<thead>
+<tr>
+<th>Category</th>
+<th>Label</th>
+<th>Precision</th>
+<th>Recall</th>
+<th>F1-Score</th>
+<th># Support</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>General</td>
+<td>System Overview</td>
+<td>0.88</td>
+<td>0.90</td>
+<td><strong>0.89</strong></td>
+<td>196</td>
+</tr>
+<tr>
+<td>General</td>
+<td>AI Integration</td>
+<td>0.33</td>
+<td>0.86</td>
+<td>0.48</td>
+<td>80</td>
+</tr>
+<tr>
+<td>General</td>
+<td>Documentation</td>
+<td>0.43</td>
+<td>0.87</td>
+<td>0.57</td>
+<td>89</td>
+</tr>
+<tr>
+<td>Implementation</td>
+<td>Architecture</td>
+<td>0.89</td>
+<td>0.97</td>
+<td><strong>0.93</strong></td>
+<td>226</td>
+</tr>
+<tr>
+<td>Implementation</td>
+<td>Impl. Details</td>
+<td>0.85</td>
+<td>0.93</td>
+<td><strong>0.89</strong></td>
+<td>235</td>
+</tr>
+<tr>
+<td>Build</td>
+<td>Build &amp; Run</td>
+<td>0.90</td>
+<td>0.94</td>
+<td><strong>0.92</strong></td>
+<td>209</td>
+</tr>
+<tr>
+<td>Build</td>
+<td>Testing</td>
+<td>0.91</td>
+<td>0.96</td>
+<td><strong>0.94</strong></td>
+<td>252</td>
+</tr>
+<tr>
+<td>Build</td>
+<td>Conf. &amp; Env.</td>
+<td>0.64</td>
+<td>0.91</td>
+<td>0.75</td>
+<td>129</td>
+</tr>
+<tr>
+<td>Build</td>
+<td>DevOps</td>
+<td>0.64</td>
+<td>0.84</td>
+<td>0.72</td>
+<td>61</td>
+</tr>
+<tr>
+<td>Management</td>
+<td>Dev. Process</td>
+<td>0.92</td>
+<td>0.76</td>
+<td><strong>0.83</strong></td>
+<td>216</td>
+</tr>
+<tr>
+<td>Management</td>
+<td>Project Mgmt.</td>
+<td>0.40</td>
+<td>0.44</td>
+<td>0.42</td>
+<td>18</td>
+</tr>
+<tr>
+<td>Quality</td>
+<td>Maintainability</td>
+<td>0.65</td>
+<td>0.50</td>
+<td>0.56</td>
+<td>148</td>
+</tr>
+<tr>
+<td>Quality</td>
+<td>Debugging</td>
+<td>0.70</td>
+<td>0.73</td>
+<td>0.71</td>
+<td>84</td>
+</tr>
+<tr>
+<td>Quality</td>
+<td>Performance</td>
+<td>0.59</td>
+<td>0.90</td>
+<td>0.71</td>
+<td>48</td>
+</tr>
+<tr>
+<td>Quality</td>
+<td>Security</td>
+<td>0.60</td>
+<td>0.98</td>
+<td>0.74</td>
+<td>49</td>
+</tr>
+<tr>
+<td>Quality</td>
+<td>UI/UX</td>
+<td>0.48</td>
+<td>0.69</td>
+<td>0.56</td>
+<td>29</td>
+</tr>
+<tr>
+<td><strong>Micro Avg</strong></td>
+<td></td>
+<td><strong>0.73</strong></td>
+<td><strong>0.86</strong></td>
+<td><strong>0.79</strong></td>
+<td><strong>2,069</strong></td>
+</tr>
+</tbody>
+</table>
+<p><strong>关键发现</strong>: 整体 micro-average F1 = 0.79。具体功能性类别（Testing 0.94、Architecture 0.93、Build &amp; Run 0.92）表现优异；抽象/稀疏类别（Project Management 0.42、AI Integration 0.48）表现较弱。</p>
+<hr />
+<h2>实验</h2>
+<h3>数据集</h3>
+<table>
+<thead>
+<tr>
+<th>数据集</th>
+<th>规模</th>
+<th>特点</th>
+<th>用途</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>AIDev (Li et al., 2025b)</td>
+<td>8,370 仓库（≥5 Stars）</td>
+<td>AI 辅助开发仓库</td>
+<td>数据源</td>
+</tr>
+<tr>
+<td>收集结果</td>
+<td>2,303 ACF / 1,925 仓库</td>
+<td>覆盖 3 种 Agentic Coding 工具</td>
+<td>分析对象</td>
+</tr>
+<tr>
+<td>Commit 历史</td>
+<td>10,659 次 commit</td>
+<td>Claude Code 5,655 + Codex 2,767 + Copilot 2,237</td>
+<td>维护分析</td>
+</tr>
+<tr>
+<td>人工标注</td>
+<td>332 Claude Code 文件 / 2,069 标签</td>
+<td>3 位标注员, 80.3% 一致率</td>
+<td>内容分类</td>
+</tr>
+</tbody>
+</table>
+<h3>实现细节</h3>
+<ul>
+<li><strong>标注工具</strong>: LLM 辅助标签生成（Claude Opus 4.1、Gemini 2.5 Pro、GPT-5）</li>
+<li><strong>统计检验</strong>: Mann-Whitney U test (<span class="math-inline">$\alpha = 0.05$</span>) + Cliff's delta 效应量</li>
+<li><strong>可读性指标</strong>: Flesch Reading Ease (FRE)</li>
+<li><strong>分类评估</strong>: Precision / Recall / F1-score (micro average)</li>
+<li><strong>标注员</strong>: 3 位检查员，编程经验 4-17 年</li>
+</ul>
+<h3>核心发现汇总</h3>
+<p><strong>RQ1 — 特征</strong>:
+- ACF 普遍长且难读，Claude Code 最难读（FRE 中位数 16.6）
+- 一致的浅层层级结构：单一 H1 + H2/H3 组织</p>
+<p><strong>RQ2 — 维护</strong>:
+- 67.4% 的 Claude Code ACF 经历多次修改，不是静态文档
+- 维护以短时间突发模式进行（中位间隔约 1 天）
+- 演化由小规模增量添加驱动</p>
+<p><strong>RQ3 — 内容</strong>:
+- 功能性指令占主导（Testing 75.0%、Impl. Details 69.9%、Architecture 67.7%）
+- 非功能性需求严重不足（Security 14.5%、Performance 14.5%）</p>
+<p><strong>RQ4 — 自动分类</strong>:
+- GPT-5 达到 0.79 F1-score，具体功能类别效果好（Testing 0.94）
+- 抽象类别效果较差（Maintenance 0.56、Project Management 0.42）</p>
+<hr />
+<h2>批判性思考</h2>
+<h3>优点</h3>
+<ol>
+<li><strong>规模全面</strong>: 2,303 个文件、1,925 个仓库、3 种工具，是该领域迄今最大规模的实证研究</li>
+<li><strong>实践价值高</strong>: 16 类指令 taxonomy 直接可用于指导 ACF 编写和工具设计</li>
+<li><strong>方法严谨</strong>: 多标注员独立标注 + 调解机制，Mann-Whitney U + Cliff's delta 双重统计检验</li>
+<li><strong>洞察深刻</strong>: 揭示了 "功能性 vs 非功能性" 指令的显著失衡，对安全和性能有重要警示意义</li>
+<li><strong>可复现</strong>: 提供完整 replication package</li>
+</ol>
+<h3>局限性</h3>
+<ol>
+<li><strong>仅分析根目录文件</strong>: 可能遗漏子目录中的 ACF（如 <code>.github/copilot-instructions.md</code>）</li>
+<li><strong>二值分类局限</strong>: 仅标记类别是否出现，未衡量指令的深度和质量</li>
+<li><strong>仅限开源项目</strong>: 企业内部的 ACF 实践可能有显著不同</li>
+<li><strong>人工标注仅覆盖 Claude Code</strong>: 332 个文件的标注结果用于推广到全部 2,303 个文件可能存在偏差</li>
+</ol>
+<h3>潜在改进方向</h3>
+<ol>
+<li><strong>纵向追踪研究</strong>: 分析 ACF 与代码变更的 co-evolution 关系</li>
+<li><strong>因果分析</strong>: 研究 ACF 内容质量对 Agent 生成代码质量的影响</li>
+<li><strong>模板设计</strong>: 基于 16 类 taxonomy 设计标准化 ACF 模板</li>
+<li><strong>非功能性需求检测</strong>: 开发 CI 集成工具自动检测 ACF 中缺失的 Security/Performance 指令</li>
+</ol>
+<h3>可复现性评估</h3>
+<ul>
+<li>[x] 代码开源</li>
+<li>[x] 数据集可获取（replication package）</li>
+<li>[x] 分析细节完整</li>
+<li>[ ] 预训练模型（不适用，本文为实证研究）</li>
+</ul>
+<hr />
+<h2>关联笔记</h2>
+<h3>基于</h3>
+<ul>
+<li>Chatlatanagulchai et al. (2025): 前序工作，253 个 Claude Code 文件的初步分析</li>
+<li>AIDev Dataset (Li et al., 2025b): AI 辅助开发仓库数据集</li>
+</ul>
+<h3>对比</h3>
+<ul>
+<li><span class="wikilink">SWE-bench</span>: 评估 Agent 代码生成的 benchmark，本文指出其缺乏非功能性需求评估</li>
+<li>Gaughan et al. (2025) 传统 README 文件研究: 本文发现 ACF 维护更活跃</li>
+</ul>
+<h3>方法相关</h3>
+<ul>
+<li><span class="wikilink">Context Engineering</span>: 超越 <span class="wikilink">Prompt Engineering</span> 的持久化项目级上下文管理</li>
+<li><span class="wikilink">Mann-Whitney U Test</span>: 非参数统计检验方法</li>
+<li><span class="wikilink">Cliff&#x27;s Delta</span>: 效应量度量</li>
+<li><span class="wikilink">Flesch Reading Ease</span>: 文本可读性指标</li>
+<li><span class="wikilink">Multi-label Classification</span>: 多标签分类任务</li>
+</ul>
+<h3>工具相关</h3>
+<ul>
+<li><span class="wikilink">Claude Code</span>: Anthropic 的 Agentic Coding 工具（CLAUDE.md）</li>
+<li><span class="wikilink">OpenAI Codex</span>: OpenAI 的 Agentic Coding 工具（AGENTS.md）</li>
+<li><span class="wikilink">GitHub Copilot</span>: GitHub 的 AI 编码助手（copilot-instructions.md）</li>
+</ul>
+<hr />
+<h2>速查卡片</h2>
+<blockquote>
+<p>[!summary] Agent READMEs: An Empirical Study of Context Files for Agentic Coding
+- <strong>核心</strong>: 首个 Agent 上下文文件（CLAUDE.md/AGENTS.md 等）大规模实证研究
+- <strong>方法</strong>: 2,303 ACF / 1,925 仓库 / 16 类指令 taxonomy / GPT-5 自动分类
+- <strong>结果</strong>: 功能性指令主导（Testing 75%、Impl. Details 70%），Security/Performance 仅 14.5%
+- <strong>代码</strong>: https://github.com/woraamy/Agent-Context-File-Analysis</p>
+</blockquote>
+<hr />
+<p><em>笔记创建时间: 2026-04-11</em></p></div></details>
+
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2511.12884/x2.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2511.12884/x5.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: <span class="wikilink">Agent-READMEs</span> 实证研究agentic coding中上下文文件（CLAUDE.md、.cursorrules等）的使用模式。分析了GitHub上的上下文文件分布、内容类别和对agent行为的影响。</li>
+<li><strong>对比方法/Baselines</strong>: 无上下文文件的agent coding</li>
+<li><strong>借鉴意义</strong>: Agent coding正在成为主流开发模式。理解上下文文件的最佳实践对提升agent coding效率有直接价值。</li>
+<li><strong>锐评</strong>: 28个upvote。务实的实证研究。Agent coding的context file生态正在野蛮生长，有人做系统分析是好事。但如果只是描述性统计（'多少repo有CLAUDE.md'），缺乏因果分析（'有vs没有context file对代码质量的影响'），价值就有限。 👀</li>
+</ul>
+<hr /></div><h2>🔍 检索与RAG</h2><div class="paper-card" data-topic="🔍 检索与RAG"><h3>9. VRAG-RL: Empower Vision-Perception-Based RAG for Visually Rich Information Understanding via Iterative Reasoning with Reinforcement Learning</h3>
+<ul>
+<li><strong>作者</strong>: Wang, Qiuchen, Ding, Ruixue, Zeng, Yu, Chen, Zehui, Chen, Lin, Wang, Shihang, Xie, Pengjun, Huang, Fei, Zhao, Feng</li>
+<li><strong>机构</strong>: Tongyi Lab, Alibaba Group</li>
+<li><strong>链接</strong>: <a href="https://arxiv.org/abs/2505.22019">arXiv</a> | <a href="https://arxiv.org/pdf/2505.22019">PDF</a></li>
+<li>
+<p><strong>来源</strong>: 🔥 HF Trending，⬆️ 12</p>
+</li>
+<li>
+<p><strong>核心方法</strong>: <span class="wikilink">VRAG-RL</span> 用RL对齐视觉感知的RAG系统。针对视觉富文本（PDF、表格、图表），让模型学会在什么时候检索、检索什么。用<span class="wikilink">ReAct</span>风格的agent loop + RL reward优化检索决策。</p>
+</li>
+<li><strong>对比方法/Baselines</strong>: 纯文本RAG、<span class="wikilink">LightRAG</span>、多模态RAG</li>
+<li><strong>借鉴意义</strong>: 视觉富文本是RAG的重要场景（财报、论文、发票），用RL优化检索决策比规则触发更灵活。</li>
+<li><strong>锐评</strong>: 12个upvote。方向正确——视觉文档的RAG需要模型理解'何时看图、何时读文'。但RL训练的reward设计是关键：检索决策的ground truth怎么定义？如果靠最终答案的correctness做reward，信号太稀疏。 👀</li>
+</ul>
+<hr /></div><h2>🧠 推理与记忆</h2><div class="paper-card" data-topic="🧠 推理与记忆"><h3>10. A Decomposition Perspective to Long-context Reasoning for LLMs</h3>
+<ul>
+<li><strong>作者</strong>: Yanling Xiao, Huaibing Xie, Guoliang Zhao, Shihan Dou, Shaolei Wang, Yiting Liu, Nantao Zheng, Cheng Zhang, Pluto Zhou, Zhisong Zhang, Lemao Liu</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2604.07981v1">arXiv</a> | <a href="https://arxiv.org/pdf/2604.07981v1">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2604.07981v1/x2.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2604.07981v1/correlation_heatmap_normalized_oriented_V2.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: 从分解视角研究LLM长上下文推理。核心发现：长上下文推理可以被分解为多个短上下文子问题。提出分解策略让模型在短窗口内解决原本需要长上下文的任务。在<span class="wikilink">NIAH</span>和多跳推理任务上验证。</li>
+<li><strong>对比方法/Baselines</strong>: <span class="wikilink">DeepSeek</span>长上下文、<span class="wikilink">LoongRL</span></li>
+<li><strong>借鉴意义</strong>: 如果长上下文推理真的可以被有效分解，那昂贵的长上下文训练可能没有必要。</li>
+<li><strong>锐评</strong>: 思路有意思——与其让模型处理128K上下文，不如把问题拆成多个4K子问题。但分解本身需要理解全局结构，这不是又回到了原始问题吗？除非分解策略本身不需要长上下文。实验需要证明分解的成本低于直接处理长上下文。 👀</li>
+</ul>
+<hr /></div></div>
+<div id="panel-llm训练与架构" class="tab-panel"><h2>🔬 LLM 训练与架构</h2><div class="paper-card" data-topic="🔬 LLM 训练与架构"><h3>1. TriAttention: Efficient Long Reasoning with Trigonometric KV Compression</h3>
+<ul>
+<li><strong>作者</strong>: Weian Mao 1∗, Xi Lin 3∗, Wei Huang 2∗, Yuxin Xie, Tianfu Fu 1, Bohan Zhuang 3, Song Han 1 2, Yukang Chen 2</li>
+<li><strong>链接</strong>: <a href="https://arxiv.org/abs/2604.04921">arXiv</a> | <a href="https://arxiv.org/pdf/2604.04921">PDF</a></li>
+<li><strong>来源</strong>: 🔥 HF Trending，⬆️ 98</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2604.04921v1/fig/fig_openclaw_demo.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: <span class="wikilink">TriAttention</span> 用三角函数（sin/cos）对KV cache进行周期性压缩。核心思路：利用<span class="wikilink">RoPE</span>的旋转性质，将key/value向量投影到低维三角基上，实现8:1压缩比。在<span class="wikilink">MATH</span>等benchmark上验证，几乎无损。</li>
+<li><strong>对比方法/Baselines</strong>: 标准KV cache、<span class="wikilink">GQA</span>、量化KV、<span class="wikilink">StreamingLLM</span></li>
+<li><strong>借鉴意义</strong>: KV cache是长序列推理的核心瓶颈。8:1无损压缩直接将可处理上下文长度提升8倍，对部署成本影响巨大。</li>
+<li><strong>锐评</strong>: 98个upvote。用三角函数压KV cache是优雅的数学直觉——RoPE本身就是旋转变换，用三角基做压缩是自然的延伸。8:1压缩比如果真的无损，这是今年最实用的效率改进之一。但'几乎无损'的定义很关键——在长文本生成和多跳推理上的降级需要更细致的ablation。 🔥</li>
+</ul></div><div class="paper-card" data-topic="🔬 LLM 训练与架构"><h3>2. Rethinking Generalization in Reasoning SFT: A Conditional Analysis on Optimization, Data, and Model Capability</h3>
+<ul>
+<li><strong>作者</strong>: Ren, Qihan, Wang, Peng, Cai, Ruikun, Shao, Shuai, Guo, Dadi, Xie, Yuejin, Li, Yafu, Zhang, Quanshi, Hu, Xia, Shao, Jing, Liu, Dongrui</li>
+<li><strong>机构</strong>: Shanghai Artificial Intelligence Laboratory, Shanghai Jiao Tong University, University of Science and Technology of China</li>
+<li><strong>链接</strong>: <a href="https://arxiv.org/abs/2604.06628">arXiv</a> | <a href="https://arxiv.org/pdf/2604.06628">PDF</a></li>
+<li>
+<p><strong>来源</strong>: 🔥 HF Trending，⬆️ 160</p>
+</li>
+<li>
+<p><strong>核心方法</strong>: 研究<span class="wikilink">SFT</span>泛化能力的条件复杂度假说：SFT的泛化不取决于训练数据量，而取决于目标任务的条件复杂度（conditional complexity）。高条件复杂度任务（如数学推理）需要更多推理步骤，SFT难以泛化；低条件复杂度任务SFT容易泛化。</p>
+</li>
+<li><strong>对比方法/Baselines</strong>: 标准SFT、<span class="wikilink">GRPO</span>、<span class="wikilink">RLVR</span></li>
+<li><strong>借鉴意义</strong>: 直接回答了'SFT到底能不能教会模型推理'这个根本问题。条件复杂度框架为SFT vs RL的选择提供了理论依据。</li>
+<li><strong>锐评</strong>: 160个upvote说明社区很渴望这类基础性实验分析。条件复杂度假说解释了一个广泛观察到的现象：SFT在简单任务上泛化良好，但在复杂推理上完全失败。这为'什么时候用SFT、什么时候必须用RL'提供了清晰的判断标准。但'条件复杂度'本身怎么测量？如果没有可操作的度量方法，这个理论框架的实用价值就打折扣。 🔥</li>
+</ul></div><div class="paper-card" data-topic="🔬 LLM 训练与架构"><h3>3. DFlash: Block Diffusion for Flash Speculative Decoding</h3>
+<ul>
+<li><strong>作者</strong>: Jian Chen, Yesheng Liang, Zhijian Liu</li>
+<li><strong>链接</strong>: <a href="https://arxiv.org/abs/2602.06036">arXiv</a> | <a href="https://arxiv.org/pdf/2602.06036">PDF</a></li>
+<li><strong>来源</strong>: 🔥 HF Trending，⬆️ 46</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2602.06036/x2.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2602.06036/x3.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: <span class="wikilink">DFlash</span> 将block diffusion与投机解码结合。用小型diffusion模型生成draft tokens，大模型验证。在<span class="wikilink">HumanEval</span>等代码生成任务上实现2-3x加速。</li>
+<li><strong>对比方法/Baselines</strong>: <span class="wikilink">EAGLE-3</span>、Medusa、标准自回归解码</li>
+<li><strong>借鉴意义</strong>: 扩散LLM的解码加速是实用化的关键一步。投机解码思路的跨范式迁移值得关注。</li>
+<li><strong>锐评</strong>: 46个upvote。把投机解码从自回归迁移到扩散模型，思路简洁。但2-3x加速相比自回归投机解码的改进并不突出（EAGLE-3在自回归上也能做到类似加速）。关键问题是扩散LLM本身的生成质量是否已经追上自回归模型。 👀</li>
+</ul></div><div class="paper-card" data-topic="🔬 LLM 训练与架构"><h3>4. QaRL: Rollout-Aligned Quantization-Aware RL for Fast and Stable Training under Training--Inference Mismatch</h3>
+<ul>
+<li><strong>作者</strong>: Hao Gu1</li>
+<li><strong>机构</strong>: 3Zhejiang University, 2City University of Hong Kong, 1The Hong Kong University of Science and Technology</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2604.07853v1">arXiv</a> | <a href="https://arxiv.org/pdf/2604.07853v1">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2604.07853v1/fig/app_speed.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: <span class="wikilink">QaRL</span> 提出量化感知的RL训练框架。在<span class="wikilink">GRPO</span>训练过程中同步进行量化，让模型在量化约束下学习推理策略。提出<span class="wikilink">TBPO</span>等适配量化的策略优化方法。</li>
+<li><strong>对比方法/Baselines</strong>: 训练后量化 + RL、标准<span class="wikilink">GRPO</span></li>
+<li><strong>借鉴意义</strong>: RL训练的模型最终要部署在量化环境中。训练时就考虑量化约束比训后量化更合理。</li>
+<li><strong>锐评</strong>: 量化和RL的交叉点，解决了一个实际工程问题：GRPO训好的模型量化后性能降多少？如果在训练时就引入量化约束，降级能控制在什么范围？思路正确但arxiv得分只有2，说明实验说服力可能不够。 👀</li>
+</ul>
+<hr /></div></div>
+<div id="panel-agent框架" class="tab-panel"><h2>🤖 Agent 框架</h2><div class="paper-card" data-topic="🤖 Agent 框架"><h3>5. AgentScope 1.0: A Developer-Centric Framework for Building Agentic</h3>
+<p>Applications
+- <strong>作者</strong>: Gao, Dawei, Li, Zitao, Xie, Yuexiang, Kuang, Weirui, Yao, Liuyi, Qian, Bingchen, Ma, Zhijian, Cui, Yue, Luo, Haohao, Li, Shen, Yi, Lu, Yu, Yi, He, Shiqi, Luo, Zhiling, Zhou, Wenmeng, Zhang, Zhicheng, He, Xuguang, Chen, Ziqian, Liao, Weikai, Kushnazarov, Farruh Isakulovich, Li, Yaliang, Ding, Bolin, Zhou, Jingren
+- <strong>机构</strong>: Alibaba Group
+- <strong>链接</strong>: <a href="https://arxiv.org/abs/2508.16279">arXiv</a> | <a href="https://arxiv.org/pdf/2508.16279">PDF</a>
+- <strong>来源</strong>: 🔥 HF Trending，⬆️ 61</p>
+<details class="paper-note"><summary>📒 精读笔记: AgentScope</summary><div class="note-body"><h1>AgentScope 1.0</h1>
+<h2>📋 基本信息</h2>
+<ul>
+<li><strong>作者</strong>: Dawei Gao, Zitao Li, Yuexiang Xie 等</li>
+<li><strong>机构</strong>: Alibaba Group</li>
+<li><strong>链接</strong>: <a href="https://arxiv.org/abs/2508.16279">arXiv</a> | <a href="https://arxiv.org/pdf/2508.16279">PDF</a></li>
+</ul>
+<h2>🎯 研究动机与问题</h2>
+<p>现有 multi-agent 框架（如 <span class="wikilink">LangChain</span>, <span class="wikilink">AutoGen</span>）在以下方面存在不足：
+1. <strong>工具集成侵入性强</strong>：需要大量修改已有代码
+2. <strong>可观测性差</strong>：大规模部署时难以监控和调试
+3. <strong>长期记忆缺失</strong>：agent 无法保持跨会话的上下文
+4. <strong>分布式支持弱</strong>：难以扩展到大规模 multi-agent 场景</p>
+<h2>🔧 方法详解</h2>
+<h3>核心架构</h3>
+<p>AgentScope 1.0 的核心抽象：</p>
+<ol>
+<li><strong><span class="wikilink">MsgHub</span>（消息总线）</strong>：agent 间消息传递的统一接口，支持广播和点对点通信</li>
+<li><strong>StateModule（状态管理）</strong>：统一管理 agent 状态，支持序列化和恢复</li>
+<li><strong>Non-Invasive Monitoring</strong>：基于 <span class="wikilink">OpenTelemetry</span> 的无侵入式监控</li>
+</ol>
+<h3>MCP 原生支持</h3>
+<p>原生集成 <span class="wikilink">MCP</span>（Model Context Protocol）协议：
+- Agent 可通过 MCP 协议访问外部工具和数据源
+- 工具集成不需要修改 agent 代码（non-invasive）
+- 支持 MCP server 的自动发现和注册</p>
+<h3>分层记忆系统</h3>
+<ul>
+<li><strong><span class="wikilink">InMemoryMemory</span></strong>：短期工作记忆，存储当前会话上下文</li>
+<li><strong><span class="wikilink">LongTermMemoryBase</span></strong>：长期记忆，支持跨会话信息持久化</li>
+<li>记忆检索支持语义搜索和结构化查询</li>
+</ul>
+<h3>ReAct Agent 内置实现</h3>
+<p>内置 <span class="wikilink">ReAct</span> 范式的 agent 实现：
+- Thought → Action → Observation 循环
+- 支持自定义 tool 注册
+- 内置错误处理和重试机制</p>
+<h3>分布式调度</h3>
+<ul>
+<li>基于 <span class="wikilink">gRPC</span> 的分布式通信</li>
+<li>支持 agent 在多节点间调度</li>
+<li>MsgHub 支持分布式消息广播</li>
+</ul>
+<h2>📊 实验结果</h2>
+<table>
+<thead>
+<tr>
+<th>框架</th>
+<th>MCP支持</th>
+<th>可观测性</th>
+<th>长期记忆</th>
+<th>分布式</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>LangChain</td>
+<td>部分</td>
+<td>弱</td>
+<td>第三方</td>
+<td>弱</td>
+</tr>
+<tr>
+<td>AutoGen</td>
+<td>无</td>
+<td>弱</td>
+<td>无</td>
+<td>部分</td>
+</tr>
+<tr>
+<td>CAMEL</td>
+<td>无</td>
+<td>无</td>
+<td>无</td>
+<td>无</td>
+</tr>
+<tr>
+<td><strong>AgentScope 1.0</strong></td>
+<td><strong>原生</strong></td>
+<td><strong>OpenTelemetry</strong></td>
+<td><strong>内置</strong></td>
+<td><strong>原生</strong></td>
+</tr>
+</tbody>
+</table>
+<p>61 upvotes 说明社区认可度较高。</p>
+<h2>💡 核心贡献</h2>
+<ol>
+<li><strong>MCP 原生集成</strong>：首个原生支持 MCP 协议的 multi-agent 框架</li>
+<li><strong>OpenTelemetry 可观测性</strong>：无侵入式监控，适合生产环境</li>
+<li><strong>分层记忆系统</strong>：短期 + 长期记忆，支持跨会话持久化</li>
+<li><strong>大规模部署经验</strong>：阿里内部大规模 multi-agent 部署验证</li>
+</ol>
+<h2>🤔 局限性与思考</h2>
+<ol>
+<li><strong>框架评估困难</strong>：benchmark 上的数字不代表实际开发体验</li>
+<li><strong>与 LangChain 对比不够 fair</strong>：只挑了对方弱的场景</li>
+<li><strong>学习曲线</strong>：抽象层较多，新手上手成本可能较高</li>
+<li><strong>MCP 生态尚未成熟</strong>：MCP 协议本身还在快速迭代</li>
+</ol>
+<h2>📚 相关工作</h2>
+<ul>
+<li><span class="wikilink">MCP</span>: Model Context Protocol，agent 工具集成标准</li>
+<li><span class="wikilink">OpenTelemetry</span>: 可观测性标准</li>
+<li><span class="wikilink">ReAct</span>: 推理+行动范式</li>
+<li><span class="wikilink">LangChain</span>: 竞品框架</li>
+<li><span class="wikilink">AutoGen</span>: 微软 multi-agent 框架</li>
+</ul></div></details>
+
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2508.16279v1/figures/agentscope_v1_0822.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2508.16279v1/figures/agent.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2508.16279v1/x1.png" /></div>
+<ul>
+<li><strong>锐评</strong>: 61个upvote的1.0版本。AgentScope做了agent框架该做的所有工程活——<span class="wikilink">MCP</span>集成、分布式部署、可视化监控。和LangChain相比更注重多agent协调。作为框架论文，技术创新有限但工程完成度高。已有笔记覆盖核心架构。 👀</li>
+</ul></div><div class="paper-card" data-topic="🤖 Agent 框架"><h3>6. The AI Scientist-v2: Workshop-Level Automated Scientific Discovery via</h3>
+<p>Agentic Tree Search
+- <strong>作者</strong>: Yamada, Yutaro, Lange, Robert Tjarko, Lu, Cong, Hu, Shengran, Lu, Chris, Foerster, Jakob, Clune, Jeff, Ha, David
+- <strong>机构</strong>: FLAIR, University of Oxford, University of British Columbia, Vector Institute
+- <strong>链接</strong>: <a href="https://arxiv.org/abs/2504.08066">arXiv</a> | <a href="https://arxiv.org/pdf/2504.08066">PDF</a>
+- <strong>来源</strong>: 🔥 HF Trending，⬆️ 22</p>
+<ul>
+<li><strong>核心方法</strong>: <span class="wikilink">AI-Scientist-v2</span> 是全自动科研系统的升级版。从idea生成到实验执行到论文撰写全自动化，声称在多个workshop上获得oral acceptance。使用多agent架构：Ideation Agent、Experiment Agent、Writing Agent协同工作。</li>
+<li><strong>对比方法/Baselines</strong>: AI Scientist v1、人类研究者baseline</li>
+<li><strong>借鉴意义</strong>: 如果自动生成的论文能过同行评审，这对学术生态的冲击是根本性的。但workshop level和top venue level差距巨大。</li>
+<li><strong>锐评</strong>: 22个upvote。'自动写论文拿oral'是个很好的标题——但workshop oral的bar和ICML oral的bar差了好几个数量级。更值得关注的是它暴露的问题：自动生成的论文是否只是在重组已有知识？能不能产生genuinely novel的insight？目前看不到。 👀
+  Agentic Tree Search`</li>
+</ul></div><div class="paper-card" data-topic="🤖 Agent 框架"><h3>7. TradingAgents: Multi-Agents LLM Financial Trading Framework</h3>
+<ul>
+<li><strong>作者</strong>: Xiao, Yijia, Sun, Edward, Luo, Di, Wang, Wei</li>
+<li><strong>机构</strong>: Massachusetts Institute of Technology (MIT), University of California, Los Angeles (UCLA)</li>
+<li><strong>链接</strong>: <a href="https://arxiv.org/abs/2412.20138">arXiv</a> | <a href="https://arxiv.org/pdf/2412.20138">PDF</a></li>
+<li><strong>来源</strong>: 🔥 HF Trending，⬆️ 41</li>
+</ul>
+<details class="paper-note"><summary>📒 精读笔记: TradingAgents</summary><div class="note-body"><h1>论文笔记：TradingAgents: Multi-Agents LLM Financial Trading Framework</h1>
+<h2>元信息</h2>
+<table>
+<thead>
+<tr>
+<th>项目</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>机构</td>
+<td>UCLA, MIT</td>
+</tr>
+<tr>
+<td>日期</td>
+<td>December 2024</td>
+</tr>
+<tr>
+<td>项目主页</td>
+<td>https://github.com/TauricResearch/TradingAgents</td>
+</tr>
+<tr>
+<td>对比基线</td>
+<td>Buy&amp;Hold, <span class="wikilink">MACD</span>, <span class="wikilink">KDJ</span>, <span class="wikilink">RSI</span>, <span class="wikilink">SMA</span></td>
+</tr>
+<tr>
+<td>链接</td>
+<td><a href="https://arxiv.org/abs/2412.20138">arXiv</a> / <a href="https://github.com/TauricResearch/TradingAgents">Code</a></td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2>一句话总结</h2>
+<blockquote>
+<p>模拟真实交易公司组织架构，用多角色 LLM Agent 协作辩论实现股票交易决策。</p>
+</blockquote>
+<hr />
+<h2>核心贡献</h2>
+<ol>
+<li><strong>仿真交易公司的多智能体框架</strong>: 首次模拟真实交易公司的组织架构，设计包含分析师团队、研究员团队、交易员和风控团队的 <span class="wikilink">多智能体系统</span></li>
+<li><strong>结构化通信协议</strong>: 用结构化文档（而非纯自然语言对话）作为主要通信方式，解决长对话中的信息丢失问题（"telephone effect"）</li>
+<li><strong>辩论驱动的决策机制</strong>: 通过 Bull/Bear 研究员和多风险偏好风控团队的辩论机制，增强交易决策的鲁棒性和可解释性</li>
+</ol>
+<hr />
+<h2>问题背景</h2>
+<h3>要解决的问题</h3>
+<p>如何利用 <span class="wikilink">LLM</span> 驱动的 <span class="wikilink">多智能体系统</span> 在金融交易中做出高质量的交易决策，同时保持决策的可解释性。</p>
+<h3>现有方法的局限</h3>
+<ol>
+<li><strong>缺乏真实组织建模</strong>: 现有框架未能捕捉真实交易公司中 Agent 之间的复杂协作关系，局限于单任务或独立数据收集</li>
+<li><strong>低效的通信接口</strong>: 大多数系统依赖自然语言消息历史或非结构化信息池，导致"telephone effect"——随着对话变长，细节丢失、状态损坏，Agent 难以维持上下文</li>
+</ol>
+<h3>本文的动机</h3>
+<p>真实交易公司依赖专家团队协作决策——基本面分析师、情绪分析师、技术分析师、交易员、风控经理各司其职。这种组织结构已被证明有效，可以用 LLM Agent 来模拟复现。</p>
+<hr />
+<h2>方法详解</h2>
+<h3>模型架构</h3>
+<p>TradingAgents 采用 <strong>层级化多智能体</strong> 架构，模拟交易公司工作流：</p>
+<ul>
+<li><strong>输入</strong>: 历史股价、新闻、社交媒体情绪、财报、技术指标等多模态金融数据</li>
+<li><strong>Backbone</strong>: <span class="wikilink">GPT-4o</span> / <span class="wikilink">GPT-4o-mini</span> (快速任务) + <span class="wikilink">o1-preview</span> (深度推理任务)</li>
+<li><strong>核心模块</strong>: 4 个团队按流水线协作——分析师团队 → 研究员团队 → 交易员 → 风控团队</li>
+<li><strong>输出</strong>: 买入/卖出/持有交易信号</li>
+<li><strong>框架</strong>: 基于 <span class="wikilink">ReAct</span> prompting framework</li>
+</ul>
+<h3>核心模块</h3>
+<h4>模块1: Analyst Team（分析师团队）</h4>
+<p><strong>设计动机</strong>: 利用 <span class="wikilink">LLM Agent</span> 的专业化分工，并行收集和分析市场多维数据</p>
+<p><strong>具体实现</strong>:
+- <strong><span class="wikilink">基本面分析师</span></strong>: 评估公司财报、盈利报告、内部交易等，判断内在价值
+- <strong><span class="wikilink">情绪分析师</span></strong>: 处理社交媒体帖子、情绪评分，预测投资者行为对股价的短期影响
+- <strong>新闻分析师</strong>: 分析新闻文章、政府公告、宏观经济指标，识别影响市场的事件
+- <strong><span class="wikilink">技术分析师</span></strong>: 计算 <span class="wikilink">MACD</span>、<span class="wikilink">RSI</span> 等技术指标，分析价格模式和交易量，预测价格走势</p>
+<p>四位分析师<strong>并行</strong>工作，各自输出结构化分析报告。</p>
+<h4>模块2: Researcher Team（研究员团队）</h4>
+<p><strong>设计动机</strong>: 通过对立观点的 <span class="wikilink">辩论</span> 机制，确保分析全面平衡</p>
+<p><strong>具体实现</strong>:
+- <strong>Bullish Researcher</strong>: 倡导投资机会，突出积极指标、增长潜力和有利市场条件
+- <strong>Bearish Researcher</strong>: 聚焦潜在风险和不利信号，质疑投资策略的可行性
+- 两方进行 <span class="math-inline">$n$</span> 轮自然语言辩论，由 <strong>facilitator agent</strong> 主持
+- 辩论结束后 facilitator 选择占优观点，记录为结构化条目</p>
+<h4>模块3: Trader Agents（交易员）</h4>
+<p><strong>设计动机</strong>: 综合分析师和研究员的全部输入，做出最终交易决策</p>
+<p><strong>具体实现</strong>:
+- 评估分析师和研究员的建议与洞察
+- 决定交易时机和规模以最大化收益
+- 下达买入/卖出指令
+- 根据市场变化和新信息调整投资组合配置
+- 输出交易决策及详细理由报告</p>
+<h4>模块4: Risk Management Team（风控团队）</h4>
+<p><strong>设计动机</strong>: 确保交易活动在预设风险参数内，避免过度暴露</p>
+<p><strong>具体实现</strong>:
+- 评估市场波动性、流动性和对手方风险
+- 实施风险缓解策略（如止损、分散持仓）
+- 三个视角辩论：<strong>risk-seeking</strong>、<strong>neutral</strong>、<strong>risk-conservative</strong>，进行 <span class="math-inline">$n$</span> 轮讨论
+- <strong>Fund Manager</strong> 审核风控讨论结果，确定风险调整并最终执行交易</p>
+<h4>Communication Protocol（通信协议）</h4>
+<p><strong>设计动机</strong>: 解决纯自然语言通信在长任务中的信息丢失问题</p>
+<p><strong>具体实现</strong>:
+- <strong>结构化文档通信</strong>: 分析师和交易员通过结构化报告交流（而非对话），每个角色只提取/查询必要信息
+- <strong>自然语言辩论</strong>: 仅在研究员辩论和风控讨论中使用自然语言对话
+- <strong>全局状态共享</strong>: 所有 Agent 共享并监控环境状态
+- 混合方式兼顾精确性（结构化）和灵活性（自然语言）</p>
+<hr />
+<h2>关键公式</h2>
+<h3>公式1: <span class="wikilink">累计收益率 (CR)</span></h3>
+<div class="math-block">$$
+\text{CR} = \left(\frac{V_{\text{end}} - V_{\text{start}}}{V_{\text{start}}}\right) \times 100\%
+$$</div>
+
+<p><strong>含义</strong>: 衡量整个模拟期间产生的总收益</p>
+<p><strong>符号说明</strong>:
+- <span class="math-inline">$V_{\text{end}}$</span>: 模拟结束时的投资组合价值
+- <span class="math-inline">$V_{\text{start}}$</span>: 初始投资组合价值</p>
+<h3>公式2: <span class="wikilink">年化收益率 (AR)</span></h3>
+<div class="math-block">$$
+\text{AR} = \left(\left(\frac{V_{\text{end}}}{V_{\text{start}}}\right)^{\frac{1}{N}} - 1\right) \times 100\%
+$$</div>
+
+<p><strong>含义</strong>: 将累计收益率标准化到年度维度进行对比</p>
+<p><strong>符号说明</strong>:
+- <span class="math-inline">$V_{\text{end}}$</span>: 模拟结束时的投资组合价值
+- <span class="math-inline">$V_{\text{start}}$</span>: 初始投资组合价值
+- <span class="math-inline">$N$</span>: 模拟的年数</p>
+<h3>公式3: <span class="wikilink">夏普比率 (SR)</span></h3>
+<div class="math-block">$$
+\text{SR} = \frac{\bar{R} - R_f}{\sigma}
+$$</div>
+
+<p><strong>含义</strong>: 衡量风险调整后收益，将超额收益与投资组合波动性进行比较</p>
+<p><strong>符号说明</strong>:
+- <span class="math-inline">$\bar{R}$</span>: 投资组合平均收益率
+- <span class="math-inline">$R_f$</span>: 无风险利率（如 3 个月国债收益率）
+- <span class="math-inline">$\sigma$</span>: 投资组合收益率的标准差</p>
+<h3>公式4: <span class="wikilink">最大回撤 (MDD)</span></h3>
+<div class="math-block">$$
+\text{MDD} = \max_{t \in [0, T]} \left(\frac{\text{Peak}_t - \text{Trough}_t}{\text{Peak}_t}\right) \times 100\%
+$$</div>
+
+<p><strong>含义</strong>: 衡量投资组合价值从峰值到谷值的最大跌幅，反映最坏情况下的损失</p>
+<p><strong>符号说明</strong>:
+- <span class="math-inline">$\text{Peak}_t$</span>: 时间 <span class="math-inline">$t$</span> 之前的投资组合最高价值
+- <span class="math-inline">$\text{Trough}_t$</span>: 峰值之后的投资组合最低价值
+- <span class="math-inline">$T$</span>: 模拟总时长</p>
+<hr />
+<h2>关键图表</h2>
+<h3>Figure 1: Overall Framework / 整体框架</h3>
+<div class="paper-figure"><img alt="Figure 1" loading="lazy" src="https://ar5iv.labs.arxiv.org/html/2412.20138/assets/x1.png" /></div>
+<p><strong>说明</strong>: TradingAgents 整体框架组织。I. <strong>分析师团队</strong>: 四位分析师并行收集市场信息。II. <strong>研究员团队</strong>: 通过 Bull/Bear 辩论评估数据。III. <strong>交易员</strong>: 基于研究分析做出交易决策。IV. <strong>风控团队</strong>: 评估决策的风险并缓解。V. <strong>基金经理</strong>: 审批并执行交易。</p>
+<h3>Figure 2: Analyst Team / 分析师团队</h3>
+<div class="paper-figure"><img alt="Figure 2" loading="lazy" src="https://ar5iv.labs.arxiv.org/html/2412.20138/assets/x2.png" /></div>
+<p><strong>说明</strong>: 展示分析师团队的四个专业角色——基本面分析师、情绪分析师、新闻分析师和技术分析师，各自使用专属工具并行工作，产出结构化分析报告。</p>
+<h3>Figure 3: Researcher Team / 研究员团队</h3>
+<div class="paper-figure"><img alt="Figure 3" loading="lazy" src="https://ar5iv.labs.arxiv.org/html/2412.20138/assets/x3.png" /></div>
+<p><strong>说明</strong>: 研究员团队包含 Bullish（看涨）和 Bearish（看跌）两个视角的 Agent，通过多轮辩论评估市场状况，由 facilitator 总结并选择占优观点。</p>
+<h3>Figure 4: Trader Decision-Making / 交易员决策流程</h3>
+<div class="paper-figure"><img alt="Figure 4" loading="lazy" src="https://ar5iv.labs.arxiv.org/html/2412.20138/assets/x4.png" /></div>
+<p><strong>说明</strong>: 交易员综合分析师报告和研究员辩论结论，评估各方建议后决定交易时机、规模和方向，输出决策信号与详细理由报告。</p>
+<h3>Figure 5: Risk Management and Fund Manager / 风控与基金经理</h3>
+<div class="paper-figure"><img alt="Figure 5" loading="lazy" src="https://ar5iv.labs.arxiv.org/html/2412.20138/assets/x5.png" /></div>
+<p><strong>说明</strong>: 风控团队从三个风险偏好视角（risk-seeking / neutral / risk-conservative）审核交易决策，进行多轮讨论。基金经理最终审批并确定风险调整方案。</p>
+<h3>Table 1: Performance Comparison / 性能对比</h3>
+<table>
+<thead>
+<tr>
+<th>Categories</th>
+<th>Models</th>
+<th>AAPL CR%</th>
+<th>AAPL ARR%</th>
+<th>AAPL SR</th>
+<th>AAPL MDD%</th>
+<th>GOOGL CR%</th>
+<th>GOOGL ARR%</th>
+<th>GOOGL SR</th>
+<th>GOOGL MDD%</th>
+<th>AMZN CR%</th>
+<th>AMZN ARR%</th>
+<th>AMZN SR</th>
+<th>AMZN MDD%</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Market</td>
+<td>B&amp;H</td>
+<td>-5.23</td>
+<td>-5.09</td>
+<td>-1.29</td>
+<td>11.90</td>
+<td>7.78</td>
+<td>8.09</td>
+<td>1.35</td>
+<td>13.04</td>
+<td>17.1</td>
+<td>17.6</td>
+<td>3.53</td>
+<td>3.80</td>
+</tr>
+<tr>
+<td>Rule-based</td>
+<td>MACD</td>
+<td>-1.49</td>
+<td>-1.48</td>
+<td>-0.81</td>
+<td>4.53</td>
+<td>6.20</td>
+<td>6.26</td>
+<td>2.31</td>
+<td>1.22</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+</tr>
+<tr>
+<td>Rule-based</td>
+<td>KDJ&amp;RSI</td>
+<td>2.05</td>
+<td>2.07</td>
+<td>1.64</td>
+<td>1.09</td>
+<td>0.4</td>
+<td>0.4</td>
+<td>0.02</td>
+<td>1.58</td>
+<td>-0.77</td>
+<td>-0.76</td>
+<td>-2.25</td>
+<td>1.08</td>
+</tr>
+<tr>
+<td>Rule-based</td>
+<td>ZMR</td>
+<td>0.57</td>
+<td>0.57</td>
+<td>0.17</td>
+<td>0.86</td>
+<td>-0.58</td>
+<td>0.58</td>
+<td>2.12</td>
+<td>2.34</td>
+<td>-0.77</td>
+<td>-0.77</td>
+<td>-2.45</td>
+<td>0.82</td>
+</tr>
+<tr>
+<td>Rule-based</td>
+<td>SMA</td>
+<td>-3.2</td>
+<td>-2.97</td>
+<td>-1.72</td>
+<td>3.67</td>
+<td>6.23</td>
+<td>6.43</td>
+<td>2.12</td>
+<td>2.34</td>
+<td>11.01</td>
+<td>11.6</td>
+<td>2.22</td>
+<td>3.97</td>
+</tr>
+<tr>
+<td><strong>Ours</strong></td>
+<td><strong>TradingAgents</strong></td>
+<td><strong>26.62</strong></td>
+<td><strong>30.5</strong></td>
+<td><strong>8.21</strong></td>
+<td><strong>0.91</strong></td>
+<td><strong>24.36</strong></td>
+<td><strong>27.58</strong></td>
+<td><strong>6.39</strong></td>
+<td><strong>1.69</strong></td>
+<td><strong>23.21</strong></td>
+<td><strong>24.90</strong></td>
+<td><strong>5.60</strong></td>
+<td><strong>2.11</strong></td>
+</tr>
+<tr>
+<td></td>
+<td>Improvement(%)</td>
+<td>24.57</td>
+<td>28.43</td>
+<td>6.57</td>
+<td>-</td>
+<td>16.58</td>
+<td>19.49</td>
+<td>4.26</td>
+<td>-</td>
+<td>6.10</td>
+<td>7.30</td>
+<td>2.07</td>
+<td>-</td>
+</tr>
+</tbody>
+</table>
+<p><strong>说明</strong>: TradingAgents 在三只股票上全面超越所有 baseline。AAPL 上累计收益率 26.62%（基线最佳仅 2.05%），夏普比率 8.21（基线最佳 1.64），最大回撤仅 0.91%。</p>
+<h3>Figure 6: AAPL Results / AAPL 实验结果</h3>
+<div class="paper-figure"><img alt="Figure 6a" loading="lazy" src="https://ar5iv.labs.arxiv.org/html/2412.20138/assets/x6.png" /></div>
+<p><strong>说明</strong>: (a) AAPL 各方法的累计收益率对比。TradingAgents 显著领先所有基线方法。</p>
+<div class="paper-figure"><img alt="Figure 6b" loading="lazy" src="https://ar5iv.labs.arxiv.org/html/2412.20138/assets/x7.png" /></div>
+<p><strong>说明</strong>: (b) TradingAgents 在 AAPL 上的交易记录。绿色箭头表示做多，红色箭头表示做空。</p>
+<h3>Figure 7: AMZN Results / AMZN 实验结果</h3>
+<div class="paper-figure"><img alt="Figure 7a" loading="lazy" src="https://ar5iv.labs.arxiv.org/html/2412.20138/assets/x8.png" /></div>
+<p><strong>说明</strong>: (a) AMZN 各方法的累计收益率对比。</p>
+<div class="paper-figure"><img alt="Figure 7b" loading="lazy" src="https://ar5iv.labs.arxiv.org/html/2412.20138/assets/x9.png" /></div>
+<p><strong>说明</strong>: (b) TradingAgents 在 AMZN 上的详细交易记录。</p>
+<h3>Figure 8: GOOGL Results / GOOGL 实验结果</h3>
+<div class="paper-figure"><img alt="Figure 8a" loading="lazy" src="https://ar5iv.labs.arxiv.org/html/2412.20138/assets/x10.png" /></div>
+<p><strong>说明</strong>: (a) GOOGL 各方法的累计收益率对比。</p>
+<div class="paper-figure"><img alt="Figure 8b" loading="lazy" src="https://ar5iv.labs.arxiv.org/html/2412.20138/assets/x11.png" /></div>
+<p><strong>说明</strong>: (b) TradingAgents 在 GOOGL 上的详细交易记录。</p>
+<hr />
+<h2>实验</h2>
+<h3>数据集</h3>
+<table>
+<thead>
+<tr>
+<th>数据集</th>
+<th>规模</th>
+<th>特点</th>
+<th>用途</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>历史股价</td>
+<td>2024.01.01 - 2024.03.29 (训练)</td>
+<td>OHLCV + Adjusted Close</td>
+<td>训练/回测</td>
+</tr>
+<tr>
+<td>新闻数据</td>
+<td>Bloomberg, Yahoo, EODHD, FinnHub, Reddit</td>
+<td>公司新闻/全球事件/宏观趋势</td>
+<td>新闻分析</td>
+</tr>
+<tr>
+<td>社交媒体</td>
+<td>Reddit, X/Twitter</td>
+<td>情绪评分由辅助语言模型计算</td>
+<td>情绪分析</td>
+</tr>
+<tr>
+<td>内部交易数据</td>
+<td>SEDI, 公司文件</td>
+<td>内部人情绪和交易</td>
+<td>基本面分析</td>
+</tr>
+<tr>
+<td>财报</td>
+<td>季度/年度报告</td>
+<td>上市公司财务报告</td>
+<td>基本面分析</td>
+</tr>
+<tr>
+<td>技术指标</td>
+<td>60 种标准指标</td>
+<td>MACD, RSI, Bollinger Bands 等</td>
+<td>技术分析</td>
+</tr>
+</tbody>
+</table>
+<h3>实现细节</h3>
+<ul>
+<li><strong>模拟周期</strong>: 2024.06.19 - 2024.11.19（5 个月）</li>
+<li><strong>测试股票</strong>: AAPL, GOOGL, AMZN</li>
+<li><strong>快速思考模型</strong>: <span class="wikilink">GPT-4o-mini</span>, <span class="wikilink">GPT-4o</span>（数据检索、摘要等）</li>
+<li><strong>深度思考模型</strong>: <span class="wikilink">o1-preview</span>（决策、推理、报告撰写）</li>
+<li><strong>辅助模型</strong>: 专用情绪分析模型</li>
+<li><strong>硬件</strong>: 无需 GPU，仅需 API credits</li>
+<li><strong>无前瞻偏差</strong>: Agent 仅使用当天及之前的数据</li>
+</ul>
+<h3>可视化结果</h3>
+<p>TradingAgents 在 AAPL 上表现尤为突出——该股在测试期内波动剧烈，传统规则方法几乎全部亏损，而 TradingAgents 在不到 3 个月内实现超过 26% 的收益。交易记录显示 Agent 能精准捕捉趋势反转点，在市场下行前及时减仓。</p>
+<hr />
+<h2>批判性思考</h2>
+<h3>优点</h3>
+<ol>
+<li><strong>组织架构设计合理</strong>: 模拟真实交易公司的角色分工和协作流程，比单一 Agent 或简单并行 Agent 更符合实际</li>
+<li><strong>辩论机制有效</strong>: Bull/Bear 辩论和多风险偏好风控讨论提供了对立视角，有助于避免单一偏见</li>
+<li><strong>高可解释性</strong>: 每个决策都有自然语言推理过程、工具使用记录和思考链，远优于黑盒 DL 交易系统</li>
+<li><strong>即插即用</strong>: 框架支持替换任意 backbone LLM，无需 GPU，高度可扩展</li>
+<li><strong>结构化通信</strong>: 避免了纯对话式 Agent 系统中的信息衰减问题</li>
+</ol>
+<h3>局限性</h3>
+<ol>
+<li><strong>Baseline 过弱</strong>: 仅对比了简单的规则策略（MACD, SMA 等），未与其他 LLM 交易系统（如 FinMem, FinAgent）或深度学习交易模型进行对比</li>
+<li><strong>测试规模有限</strong>: 仅在 3 只股票上测试了 5 个月，统计显著性不足，存在过拟合可能</li>
+<li><strong>API 成本未提及</strong>: 使用 o1-preview 等顶级模型进行逐日决策，API 成本可能极高，论文未讨论</li>
+<li><strong>无消融实验</strong>: 缺乏对各模块（辩论轮数、Agent 数量、通信协议类型）的消融分析</li>
+<li><strong>无滑点/手续费建模</strong>: 未提及交易成本、滑点、流动性限制等现实因素</li>
+<li><strong>存活偏差风险</strong>: 仅展示大盘科技股，未验证在小盘股或波动更大的市场中的表现</li>
+</ol>
+<h3>潜在改进方向</h3>
+<ol>
+<li>增加对其他 LLM 交易框架的对比实验</li>
+<li>补充消融实验，验证各组件（辩论机制、风控团队、通信协议）的边际贡献</li>
+<li>加入真实交易环境部署测试（live trading）</li>
+<li>考虑交易成本建模，使回测更贴近现实</li>
+<li>扩展到更多资产类别（加密货币、期货、外汇）和更长时间跨度</li>
+</ol>
+<h3>可复现性评估</h3>
+<ul>
+<li>[x] 代码开源</li>
+<li>[ ] 预训练模型（基于 API 调用，无需预训练）</li>
+<li>[x] 训练细节完整</li>
+<li>[x] 数据集可获取</li>
+</ul>
+<hr />
+<h2>关联笔记</h2>
+<h3>基于</h3>
+<ul>
+<li><span class="wikilink">MetaGPT</span>: 结构化通信协议的灵感来源</li>
+<li><span class="wikilink">ReAct</span>: Agent 使用的 prompting framework</li>
+<li><span class="wikilink">FinMem</span>: 反思驱动的 LLM 交易 Agent</li>
+<li><span class="wikilink">FinAgent</span>: 多模态分层记忆 LLM 交易 Agent</li>
+</ul>
+<h3>对比</h3>
+<ul>
+<li><span class="wikilink">FinGPT</span>: 金融领域微调 LLM</li>
+<li><span class="wikilink">BloombergGPT</span>: 从零训练的金融 LLM</li>
+<li><span class="wikilink">TradingGPT</span>: 另一个 LLM 辩论驱动的交易框架</li>
+</ul>
+<h3>方法相关</h3>
+<ul>
+<li><span class="wikilink">Multi-Agent System</span>: 多智能体系统架构</li>
+<li><span class="wikilink">Agent Debate</span>: 多 Agent 辩论提升推理质量</li>
+<li><span class="wikilink">Fundamental Analysis</span>: 基本面分析</li>
+<li><span class="wikilink">Sentiment Analysis</span>: 情绪分析</li>
+<li><span class="wikilink">Technical Analysis</span>: 技术分析</li>
+<li><span class="wikilink">Sharpe Ratio</span>: 风险调整收益衡量指标</li>
+<li><span class="wikilink">Maximum Drawdown</span>: 最大回撤</li>
+</ul>
+<h3>硬件/数据相关</h3>
+<ul>
+<li><span class="wikilink">GPT-4o</span>: 快速推理 backbone</li>
+<li><span class="wikilink">o1-preview</span>: 深度推理 backbone</li>
+</ul>
+<hr />
+<h2>速查卡片</h2>
+<blockquote>
+<p>[!summary] TradingAgents: Multi-Agents LLM Financial Trading Framework
+- <strong>核心</strong>: 模拟交易公司组织架构的多 LLM Agent 股票交易框架
+- <strong>方法</strong>: 分析师(4角色)并行分析 → Bull/Bear 辩论 → 交易员决策 → 风控审批
+- <strong>结果</strong>: AAPL CR 26.62%, SR 8.21; GOOGL CR 24.36%; AMZN CR 23.21%，全面超越规则策略
+- <strong>代码</strong>: https://github.com/TauricResearch/TradingAgents</p>
+</blockquote>
+<hr />
+<p><em>笔记创建时间: 2026-04-11</em></p></div></details>
+
+<ul>
+<li><strong>核心方法</strong>: <span class="wikilink">TradingAgents</span> 用multi-agent框架做金融交易。包含Market Analyst、Risk Manager、Trader等角色分工。在美股数据上回测验证。</li>
+<li><strong>对比方法/Baselines</strong>: 单agent交易、传统量化策略</li>
+<li><strong>借鉴意义</strong>: 金融领域是multi-agent的天然应用场景——不同角色处理不同信息源。但回测=/=实盘。</li>
+<li><strong>锐评</strong>: 41个upvote。用multi-agent炒股的想法不新，但角色分工的设计还算合理。核心问题：回测period多长？有没有包含2022年这种极端下跌行情？如果只在牛市回测，任何策略都能赚钱。另外交易频率和手续费的影响完全没提。 👀</li>
+</ul></div><div class="paper-card" data-topic="🤖 Agent 框架"><h3>8. Agent READMEs: An Empirical Study of Context Files for Agentic Coding</h3>
+<ul>
+<li><strong>作者</strong>: Worawalan Chatlatanagulchai, Hao Li, Yutaro Kashiwa, Brittany Reid, Kundjanasith Thonglek, Pattara Leelaprute, Arnon Rungsawang, Bundit Manaskasemsak, Bram Adams, Ahmed E. Hassan, Hajimu Iida</li>
+<li><strong>机构</strong>: Queen’s University, yutaro.kashiwa@is.naist.jp
+, Nara Institute of Science and TechnologyIkomaJapan, Queen’s UniversityKingstonCanada, Faculty of Engineering, Kasetsart University, Faculty of Engineering, Kasetsart UniversityBangkokThailand, Nara Institute of Science and Technology</li>
+<li><strong>链接</strong>: <a href="https://arxiv.org/abs/2511.12884">arXiv</a> | <a href="https://arxiv.org/pdf/2511.12884">PDF</a></li>
+<li><strong>来源</strong>: 🔥 HF Trending，⬆️ 28</li>
+</ul>
+<details class="paper-note"><summary>📒 精读笔记: Agent READMEs</summary><div class="note-body"><h1>论文笔记：Agent READMEs: An Empirical Study of Context Files for Agentic Coding</h1>
+<h2>元信息</h2>
+<table>
+<thead>
+<tr>
+<th>项目</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>机构</td>
+<td>Kasetsart University / Queen's University / Nara Institute of Science and Technology</td>
+</tr>
+<tr>
+<td>日期</td>
+<td>November 2025</td>
+</tr>
+<tr>
+<td>项目主页</td>
+<td>https://github.com/woraamy/Agent-Context-File-Analysis</td>
+</tr>
+<tr>
+<td>对比基线</td>
+<td>前序工作 (Chatlatanagulchai et al., 2025) 253 文件 → 本文 2,303 文件</td>
+</tr>
+<tr>
+<td>链接</td>
+<td><a href="https://arxiv.org/abs/2511.12884">arXiv</a> / <a href="https://github.com/woraamy/Agent-Context-File-Analysis">Code</a></td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2>一句话总结</h2>
+<blockquote>
+<p>首个大规模实证研究，分析 2,303 个 Agent 上下文文件（CLAUDE.md/AGENTS.md/copilot-instructions.md）的结构、维护模式与指令内容，揭示功能性指令主导而安全/性能等非功能性需求严重缺失的现状。</p>
+</blockquote>
+<hr />
+<h2>核心贡献</h2>
+<ol>
+<li><strong>首个大规模 Agent 上下文文件实证研究</strong>: 收集 1,925 个仓库中的 2,303 个 Agent 上下文文件（ACF），覆盖 Claude Code、OpenAI Codex、GitHub Copilot 三大工具</li>
+<li><strong>16 类指令分类体系</strong>: 通过人工标注构建 Agent 上下文文件的指令分类 taxonomy，发现功能性指令（Build and Run 62.3%、Implementation Details 69.9%）远多于非功能性需求（Security 14.5%、Performance 14.5%）</li>
+<li><strong>自动分类可行性验证</strong>: 使用 <span class="wikilink">GPT-5</span> 实现 0.79 F1-score 的自动分类，证明大规模监控 Agent 上下文文件的可行性</li>
+</ol>
+<hr />
+<h2>问题背景</h2>
+<h3>要解决的问题</h3>
+<p><span class="wikilink">Agentic Coding</span> 工具（如 <span class="wikilink">Claude Code</span>、<span class="wikilink">OpenAI Codex</span>、<span class="wikilink">GitHub Copilot</span>）依赖 Agent 上下文文件（ACF）来理解项目架构、遵循编码规范、执行构建测试。但目前缺乏关于这些文件结构、演化方式和实际内容的系统性实证证据。</p>
+<h3>现有方法的局限</h3>
+<ul>
+<li>官方文档仅提供高层指导（如"描述架构和工作流"），开发者只能通过试错来设计这些文件</li>
+<li>已有研究主要关注 <span class="wikilink">LLM</span> 的模型能力、交互模式和即时提示，而非持久化的项目级上下文配置</li>
+<li>前序工作 (Chatlatanagulchai et al., 2025) 仅研究了 253 个 Claude Code 文件，范围有限</li>
+</ul>
+<h3>本文的动机</h3>
+<p>Agent 上下文文件作为一种新型软件工件（"READMEs for agents"），在 Agentic Coding 生态中扮演关键角色，但学术界对其缺乏基本的经验性认知。本文旨在通过大规模实证分析填补这一空白。</p>
+<hr />
+<h2>方法详解</h2>
+<h3>研究设计</h3>
+<p>本文围绕四个研究问题（RQ）展开：</p>
+<ul>
+<li><strong>RQ1</strong>: Agent 上下文文件的特征（大小、可读性、结构）是什么？</li>
+<li><strong>RQ2</strong>: 开发者维护 Agent 上下文文件的频率如何？</li>
+<li><strong>RQ3</strong>: Agent 上下文文件包含哪些指令？</li>
+<li><strong>RQ4</strong>: 能否自动分类 Agent 上下文文件中的指令？</li>
+</ul>
+<h3>数据收集</h3>
+<p><strong>数据来源</strong>: AIDev 数据集 (Li et al., 2025b)，筛选 GitHub Stars ≥ 5 的 8,370 个仓库</p>
+<p><strong>文件检索</strong>: 通过 GitHub API 扫描仓库根目录，按官方命名规范检索：
+- <code>CLAUDE.md</code> → Claude Code（922 个）
+- <code>AGENTS.md</code> → OpenAI Codex（694 个）
+- <code>copilot-instructions.md</code> → GitHub Copilot（687 个）
+- 总计: <strong>2,303 个文件来自 1,925 个仓库</strong></p>
+<h3>RQ1: 特征分析方法</h3>
+<ul>
+<li><strong>大小</strong>: 正则表达式 <code>\w+</code> 匹配单词数</li>
+<li><strong>可读性</strong>: <span class="wikilink">FRE</span> 指标（越高越易读）</li>
+<li><strong>结构</strong>: 统计 Markdown 标题层级（H1-H5）分布</li>
+<li><strong>统计检验</strong>: <span class="wikilink">Mann-Whitney U Test</span> + <span class="wikilink">Cliff&#x27;s Delta</span> 效应量</li>
+</ul>
+<h3>RQ2: 维护模式分析</h3>
+<ul>
+<li>提取所有修改 ACF 的 commit 历史</li>
+<li>统计 commit 数量、时间间隔、增删行数</li>
+<li>总计分析 5,655（Claude Code）+ 2,767（Codex）+ 2,237（Copilot）= 10,659 次 commit</li>
+</ul>
+<h3>RQ3: 内容分类方法</h3>
+<p><strong>两阶段人工标注</strong>:</p>
+<ol>
+<li><strong>标签创建阶段</strong>: 提取 H1/H2 标题 → 3 个 LLM（<span class="wikilink">Claude Opus 4.1</span>、<span class="wikilink">Gemini 2.5 Pro</span>、GPT-5）生成候选标签 → 人工筛选 → 80 个初始标签 → 合并为 <strong>16 个核心类别</strong></li>
+<li><strong>标签分配阶段</strong>: 2 位标注员独立标注 332 个 Claude Code 文件 → 80.3% 一致率 → 第 3 位标注员调解分歧 → 最终 2,069 个标签分配</li>
+</ol>
+<h3>RQ4: 自动分类方法</h3>
+<ul>
+<li><strong>任务</strong>: 多标签分类（16 个类别）</li>
+<li><strong>模型</strong>: GPT-5</li>
+<li><strong>输入</strong>: 完整 ACF 内容 + 每个类别的描述和示例</li>
+<li><strong>评估</strong>: Precision / Recall / F1-score（per-category + micro average）</li>
+</ul>
+<hr />
+<h2>关键公式</h2>
+<h3>公式1: <span class="wikilink">效应量判断标准</span></h3>
+<div class="math-block">$$
+\text{Effect size} = \begin{cases}
+\text{negligible}, &amp; \text{if } |d| \leq 0.147 \\
+\text{small}, &amp; \text{if } 0.147 &lt; |d| \leq 0.33 \\
+\text{medium}, &amp; \text{if } 0.33 &lt; |d| \leq 0.474 \\
+\text{large}, &amp; \text{if } 0.474 &lt; |d| \leq 1
+\end{cases}
+$$</div>
+
+<p><strong>含义</strong>: 用 Cliff's delta <span class="math-inline">$d$</span> 量化两组样本之间差异的实际显著性，补充 <span class="wikilink">Mann-Whitney U Test</span> 的统计显著性判断</p>
+<p><strong>符号说明</strong>:
+- <span class="math-inline">$d$</span>: Cliff's delta 值，范围 <span class="math-inline">$[-1, 1]$</span>
+- <span class="math-inline">$|d|$</span>: delta 的绝对值</p>
+<h3>公式2: <span class="wikilink">Flesch Reading Ease</span></h3>
+<div class="math-block">$$
+FRE = 206.835 - 1.015 \times \frac{\text{total words}}{\text{total sentences}} - 84.6 \times \frac{\text{total syllables}}{\text{total words}}
+$$</div>
+
+<p><strong>含义</strong>: 衡量文本可读性，分数越高越容易阅读（0-100 范围）</p>
+<p><strong>符号说明</strong>:
+- <span class="math-inline">$FRE$</span>: Flesch Reading Ease 分数
+- 低于 30 为 "Very Difficult"（大学毕业生水平）
+- 30-50 为 "Difficult"（大学水平）</p>
+<hr />
+<h2>关键图表</h2>
+<h3>Figure 1: Agent 上下文文件示例</h3>
+<div class="paper-figure"><img alt="Figure 1" loading="lazy" src="https://arxiv.org/html/2511.12884v1/x1.png" /></div>
+<p><strong>说明</strong>: 展示两个真实世界 Agent 上下文文件的对比。左侧为一个 Web 框架项目的精简 AGENTS.md（仅 20 行，3 个章节），右侧为一个 Agent 工具开发项目的 329 行综合性 CLAUDE.md（74 个章节），说明 ACF 不是标准化模板文档而是高度定制化的配置机制。</p>
+<h3>Figure 2: 研究方法论总览</h3>
+<div class="paper-figure"><img alt="Figure 2" loading="lazy" src="https://arxiv.org/html/2511.12884v1/x2.png" /></div>
+<p><strong>说明</strong>: 数据收集流水线：从 AIDev 数据集获取仓库列表 → 筛选 Stars ≥ 5 → GitHub API 扫描 → 按文件名规范检索 CLAUDE.md / AGENTS.md / copilot-instructions.md → 收集 2,303 个 ACF。</p>
+<h3>Figure 3: ACF 大小与可读性分布</h3>
+<div class="paper-figure"><img alt="Figure 3a" loading="lazy" src="https://arxiv.org/html/2511.12884v1/x3.png" /></div>
+<p><strong>(a) 文件字数分布</strong>: GitHub Copilot（中位数 535 词）和 Claude Code（中位数 485 词）显著长于 OpenAI Codex（中位数 335.5 词），Cliff's delta <span class="math-inline">$d = 0.21$</span> 和 <span class="math-inline">$d = 0.22$</span>（small effect size）。</p>
+<div class="paper-figure"><img alt="Figure 3b" loading="lazy" src="https://arxiv.org/html/2511.12884v1/x4.png" /></div>
+<p><strong>(b) FRE 可读性分布</strong>: Claude Code 最难读（中位数 FRE 16.6，"Very Difficult"），OpenAI Codex 最易读（中位数 FRE 39.6，"Difficult"），GitHub Copilot 居中（中位数 FRE 26.6）。</p>
+<h3>Figure 4: ACF 标题层级分布</h3>
+<div class="paper-figure"><img alt="Figure 4" loading="lazy" src="https://arxiv.org/html/2511.12884v1/x5.png" /></div>
+<p><strong>说明</strong>: ACF 普遍遵循浅层层级结构：单一 H1 标题 + 6-7 个 H2 标题 + 中等数量 H3/H4 子章节。H5 及更深层级极为罕见。GitHub Copilot 和 Claude Code 在 H3 层级上比 OpenAI Codex 更精细（中位数 12.0 和 11.0 vs 9.0）。</p>
+<h3>Figure 5: ACF 维护活动分布</h3>
+<div class="paper-figure"><img alt="Figure 5a" loading="lazy" src="https://arxiv.org/html/2511.12884v1/x6.png" /></div>
+<p><strong>(a) Commit 次数分布</strong>: 67.4% 的 Claude Code ACF 经历多次 commit 修改，GitHub Copilot 59.7%，OpenAI Codex 59.2%。Claude Code ACF 显著接收更多 commit（<span class="math-inline">$d = 0.35$</span>，medium effect size vs Copilot）。</p>
+<div class="paper-figure"><img alt="Figure 5b" loading="lazy" src="https://arxiv.org/html/2511.12884v1/x7.png" /></div>
+<p><strong>(b) Commit 间隔分布</strong>: Claude Code 中位间隔 24.1 小时，OpenAI Codex 22.0 小时，GitHub Copilot 70.7 小时。开发者以短时间突发模式维护 ACF。</p>
+<h3>Figure 6: ACF 增删行数分布</h3>
+<div class="paper-figure"><img alt="Figure 6" loading="lazy" src="https://arxiv.org/html/2511.12884v1/x8.png" /></div>
+<p><strong>说明</strong>: 删除行数一致地很少（中位数 &lt; 15 词），而添加行数更多且更具变化性。Claude Code 每次 commit 的中位添加为 57 词。ACF 的演化主要由小规模增量添加驱动，而非大规模删除或重写。</p>
+<h3>Table 1: 仓库概况统计</h3>
+<table>
+<thead>
+<tr>
+<th>Agent</th>
+<th>ACF Name</th>
+<th># Files</th>
+<th>Median Stars</th>
+<th>Median Forks</th>
+<th>Avg. Days Until ACF Adoption</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Claude Code</td>
+<td>CLAUDE.md</td>
+<td>922</td>
+<td>51.0</td>
+<td>10.5</td>
+<td>1099.7</td>
+</tr>
+<tr>
+<td>OpenAI Codex</td>
+<td>AGENTS.md</td>
+<td>694</td>
+<td>56.0</td>
+<td>12.0</td>
+<td>994.4</td>
+</tr>
+<tr>
+<td>GitHub Copilot</td>
+<td>copilot-instructions.md</td>
+<td>687</td>
+<td>96.0</td>
+<td>31.0</td>
+<td>1567.4</td>
+</tr>
+</tbody>
+</table>
+<p><strong>说明</strong>: GitHub Copilot 仓库的 Stars 和 Forks 中位数最高（96.0 / 31.0），但采纳 ACF 的平均天数也最长（1567.4 天）。</p>
+<h3>Table 2: FRE 分数解读</h3>
+<table>
+<thead>
+<tr>
+<th>FRE Score</th>
+<th>School Level</th>
+<th>Reading Difficulty</th>
+<th>Example Text Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>&lt; 0</td>
+<td>Highly Specialized</td>
+<td>Extremely Difficult</td>
+<td>Academic or legal documents</td>
+</tr>
+<tr>
+<td>[0, 30)</td>
+<td>College Graduate</td>
+<td>Very Difficult</td>
+<td>Technical reports</td>
+</tr>
+<tr>
+<td>[30, 50)</td>
+<td>College</td>
+<td>Difficult</td>
+<td>High school-level material</td>
+</tr>
+<tr>
+<td>[50, 60)</td>
+<td>10th to 12th grade</td>
+<td>Fairly Difficult</td>
+<td>Consumer information</td>
+</tr>
+<tr>
+<td>[60, 70)</td>
+<td>8th and 9th grade</td>
+<td>Plain English</td>
+<td>Average newspapers</td>
+</tr>
+<tr>
+<td>[70, 80)</td>
+<td>7th grade</td>
+<td>Fairly Easy</td>
+<td>Magazines</td>
+</tr>
+<tr>
+<td>[80, 90)</td>
+<td>6th grade</td>
+<td>Easy</td>
+<td>Popular magazines</td>
+</tr>
+<tr>
+<td>[90, 100)</td>
+<td>5th grade</td>
+<td>Very Easy</td>
+<td>Children's books</td>
+</tr>
+<tr>
+<td>≥ 100</td>
+<td>Pre-school</td>
+<td>Extremely Easy</td>
+<td>Picture books</td>
+</tr>
+</tbody>
+</table>
+<p><strong>说明</strong>: FRE 分数解读标准。Claude Code ACF 中位数 16.6 落入 "Very Difficult" 区间，与学术论文和法律文书难度相当。</p>
+<h3>Table 3: 16 类指令分类及其分布</h3>
+<table>
+<thead>
+<tr>
+<th>Category</th>
+<th>Label</th>
+<th>Description</th>
+<th>% ACFs</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>General</td>
+<td>System Overview</td>
+<td>系统概述和关键特性</td>
+<td>59.0</td>
+</tr>
+<tr>
+<td>General</td>
+<td>AI Integration</td>
+<td>Agent 行为角色定义和 AI 工具集成</td>
+<td>24.4</td>
+</tr>
+<tr>
+<td>General</td>
+<td>Documentation</td>
+<td>补充文档、链接和参考</td>
+<td>26.8</td>
+</tr>
+<tr>
+<td>Implementation</td>
+<td>Architecture</td>
+<td>高层架构、设计原则、关键组件</td>
+<td>67.7</td>
+</tr>
+<tr>
+<td>Implementation</td>
+<td>Impl. Details</td>
+<td>代码实现细节和编码风格指南</td>
+<td>69.9</td>
+</tr>
+<tr>
+<td>Build</td>
+<td>Build and Run</td>
+<td>编译和运行命令</td>
+<td>62.3</td>
+</tr>
+<tr>
+<td>Build</td>
+<td>Testing</td>
+<td>自动化测试流程和命令</td>
+<td>75.0</td>
+</tr>
+<tr>
+<td>Build</td>
+<td>Conf. &amp; Env.</td>
+<td>系统配置和开发环境设置</td>
+<td>38.0</td>
+</tr>
+<tr>
+<td>Build</td>
+<td>DevOps</td>
+<td>部署、发布和 CI/CD</td>
+<td>18.1</td>
+</tr>
+<tr>
+<td>Management</td>
+<td>Development Process</td>
+<td>开发工作流和 Git 规范</td>
+<td>63.3</td>
+</tr>
+<tr>
+<td>Management</td>
+<td>Project Management</td>
+<td>项目规划和管理</td>
+<td>5.4</td>
+</tr>
+<tr>
+<td>Quality</td>
+<td>Maintenance</td>
+<td>系统维护、可读性改进、Bug 修复</td>
+<td>43.7</td>
+</tr>
+<tr>
+<td>Quality</td>
+<td>Debugging</td>
+<td>错误处理和问题排查</td>
+<td>24.4</td>
+</tr>
+<tr>
+<td>Quality</td>
+<td>Performance</td>
+<td>系统性能和优化</td>
+<td><strong>14.5</strong></td>
+</tr>
+<tr>
+<td>Quality</td>
+<td>Security</td>
+<td>安全考虑和最佳实践</td>
+<td><strong>14.5</strong></td>
+</tr>
+<tr>
+<td>Quality</td>
+<td>UI/UX</td>
+<td>用户界面和体验指南</td>
+<td><strong>8.7</strong></td>
+</tr>
+</tbody>
+</table>
+<p><strong>关键发现</strong>: 功能性指令（Testing 75.0%、Implementation Details 69.9%、Architecture 67.7%、Development Process 63.3%、Build and Run 62.3%）占主导地位；非功能性需求（Security 14.5%、Performance 14.5%、UI/UX 8.7%）严重不足。</p>
+<h3>Table 4: GPT-5 自动分类性能</h3>
+<table>
+<thead>
+<tr>
+<th>Category</th>
+<th>Label</th>
+<th>Precision</th>
+<th>Recall</th>
+<th>F1-Score</th>
+<th># Support</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>General</td>
+<td>System Overview</td>
+<td>0.88</td>
+<td>0.90</td>
+<td><strong>0.89</strong></td>
+<td>196</td>
+</tr>
+<tr>
+<td>General</td>
+<td>AI Integration</td>
+<td>0.33</td>
+<td>0.86</td>
+<td>0.48</td>
+<td>80</td>
+</tr>
+<tr>
+<td>General</td>
+<td>Documentation</td>
+<td>0.43</td>
+<td>0.87</td>
+<td>0.57</td>
+<td>89</td>
+</tr>
+<tr>
+<td>Implementation</td>
+<td>Architecture</td>
+<td>0.89</td>
+<td>0.97</td>
+<td><strong>0.93</strong></td>
+<td>226</td>
+</tr>
+<tr>
+<td>Implementation</td>
+<td>Impl. Details</td>
+<td>0.85</td>
+<td>0.93</td>
+<td><strong>0.89</strong></td>
+<td>235</td>
+</tr>
+<tr>
+<td>Build</td>
+<td>Build &amp; Run</td>
+<td>0.90</td>
+<td>0.94</td>
+<td><strong>0.92</strong></td>
+<td>209</td>
+</tr>
+<tr>
+<td>Build</td>
+<td>Testing</td>
+<td>0.91</td>
+<td>0.96</td>
+<td><strong>0.94</strong></td>
+<td>252</td>
+</tr>
+<tr>
+<td>Build</td>
+<td>Conf. &amp; Env.</td>
+<td>0.64</td>
+<td>0.91</td>
+<td>0.75</td>
+<td>129</td>
+</tr>
+<tr>
+<td>Build</td>
+<td>DevOps</td>
+<td>0.64</td>
+<td>0.84</td>
+<td>0.72</td>
+<td>61</td>
+</tr>
+<tr>
+<td>Management</td>
+<td>Dev. Process</td>
+<td>0.92</td>
+<td>0.76</td>
+<td><strong>0.83</strong></td>
+<td>216</td>
+</tr>
+<tr>
+<td>Management</td>
+<td>Project Mgmt.</td>
+<td>0.40</td>
+<td>0.44</td>
+<td>0.42</td>
+<td>18</td>
+</tr>
+<tr>
+<td>Quality</td>
+<td>Maintainability</td>
+<td>0.65</td>
+<td>0.50</td>
+<td>0.56</td>
+<td>148</td>
+</tr>
+<tr>
+<td>Quality</td>
+<td>Debugging</td>
+<td>0.70</td>
+<td>0.73</td>
+<td>0.71</td>
+<td>84</td>
+</tr>
+<tr>
+<td>Quality</td>
+<td>Performance</td>
+<td>0.59</td>
+<td>0.90</td>
+<td>0.71</td>
+<td>48</td>
+</tr>
+<tr>
+<td>Quality</td>
+<td>Security</td>
+<td>0.60</td>
+<td>0.98</td>
+<td>0.74</td>
+<td>49</td>
+</tr>
+<tr>
+<td>Quality</td>
+<td>UI/UX</td>
+<td>0.48</td>
+<td>0.69</td>
+<td>0.56</td>
+<td>29</td>
+</tr>
+<tr>
+<td><strong>Micro Avg</strong></td>
+<td></td>
+<td><strong>0.73</strong></td>
+<td><strong>0.86</strong></td>
+<td><strong>0.79</strong></td>
+<td><strong>2,069</strong></td>
+</tr>
+</tbody>
+</table>
+<p><strong>关键发现</strong>: 整体 micro-average F1 = 0.79。具体功能性类别（Testing 0.94、Architecture 0.93、Build &amp; Run 0.92）表现优异；抽象/稀疏类别（Project Management 0.42、AI Integration 0.48）表现较弱。</p>
+<hr />
+<h2>实验</h2>
+<h3>数据集</h3>
+<table>
+<thead>
+<tr>
+<th>数据集</th>
+<th>规模</th>
+<th>特点</th>
+<th>用途</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>AIDev (Li et al., 2025b)</td>
+<td>8,370 仓库（≥5 Stars）</td>
+<td>AI 辅助开发仓库</td>
+<td>数据源</td>
+</tr>
+<tr>
+<td>收集结果</td>
+<td>2,303 ACF / 1,925 仓库</td>
+<td>覆盖 3 种 Agentic Coding 工具</td>
+<td>分析对象</td>
+</tr>
+<tr>
+<td>Commit 历史</td>
+<td>10,659 次 commit</td>
+<td>Claude Code 5,655 + Codex 2,767 + Copilot 2,237</td>
+<td>维护分析</td>
+</tr>
+<tr>
+<td>人工标注</td>
+<td>332 Claude Code 文件 / 2,069 标签</td>
+<td>3 位标注员, 80.3% 一致率</td>
+<td>内容分类</td>
+</tr>
+</tbody>
+</table>
+<h3>实现细节</h3>
+<ul>
+<li><strong>标注工具</strong>: LLM 辅助标签生成（Claude Opus 4.1、Gemini 2.5 Pro、GPT-5）</li>
+<li><strong>统计检验</strong>: Mann-Whitney U test (<span class="math-inline">$\alpha = 0.05$</span>) + Cliff's delta 效应量</li>
+<li><strong>可读性指标</strong>: Flesch Reading Ease (FRE)</li>
+<li><strong>分类评估</strong>: Precision / Recall / F1-score (micro average)</li>
+<li><strong>标注员</strong>: 3 位检查员，编程经验 4-17 年</li>
+</ul>
+<h3>核心发现汇总</h3>
+<p><strong>RQ1 — 特征</strong>:
+- ACF 普遍长且难读，Claude Code 最难读（FRE 中位数 16.6）
+- 一致的浅层层级结构：单一 H1 + H2/H3 组织</p>
+<p><strong>RQ2 — 维护</strong>:
+- 67.4% 的 Claude Code ACF 经历多次修改，不是静态文档
+- 维护以短时间突发模式进行（中位间隔约 1 天）
+- 演化由小规模增量添加驱动</p>
+<p><strong>RQ3 — 内容</strong>:
+- 功能性指令占主导（Testing 75.0%、Impl. Details 69.9%、Architecture 67.7%）
+- 非功能性需求严重不足（Security 14.5%、Performance 14.5%）</p>
+<p><strong>RQ4 — 自动分类</strong>:
+- GPT-5 达到 0.79 F1-score，具体功能类别效果好（Testing 0.94）
+- 抽象类别效果较差（Maintenance 0.56、Project Management 0.42）</p>
+<hr />
+<h2>批判性思考</h2>
+<h3>优点</h3>
+<ol>
+<li><strong>规模全面</strong>: 2,303 个文件、1,925 个仓库、3 种工具，是该领域迄今最大规模的实证研究</li>
+<li><strong>实践价值高</strong>: 16 类指令 taxonomy 直接可用于指导 ACF 编写和工具设计</li>
+<li><strong>方法严谨</strong>: 多标注员独立标注 + 调解机制，Mann-Whitney U + Cliff's delta 双重统计检验</li>
+<li><strong>洞察深刻</strong>: 揭示了 "功能性 vs 非功能性" 指令的显著失衡，对安全和性能有重要警示意义</li>
+<li><strong>可复现</strong>: 提供完整 replication package</li>
+</ol>
+<h3>局限性</h3>
+<ol>
+<li><strong>仅分析根目录文件</strong>: 可能遗漏子目录中的 ACF（如 <code>.github/copilot-instructions.md</code>）</li>
+<li><strong>二值分类局限</strong>: 仅标记类别是否出现，未衡量指令的深度和质量</li>
+<li><strong>仅限开源项目</strong>: 企业内部的 ACF 实践可能有显著不同</li>
+<li><strong>人工标注仅覆盖 Claude Code</strong>: 332 个文件的标注结果用于推广到全部 2,303 个文件可能存在偏差</li>
+</ol>
+<h3>潜在改进方向</h3>
+<ol>
+<li><strong>纵向追踪研究</strong>: 分析 ACF 与代码变更的 co-evolution 关系</li>
+<li><strong>因果分析</strong>: 研究 ACF 内容质量对 Agent 生成代码质量的影响</li>
+<li><strong>模板设计</strong>: 基于 16 类 taxonomy 设计标准化 ACF 模板</li>
+<li><strong>非功能性需求检测</strong>: 开发 CI 集成工具自动检测 ACF 中缺失的 Security/Performance 指令</li>
+</ol>
+<h3>可复现性评估</h3>
+<ul>
+<li>[x] 代码开源</li>
+<li>[x] 数据集可获取（replication package）</li>
+<li>[x] 分析细节完整</li>
+<li>[ ] 预训练模型（不适用，本文为实证研究）</li>
+</ul>
+<hr />
+<h2>关联笔记</h2>
+<h3>基于</h3>
+<ul>
+<li>Chatlatanagulchai et al. (2025): 前序工作，253 个 Claude Code 文件的初步分析</li>
+<li>AIDev Dataset (Li et al., 2025b): AI 辅助开发仓库数据集</li>
+</ul>
+<h3>对比</h3>
+<ul>
+<li><span class="wikilink">SWE-bench</span>: 评估 Agent 代码生成的 benchmark，本文指出其缺乏非功能性需求评估</li>
+<li>Gaughan et al. (2025) 传统 README 文件研究: 本文发现 ACF 维护更活跃</li>
+</ul>
+<h3>方法相关</h3>
+<ul>
+<li><span class="wikilink">Context Engineering</span>: 超越 <span class="wikilink">Prompt Engineering</span> 的持久化项目级上下文管理</li>
+<li><span class="wikilink">Mann-Whitney U Test</span>: 非参数统计检验方法</li>
+<li><span class="wikilink">Cliff&#x27;s Delta</span>: 效应量度量</li>
+<li><span class="wikilink">Flesch Reading Ease</span>: 文本可读性指标</li>
+<li><span class="wikilink">Multi-label Classification</span>: 多标签分类任务</li>
+</ul>
+<h3>工具相关</h3>
+<ul>
+<li><span class="wikilink">Claude Code</span>: Anthropic 的 Agentic Coding 工具（CLAUDE.md）</li>
+<li><span class="wikilink">OpenAI Codex</span>: OpenAI 的 Agentic Coding 工具（AGENTS.md）</li>
+<li><span class="wikilink">GitHub Copilot</span>: GitHub 的 AI 编码助手（copilot-instructions.md）</li>
+</ul>
+<hr />
+<h2>速查卡片</h2>
+<blockquote>
+<p>[!summary] Agent READMEs: An Empirical Study of Context Files for Agentic Coding
+- <strong>核心</strong>: 首个 Agent 上下文文件（CLAUDE.md/AGENTS.md 等）大规模实证研究
+- <strong>方法</strong>: 2,303 ACF / 1,925 仓库 / 16 类指令 taxonomy / GPT-5 自动分类
+- <strong>结果</strong>: 功能性指令主导（Testing 75%、Impl. Details 70%），Security/Performance 仅 14.5%
+- <strong>代码</strong>: https://github.com/woraamy/Agent-Context-File-Analysis</p>
+</blockquote>
+<hr />
+<p><em>笔记创建时间: 2026-04-11</em></p></div></details>
+
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2511.12884/x2.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2511.12884/x5.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: <span class="wikilink">Agent-READMEs</span> 实证研究agentic coding中上下文文件（CLAUDE.md、.cursorrules等）的使用模式。分析了GitHub上的上下文文件分布、内容类别和对agent行为的影响。</li>
+<li><strong>对比方法/Baselines</strong>: 无上下文文件的agent coding</li>
+<li><strong>借鉴意义</strong>: Agent coding正在成为主流开发模式。理解上下文文件的最佳实践对提升agent coding效率有直接价值。</li>
+<li><strong>锐评</strong>: 28个upvote。务实的实证研究。Agent coding的context file生态正在野蛮生长，有人做系统分析是好事。但如果只是描述性统计（'多少repo有CLAUDE.md'），缺乏因果分析（'有vs没有context file对代码质量的影响'），价值就有限。 👀</li>
+</ul>
+<hr /></div></div>
+<div id="panel-检索与rag" class="tab-panel"><h2>🔍 检索与RAG</h2><div class="paper-card" data-topic="🔍 检索与RAG"><h3>9. VRAG-RL: Empower Vision-Perception-Based RAG for Visually Rich Information Understanding via Iterative Reasoning with Reinforcement Learning</h3>
+<ul>
+<li><strong>作者</strong>: Wang, Qiuchen, Ding, Ruixue, Zeng, Yu, Chen, Zehui, Chen, Lin, Wang, Shihang, Xie, Pengjun, Huang, Fei, Zhao, Feng</li>
+<li><strong>机构</strong>: Tongyi Lab, Alibaba Group</li>
+<li><strong>链接</strong>: <a href="https://arxiv.org/abs/2505.22019">arXiv</a> | <a href="https://arxiv.org/pdf/2505.22019">PDF</a></li>
+<li>
+<p><strong>来源</strong>: 🔥 HF Trending，⬆️ 12</p>
+</li>
+<li>
+<p><strong>核心方法</strong>: <span class="wikilink">VRAG-RL</span> 用RL对齐视觉感知的RAG系统。针对视觉富文本（PDF、表格、图表），让模型学会在什么时候检索、检索什么。用<span class="wikilink">ReAct</span>风格的agent loop + RL reward优化检索决策。</p>
+</li>
+<li><strong>对比方法/Baselines</strong>: 纯文本RAG、<span class="wikilink">LightRAG</span>、多模态RAG</li>
+<li><strong>借鉴意义</strong>: 视觉富文本是RAG的重要场景（财报、论文、发票），用RL优化检索决策比规则触发更灵活。</li>
+<li><strong>锐评</strong>: 12个upvote。方向正确——视觉文档的RAG需要模型理解'何时看图、何时读文'。但RL训练的reward设计是关键：检索决策的ground truth怎么定义？如果靠最终答案的correctness做reward，信号太稀疏。 👀</li>
+</ul>
+<hr /></div></div>
+<div id="panel-推理与记忆" class="tab-panel"><h2>🧠 推理与记忆</h2><div class="paper-card" data-topic="🧠 推理与记忆"><h3>10. A Decomposition Perspective to Long-context Reasoning for LLMs</h3>
+<ul>
+<li><strong>作者</strong>: Yanling Xiao, Huaibing Xie, Guoliang Zhao, Shihan Dou, Shaolei Wang, Yiting Liu, Nantao Zheng, Cheng Zhang, Pluto Zhou, Zhisong Zhang, Lemao Liu</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2604.07981v1">arXiv</a> | <a href="https://arxiv.org/pdf/2604.07981v1">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2604.07981v1/x2.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2604.07981v1/correlation_heatmap_normalized_oriented_V2.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: 从分解视角研究LLM长上下文推理。核心发现：长上下文推理可以被分解为多个短上下文子问题。提出分解策略让模型在短窗口内解决原本需要长上下文的任务。在<span class="wikilink">NIAH</span>和多跳推理任务上验证。</li>
+<li><strong>对比方法/Baselines</strong>: <span class="wikilink">DeepSeek</span>长上下文、<span class="wikilink">LoongRL</span></li>
+<li><strong>借鉴意义</strong>: 如果长上下文推理真的可以被有效分解，那昂贵的长上下文训练可能没有必要。</li>
+<li><strong>锐评</strong>: 思路有意思——与其让模型处理128K上下文，不如把问题拆成多个4K子问题。但分解本身需要理解全局结构，这不是又回到了原始问题吗？除非分解策略本身不需要长上下文。实验需要证明分解的成本低于直接处理长上下文。 👀</li>
+</ul>
+<hr /></div></div>
+<hr>
+<h2>被排除的论文</h2>
+<ul>
+<li>GLM-5: from Vibe Coding to Agentic Engineering — 模型技术报告，非研究论文；已在4月10日推荐</li>
+<li>Very Large-Scale Multi-Agent Simulation in AgentScope — AgentScope的仿真扩展，与1.0论文重叠</li>
+<li>CutClaw: Agentic Hours-Long Video Editing — 视频编辑应用，非核心方向</li>
+<li>Efficient Memory Management for LLM Serving — 系统工程，非核心研究</li>
+<li>MegaTrain: Full Precision Training of 100B+ — 训练工程优化，非核心研究</li>
+<li>CORAL: Towards Autonomous Multi-Agent Evolution — 已在4月10日推荐并精读</li>
+<li>MSA: Memory Sparse Attention — 已有笔记，非新论文</li>
+<li>A decoder-only foundation model for time-series — 时序预测，非核心方向</li>
+<li>Bitnet.cpp: Efficient Edge Inference — 推理引擎工程，非核心研究</li>
+<li>LightRAG: Simple and Fast RAG — 已有概念笔记，非新论文</li>
+<li>Mem0: Building Production-Ready AI Agents — 已有笔记，非新论文</li>
+<li>RAG-Anything: All-in-One RAG Framework — RAG框架集成，缺乏技术创新</li>
+<li>LlamaFactory: Unified Efficient Fine-Tuning — 微调工具升级版，非研究论文</li>
+<li>OmniFlatten: End-to-end GPT for Voice — 语音对话，非核心方向</li>
+<li>Memento-Skills: Let Agents Design Agents — 已在4月10日推荐并精读</li>
+<li>Self-Supervised Prompt Optimization — prompt优化，偏增量</li>
+<li>Zep: A Temporal Knowledge Graph for Agent Memory — 已有笔记，非新论文</li>
+<li>ASPECT: Analogical Semantic Policy Execution — 类比推理agent，太niche</li>
+<li>ProMedical: Hierarchical Criteria for Medical RM — 医学NLP，非核心方向</li>
+<li>Fundus-R1: Fundus-Reading MLLM — 医学影像，非核心方向</li>
+</ul>
+<p>框架成熟期——AgentScope、AI Scientist、TradingAgents都在做'把已有技术包装成可用系统'的工作，真正的方法创新（TriAttention、Rethinking SFT）反而upvote更高。社区开始区分工程贡献和科学贡献了。</p>
