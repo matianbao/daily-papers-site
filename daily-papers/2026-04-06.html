@@ -207,7 +207,7 @@
 <li><strong>对比方法/Baselines</strong>: 推理时 skill augmentation（<span class="wikilink">EvolveR</span> 等）、标准 <span class="wikilink">SFT</span></li>
 <li><strong>借鉴意义</strong>: "从检索到内化" 的范式转变对任何依赖外部知识的 agent 系统都有参考价值。也可以类比 <span class="wikilink">RAG</span> vs 参数化记忆的讨论。</li>
 <li><strong>锐评</strong>: 今天最值得读的论文。"inference-time skill augmentation is fundamentally limited" 这个 claim 很大胆但有道理——你不能指望一个不会游泳的人拿着游泳教程就能游。86 个 upvote 说明社区买账。关键问题是：RL 训练的技能泛化能力如何？能否内化从未见过的新技能？ 🔥</li>
-</ul></div><div class="paper-card" data-topic="🏋️ Agent 训练"><h3>2. Agent Lightning: Train ANY AI Agents with Reinforcement Learning</h3>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2604.02268" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🏋️ Agent 训练"><h3>2. Agent Lightning: Train ANY AI Agents with Reinforcement Learning</h3>
 <ul>
 <li><strong>作者</strong>: Xufang Luo, Yuge Zhang et al.</li>
 <li><strong>机构</strong>: Microsoft Research</li>
@@ -430,7 +430,7 @@
 <li><strong>RL 训练框架</strong>: <span class="wikilink">VeRL</span></li>
 <li><strong>可观测性</strong>: <span class="wikilink">OpenTelemetry</span></li>
 <li><strong>评估基准</strong>: Spider (text-to-SQL), MuSiQue (multi-hop QA), Calc-X (math tool-use)</li>
-</ul></div></details></div><div class="paper-card" data-topic="🏋️ Agent 训练"><h3>3. GrandCode: Achieving Grandmaster Level in Competitive Programming via Agentic Reinforcement Learning</h3>
+</ul></div></details><a class="papers-cool-btn" href="https://papers.cool/arxiv/2508.03680" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🏋️ Agent 训练"><h3>3. GrandCode: Achieving Grandmaster Level in Competitive Programming via Agentic Reinforcement Learning</h3>
 <ul>
 <li><strong>作者</strong>: Xiaoya Li, Xiaofei Sun, Guoyin Wang</li>
 <li><strong>机构</strong>: DeepReinforce Team</li>
@@ -612,7 +612,7 @@
 <li><strong>借鉴意义</strong>: Multi-agent RL 在复杂推理任务中的分工协作模式值得参考。</li>
 <li><strong>锐评</strong>: "Grandmaster level" 的 claim 需要仔细看评测条件——是在 live competition 还是离线评测？33 upvote 说明关注度一般。不过 multi-agent 分工（规划+编码+调试）的设计思路比单 agent 暴力推理更接近人类工程师的工作方式。 👀</li>
 </ul>
-<hr /></div><h2>🧪 LLM 训练与对齐</h2><div class="paper-card" data-topic="🧪 LLM 训练与对齐"><h3>4. SODA: Semi On-Policy Black-Box Distillation for Large Language Models</h3>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2604.02721" target="_blank" rel="noopener">📖 AI 精读</a></div><h2>🧪 LLM 训练与对齐</h2><div class="paper-card" data-topic="🧪 LLM 训练与对齐"><h3>4. SODA: Semi On-Policy Black-Box Distillation for Large Language Models</h3>
 <ul>
 <li><strong>作者</strong>: Xiwen Chen</li>
 <li><strong>机构</strong>: Clemson University, LinkedIn, Washington University, ASU, Columbia</li>
@@ -652,7 +652,7 @@
 <li><strong>对比方法/Baselines</strong>: <span class="wikilink">SeqKD</span>, <span class="wikilink">GAD</span>, <span class="wikilink">DPO</span></li>
 <li><strong>借鉴意义</strong>: "Semi On-Policy" 的折中思路在 agent 训练中也适用——完全 on-policy 太贵，完全 off-policy 效果差。</li>
 <li><strong>锐评</strong>: 实际上是蒸馏领域一个很自然的想法——mixed policy。关键看实验是否扎实、和 <span class="wikilink">DPO</span> 系列方法的对比是否公平。多机构合作但论文日期是 2026-04-04，说明刚出来。 👀</li>
-</ul></div><div class="paper-card" data-topic="🧪 LLM 训练与对齐"><h3>5. Rethinking Exploration in RLVR: From Entropy Regularization to Refinement via Bidirectional Entropy Modulation</h3>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2604.03873v1" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🧪 LLM 训练与对齐"><h3>5. Rethinking Exploration in RLVR: From Entropy Regularization to Refinement via Bidirectional Entropy Modulation</h3>
 <ul>
 <li><strong>作者</strong>: Hengrui Gu, Xiaotian Han et al.</li>
 <li><strong>机构</strong>: NC State, Case Western Reserve University</li>
@@ -666,7 +666,7 @@
 <li><strong>借鉴意义</strong>: 对 <span class="wikilink">GRPO</span> 的改进，直接可用于 agent RL 训练。</li>
 <li><strong>锐评</strong>: "正确答案收敛、错误答案发散" 的非对称设计很优雅。MATH-500 上的提升如果显著的话这篇会火。但熵调制的超参数敏感性是个隐忧。 👀</li>
 </ul>
-<hr /></div><h2>🔧 Agent 框架</h2><div class="paper-card" data-topic="🔧 Agent 框架"><h3>6. AgentScope 1.0: A Developer-Centric Framework for Building Agentic Applications</h3>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2604.04894v1" target="_blank" rel="noopener">📖 AI 精读</a></div><h2>🔧 Agent 框架</h2><div class="paper-card" data-topic="🔧 Agent 框架"><h3>6. AgentScope 1.0: A Developer-Centric Framework for Building Agentic Applications</h3>
 <ul>
 <li><strong>作者</strong>: Dawei Gao et al.</li>
 <li><strong>机构</strong>: Alibaba Group</li>
@@ -780,7 +780,7 @@
 <li><span class="wikilink">ReAct</span>: 推理+行动范式</li>
 <li><span class="wikilink">LangChain</span>: 竞品框架</li>
 <li><span class="wikilink">AutoGen</span>: 微软 multi-agent 框架</li>
-</ul></div></details></div><div class="paper-card" data-topic="🔧 Agent 框架"><h3>7. TradingAgents: Multi-Agents LLM Financial Trading Framework</h3>
+</ul></div></details><a class="papers-cool-btn" href="https://papers.cool/arxiv/2508.16279" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🔧 Agent 框架"><h3>7. TradingAgents: Multi-Agents LLM Financial Trading Framework</h3>
 <ul>
 <li><strong>作者</strong>: Yijia Xiao et al.</li>
 <li><strong>机构</strong>: MIT, UCLA</li>
@@ -793,7 +793,7 @@
 </li>
 <li><strong>锐评</strong>: 2024 年 12 月的旧论文又上 trending。MIT+UCLA 的招牌让人点进来，但交易策略的实盘验证才是硬通货。和昨天的 <span class="wikilink">PolySwarm</span> 类似，都是 "agent 做金融" 但缺实盘。 🫠</li>
 </ul>
-<hr /></div><h2>📊 Benchmark &amp; 评测</h2><div class="paper-card" data-topic="📊 Benchmark &amp; 评测"><h3>8. Agentic-MME: What Agentic Capability Really Brings to Multimodal Intelligence?</h3>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2412.20138" target="_blank" rel="noopener">📖 AI 精读</a></div><h2>📊 Benchmark &amp; 评测</h2><div class="paper-card" data-topic="📊 Benchmark &amp; 评测"><h3>8. Agentic-MME: What Agentic Capability Really Brings to Multimodal Intelligence?</h3>
 <ul>
 <li><strong>作者</strong>: Qianshan Wei et al.</li>
 <li><strong>机构</strong>: CASIA, UCAS, SEU, NJU, PKU, BUAA, NTU, UCLA</li>
@@ -804,7 +804,7 @@
 <ul>
 <li><strong>核心方法</strong>: 评测 MLLM 作为 agent 时的能力——视觉扩展（调用视觉工具）和知识扩展（开放搜索）。现有评测的问题：缺乏灵活工具集成、视觉和搜索分开测、只看最终答案。Agentic-MME 解决这些问题，测了 <span class="wikilink">GPT-5</span> 等模型。</li>
 <li><strong>锐评</strong>: 又一个 benchmark。八家机构联合搞评测说明 MLLM agent 评估标准仍未统一。如果 GPT-5 的数据有亮点可能会火，否则就是又一篇 benchmark paper。 💤</li>
-</ul></div><div class="paper-card" data-topic="📊 Benchmark &amp; 评测"><h3>9. Combee: Scaling Prompt Learning for Self-Improving Language Model Agents</h3>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2604.03016" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="📊 Benchmark &amp; 评测"><h3>9. Combee: Scaling Prompt Learning for Self-Improving Language Model Agents</h3>
 <ul>
 <li><strong>作者</strong>: Hanchen Li et al.</li>
 <li><strong>机构</strong>: UC Berkeley, Stanford, Tensormesh, Gradient Network</li>
@@ -817,7 +817,7 @@
 <li><strong>借鉴意义</strong>: Prompt 自优化 + 多 agent 并行是一个实用方向。</li>
 <li><strong>锐评</strong>: Berkeley+Stanford 出品，但关键是 "scaling prompt learning" 相比直接 RL 训练有什么不可替代的优势？如果 SKILL0 的参数内化更有效，prompt learning 的天花板在哪？ 💤</li>
 </ul>
-<hr /></div></div>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2604.04247v1" target="_blank" rel="noopener">📖 AI 精读</a></div></div>
 <div id="panel-agent训练" class="tab-panel"><h2>🏋️ Agent 训练</h2><div class="paper-card" data-topic="🏋️ Agent 训练"><h3>1. SKILL0: In-Context Agentic Reinforcement Learning for Skill Internalization</h3>
 <ul>
 <li><strong>作者</strong>: Zhengxi Lu et al.</li>
@@ -984,7 +984,7 @@
 <li><strong>对比方法/Baselines</strong>: 推理时 skill augmentation（<span class="wikilink">EvolveR</span> 等）、标准 <span class="wikilink">SFT</span></li>
 <li><strong>借鉴意义</strong>: "从检索到内化" 的范式转变对任何依赖外部知识的 agent 系统都有参考价值。也可以类比 <span class="wikilink">RAG</span> vs 参数化记忆的讨论。</li>
 <li><strong>锐评</strong>: 今天最值得读的论文。"inference-time skill augmentation is fundamentally limited" 这个 claim 很大胆但有道理——你不能指望一个不会游泳的人拿着游泳教程就能游。86 个 upvote 说明社区买账。关键问题是：RL 训练的技能泛化能力如何？能否内化从未见过的新技能？ 🔥</li>
-</ul></div><div class="paper-card" data-topic="🏋️ Agent 训练"><h3>2. Agent Lightning: Train ANY AI Agents with Reinforcement Learning</h3>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2604.02268" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🏋️ Agent 训练"><h3>2. Agent Lightning: Train ANY AI Agents with Reinforcement Learning</h3>
 <ul>
 <li><strong>作者</strong>: Xufang Luo, Yuge Zhang et al.</li>
 <li><strong>机构</strong>: Microsoft Research</li>
@@ -1207,7 +1207,7 @@
 <li><strong>RL 训练框架</strong>: <span class="wikilink">VeRL</span></li>
 <li><strong>可观测性</strong>: <span class="wikilink">OpenTelemetry</span></li>
 <li><strong>评估基准</strong>: Spider (text-to-SQL), MuSiQue (multi-hop QA), Calc-X (math tool-use)</li>
-</ul></div></details></div><div class="paper-card" data-topic="🏋️ Agent 训练"><h3>3. GrandCode: Achieving Grandmaster Level in Competitive Programming via Agentic Reinforcement Learning</h3>
+</ul></div></details><a class="papers-cool-btn" href="https://papers.cool/arxiv/2508.03680" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🏋️ Agent 训练"><h3>3. GrandCode: Achieving Grandmaster Level in Competitive Programming via Agentic Reinforcement Learning</h3>
 <ul>
 <li><strong>作者</strong>: Xiaoya Li, Xiaofei Sun, Guoyin Wang</li>
 <li><strong>机构</strong>: DeepReinforce Team</li>
@@ -1389,7 +1389,7 @@
 <li><strong>借鉴意义</strong>: Multi-agent RL 在复杂推理任务中的分工协作模式值得参考。</li>
 <li><strong>锐评</strong>: "Grandmaster level" 的 claim 需要仔细看评测条件——是在 live competition 还是离线评测？33 upvote 说明关注度一般。不过 multi-agent 分工（规划+编码+调试）的设计思路比单 agent 暴力推理更接近人类工程师的工作方式。 👀</li>
 </ul>
-<hr /></div></div>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2604.02721" target="_blank" rel="noopener">📖 AI 精读</a></div></div>
 <div id="panel-llm训练与对齐" class="tab-panel"><h2>🧪 LLM 训练与对齐</h2><div class="paper-card" data-topic="🧪 LLM 训练与对齐"><h3>4. SODA: Semi On-Policy Black-Box Distillation for Large Language Models</h3>
 <ul>
 <li><strong>作者</strong>: Xiwen Chen</li>
@@ -1430,7 +1430,7 @@
 <li><strong>对比方法/Baselines</strong>: <span class="wikilink">SeqKD</span>, <span class="wikilink">GAD</span>, <span class="wikilink">DPO</span></li>
 <li><strong>借鉴意义</strong>: "Semi On-Policy" 的折中思路在 agent 训练中也适用——完全 on-policy 太贵，完全 off-policy 效果差。</li>
 <li><strong>锐评</strong>: 实际上是蒸馏领域一个很自然的想法——mixed policy。关键看实验是否扎实、和 <span class="wikilink">DPO</span> 系列方法的对比是否公平。多机构合作但论文日期是 2026-04-04，说明刚出来。 👀</li>
-</ul></div><div class="paper-card" data-topic="🧪 LLM 训练与对齐"><h3>5. Rethinking Exploration in RLVR: From Entropy Regularization to Refinement via Bidirectional Entropy Modulation</h3>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2604.03873v1" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🧪 LLM 训练与对齐"><h3>5. Rethinking Exploration in RLVR: From Entropy Regularization to Refinement via Bidirectional Entropy Modulation</h3>
 <ul>
 <li><strong>作者</strong>: Hengrui Gu, Xiaotian Han et al.</li>
 <li><strong>机构</strong>: NC State, Case Western Reserve University</li>
@@ -1444,7 +1444,7 @@
 <li><strong>借鉴意义</strong>: 对 <span class="wikilink">GRPO</span> 的改进，直接可用于 agent RL 训练。</li>
 <li><strong>锐评</strong>: "正确答案收敛、错误答案发散" 的非对称设计很优雅。MATH-500 上的提升如果显著的话这篇会火。但熵调制的超参数敏感性是个隐忧。 👀</li>
 </ul>
-<hr /></div></div>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2604.04894v1" target="_blank" rel="noopener">📖 AI 精读</a></div></div>
 <div id="panel-agent框架" class="tab-panel"><h2>🔧 Agent 框架</h2><div class="paper-card" data-topic="🔧 Agent 框架"><h3>6. AgentScope 1.0: A Developer-Centric Framework for Building Agentic Applications</h3>
 <ul>
 <li><strong>作者</strong>: Dawei Gao et al.</li>
@@ -1559,7 +1559,7 @@
 <li><span class="wikilink">ReAct</span>: 推理+行动范式</li>
 <li><span class="wikilink">LangChain</span>: 竞品框架</li>
 <li><span class="wikilink">AutoGen</span>: 微软 multi-agent 框架</li>
-</ul></div></details></div><div class="paper-card" data-topic="🔧 Agent 框架"><h3>7. TradingAgents: Multi-Agents LLM Financial Trading Framework</h3>
+</ul></div></details><a class="papers-cool-btn" href="https://papers.cool/arxiv/2508.16279" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🔧 Agent 框架"><h3>7. TradingAgents: Multi-Agents LLM Financial Trading Framework</h3>
 <ul>
 <li><strong>作者</strong>: Yijia Xiao et al.</li>
 <li><strong>机构</strong>: MIT, UCLA</li>
@@ -1572,7 +1572,7 @@
 </li>
 <li><strong>锐评</strong>: 2024 年 12 月的旧论文又上 trending。MIT+UCLA 的招牌让人点进来，但交易策略的实盘验证才是硬通货。和昨天的 <span class="wikilink">PolySwarm</span> 类似，都是 "agent 做金融" 但缺实盘。 🫠</li>
 </ul>
-<hr /></div></div>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2412.20138" target="_blank" rel="noopener">📖 AI 精读</a></div></div>
 <div id="panel-benchmark评测" class="tab-panel"><h2>📊 Benchmark &amp; 评测</h2><div class="paper-card" data-topic="📊 Benchmark &amp; 评测"><h3>8. Agentic-MME: What Agentic Capability Really Brings to Multimodal Intelligence?</h3>
 <ul>
 <li><strong>作者</strong>: Qianshan Wei et al.</li>
@@ -1584,7 +1584,7 @@
 <ul>
 <li><strong>核心方法</strong>: 评测 MLLM 作为 agent 时的能力——视觉扩展（调用视觉工具）和知识扩展（开放搜索）。现有评测的问题：缺乏灵活工具集成、视觉和搜索分开测、只看最终答案。Agentic-MME 解决这些问题，测了 <span class="wikilink">GPT-5</span> 等模型。</li>
 <li><strong>锐评</strong>: 又一个 benchmark。八家机构联合搞评测说明 MLLM agent 评估标准仍未统一。如果 GPT-5 的数据有亮点可能会火，否则就是又一篇 benchmark paper。 💤</li>
-</ul></div><div class="paper-card" data-topic="📊 Benchmark &amp; 评测"><h3>9. Combee: Scaling Prompt Learning for Self-Improving Language Model Agents</h3>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2604.03016" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="📊 Benchmark &amp; 评测"><h3>9. Combee: Scaling Prompt Learning for Self-Improving Language Model Agents</h3>
 <ul>
 <li><strong>作者</strong>: Hanchen Li et al.</li>
 <li><strong>机构</strong>: UC Berkeley, Stanford, Tensormesh, Gradient Network</li>
@@ -1597,7 +1597,7 @@
 <li><strong>借鉴意义</strong>: Prompt 自优化 + 多 agent 并行是一个实用方向。</li>
 <li><strong>锐评</strong>: Berkeley+Stanford 出品，但关键是 "scaling prompt learning" 相比直接 RL 训练有什么不可替代的优势？如果 SKILL0 的参数内化更有效，prompt learning 的天花板在哪？ 💤</li>
 </ul>
-<hr /></div></div>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2604.04247v1" target="_blank" rel="noopener">📖 AI 精读</a></div></div>
 <hr>
 <h2>被排除的论文</h2>
 <table>

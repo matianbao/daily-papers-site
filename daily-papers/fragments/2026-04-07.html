@@ -622,7 +622,7 @@ $$</div>
 <li><strong>对比方法/Baselines</strong>: 现有 MCP scanner、<span class="wikilink">GPT-4</span> 语义防护</li>
 <li><strong>借鉴意义</strong>: MCP 生态的安全问题终于有人系统性地搞了。10k 恶意工具的 benchmark 本身就很有价值。</li>
 <li><strong>锐评</strong>: 思路很实用——别在语义层防，在网络层抓。但 MITM 代理引入的延迟和隐私问题呢？论文说 "limited operational overhead" 但没给具体数字。另外恶意工具是合成的，和野外真实攻击的分布差距有多大？不过作为第一个系统性的 MCP 安全 benchmark，值得收藏。 👀</li>
-</ul></div><div class="paper-card" data-topic="🤖 Agent 框架与安全"><h3>2. HDP: A Lightweight Cryptographic Protocol for Human Delegation Provenance in Agentic AI Systems</h3>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2604.04426v1" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🤖 Agent 框架与安全"><h3>2. HDP: A Lightweight Cryptographic Protocol for Human Delegation Provenance in Agentic AI Systems</h3>
 <ul>
 <li><strong>作者</strong>: Dalugoda, Asiri</li>
 <li><strong>链接</strong>: <a href="https://arxiv.org/abs/2604.04522">arXiv</a> | <a href="https://arxiv.org/pdf/2604.04522">PDF</a></li>
@@ -985,7 +985,7 @@ $$</div>
 <li><strong>核心方法</strong>: 用密码学协议解决 agentic AI 的授权溯源问题——在多级 agent 委托链中验证终端动作是否由人类真正授权、经过什么委托路径、在什么范围内。类似给 agent 调用链加了一条加密审计追踪。</li>
 <li><strong>借鉴意义</strong>: 随着 <span class="wikilink">MCP</span> 和 <span class="wikilink">A2A</span> 生态扩展，agent 间的授权验证会越来越重要。</li>
 <li><strong>锐评</strong>: 问题很重要，但 HF 只有 1 个 upvote 说明社区还没意识到这事的紧迫性。等到出了大的安全事故大家就会回来找这篇了。 👀</li>
-</ul></div><div class="paper-card" data-topic="🤖 Agent 框架与安全"><h3>3. MetaChain: A Fully-Automated and Zero-Code Framework for LLM Agents</h3>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2604.04522" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🤖 Agent 框架与安全"><h3>3. MetaChain: A Fully-Automated and Zero-Code Framework for LLM Agents</h3>
 <ul>
 <li><strong>作者</strong>: Tang, Jiabin et al.</li>
 <li><strong>机构</strong>: The University of Hong Kong</li>
@@ -998,7 +998,7 @@ $$</div>
 </li>
 <li><strong>锐评</strong>: 这是 2025 年 2 月的论文又上了 trending。"只需自然语言就能造 agent" 的故事很有吸引力，但实际上 <span class="wikilink">LangChain</span>、<span class="wikilink">AutoGen</span> 早就在做类似的事。GAIA benchmark 的 SOTA 在 2026 年 4 月已经不太有说服力了。 🫠</li>
 </ul>
-<hr /></div><h2>🧠 Agent 记忆与推理</h2><div class="paper-card" data-topic="🧠 Agent 记忆与推理"><h3>4. Zep: A Temporal Knowledge Graph Architecture for Agent Memory</h3>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2502.05957" target="_blank" rel="noopener">📖 AI 精读</a></div><h2>🧠 Agent 记忆与推理</h2><div class="paper-card" data-topic="🧠 Agent 记忆与推理"><h3>4. Zep: A Temporal Knowledge Graph Architecture for Agent Memory</h3>
 <ul>
 <li><strong>作者</strong>: Preston Rasmussen, Pavlo Paliychuk (Zep AI)</li>
 <li><strong>链接</strong>: <a href="https://arxiv.org/abs/2501.13956">arXiv</a> | <a href="https://arxiv.org/pdf/2501.13956">PDF</a></li>
@@ -1029,7 +1029,7 @@ $$</div>
 <li><strong>借鉴意义</strong>: 和 <span class="wikilink">Mem0</span> 思路不同——Zep 走的是图谱路线而不是向量检索。对需要跨 session 信息整合的场景很有价值。</li>
 <li><strong>锐评</strong>: 2025 年 1 月的论文也在 trending。数据不错但 DMR benchmark 本身就是 MemGPT 团队搞的，1.4% 的提升说服力有限。LongMemEval 上 18.5% 的提升更有意思。不过 Zep 是商业产品，论文天然有 marketing 味道。 👀</li>
 </ul>
-<hr /></div><h2>🏋️ Agent 训练</h2><div class="paper-card" data-topic="🏋️ Agent 训练"><h3>5. SandMLE: Synthetic Sandbox for Training Machine Learning Engineering Agents</h3>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2501.13956" target="_blank" rel="noopener">📖 AI 精读</a></div><h2>🏋️ Agent 训练</h2><div class="paper-card" data-topic="🏋️ Agent 训练"><h3>5. SandMLE: Synthetic Sandbox for Training Machine Learning Engineering Agents</h3>
 <ul>
 <li><strong>作者</strong>: Yuhang Zhou, Lizhu Zhang et al.</li>
 <li><strong>机构</strong>: Meta AI</li>
@@ -1204,7 +1204,7 @@ $$</div>
 <li><strong>借鉴意义</strong>: 思路可以推广——任何 agent 训练瓶颈是环境执行成本时，都可以考虑合成微型环境。</li>
 <li><strong>锐评</strong>: 这是今天最值得读的论文。问题定义精准（MLE verification 太贵导致 on-policy RL 不可行），解决方案优雅（合成微型环境保留复杂性但降低成本 13x），实验扎实（Qwen3-8B/14B/30B 三个规模都验证了）。跨 scaffold 的泛化能力（HumanRank +32.4%）是真正的亮点。唯一遗憾是没测 Claude 或 GPT 系列。 🔥</li>
 </ul>
-<hr /></div><h2>🤝 Multi-Agent 系统</h2><div class="paper-card" data-topic="🤝 Multi-Agent 系统"><h3>6. PolySwarm: A Multi-Agent LLM Framework for Prediction Market Trading</h3>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2604.04872v1" target="_blank" rel="noopener">📖 AI 精读</a></div><h2>🤝 Multi-Agent 系统</h2><div class="paper-card" data-topic="🤝 Multi-Agent 系统"><h3>6. PolySwarm: A Multi-Agent LLM Framework for Prediction Market Trading</h3>
 <ul>
 <li><strong>作者</strong>: Rajat M. Barot, Arjun S. Borkhatariya</li>
 <li><strong>机构</strong>: SUNY Binghamton, Arizona State University</li>
@@ -1375,7 +1375,7 @@ $$</div>
 <li><strong>对比方法/Baselines</strong>: 单模型 baseline, human superforecaster</li>
 <li><strong>借鉴意义</strong>: "群体智慧" 思路在推荐系统的 ensemble 策略中也可借鉴。</li>
 <li><strong>锐评</strong>: 50 个 LLM persona 的想法很 bold。Bayesian 聚合优于单模型不奇怪——关键是 50 个 persona 的计算成本值不值得这个提升？论文只有评估方法论没有实盘结果，Polymarket 上实际跑一下再说。 👀</li>
-</ul></div><div class="paper-card" data-topic="🤝 Multi-Agent 系统"><h3>7. Rethinking Model Efficiency: Multi-Agent Inference with Large Models</h3>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2604.03888v1" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🤝 Multi-Agent 系统"><h3>7. Rethinking Model Efficiency: Multi-Agent Inference with Large Models</h3>
 <ul>
 <li><strong>作者</strong>: Dong, Sixun et al.</li>
 <li><strong>机构</strong>: University of Washington</li>
@@ -1559,7 +1559,7 @@ $$</div>
 <li><strong>核心方法</strong>: 核心发现——大模型用更少的 output token 可能比小模型用长序列更快。提出 multi-agent inference 框架：大模型出短回答，必要时从小模型转移关键推理 token。</li>
 <li><strong>借鉴意义</strong>: 对 VLM 部署的延迟优化有直接参考价值。</li>
 <li><strong>锐评</strong>: 观察很有意思但不算新——"大模型更高效因为废话少" 这个 intuition 很多人都有。贡献在于系统性地量化了这个现象并给出了一个可用的框架。 👀</li>
-</ul></div><div class="paper-card" data-topic="🤝 Multi-Agent 系统"><h3>8. Optimizing Service Operations via LLM-Powered Multi-Agent Simulation</h3>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2604.04929v1" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🤝 Multi-Agent 系统"><h3>8. Optimizing Service Operations via LLM-Powered Multi-Agent Simulation</h3>
 <ul>
 <li><strong>作者</strong>: Wang, Yanyuan, Zhang, Xiaowei</li>
 <li><strong>机构</strong>: HKUST</li>
@@ -1572,7 +1572,7 @@ $$</div>
 </li>
 <li><strong>锐评</strong>: 形式化做得漂亮，但 "用 LLM 模拟人类行为" 的假设本身就很脆弱。LLM 的行为分布和真实人类差多少？论文用了真实行为数据做 case study，但没有正面回答这个根本问题。 💤</li>
 </ul>
-<hr /></div><h2>🔧 LLM 效率与工具</h2><div class="paper-card" data-topic="🔧 LLM 效率与工具"><h3>9. SLaB: Sparse-Lowrank-Binary Decomposition for Efficient LLMs</h3>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2604.04383v1" target="_blank" rel="noopener">📖 AI 精读</a></div><h2>🔧 LLM 效率与工具</h2><div class="paper-card" data-topic="🔧 LLM 效率与工具"><h3>9. SLaB: Sparse-Lowrank-Binary Decomposition for Efficient LLMs</h3>
 <ul>
 <li><strong>作者</strong>: Ziwei Li, Yuang Ma, Yi Kang</li>
 <li><strong>机构</strong>: USTC</li>
@@ -2155,7 +2155,7 @@ $$</div>
 <li><strong>对比方法/Baselines</strong>: <span class="wikilink">SparseGPT</span>, Wanda, <span class="wikilink">SVD</span>-based methods</li>
 <li><strong>借鉴意义</strong>: 三路分解的思路比单纯剪枝或低秩更灵活。</li>
 <li><strong>锐评</strong>: 方法简洁有效，50% 压缩率下大幅超过现有方法。但只在 Llama 系列上测了，没测 Qwen 或 Mistral。而且 "不需要重训练" 的 claim 在高压缩率下是否还成立需要验证。总体是一篇扎实的工程论文。 👀</li>
-</ul></div><div class="paper-card" data-topic="🔧 LLM 效率与工具"><h3>10. ENCRUST: Agentic C-to-Rust Translation</h3>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2604.04493v1" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🔧 LLM 效率与工具"><h3>10. ENCRUST: Agentic C-to-Rust Translation</h3>
 <ul>
 <li><strong>作者</strong>: HoHyun Sim et al.</li>
 <li><strong>机构</strong>: Korea University, Virginia Tech, University of Houston</li>
@@ -2356,7 +2356,7 @@ $$</div>
 <li><strong>核心方法</strong>: 两阶段 C-to-Rust 翻译：Phase 1 用 ABI-preserving wrapper 逐函数翻译（失败自动回滚），Phase 2 用 LLM agent 处理全局 unsafe 构造（static mut、跨单元类型不匹配）。在 7 个 GNU Coreutils + 8 个 Laertes 库上验证。</li>
 <li><strong>锐评</strong>: 解耦 "边界适配" 和 "函数逻辑" 的设计很聪明。ABI wrapper + 自动回滚保证了翻译过程不会破坏现有代码。不过 unsafe construct 的消除率没公布具体数字，只说 "substantial reduction"，有点模糊。 💤</li>
 </ul>
-<hr /></div></div>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2604.04527v1" target="_blank" rel="noopener">📖 AI 精读</a></div></div>
 <div id="panel-agent框架与安全" class="tab-panel"><h2>🤖 Agent 框架与安全</h2><div class="paper-card" data-topic="🤖 Agent 框架与安全"><h3>1. ShieldNet: Network-Level Guardrails against Emerging Supply-Chain Injections in Agentic Systems</h3>
 <ul>
 <li><strong>作者</strong>: Zhuowen Yuan et al.</li>
@@ -2954,7 +2954,7 @@ $$</div>
 <li><strong>对比方法/Baselines</strong>: 现有 MCP scanner、<span class="wikilink">GPT-4</span> 语义防护</li>
 <li><strong>借鉴意义</strong>: MCP 生态的安全问题终于有人系统性地搞了。10k 恶意工具的 benchmark 本身就很有价值。</li>
 <li><strong>锐评</strong>: 思路很实用——别在语义层防，在网络层抓。但 MITM 代理引入的延迟和隐私问题呢？论文说 "limited operational overhead" 但没给具体数字。另外恶意工具是合成的，和野外真实攻击的分布差距有多大？不过作为第一个系统性的 MCP 安全 benchmark，值得收藏。 👀</li>
-</ul></div><div class="paper-card" data-topic="🤖 Agent 框架与安全"><h3>2. HDP: A Lightweight Cryptographic Protocol for Human Delegation Provenance in Agentic AI Systems</h3>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2604.04426v1" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🤖 Agent 框架与安全"><h3>2. HDP: A Lightweight Cryptographic Protocol for Human Delegation Provenance in Agentic AI Systems</h3>
 <ul>
 <li><strong>作者</strong>: Dalugoda, Asiri</li>
 <li><strong>链接</strong>: <a href="https://arxiv.org/abs/2604.04522">arXiv</a> | <a href="https://arxiv.org/pdf/2604.04522">PDF</a></li>
@@ -3317,7 +3317,7 @@ $$</div>
 <li><strong>核心方法</strong>: 用密码学协议解决 agentic AI 的授权溯源问题——在多级 agent 委托链中验证终端动作是否由人类真正授权、经过什么委托路径、在什么范围内。类似给 agent 调用链加了一条加密审计追踪。</li>
 <li><strong>借鉴意义</strong>: 随着 <span class="wikilink">MCP</span> 和 <span class="wikilink">A2A</span> 生态扩展，agent 间的授权验证会越来越重要。</li>
 <li><strong>锐评</strong>: 问题很重要，但 HF 只有 1 个 upvote 说明社区还没意识到这事的紧迫性。等到出了大的安全事故大家就会回来找这篇了。 👀</li>
-</ul></div><div class="paper-card" data-topic="🤖 Agent 框架与安全"><h3>3. MetaChain: A Fully-Automated and Zero-Code Framework for LLM Agents</h3>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2604.04522" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🤖 Agent 框架与安全"><h3>3. MetaChain: A Fully-Automated and Zero-Code Framework for LLM Agents</h3>
 <ul>
 <li><strong>作者</strong>: Tang, Jiabin et al.</li>
 <li><strong>机构</strong>: The University of Hong Kong</li>
@@ -3330,7 +3330,7 @@ $$</div>
 </li>
 <li><strong>锐评</strong>: 这是 2025 年 2 月的论文又上了 trending。"只需自然语言就能造 agent" 的故事很有吸引力，但实际上 <span class="wikilink">LangChain</span>、<span class="wikilink">AutoGen</span> 早就在做类似的事。GAIA benchmark 的 SOTA 在 2026 年 4 月已经不太有说服力了。 🫠</li>
 </ul>
-<hr /></div></div>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2502.05957" target="_blank" rel="noopener">📖 AI 精读</a></div></div>
 <div id="panel-agent记忆与推理" class="tab-panel"><h2>🧠 Agent 记忆与推理</h2><div class="paper-card" data-topic="🧠 Agent 记忆与推理"><h3>4. Zep: A Temporal Knowledge Graph Architecture for Agent Memory</h3>
 <ul>
 <li><strong>作者</strong>: Preston Rasmussen, Pavlo Paliychuk (Zep AI)</li>
@@ -3362,7 +3362,7 @@ $$</div>
 <li><strong>借鉴意义</strong>: 和 <span class="wikilink">Mem0</span> 思路不同——Zep 走的是图谱路线而不是向量检索。对需要跨 session 信息整合的场景很有价值。</li>
 <li><strong>锐评</strong>: 2025 年 1 月的论文也在 trending。数据不错但 DMR benchmark 本身就是 MemGPT 团队搞的，1.4% 的提升说服力有限。LongMemEval 上 18.5% 的提升更有意思。不过 Zep 是商业产品，论文天然有 marketing 味道。 👀</li>
 </ul>
-<hr /></div></div>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2501.13956" target="_blank" rel="noopener">📖 AI 精读</a></div></div>
 <div id="panel-agent训练" class="tab-panel"><h2>🏋️ Agent 训练</h2><div class="paper-card" data-topic="🏋️ Agent 训练"><h3>5. SandMLE: Synthetic Sandbox for Training Machine Learning Engineering Agents</h3>
 <ul>
 <li><strong>作者</strong>: Yuhang Zhou, Lizhu Zhang et al.</li>
@@ -3538,7 +3538,7 @@ $$</div>
 <li><strong>借鉴意义</strong>: 思路可以推广——任何 agent 训练瓶颈是环境执行成本时，都可以考虑合成微型环境。</li>
 <li><strong>锐评</strong>: 这是今天最值得读的论文。问题定义精准（MLE verification 太贵导致 on-policy RL 不可行），解决方案优雅（合成微型环境保留复杂性但降低成本 13x），实验扎实（Qwen3-8B/14B/30B 三个规模都验证了）。跨 scaffold 的泛化能力（HumanRank +32.4%）是真正的亮点。唯一遗憾是没测 Claude 或 GPT 系列。 🔥</li>
 </ul>
-<hr /></div></div>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2604.04872v1" target="_blank" rel="noopener">📖 AI 精读</a></div></div>
 <div id="panel-multiagent系统" class="tab-panel"><h2>🤝 Multi-Agent 系统</h2><div class="paper-card" data-topic="🤝 Multi-Agent 系统"><h3>6. PolySwarm: A Multi-Agent LLM Framework for Prediction Market Trading</h3>
 <ul>
 <li><strong>作者</strong>: Rajat M. Barot, Arjun S. Borkhatariya</li>
@@ -3710,7 +3710,7 @@ $$</div>
 <li><strong>对比方法/Baselines</strong>: 单模型 baseline, human superforecaster</li>
 <li><strong>借鉴意义</strong>: "群体智慧" 思路在推荐系统的 ensemble 策略中也可借鉴。</li>
 <li><strong>锐评</strong>: 50 个 LLM persona 的想法很 bold。Bayesian 聚合优于单模型不奇怪——关键是 50 个 persona 的计算成本值不值得这个提升？论文只有评估方法论没有实盘结果，Polymarket 上实际跑一下再说。 👀</li>
-</ul></div><div class="paper-card" data-topic="🤝 Multi-Agent 系统"><h3>7. Rethinking Model Efficiency: Multi-Agent Inference with Large Models</h3>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2604.03888v1" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🤝 Multi-Agent 系统"><h3>7. Rethinking Model Efficiency: Multi-Agent Inference with Large Models</h3>
 <ul>
 <li><strong>作者</strong>: Dong, Sixun et al.</li>
 <li><strong>机构</strong>: University of Washington</li>
@@ -3894,7 +3894,7 @@ $$</div>
 <li><strong>核心方法</strong>: 核心发现——大模型用更少的 output token 可能比小模型用长序列更快。提出 multi-agent inference 框架：大模型出短回答，必要时从小模型转移关键推理 token。</li>
 <li><strong>借鉴意义</strong>: 对 VLM 部署的延迟优化有直接参考价值。</li>
 <li><strong>锐评</strong>: 观察很有意思但不算新——"大模型更高效因为废话少" 这个 intuition 很多人都有。贡献在于系统性地量化了这个现象并给出了一个可用的框架。 👀</li>
-</ul></div><div class="paper-card" data-topic="🤝 Multi-Agent 系统"><h3>8. Optimizing Service Operations via LLM-Powered Multi-Agent Simulation</h3>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2604.04929v1" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🤝 Multi-Agent 系统"><h3>8. Optimizing Service Operations via LLM-Powered Multi-Agent Simulation</h3>
 <ul>
 <li><strong>作者</strong>: Wang, Yanyuan, Zhang, Xiaowei</li>
 <li><strong>机构</strong>: HKUST</li>
@@ -3907,7 +3907,7 @@ $$</div>
 </li>
 <li><strong>锐评</strong>: 形式化做得漂亮，但 "用 LLM 模拟人类行为" 的假设本身就很脆弱。LLM 的行为分布和真实人类差多少？论文用了真实行为数据做 case study，但没有正面回答这个根本问题。 💤</li>
 </ul>
-<hr /></div></div>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2604.04383v1" target="_blank" rel="noopener">📖 AI 精读</a></div></div>
 <div id="panel-llm效率与工具" class="tab-panel"><h2>🔧 LLM 效率与工具</h2><div class="paper-card" data-topic="🔧 LLM 效率与工具"><h3>9. SLaB: Sparse-Lowrank-Binary Decomposition for Efficient LLMs</h3>
 <ul>
 <li><strong>作者</strong>: Ziwei Li, Yuang Ma, Yi Kang</li>
@@ -4491,7 +4491,7 @@ $$</div>
 <li><strong>对比方法/Baselines</strong>: <span class="wikilink">SparseGPT</span>, Wanda, <span class="wikilink">SVD</span>-based methods</li>
 <li><strong>借鉴意义</strong>: 三路分解的思路比单纯剪枝或低秩更灵活。</li>
 <li><strong>锐评</strong>: 方法简洁有效，50% 压缩率下大幅超过现有方法。但只在 Llama 系列上测了，没测 Qwen 或 Mistral。而且 "不需要重训练" 的 claim 在高压缩率下是否还成立需要验证。总体是一篇扎实的工程论文。 👀</li>
-</ul></div><div class="paper-card" data-topic="🔧 LLM 效率与工具"><h3>10. ENCRUST: Agentic C-to-Rust Translation</h3>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2604.04493v1" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🔧 LLM 效率与工具"><h3>10. ENCRUST: Agentic C-to-Rust Translation</h3>
 <ul>
 <li><strong>作者</strong>: HoHyun Sim et al.</li>
 <li><strong>机构</strong>: Korea University, Virginia Tech, University of Houston</li>
@@ -4692,7 +4692,7 @@ $$</div>
 <li><strong>核心方法</strong>: 两阶段 C-to-Rust 翻译：Phase 1 用 ABI-preserving wrapper 逐函数翻译（失败自动回滚），Phase 2 用 LLM agent 处理全局 unsafe 构造（static mut、跨单元类型不匹配）。在 7 个 GNU Coreutils + 8 个 Laertes 库上验证。</li>
 <li><strong>锐评</strong>: 解耦 "边界适配" 和 "函数逻辑" 的设计很聪明。ABI wrapper + 自动回滚保证了翻译过程不会破坏现有代码。不过 unsafe construct 的消除率没公布具体数字，只说 "substantial reduction"，有点模糊。 💤</li>
 </ul>
-<hr /></div></div>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2604.04527v1" target="_blank" rel="noopener">📖 AI 精读</a></div></div>
 <hr>
 <h2>被排除的论文</h2>
 <table>

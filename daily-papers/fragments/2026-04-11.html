@@ -37,7 +37,7 @@
 <li><strong>对比方法/Baselines</strong>: 标准KV cache、<span class="wikilink">GQA</span>、量化KV、<span class="wikilink">StreamingLLM</span></li>
 <li><strong>借鉴意义</strong>: KV cache是长序列推理的核心瓶颈。8:1无损压缩直接将可处理上下文长度提升8倍，对部署成本影响巨大。</li>
 <li><strong>锐评</strong>: 98个upvote。用三角函数压KV cache是优雅的数学直觉——RoPE本身就是旋转变换，用三角基做压缩是自然的延伸。8:1压缩比如果真的无损，这是今年最实用的效率改进之一。但'几乎无损'的定义很关键——在长文本生成和多跳推理上的降级需要更细致的ablation。 🔥</li>
-</ul></div><div class="paper-card" data-topic="🔬 LLM 训练与架构"><h3>2. Rethinking Generalization in Reasoning SFT: A Conditional Analysis on Optimization, Data, and Model Capability</h3>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2604.04921" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🔬 LLM 训练与架构"><h3>2. Rethinking Generalization in Reasoning SFT: A Conditional Analysis on Optimization, Data, and Model Capability</h3>
 <ul>
 <li><strong>作者</strong>: Ren, Qihan, Wang, Peng, Cai, Ruikun, Shao, Shuai, Guo, Dadi, Xie, Yuejin, Li, Yafu, Zhang, Quanshi, Hu, Xia, Shao, Jing, Liu, Dongrui</li>
 <li><strong>机构</strong>: Shanghai Artificial Intelligence Laboratory, Shanghai Jiao Tong University, University of Science and Technology of China</li>
@@ -51,7 +51,7 @@
 <li><strong>对比方法/Baselines</strong>: 标准SFT、<span class="wikilink">GRPO</span>、<span class="wikilink">RLVR</span></li>
 <li><strong>借鉴意义</strong>: 直接回答了'SFT到底能不能教会模型推理'这个根本问题。条件复杂度框架为SFT vs RL的选择提供了理论依据。</li>
 <li><strong>锐评</strong>: 160个upvote说明社区很渴望这类基础性实验分析。条件复杂度假说解释了一个广泛观察到的现象：SFT在简单任务上泛化良好，但在复杂推理上完全失败。这为'什么时候用SFT、什么时候必须用RL'提供了清晰的判断标准。但'条件复杂度'本身怎么测量？如果没有可操作的度量方法，这个理论框架的实用价值就打折扣。 🔥</li>
-</ul></div><div class="paper-card" data-topic="🔬 LLM 训练与架构"><h3>3. DFlash: Block Diffusion for Flash Speculative Decoding</h3>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2604.06628" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🔬 LLM 训练与架构"><h3>3. DFlash: Block Diffusion for Flash Speculative Decoding</h3>
 <ul>
 <li><strong>作者</strong>: Jian Chen, Yesheng Liang, Zhijian Liu</li>
 <li><strong>链接</strong>: <a href="https://arxiv.org/abs/2602.06036">arXiv</a> | <a href="https://arxiv.org/pdf/2602.06036">PDF</a></li>
@@ -64,7 +64,7 @@
 <li><strong>对比方法/Baselines</strong>: <span class="wikilink">EAGLE-3</span>、Medusa、标准自回归解码</li>
 <li><strong>借鉴意义</strong>: 扩散LLM的解码加速是实用化的关键一步。投机解码思路的跨范式迁移值得关注。</li>
 <li><strong>锐评</strong>: 46个upvote。把投机解码从自回归迁移到扩散模型，思路简洁。但2-3x加速相比自回归投机解码的改进并不突出（EAGLE-3在自回归上也能做到类似加速）。关键问题是扩散LLM本身的生成质量是否已经追上自回归模型。 👀</li>
-</ul></div><div class="paper-card" data-topic="🔬 LLM 训练与架构"><h3>4. QaRL: Rollout-Aligned Quantization-Aware RL for Fast and Stable Training under Training--Inference Mismatch</h3>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2602.06036" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🔬 LLM 训练与架构"><h3>4. QaRL: Rollout-Aligned Quantization-Aware RL for Fast and Stable Training under Training--Inference Mismatch</h3>
 <ul>
 <li><strong>作者</strong>: Hao Gu1</li>
 <li><strong>机构</strong>: 3Zhejiang University, 2City University of Hong Kong, 1The Hong Kong University of Science and Technology</li>
@@ -78,7 +78,7 @@
 <li><strong>借鉴意义</strong>: RL训练的模型最终要部署在量化环境中。训练时就考虑量化约束比训后量化更合理。</li>
 <li><strong>锐评</strong>: 量化和RL的交叉点，解决了一个实际工程问题：GRPO训好的模型量化后性能降多少？如果在训练时就引入量化约束，降级能控制在什么范围？思路正确但arxiv得分只有2，说明实验说服力可能不够。 👀</li>
 </ul>
-<hr /></div><h2>🤖 Agent 框架</h2><div class="paper-card" data-topic="🤖 Agent 框架"><h3>5. AgentScope 1.0: A Developer-Centric Framework for Building Agentic</h3>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2604.07853v1" target="_blank" rel="noopener">📖 AI 精读</a></div><h2>🤖 Agent 框架</h2><div class="paper-card" data-topic="🤖 Agent 框架"><h3>5. AgentScope 1.0: A Developer-Centric Framework for Building Agentic</h3>
 <p>Applications
 - <strong>作者</strong>: Gao, Dawei, Li, Zitao, Xie, Yuexiang, Kuang, Weirui, Yao, Liuyi, Qian, Bingchen, Ma, Zhijian, Cui, Yue, Luo, Haohao, Li, Shen, Yi, Lu, Yu, Yi, He, Shiqi, Luo, Zhiling, Zhou, Wenmeng, Zhang, Zhicheng, He, Xuguang, Chen, Ziqian, Liao, Weikai, Kushnazarov, Farruh Isakulovich, Li, Yaliang, Ding, Bolin, Zhou, Jingren
 - <strong>机构</strong>: Alibaba Group
@@ -198,7 +198,7 @@
 <div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2508.16279v1/x1.png" /></div>
 <ul>
 <li><strong>锐评</strong>: 61个upvote的1.0版本。AgentScope做了agent框架该做的所有工程活——<span class="wikilink">MCP</span>集成、分布式部署、可视化监控。和LangChain相比更注重多agent协调。作为框架论文，技术创新有限但工程完成度高。已有笔记覆盖核心架构。 👀</li>
-</ul></div><div class="paper-card" data-topic="🤖 Agent 框架"><h3>6. The AI Scientist-v2: Workshop-Level Automated Scientific Discovery via</h3>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2508.16279" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🤖 Agent 框架"><h3>6. The AI Scientist-v2: Workshop-Level Automated Scientific Discovery via</h3>
 <p>Agentic Tree Search
 - <strong>作者</strong>: Yamada, Yutaro, Lange, Robert Tjarko, Lu, Cong, Hu, Shengran, Lu, Chris, Foerster, Jakob, Clune, Jeff, Ha, David
 - <strong>机构</strong>: FLAIR, University of Oxford, University of British Columbia, Vector Institute
@@ -210,7 +210,7 @@
 <li><strong>借鉴意义</strong>: 如果自动生成的论文能过同行评审，这对学术生态的冲击是根本性的。但workshop level和top venue level差距巨大。</li>
 <li><strong>锐评</strong>: 22个upvote。'自动写论文拿oral'是个很好的标题——但workshop oral的bar和ICML oral的bar差了好几个数量级。更值得关注的是它暴露的问题：自动生成的论文是否只是在重组已有知识？能不能产生genuinely novel的insight？目前看不到。 👀
   Agentic Tree Search`</li>
-</ul></div><div class="paper-card" data-topic="🤖 Agent 框架"><h3>7. TradingAgents: Multi-Agents LLM Financial Trading Framework</h3>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2504.08066" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🤖 Agent 框架"><h3>7. TradingAgents: Multi-Agents LLM Financial Trading Framework</h3>
 <ul>
 <li><strong>作者</strong>: Xiao, Yijia, Sun, Edward, Luo, Di, Wang, Wei</li>
 <li><strong>机构</strong>: Massachusetts Institute of Technology (MIT), University of California, Los Angeles (UCLA)</li>
@@ -674,7 +674,7 @@ $$</div>
 <li><strong>对比方法/Baselines</strong>: 单agent交易、传统量化策略</li>
 <li><strong>借鉴意义</strong>: 金融领域是multi-agent的天然应用场景——不同角色处理不同信息源。但回测=/=实盘。</li>
 <li><strong>锐评</strong>: 41个upvote。用multi-agent炒股的想法不新，但角色分工的设计还算合理。核心问题：回测period多长？有没有包含2022年这种极端下跌行情？如果只在牛市回测，任何策略都能赚钱。另外交易频率和手续费的影响完全没提。 👀</li>
-</ul></div><div class="paper-card" data-topic="🤖 Agent 框架"><h3>8. Agent READMEs: An Empirical Study of Context Files for Agentic Coding</h3>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2412.20138" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🤖 Agent 框架"><h3>8. Agent READMEs: An Empirical Study of Context Files for Agentic Coding</h3>
 <ul>
 <li><strong>作者</strong>: Worawalan Chatlatanagulchai, Hao Li, Yutaro Kashiwa, Brittany Reid, Kundjanasith Thonglek, Pattara Leelaprute, Arnon Rungsawang, Bundit Manaskasemsak, Bram Adams, Ahmed E. Hassan, Hajimu Iida</li>
 <li><strong>机构</strong>: Queen’s University, yutaro.kashiwa@is.naist.jp
@@ -1339,7 +1339,7 @@ $$</div>
 <li><strong>借鉴意义</strong>: Agent coding正在成为主流开发模式。理解上下文文件的最佳实践对提升agent coding效率有直接价值。</li>
 <li><strong>锐评</strong>: 28个upvote。务实的实证研究。Agent coding的context file生态正在野蛮生长，有人做系统分析是好事。但如果只是描述性统计（'多少repo有CLAUDE.md'），缺乏因果分析（'有vs没有context file对代码质量的影响'），价值就有限。 👀</li>
 </ul>
-<hr /></div><h2>🔍 检索与RAG</h2><div class="paper-card" data-topic="🔍 检索与RAG"><h3>9. VRAG-RL: Empower Vision-Perception-Based RAG for Visually Rich Information Understanding via Iterative Reasoning with Reinforcement Learning</h3>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2511.12884" target="_blank" rel="noopener">📖 AI 精读</a></div><h2>🔍 检索与RAG</h2><div class="paper-card" data-topic="🔍 检索与RAG"><h3>9. VRAG-RL: Empower Vision-Perception-Based RAG for Visually Rich Information Understanding via Iterative Reasoning with Reinforcement Learning</h3>
 <ul>
 <li><strong>作者</strong>: Wang, Qiuchen, Ding, Ruixue, Zeng, Yu, Chen, Zehui, Chen, Lin, Wang, Shihang, Xie, Pengjun, Huang, Fei, Zhao, Feng</li>
 <li><strong>机构</strong>: Tongyi Lab, Alibaba Group</li>
@@ -1354,7 +1354,7 @@ $$</div>
 <li><strong>借鉴意义</strong>: 视觉富文本是RAG的重要场景（财报、论文、发票），用RL优化检索决策比规则触发更灵活。</li>
 <li><strong>锐评</strong>: 12个upvote。方向正确——视觉文档的RAG需要模型理解'何时看图、何时读文'。但RL训练的reward设计是关键：检索决策的ground truth怎么定义？如果靠最终答案的correctness做reward，信号太稀疏。 👀</li>
 </ul>
-<hr /></div><h2>🧠 推理与记忆</h2><div class="paper-card" data-topic="🧠 推理与记忆"><h3>10. A Decomposition Perspective to Long-context Reasoning for LLMs</h3>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2505.22019" target="_blank" rel="noopener">📖 AI 精读</a></div><h2>🧠 推理与记忆</h2><div class="paper-card" data-topic="🧠 推理与记忆"><h3>10. A Decomposition Perspective to Long-context Reasoning for LLMs</h3>
 <ul>
 <li><strong>作者</strong>: Yanling Xiao, Huaibing Xie, Guoliang Zhao, Shihan Dou, Shaolei Wang, Yiting Liu, Nantao Zheng, Cheng Zhang, Pluto Zhou, Zhisong Zhang, Lemao Liu</li>
 <li><strong>链接</strong>: <a href="http://arxiv.org/abs/2604.07981v1">arXiv</a> | <a href="https://arxiv.org/pdf/2604.07981v1">PDF</a></li>
@@ -1368,7 +1368,7 @@ $$</div>
 <li><strong>借鉴意义</strong>: 如果长上下文推理真的可以被有效分解，那昂贵的长上下文训练可能没有必要。</li>
 <li><strong>锐评</strong>: 思路有意思——与其让模型处理128K上下文，不如把问题拆成多个4K子问题。但分解本身需要理解全局结构，这不是又回到了原始问题吗？除非分解策略本身不需要长上下文。实验需要证明分解的成本低于直接处理长上下文。 👀</li>
 </ul>
-<hr /></div></div>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2604.07981v1" target="_blank" rel="noopener">📖 AI 精读</a></div></div>
 <div id="panel-llm训练与架构" class="tab-panel"><h2>🔬 LLM 训练与架构</h2><div class="paper-card" data-topic="🔬 LLM 训练与架构"><h3>1. TriAttention: Efficient Long Reasoning with Trigonometric KV Compression</h3>
 <ul>
 <li><strong>作者</strong>: Weian Mao 1∗, Xi Lin 3∗, Wei Huang 2∗, Yuxin Xie, Tianfu Fu 1, Bohan Zhuang 3, Song Han 1 2, Yukang Chen 2</li>
@@ -1381,7 +1381,7 @@ $$</div>
 <li><strong>对比方法/Baselines</strong>: 标准KV cache、<span class="wikilink">GQA</span>、量化KV、<span class="wikilink">StreamingLLM</span></li>
 <li><strong>借鉴意义</strong>: KV cache是长序列推理的核心瓶颈。8:1无损压缩直接将可处理上下文长度提升8倍，对部署成本影响巨大。</li>
 <li><strong>锐评</strong>: 98个upvote。用三角函数压KV cache是优雅的数学直觉——RoPE本身就是旋转变换，用三角基做压缩是自然的延伸。8:1压缩比如果真的无损，这是今年最实用的效率改进之一。但'几乎无损'的定义很关键——在长文本生成和多跳推理上的降级需要更细致的ablation。 🔥</li>
-</ul></div><div class="paper-card" data-topic="🔬 LLM 训练与架构"><h3>2. Rethinking Generalization in Reasoning SFT: A Conditional Analysis on Optimization, Data, and Model Capability</h3>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2604.04921" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🔬 LLM 训练与架构"><h3>2. Rethinking Generalization in Reasoning SFT: A Conditional Analysis on Optimization, Data, and Model Capability</h3>
 <ul>
 <li><strong>作者</strong>: Ren, Qihan, Wang, Peng, Cai, Ruikun, Shao, Shuai, Guo, Dadi, Xie, Yuejin, Li, Yafu, Zhang, Quanshi, Hu, Xia, Shao, Jing, Liu, Dongrui</li>
 <li><strong>机构</strong>: Shanghai Artificial Intelligence Laboratory, Shanghai Jiao Tong University, University of Science and Technology of China</li>
@@ -1395,7 +1395,7 @@ $$</div>
 <li><strong>对比方法/Baselines</strong>: 标准SFT、<span class="wikilink">GRPO</span>、<span class="wikilink">RLVR</span></li>
 <li><strong>借鉴意义</strong>: 直接回答了'SFT到底能不能教会模型推理'这个根本问题。条件复杂度框架为SFT vs RL的选择提供了理论依据。</li>
 <li><strong>锐评</strong>: 160个upvote说明社区很渴望这类基础性实验分析。条件复杂度假说解释了一个广泛观察到的现象：SFT在简单任务上泛化良好，但在复杂推理上完全失败。这为'什么时候用SFT、什么时候必须用RL'提供了清晰的判断标准。但'条件复杂度'本身怎么测量？如果没有可操作的度量方法，这个理论框架的实用价值就打折扣。 🔥</li>
-</ul></div><div class="paper-card" data-topic="🔬 LLM 训练与架构"><h3>3. DFlash: Block Diffusion for Flash Speculative Decoding</h3>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2604.06628" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🔬 LLM 训练与架构"><h3>3. DFlash: Block Diffusion for Flash Speculative Decoding</h3>
 <ul>
 <li><strong>作者</strong>: Jian Chen, Yesheng Liang, Zhijian Liu</li>
 <li><strong>链接</strong>: <a href="https://arxiv.org/abs/2602.06036">arXiv</a> | <a href="https://arxiv.org/pdf/2602.06036">PDF</a></li>
@@ -1408,7 +1408,7 @@ $$</div>
 <li><strong>对比方法/Baselines</strong>: <span class="wikilink">EAGLE-3</span>、Medusa、标准自回归解码</li>
 <li><strong>借鉴意义</strong>: 扩散LLM的解码加速是实用化的关键一步。投机解码思路的跨范式迁移值得关注。</li>
 <li><strong>锐评</strong>: 46个upvote。把投机解码从自回归迁移到扩散模型，思路简洁。但2-3x加速相比自回归投机解码的改进并不突出（EAGLE-3在自回归上也能做到类似加速）。关键问题是扩散LLM本身的生成质量是否已经追上自回归模型。 👀</li>
-</ul></div><div class="paper-card" data-topic="🔬 LLM 训练与架构"><h3>4. QaRL: Rollout-Aligned Quantization-Aware RL for Fast and Stable Training under Training--Inference Mismatch</h3>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2602.06036" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🔬 LLM 训练与架构"><h3>4. QaRL: Rollout-Aligned Quantization-Aware RL for Fast and Stable Training under Training--Inference Mismatch</h3>
 <ul>
 <li><strong>作者</strong>: Hao Gu1</li>
 <li><strong>机构</strong>: 3Zhejiang University, 2City University of Hong Kong, 1The Hong Kong University of Science and Technology</li>
@@ -1422,7 +1422,7 @@ $$</div>
 <li><strong>借鉴意义</strong>: RL训练的模型最终要部署在量化环境中。训练时就考虑量化约束比训后量化更合理。</li>
 <li><strong>锐评</strong>: 量化和RL的交叉点，解决了一个实际工程问题：GRPO训好的模型量化后性能降多少？如果在训练时就引入量化约束，降级能控制在什么范围？思路正确但arxiv得分只有2，说明实验说服力可能不够。 👀</li>
 </ul>
-<hr /></div></div>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2604.07853v1" target="_blank" rel="noopener">📖 AI 精读</a></div></div>
 <div id="panel-agent框架" class="tab-panel"><h2>🤖 Agent 框架</h2><div class="paper-card" data-topic="🤖 Agent 框架"><h3>5. AgentScope 1.0: A Developer-Centric Framework for Building Agentic</h3>
 <p>Applications
 - <strong>作者</strong>: Gao, Dawei, Li, Zitao, Xie, Yuexiang, Kuang, Weirui, Yao, Liuyi, Qian, Bingchen, Ma, Zhijian, Cui, Yue, Luo, Haohao, Li, Shen, Yi, Lu, Yu, Yi, He, Shiqi, Luo, Zhiling, Zhou, Wenmeng, Zhang, Zhicheng, He, Xuguang, Chen, Ziqian, Liao, Weikai, Kushnazarov, Farruh Isakulovich, Li, Yaliang, Ding, Bolin, Zhou, Jingren
@@ -1543,7 +1543,7 @@ $$</div>
 <div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2508.16279v1/x1.png" /></div>
 <ul>
 <li><strong>锐评</strong>: 61个upvote的1.0版本。AgentScope做了agent框架该做的所有工程活——<span class="wikilink">MCP</span>集成、分布式部署、可视化监控。和LangChain相比更注重多agent协调。作为框架论文，技术创新有限但工程完成度高。已有笔记覆盖核心架构。 👀</li>
-</ul></div><div class="paper-card" data-topic="🤖 Agent 框架"><h3>6. The AI Scientist-v2: Workshop-Level Automated Scientific Discovery via</h3>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2508.16279" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🤖 Agent 框架"><h3>6. The AI Scientist-v2: Workshop-Level Automated Scientific Discovery via</h3>
 <p>Agentic Tree Search
 - <strong>作者</strong>: Yamada, Yutaro, Lange, Robert Tjarko, Lu, Cong, Hu, Shengran, Lu, Chris, Foerster, Jakob, Clune, Jeff, Ha, David
 - <strong>机构</strong>: FLAIR, University of Oxford, University of British Columbia, Vector Institute
@@ -1555,7 +1555,7 @@ $$</div>
 <li><strong>借鉴意义</strong>: 如果自动生成的论文能过同行评审，这对学术生态的冲击是根本性的。但workshop level和top venue level差距巨大。</li>
 <li><strong>锐评</strong>: 22个upvote。'自动写论文拿oral'是个很好的标题——但workshop oral的bar和ICML oral的bar差了好几个数量级。更值得关注的是它暴露的问题：自动生成的论文是否只是在重组已有知识？能不能产生genuinely novel的insight？目前看不到。 👀
   Agentic Tree Search`</li>
-</ul></div><div class="paper-card" data-topic="🤖 Agent 框架"><h3>7. TradingAgents: Multi-Agents LLM Financial Trading Framework</h3>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2504.08066" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🤖 Agent 框架"><h3>7. TradingAgents: Multi-Agents LLM Financial Trading Framework</h3>
 <ul>
 <li><strong>作者</strong>: Xiao, Yijia, Sun, Edward, Luo, Di, Wang, Wei</li>
 <li><strong>机构</strong>: Massachusetts Institute of Technology (MIT), University of California, Los Angeles (UCLA)</li>
@@ -2019,7 +2019,7 @@ $$</div>
 <li><strong>对比方法/Baselines</strong>: 单agent交易、传统量化策略</li>
 <li><strong>借鉴意义</strong>: 金融领域是multi-agent的天然应用场景——不同角色处理不同信息源。但回测=/=实盘。</li>
 <li><strong>锐评</strong>: 41个upvote。用multi-agent炒股的想法不新，但角色分工的设计还算合理。核心问题：回测period多长？有没有包含2022年这种极端下跌行情？如果只在牛市回测，任何策略都能赚钱。另外交易频率和手续费的影响完全没提。 👀</li>
-</ul></div><div class="paper-card" data-topic="🤖 Agent 框架"><h3>8. Agent READMEs: An Empirical Study of Context Files for Agentic Coding</h3>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2412.20138" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🤖 Agent 框架"><h3>8. Agent READMEs: An Empirical Study of Context Files for Agentic Coding</h3>
 <ul>
 <li><strong>作者</strong>: Worawalan Chatlatanagulchai, Hao Li, Yutaro Kashiwa, Brittany Reid, Kundjanasith Thonglek, Pattara Leelaprute, Arnon Rungsawang, Bundit Manaskasemsak, Bram Adams, Ahmed E. Hassan, Hajimu Iida</li>
 <li><strong>机构</strong>: Queen’s University, yutaro.kashiwa@is.naist.jp
@@ -2684,7 +2684,7 @@ $$</div>
 <li><strong>借鉴意义</strong>: Agent coding正在成为主流开发模式。理解上下文文件的最佳实践对提升agent coding效率有直接价值。</li>
 <li><strong>锐评</strong>: 28个upvote。务实的实证研究。Agent coding的context file生态正在野蛮生长，有人做系统分析是好事。但如果只是描述性统计（'多少repo有CLAUDE.md'），缺乏因果分析（'有vs没有context file对代码质量的影响'），价值就有限。 👀</li>
 </ul>
-<hr /></div></div>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2511.12884" target="_blank" rel="noopener">📖 AI 精读</a></div></div>
 <div id="panel-检索与rag" class="tab-panel"><h2>🔍 检索与RAG</h2><div class="paper-card" data-topic="🔍 检索与RAG"><h3>9. VRAG-RL: Empower Vision-Perception-Based RAG for Visually Rich Information Understanding via Iterative Reasoning with Reinforcement Learning</h3>
 <ul>
 <li><strong>作者</strong>: Wang, Qiuchen, Ding, Ruixue, Zeng, Yu, Chen, Zehui, Chen, Lin, Wang, Shihang, Xie, Pengjun, Huang, Fei, Zhao, Feng</li>
@@ -2700,7 +2700,7 @@ $$</div>
 <li><strong>借鉴意义</strong>: 视觉富文本是RAG的重要场景（财报、论文、发票），用RL优化检索决策比规则触发更灵活。</li>
 <li><strong>锐评</strong>: 12个upvote。方向正确——视觉文档的RAG需要模型理解'何时看图、何时读文'。但RL训练的reward设计是关键：检索决策的ground truth怎么定义？如果靠最终答案的correctness做reward，信号太稀疏。 👀</li>
 </ul>
-<hr /></div></div>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2505.22019" target="_blank" rel="noopener">📖 AI 精读</a></div></div>
 <div id="panel-推理与记忆" class="tab-panel"><h2>🧠 推理与记忆</h2><div class="paper-card" data-topic="🧠 推理与记忆"><h3>10. A Decomposition Perspective to Long-context Reasoning for LLMs</h3>
 <ul>
 <li><strong>作者</strong>: Yanling Xiao, Huaibing Xie, Guoliang Zhao, Shihan Dou, Shaolei Wang, Yiting Liu, Nantao Zheng, Cheng Zhang, Pluto Zhou, Zhisong Zhang, Lemao Liu</li>
@@ -2715,7 +2715,7 @@ $$</div>
 <li><strong>借鉴意义</strong>: 如果长上下文推理真的可以被有效分解，那昂贵的长上下文训练可能没有必要。</li>
 <li><strong>锐评</strong>: 思路有意思——与其让模型处理128K上下文，不如把问题拆成多个4K子问题。但分解本身需要理解全局结构，这不是又回到了原始问题吗？除非分解策略本身不需要长上下文。实验需要证明分解的成本低于直接处理长上下文。 👀</li>
 </ul>
-<hr /></div></div>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2604.07981v1" target="_blank" rel="noopener">📖 AI 精读</a></div></div>
 <hr>
 <h2>被排除的论文</h2>
 <ul>

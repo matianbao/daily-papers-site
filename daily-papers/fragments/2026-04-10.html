@@ -40,7 +40,7 @@
 <li><strong>借鉴意义</strong>: 直接关系到推荐系统和广告投放的核心问题：当 LLM 成为用户决策的中介，广告商如何影响 LLM 输出？这对 ad serving 和 computational advertising 的未来形态有深远影响。</li>
 <li><strong>锐评</strong>: 这篇太对口了。把 LLM 当成新的广告媒介来分析，从语言学和监管双重视角拆解利益冲突。发现 CoT 推理中的偏向性尤其隐蔽——模型在 think 阶段就已经被广告主的 prompt 污染了。唯一遗憾是没有测试 retrieval-augmented 场景下的广告注入，这才是实际部署中最危险的。 🔥</li>
 </ul>
-<hr /></div><h2>🤖 Agent 工具使用</h2><div class="paper-card" data-topic="🤖 Agent 工具使用"><h3>2. Act Wisely: Cultivating Meta-Cognitive Tool Use in Agentic Multimodal Models</h3>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2604.08525v1" target="_blank" rel="noopener">📖 AI 精读</a></div><h2>🤖 Agent 工具使用</h2><div class="paper-card" data-topic="🤖 Agent 工具使用"><h3>2. Act Wisely: Cultivating Meta-Cognitive Tool Use in Agentic Multimodal Models</h3>
 <ul>
 <li><strong>作者</strong>: Shilin Yan1∗†, Kunyu Shi1, †</li>
 <li><strong>机构</strong>: 2Huazhong University of Science and Technology, 1Accio Team, Alibaba Group</li>
@@ -53,7 +53,7 @@
 <li><strong>对比方法/Baselines</strong>: <span class="wikilink">DeepEyesV2</span>、InternVL2.5、Qwen2.5-VL</li>
 <li><strong>借鉴意义</strong>: 解决了 agent 系统的一个真实痛点：过度依赖工具调用导致效率低下和幻觉。</li>
 <li><strong>锐评</strong>: 问题定义精准——'blind tool invocation' 确实是当前 agent 系统的通病。HDPO 的层次化偏好优化思路不错，但 18 个 HF upvotes 说明社区反应平平。可能是因为 benchmark 太多但每个改进幅度不大。实用价值大于学术新意。 👀</li>
-</ul></div><div class="paper-card" data-topic="🤖 Agent 工具使用"><h3>3. Awakening the Sleeping Agent: Lean-Specific Agentic Data Reactivates General Tool Use in Goedel Prover</h3>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2604.08545" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🤖 Agent 工具使用"><h3>3. Awakening the Sleeping Agent: Lean-Specific Agentic Data Reactivates General Tool Use in Goedel Prover</h3>
 <ul>
 <li><strong>作者</strong>: Jui-Hui Chung1</li>
 <li><strong>机构</strong>: 3Department of Computer Science, University of Illinois at Urbana-Champaign, 1Princeton Language and Intelligence, 2Amazon</li>
@@ -66,7 +66,7 @@
 <li><strong>对比方法/Baselines</strong>: <span class="wikilink">Goedel-Prover</span>-V2、BFCL benchmark</li>
 <li><strong>借鉴意义</strong>: 揭示了 SFT 的一个重要副作用：domain specialization 会抑制 general tool use。对任何做 agent 微调的团队都是警示。</li>
 <li><strong>锐评</strong>: 问题很实际——你辛辛苦苦训出一个数学专家，结果发现它不会用工具了。这种 capability trade-off 在 agent 训练中很常见但很少被系统研究。Princeton+Amazon 的联合分析比较扎实。不过 'sleeping agent' 这个标题有点标题党了。 👀</li>
-</ul></div><div class="paper-card" data-topic="🤖 Agent 工具使用"><h3>4. Beyond Stochastic Exploration: What Makes Training Data Valuable for Agentic Search</h3>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2604.08388v1" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🤖 Agent 工具使用"><h3>4. Beyond Stochastic Exploration: What Makes Training Data Valuable for Agentic Search</h3>
 <ul>
 <li><strong>作者</strong>: Hao, Chuzhan, Feng, Wenfeng, Jiang, Guochao, Quan, Guofeng, Liu, Guohua, Zhang, Yuewei</li>
 <li><strong>机构</strong>: Alibaba Cloud Computing, {haochuzhan.hcz, liyou.zyw}@alibaba-inc.com</li>
@@ -81,7 +81,7 @@
 <li><strong>借鉴意义</strong>: 为 agentic search 的训练提供了数据价值的分析框架，对构建更高效的搜索 agent 有指导意义。</li>
 <li><strong>锐评</strong>: Alibaba 出品，问题切入角度好——不是在做更好的 search agent，而是在问什么训练数据能让 search agent 更好。但只在 QA benchmark 上验证，实际搜索场景的迁移性存疑。 👀</li>
 </ul>
-<hr /></div><h2>🔬 LLM 训练与架构</h2><div class="paper-card" data-topic="🔬 LLM 训练与架构"><h3>5. GLM-5: from Vibe Coding to Agentic Engineering</h3>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2604.08124" target="_blank" rel="noopener">📖 AI 精读</a></div><h2>🔬 LLM 训练与架构</h2><div class="paper-card" data-topic="🔬 LLM 训练与架构"><h3>5. GLM-5: from Vibe Coding to Agentic Engineering</h3>
 <ul>
 <li><strong>作者</strong>: GLM-5-Team, :, Zeng, Aohan, Lv, Xin, Hou, Zhenyu, Du, Zhengxiao, Zheng, Qinkai, Chen, Bin, Yin, Da, Ge, Chendi, Huang, Chenghua, Xie, Chengxing, Zhu, Chenzheng, Yin, Congfeng, Wang, Cunxiang, Pan, Gengzheng, Zeng, Hao, Zhang, Haoke, Wang, Haoran, Chen, Huilong, Zhang, Jiajie, Jiao, Jian, Guo, Jiaqi, Wang, Jingsen, Du, Jingzhao, Wu, Jinzhu, Wang, Kedong, Li, Lei, Fan, Lin, Zhong, Lucen, Liu, Mingdao, Zhao, Mingming, Du, Pengfan, Dong, Qian, Lu, Rui, Shuang-Li, Cao, Shulin, Liu, Song, Jiang, Ting, Chen, Xiaodong, Zhang, Xiaohan, Huang, Xuancheng, Dong, Xuezhen, Xu, Yabo, Wei, Yao, An, Yifan, Niu, Yilin, Zhu, Yitong, Wen, Yuanhao, Cen, Yukuo, Bai, Yushi, Qiao, Zhongpei, Wang, Zihan, Wang, Zikang, Zhu, Zilin, Liu, Ziqiang, Li, Zixuan, Wang, Bojie, Wen, Bosi, Huang, Can, Cai, Changpeng, Yu, Chao, Li, Chen, Hu, Chengwei, Zhang, Chenhui, Zhang, Dan, Lin, Daoyan, Yang, Dayong, Wang, Di, Ai, Ding, Zhu, Erle, Yi, Fangzhou, Chen, Feiyu, Wen, Guohong, Sun, Hailong, Zhao, Haisha, Hu, Haiyi, Zhang, Hanchen, Liu, Hanrui, Zhang, Hanyu, Peng, Hao, Tai, Hao, Zhang, Haobo, Liu, He, Wang, Hongwei, Yan, Hongxi, Ge, Hongyu, Liu, Huan, Chu, Huanpeng, Zhao, Jia&#39;ni, Wang, Jiachen, Zhao, Jiajing, Ren, Jiamin, Wang, Jiapeng, Zhang, Jiaxin, Gui, Jiayi, Zhao, Jiayue, Li, Jijie, An, Jing, Li, Jing, Yuan, Jingwei, Du, Jinhua, Liu, Jinxin, Zhi, Junkai, Duan, Junwen, Zhou, Kaiyue, Wei, Kangjian, Wang, Ke, Luo, Keyun, Zhang, Laiqiang, Sha, Leigang, Xu, Liang, Wu, Lindong, Ding, Lintao, Chen, Lu, Li, Minghao, Lin, Nianyi, Ta, Pan, Zou, Qiang, Song, Rongjun, Yang, Ruiqi, Tu, Shangqing, Yang, Shangtong, Wu, Shaoxiang, Zhang, Shengyan, Li, Shijie, Li, Shuang, Fan, Shuyi, Qin, Wei, Tian, Wei, Zhang, Weining, Yu, Wenbo, Liang, Wenjie, Kuang, Xiang, Cheng, Xiangmeng, Li, Xiangyang, Yan, Xiaoquan, Hu, Xiaowei, Ling, Xiaoying, Fan, Xing, Xia, Xingye, Zhang, Xinyuan, Zhang, Xinze, Pan, Xirui, Zou, Xu, Zhang, Xunkai, Liu, Yadi, Wu, Yandong, Li, Yanfu, Wang, Yidong, Zhu, Yifan, Tan, Yijun, Zhou, Yilin, Pan, Yiming, Zhang, Ying, Su, Yinpei, Geng, Yipeng, Yan, Yong, Tan, Yonglin, Bi, Yuean, Shen, Yuhan, Yang, Yuhao, Li, Yujiang, Liu, Yunan, Wang, Yunqing, Li, Yuntao, Wu, Yurong, Zhang, Yutao, Duan, Yuxi, Zhang, Yuxuan, Liu, Zezhen, Jiang, Zhengtao, Yan, Zhenhe, Zhang, Zheyu, Wei, Zhixiang, Chen, Zhuo, Feng, Zhuoer, Yao, Zijun, Chai, Ziwei, Wang, Ziyuan, Zhang, Zuzhou, Xu, Bin, Huang, Minlie, Wang, Hongning, Li, Juanzi, Dong, Yuxiao, Tang, Jie</li>
 <li><strong>机构</strong>: Zhipu AI  &amp;  Tsinghua University</li>
@@ -96,7 +96,7 @@
 <li><strong>对比方法/Baselines</strong>: <span class="wikilink">GLM-4</span>、<span class="wikilink">DeepSeek</span>、GPT-4o</li>
 <li><strong>借鉴意义</strong>: 国产大模型的最新进展，DSA 架构对长上下文 agent 场景有直接价值。</li>
 <li><strong>锐评</strong>: 137 个 upvote 的流量王。但这是 2 月的论文现在才 trending，说明更多是 marketing 驱动。DSA 的技术细节值得关注——如果真能在保持质量的前提下大幅降低推理成本，对 agent 部署有实际意义。不过 'agentic engineering' 这个概念有点空洞，等看具体 benchmark。 👀</li>
-</ul></div><div class="paper-card" data-topic="🔬 LLM 训练与架构"><h3>6. SUPERNOVA: Eliciting General Reasoning in LLMs with Reinforcement Learning on Natural Instructions</h3>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2602.15763" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🔬 LLM 训练与架构"><h3>6. SUPERNOVA: Eliciting General Reasoning in LLMs with Reinforcement Learning on Natural Instructions</h3>
 <ul>
 <li><strong>作者</strong>: Ashima Suvarna, Kendrick Phan, Mehrab Beikzadeh, Hritik Bansal, Saadia Gabriel</li>
 <li><strong>机构</strong>: University of California, Los Angeles</li>
@@ -111,7 +111,7 @@
 <li><strong>借鉴意义</strong>: RLVR 的泛化边界探索——如果 verifiable reward 能扩展到非形式化领域，RL 训练的适用范围会大幅扩大。</li>
 <li><strong>锐评</strong>: UCLA 出品，方向很重要——RLVR 不能永远只在数学和代码上刷分。但通用推理的 'verifiable reward' 本身就是个难题，论文用 BBEH 的结构化答案作为代理验证信号，这个假设在开放域推理中能成立吗？实验设计合理但结论的推广性需要更多验证。 👀</li>
 </ul>
-<hr /></div><h2>🤝 Multi-Agent 系统</h2><div class="paper-card" data-topic="🤝 Multi-Agent 系统"><h3>7. CORAL: Towards Autonomous Multi-Agent Evolution for Open-Ended Discovery</h3>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2604.08477v1" target="_blank" rel="noopener">📖 AI 精读</a></div><h2>🤝 Multi-Agent 系统</h2><div class="paper-card" data-topic="🤝 Multi-Agent 系统"><h3>7. CORAL: Towards Autonomous Multi-Agent Evolution for Open-Ended Discovery</h3>
 <ul>
 <li><strong>作者</strong>: Ao Qu1,8∗</li>
 <li><strong>机构</strong>: 1MIT  2NUS  3MiniMax  4McGill  5Stanford  6SambaNova  7Meta, 8Singapore-MIT Alliance for Research and Technology  9Amazon  10Microsoft</li>
@@ -127,7 +127,7 @@
 <li><strong>借鉴意义</strong>: multi-agent 演化搜索的新范式，从硬编码规则到自主策略选择的转变。</li>
 <li><strong>锐评</strong>: 阵容豪华（MIT+Meta），问题也很前沿——open-ended discovery 需要 agent 自己学会演化策略而不是人为指定。但 'autonomous evolution' 的边界在哪里？如果 agent 的搜索空间本身就是人设计的，那 autonomy 有多少是真实的？51 个 upvote 说明社区还是买账的。 👀</li>
 </ul>
-<hr /></div><h2>🧠 Agent 记忆与技能演化</h2><div class="paper-card" data-topic="🧠 Agent 记忆与技能演化"><h3>8. SkillClaw: Let Skills Evolve Collectively with Agentic Evolver</h3>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2604.01658" target="_blank" rel="noopener">📖 AI 精读</a></div><h2>🧠 Agent 记忆与技能演化</h2><div class="paper-card" data-topic="🧠 Agent 记忆与技能演化"><h3>8. SkillClaw: Let Skills Evolve Collectively with Agentic Evolver</h3>
 <ul>
 <li><strong>作者</strong>: Ma, Ziyu, Yang, Shidong, Ji, Yuxiang, Wang, Xucong, Wang, Yong, Hu, Yiming, Huang, Tongwen, Chu, Xiangxiang</li>
 <li><strong>机构</strong>: Large language model (LLM) agents such as OpenClaw rely on reusable skills to perform complex</li>
@@ -141,7 +141,7 @@
 <li><strong>对比方法/Baselines</strong>: OpenClaw 静态技能基线</li>
 <li><strong>借鉴意义</strong>: agent 技能从 '一次部署永不更新' 到 '持续进化' 的范式转变。直接影响 function calling 和 tool use 的长期效果。</li>
 <li><strong>锐评</strong>: 69 个 upvote 说明大家对 'skill evolution' 的故事很感兴趣。但论文 HTML 抽取不到 method_summary，方法细节存疑。'collective evolution' 的核心是跨用户模式共享——隐私问题怎么处理？安全边界在哪？概念吸引人，但实现细节可能埋了不少坑。 👀</li>
-</ul></div><div class="paper-card" data-topic="🧠 Agent 记忆与技能演化"><h3>9. Memento-Skills: Let Agents Design Agents</h3>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2604.08377" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🧠 Agent 记忆与技能演化"><h3>9. Memento-Skills: Let Agents Design Agents</h3>
 <ul>
 <li><strong>作者</strong>: Zhou, Huichi, Guo, Siyuan, Liu, Anjie, Yu, Zhongwei, Gong, Ziqin, Zhao, Bowen, Chen, Zhixun, Zhang, Menglong, Chen, Yihang, Li, Jinsong, Yang, Runyu, Liu, Qiangbin, Yu, Xinlei, Zhou, Jianmin, Wang, Na, Sun, Chunyang, Wang, Jun</li>
 <li><strong>机构</strong>: Performance (%)</li>
@@ -155,7 +155,7 @@
 <li><strong>对比方法/Baselines</strong>: 传统固定 prompt agent</li>
 <li><strong>借鉴意义</strong>: meta-learning for agents 的实用化尝试。如果 agent 能自己设计 agent，那人类 prompt engineer 的角色就要被重新定义了。</li>
 <li><strong>锐评</strong>: 56 个 upvote，也是 3 月的旧论文上热榜。'agents design agents' 的故事确实有吸引力，但 markdown 文件作为 skill 存储的可扩展性堪忧。当技能库膨胀到几千个时，检索和组合的效率怎么办？不过作为概念验证，方向是对的。 👀</li>
-</ul></div><div class="paper-card" data-topic="🧠 Agent 记忆与技能演化"><h3>10. Memory Intelligence Agent</h3>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2603.18743" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🧠 Agent 记忆与技能演化"><h3>10. Memory Intelligence Agent</h3>
 <ul>
 <li><strong>作者</strong>: Jingyang Qiao∗<em>, Weicheng Meng∗</em>, Yu Cheng, Zhihang Lin, Zhizhong Zhang†\dagger, Xin Tan, Jingyu Gong, Kun Shao, Yuan Xie‡\ddagger</li>
 <li><strong>机构</strong>: East China Normal University, Shanghai Innovation Institute, Harbin Institute of Technology, Xiamen University, Shanghai Artificial Intelligence Laboratory, Independent Researcher, East China Normal University, Shanghai Innovation Institute, Harbin Institute of Technology, Xiamen University, Shanghai Artificial Intelligence Laboratory, Independent Researcher
@@ -172,7 +172,7 @@
 <li><strong>借鉴意义</strong>: 记忆系统从被动检索到主动演化的转变，对长期运行的 agent 系统有实际价值。</li>
 <li><strong>锐评</strong>: 和 <span class="wikilink">Zep</span>、<span class="wikilink">Mem0</span> 走不同路线——不是做更好的检索，而是让记忆自己进化。思路有意思但 46 个 upvote 的热度说明社区还在观望。RL-driven memory evolution 的训练稳定性是个大问题，论文没充分讨论。 👀</li>
 </ul>
-<hr /></div><h2>📚 综述</h2><div class="paper-card" data-topic="📚 综述"><h3>11. Large Language Model Post-Training: A Unified View of Off-Policy and On-Policy Learning</h3>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2604.04503" target="_blank" rel="noopener">📖 AI 精读</a></div><h2>📚 综述</h2><div class="paper-card" data-topic="📚 综述"><h3>11. Large Language Model Post-Training: A Unified View of Off-Policy and On-Policy Learning</h3>
 <ul>
 <li><strong>作者</strong>: Shiwan Zhao, Zhihu Wang, Xuyang Zhao, Jiaming Zhou, Caiyue Xu, Chenfei Liu, Liting Zhang, Yuhang Jia, Yanzhe Zhang, Hualong Yu, Zichen Xu, Qicheng Li, Yong Qin</li>
 <li><strong>机构</strong>: xucaiyue@huawei.com, zhangliting@mail.nankai.edu.cn, Nankai UniversityTianjinChina, zhaosw@gmail.com, Nankai UniversityTianjinChina, 2120240729@mail.nankai.edu.cn, Nankai UniversityTianjinChina, zhaosw@gmail.com, xucaiyue@huawei.com, Huawei Technologies Ltd.BeijingChina, yanzhe.zhang@mail.nankai.edu.cn, xychao@mail.nankai.edu.cn, liuchenfei2@huawei.com, wangzhihu3@huawei.com, 2211447@mail.nankai.edu.cn, Nankai UniversityTianjinChina, wangzhihu3@huawei.com, Huawei Technologies Ltd.BeijingChina, yanzhe.zhang@mail.nankai.edu.cn, Nankai UniversityTianjinChina, zhoujiaming@mail.nankai.edu.cn, Nankai UniversityTianjinChina, 2211447@mail.nankai.edu.cn, yuhualong@mail.nankai.edu.cn, liqicheng@nankai.edu.cn, yuhualong@mail.nankai.edu.cn, Nankai UniversityTianjinChina, zhoujiaming@mail.nankai.edu.cn, qinyong@nankai.edu.cn, Nankai UniversityTianjinChina, liqicheng@nankai.edu.cn, Nankai UniversityTianjinChina, liuchenfei2@huawei.com, Huawei Technologies Ltd.BeijingChina, xychao@mail.nankai.edu.cn, Nankai UniversityTianjinChina, zhangliting@mail.nankai.edu.cn, qinyong@nankai.edu.cn, 2120240729@mail.nankai.edu.cn</li>
@@ -186,7 +186,7 @@
 <li><strong>借鉴意义</strong>: 对 LLM 后训练全景的系统性梳理。把 SFT、RLHF、RLVR 放在统一框架下理解，对理解 agent 训练路线很有帮助。</li>
 <li><strong>锐评</strong>: 南开+华为出品。把后训练方法从 off-policy/on-policy 的角度重新分类，这个视角比按方法名分类更有洞察力。但综述类论文的通病——广度有余深度不足，每个方法只蜻蜓点水。不过作为 reference 收藏还是值得的。 👀</li>
 </ul>
-<hr /></div></div>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2604.07941v1" target="_blank" rel="noopener">📖 AI 精读</a></div></div>
 <div id="panel-计算广告与llm" class="tab-panel"><h2>📊 计算广告与 LLM</h2><div class="paper-card" data-topic="📊 计算广告与 LLM"><h3>1. Ads in AI Chatbots? An Analysis of How Large Language Models Navigate Conflicts of Interest</h3>
 <ul>
 <li><strong>作者</strong>: Addison J. Wu1∗</li>
@@ -202,7 +202,7 @@
 <li><strong>借鉴意义</strong>: 直接关系到推荐系统和广告投放的核心问题：当 LLM 成为用户决策的中介，广告商如何影响 LLM 输出？这对 ad serving 和 computational advertising 的未来形态有深远影响。</li>
 <li><strong>锐评</strong>: 这篇太对口了。把 LLM 当成新的广告媒介来分析，从语言学和监管双重视角拆解利益冲突。发现 CoT 推理中的偏向性尤其隐蔽——模型在 think 阶段就已经被广告主的 prompt 污染了。唯一遗憾是没有测试 retrieval-augmented 场景下的广告注入，这才是实际部署中最危险的。 🔥</li>
 </ul>
-<hr /></div></div>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2604.08525v1" target="_blank" rel="noopener">📖 AI 精读</a></div></div>
 <div id="panel-agent工具使用" class="tab-panel"><h2>🤖 Agent 工具使用</h2><div class="paper-card" data-topic="🤖 Agent 工具使用"><h3>2. Act Wisely: Cultivating Meta-Cognitive Tool Use in Agentic Multimodal Models</h3>
 <ul>
 <li><strong>作者</strong>: Shilin Yan1∗†, Kunyu Shi1, †</li>
@@ -216,7 +216,7 @@
 <li><strong>对比方法/Baselines</strong>: <span class="wikilink">DeepEyesV2</span>、InternVL2.5、Qwen2.5-VL</li>
 <li><strong>借鉴意义</strong>: 解决了 agent 系统的一个真实痛点：过度依赖工具调用导致效率低下和幻觉。</li>
 <li><strong>锐评</strong>: 问题定义精准——'blind tool invocation' 确实是当前 agent 系统的通病。HDPO 的层次化偏好优化思路不错，但 18 个 HF upvotes 说明社区反应平平。可能是因为 benchmark 太多但每个改进幅度不大。实用价值大于学术新意。 👀</li>
-</ul></div><div class="paper-card" data-topic="🤖 Agent 工具使用"><h3>3. Awakening the Sleeping Agent: Lean-Specific Agentic Data Reactivates General Tool Use in Goedel Prover</h3>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2604.08545" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🤖 Agent 工具使用"><h3>3. Awakening the Sleeping Agent: Lean-Specific Agentic Data Reactivates General Tool Use in Goedel Prover</h3>
 <ul>
 <li><strong>作者</strong>: Jui-Hui Chung1</li>
 <li><strong>机构</strong>: 3Department of Computer Science, University of Illinois at Urbana-Champaign, 1Princeton Language and Intelligence, 2Amazon</li>
@@ -229,7 +229,7 @@
 <li><strong>对比方法/Baselines</strong>: <span class="wikilink">Goedel-Prover</span>-V2、BFCL benchmark</li>
 <li><strong>借鉴意义</strong>: 揭示了 SFT 的一个重要副作用：domain specialization 会抑制 general tool use。对任何做 agent 微调的团队都是警示。</li>
 <li><strong>锐评</strong>: 问题很实际——你辛辛苦苦训出一个数学专家，结果发现它不会用工具了。这种 capability trade-off 在 agent 训练中很常见但很少被系统研究。Princeton+Amazon 的联合分析比较扎实。不过 'sleeping agent' 这个标题有点标题党了。 👀</li>
-</ul></div><div class="paper-card" data-topic="🤖 Agent 工具使用"><h3>4. Beyond Stochastic Exploration: What Makes Training Data Valuable for Agentic Search</h3>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2604.08388v1" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🤖 Agent 工具使用"><h3>4. Beyond Stochastic Exploration: What Makes Training Data Valuable for Agentic Search</h3>
 <ul>
 <li><strong>作者</strong>: Hao, Chuzhan, Feng, Wenfeng, Jiang, Guochao, Quan, Guofeng, Liu, Guohua, Zhang, Yuewei</li>
 <li><strong>机构</strong>: Alibaba Cloud Computing, {haochuzhan.hcz, liyou.zyw}@alibaba-inc.com</li>
@@ -244,7 +244,7 @@
 <li><strong>借鉴意义</strong>: 为 agentic search 的训练提供了数据价值的分析框架，对构建更高效的搜索 agent 有指导意义。</li>
 <li><strong>锐评</strong>: Alibaba 出品，问题切入角度好——不是在做更好的 search agent，而是在问什么训练数据能让 search agent 更好。但只在 QA benchmark 上验证，实际搜索场景的迁移性存疑。 👀</li>
 </ul>
-<hr /></div></div>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2604.08124" target="_blank" rel="noopener">📖 AI 精读</a></div></div>
 <div id="panel-llm训练与架构" class="tab-panel"><h2>🔬 LLM 训练与架构</h2><div class="paper-card" data-topic="🔬 LLM 训练与架构"><h3>5. GLM-5: from Vibe Coding to Agentic Engineering</h3>
 <ul>
 <li><strong>作者</strong>: GLM-5-Team, :, Zeng, Aohan, Lv, Xin, Hou, Zhenyu, Du, Zhengxiao, Zheng, Qinkai, Chen, Bin, Yin, Da, Ge, Chendi, Huang, Chenghua, Xie, Chengxing, Zhu, Chenzheng, Yin, Congfeng, Wang, Cunxiang, Pan, Gengzheng, Zeng, Hao, Zhang, Haoke, Wang, Haoran, Chen, Huilong, Zhang, Jiajie, Jiao, Jian, Guo, Jiaqi, Wang, Jingsen, Du, Jingzhao, Wu, Jinzhu, Wang, Kedong, Li, Lei, Fan, Lin, Zhong, Lucen, Liu, Mingdao, Zhao, Mingming, Du, Pengfan, Dong, Qian, Lu, Rui, Shuang-Li, Cao, Shulin, Liu, Song, Jiang, Ting, Chen, Xiaodong, Zhang, Xiaohan, Huang, Xuancheng, Dong, Xuezhen, Xu, Yabo, Wei, Yao, An, Yifan, Niu, Yilin, Zhu, Yitong, Wen, Yuanhao, Cen, Yukuo, Bai, Yushi, Qiao, Zhongpei, Wang, Zihan, Wang, Zikang, Zhu, Zilin, Liu, Ziqiang, Li, Zixuan, Wang, Bojie, Wen, Bosi, Huang, Can, Cai, Changpeng, Yu, Chao, Li, Chen, Hu, Chengwei, Zhang, Chenhui, Zhang, Dan, Lin, Daoyan, Yang, Dayong, Wang, Di, Ai, Ding, Zhu, Erle, Yi, Fangzhou, Chen, Feiyu, Wen, Guohong, Sun, Hailong, Zhao, Haisha, Hu, Haiyi, Zhang, Hanchen, Liu, Hanrui, Zhang, Hanyu, Peng, Hao, Tai, Hao, Zhang, Haobo, Liu, He, Wang, Hongwei, Yan, Hongxi, Ge, Hongyu, Liu, Huan, Chu, Huanpeng, Zhao, Jia&#39;ni, Wang, Jiachen, Zhao, Jiajing, Ren, Jiamin, Wang, Jiapeng, Zhang, Jiaxin, Gui, Jiayi, Zhao, Jiayue, Li, Jijie, An, Jing, Li, Jing, Yuan, Jingwei, Du, Jinhua, Liu, Jinxin, Zhi, Junkai, Duan, Junwen, Zhou, Kaiyue, Wei, Kangjian, Wang, Ke, Luo, Keyun, Zhang, Laiqiang, Sha, Leigang, Xu, Liang, Wu, Lindong, Ding, Lintao, Chen, Lu, Li, Minghao, Lin, Nianyi, Ta, Pan, Zou, Qiang, Song, Rongjun, Yang, Ruiqi, Tu, Shangqing, Yang, Shangtong, Wu, Shaoxiang, Zhang, Shengyan, Li, Shijie, Li, Shuang, Fan, Shuyi, Qin, Wei, Tian, Wei, Zhang, Weining, Yu, Wenbo, Liang, Wenjie, Kuang, Xiang, Cheng, Xiangmeng, Li, Xiangyang, Yan, Xiaoquan, Hu, Xiaowei, Ling, Xiaoying, Fan, Xing, Xia, Xingye, Zhang, Xinyuan, Zhang, Xinze, Pan, Xirui, Zou, Xu, Zhang, Xunkai, Liu, Yadi, Wu, Yandong, Li, Yanfu, Wang, Yidong, Zhu, Yifan, Tan, Yijun, Zhou, Yilin, Pan, Yiming, Zhang, Ying, Su, Yinpei, Geng, Yipeng, Yan, Yong, Tan, Yonglin, Bi, Yuean, Shen, Yuhan, Yang, Yuhao, Li, Yujiang, Liu, Yunan, Wang, Yunqing, Li, Yuntao, Wu, Yurong, Zhang, Yutao, Duan, Yuxi, Zhang, Yuxuan, Liu, Zezhen, Jiang, Zhengtao, Yan, Zhenhe, Zhang, Zheyu, Wei, Zhixiang, Chen, Zhuo, Feng, Zhuoer, Yao, Zijun, Chai, Ziwei, Wang, Ziyuan, Zhang, Zuzhou, Xu, Bin, Huang, Minlie, Wang, Hongning, Li, Juanzi, Dong, Yuxiao, Tang, Jie</li>
@@ -260,7 +260,7 @@
 <li><strong>对比方法/Baselines</strong>: <span class="wikilink">GLM-4</span>、<span class="wikilink">DeepSeek</span>、GPT-4o</li>
 <li><strong>借鉴意义</strong>: 国产大模型的最新进展，DSA 架构对长上下文 agent 场景有直接价值。</li>
 <li><strong>锐评</strong>: 137 个 upvote 的流量王。但这是 2 月的论文现在才 trending，说明更多是 marketing 驱动。DSA 的技术细节值得关注——如果真能在保持质量的前提下大幅降低推理成本，对 agent 部署有实际意义。不过 'agentic engineering' 这个概念有点空洞，等看具体 benchmark。 👀</li>
-</ul></div><div class="paper-card" data-topic="🔬 LLM 训练与架构"><h3>6. SUPERNOVA: Eliciting General Reasoning in LLMs with Reinforcement Learning on Natural Instructions</h3>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2602.15763" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🔬 LLM 训练与架构"><h3>6. SUPERNOVA: Eliciting General Reasoning in LLMs with Reinforcement Learning on Natural Instructions</h3>
 <ul>
 <li><strong>作者</strong>: Ashima Suvarna, Kendrick Phan, Mehrab Beikzadeh, Hritik Bansal, Saadia Gabriel</li>
 <li><strong>机构</strong>: University of California, Los Angeles</li>
@@ -275,7 +275,7 @@
 <li><strong>借鉴意义</strong>: RLVR 的泛化边界探索——如果 verifiable reward 能扩展到非形式化领域，RL 训练的适用范围会大幅扩大。</li>
 <li><strong>锐评</strong>: UCLA 出品，方向很重要——RLVR 不能永远只在数学和代码上刷分。但通用推理的 'verifiable reward' 本身就是个难题，论文用 BBEH 的结构化答案作为代理验证信号，这个假设在开放域推理中能成立吗？实验设计合理但结论的推广性需要更多验证。 👀</li>
 </ul>
-<hr /></div></div>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2604.08477v1" target="_blank" rel="noopener">📖 AI 精读</a></div></div>
 <div id="panel-multiagent系统" class="tab-panel"><h2>🤝 Multi-Agent 系统</h2><div class="paper-card" data-topic="🤝 Multi-Agent 系统"><h3>7. CORAL: Towards Autonomous Multi-Agent Evolution for Open-Ended Discovery</h3>
 <ul>
 <li><strong>作者</strong>: Ao Qu1,8∗</li>
@@ -292,7 +292,7 @@
 <li><strong>借鉴意义</strong>: multi-agent 演化搜索的新范式，从硬编码规则到自主策略选择的转变。</li>
 <li><strong>锐评</strong>: 阵容豪华（MIT+Meta），问题也很前沿——open-ended discovery 需要 agent 自己学会演化策略而不是人为指定。但 'autonomous evolution' 的边界在哪里？如果 agent 的搜索空间本身就是人设计的，那 autonomy 有多少是真实的？51 个 upvote 说明社区还是买账的。 👀</li>
 </ul>
-<hr /></div></div>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2604.01658" target="_blank" rel="noopener">📖 AI 精读</a></div></div>
 <div id="panel-agent记忆与技能演化" class="tab-panel"><h2>🧠 Agent 记忆与技能演化</h2><div class="paper-card" data-topic="🧠 Agent 记忆与技能演化"><h3>8. SkillClaw: Let Skills Evolve Collectively with Agentic Evolver</h3>
 <ul>
 <li><strong>作者</strong>: Ma, Ziyu, Yang, Shidong, Ji, Yuxiang, Wang, Xucong, Wang, Yong, Hu, Yiming, Huang, Tongwen, Chu, Xiangxiang</li>
@@ -307,7 +307,7 @@
 <li><strong>对比方法/Baselines</strong>: OpenClaw 静态技能基线</li>
 <li><strong>借鉴意义</strong>: agent 技能从 '一次部署永不更新' 到 '持续进化' 的范式转变。直接影响 function calling 和 tool use 的长期效果。</li>
 <li><strong>锐评</strong>: 69 个 upvote 说明大家对 'skill evolution' 的故事很感兴趣。但论文 HTML 抽取不到 method_summary，方法细节存疑。'collective evolution' 的核心是跨用户模式共享——隐私问题怎么处理？安全边界在哪？概念吸引人，但实现细节可能埋了不少坑。 👀</li>
-</ul></div><div class="paper-card" data-topic="🧠 Agent 记忆与技能演化"><h3>9. Memento-Skills: Let Agents Design Agents</h3>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2604.08377" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🧠 Agent 记忆与技能演化"><h3>9. Memento-Skills: Let Agents Design Agents</h3>
 <ul>
 <li><strong>作者</strong>: Zhou, Huichi, Guo, Siyuan, Liu, Anjie, Yu, Zhongwei, Gong, Ziqin, Zhao, Bowen, Chen, Zhixun, Zhang, Menglong, Chen, Yihang, Li, Jinsong, Yang, Runyu, Liu, Qiangbin, Yu, Xinlei, Zhou, Jianmin, Wang, Na, Sun, Chunyang, Wang, Jun</li>
 <li><strong>机构</strong>: Performance (%)</li>
@@ -321,7 +321,7 @@
 <li><strong>对比方法/Baselines</strong>: 传统固定 prompt agent</li>
 <li><strong>借鉴意义</strong>: meta-learning for agents 的实用化尝试。如果 agent 能自己设计 agent，那人类 prompt engineer 的角色就要被重新定义了。</li>
 <li><strong>锐评</strong>: 56 个 upvote，也是 3 月的旧论文上热榜。'agents design agents' 的故事确实有吸引力，但 markdown 文件作为 skill 存储的可扩展性堪忧。当技能库膨胀到几千个时，检索和组合的效率怎么办？不过作为概念验证，方向是对的。 👀</li>
-</ul></div><div class="paper-card" data-topic="🧠 Agent 记忆与技能演化"><h3>10. Memory Intelligence Agent</h3>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2603.18743" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🧠 Agent 记忆与技能演化"><h3>10. Memory Intelligence Agent</h3>
 <ul>
 <li><strong>作者</strong>: Jingyang Qiao∗<em>, Weicheng Meng∗</em>, Yu Cheng, Zhihang Lin, Zhizhong Zhang†\dagger, Xin Tan, Jingyu Gong, Kun Shao, Yuan Xie‡\ddagger</li>
 <li><strong>机构</strong>: East China Normal University, Shanghai Innovation Institute, Harbin Institute of Technology, Xiamen University, Shanghai Artificial Intelligence Laboratory, Independent Researcher, East China Normal University, Shanghai Innovation Institute, Harbin Institute of Technology, Xiamen University, Shanghai Artificial Intelligence Laboratory, Independent Researcher
@@ -338,7 +338,7 @@
 <li><strong>借鉴意义</strong>: 记忆系统从被动检索到主动演化的转变，对长期运行的 agent 系统有实际价值。</li>
 <li><strong>锐评</strong>: 和 <span class="wikilink">Zep</span>、<span class="wikilink">Mem0</span> 走不同路线——不是做更好的检索，而是让记忆自己进化。思路有意思但 46 个 upvote 的热度说明社区还在观望。RL-driven memory evolution 的训练稳定性是个大问题，论文没充分讨论。 👀</li>
 </ul>
-<hr /></div></div>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2604.04503" target="_blank" rel="noopener">📖 AI 精读</a></div></div>
 <div id="panel-综述" class="tab-panel"><h2>📚 综述</h2><div class="paper-card" data-topic="📚 综述"><h3>11. Large Language Model Post-Training: A Unified View of Off-Policy and On-Policy Learning</h3>
 <ul>
 <li><strong>作者</strong>: Shiwan Zhao, Zhihu Wang, Xuyang Zhao, Jiaming Zhou, Caiyue Xu, Chenfei Liu, Liting Zhang, Yuhang Jia, Yanzhe Zhang, Hualong Yu, Zichen Xu, Qicheng Li, Yong Qin</li>
@@ -353,7 +353,7 @@
 <li><strong>借鉴意义</strong>: 对 LLM 后训练全景的系统性梳理。把 SFT、RLHF、RLVR 放在统一框架下理解，对理解 agent 训练路线很有帮助。</li>
 <li><strong>锐评</strong>: 南开+华为出品。把后训练方法从 off-policy/on-policy 的角度重新分类，这个视角比按方法名分类更有洞察力。但综述类论文的通病——广度有余深度不足，每个方法只蜻蜓点水。不过作为 reference 收藏还是值得的。 👀</li>
 </ul>
-<hr /></div></div>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2604.07941v1" target="_blank" rel="noopener">📖 AI 精读</a></div></div>
 <hr>
 <h2>被排除的论文</h2>
 <ul>
