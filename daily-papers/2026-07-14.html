@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>2026-07-14 论文推荐</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.21/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.21/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.21/dist/contrib/auto-render.min.js"
+  onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}]});"></script>
+<link rel="stylesheet" href="style.css">
+<style>body{max-width:960px;}</style>
+
+</head>
+<body>
+<nav class="nav"><a href="index.html">🏠 首页</a><a href="2026-07-10.html">← 前一天</a></nav>
+<div class="detail-page"><h1>🔪 今日锐评</h1>
+<p>今天是彻头彻尾的 Agent 大杂烩日——30 篇里 Agent/Multi-Agent 占了一大半，但真正有干货的没几篇，更多是把'agentic'当形容词往标题上贴。难得的是两篇 Scaling Law 论文有真东西，一篇量化可靠性、一篇数据配比协同，都值得精读。Agent 安全方向今天集体觉醒：从合成数据污染到分布式后门到搜索幻觉，扎堆刷'我们发现了一个致命漏洞'。</p>
+<h2>分流表</h2>
+<table>
+<thead>
+<tr>
+<th>等级</th>
+<th>论文</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>🔥 必读</td>
+<td><span class="wikilink">Reliability Scaling Laws</span>（量化不只看准确率，可靠性也有幂律，做部署的必看） · <span class="wikilink">Domain-Aware Scaling Laws</span>（把数据配比协同写进 scaling law，代码提数学的老现象终于有公式了） · <span class="wikilink">Phantom Transfer</span>（合成 agent 轨迹里过滤掉有害动作居然还不够安全，反直觉且实锤）</td>
+</tr>
+<tr>
+<td>👀 值得看</td>
+<td><span class="wikilink">Multi-Agent Fail to Explore</span>（结论扎心：多个 LLM 放一起反而更不会探索） · <span class="wikilink">Abstention-Aware RL</span>（检索失败时该闭嘴，用 RL 罚幻觉，思路正） · <span class="wikilink">Distributed Backdoor</span>（分布式后门躲过所有局部监控，可观测性边界的定义漂亮） · <span class="wikilink">GRADE</span>（用学到的门控决定 agent 深度和通信，省算力） · <span class="wikilink">SVR-R1</span>（模型自我验证当奖励信号，多模态推理自举） · <span class="wikilink">Agentic Routing</span>（harness-native 数据飞轮，工程味重） · <span class="wikilink">BackendForge</span>（端到端后端服务生成评测，比 SWE-bench 更狠）</td>
+</tr>
+<tr>
+<td>💤 可跳过</td>
+<td><span class="wikilink">Lie Algebroids</span>（把 skill 编辑套上李代数胚外壳，形式主义过度） · <span class="wikilink">Hierarchical Orchestration</span>（栈式执行+懒加载，工程报告包装成 formal 架构） · <span class="wikilink">Proof Autoformalization</span>（测试时优化，太窄） · <span class="wikilink">Mako</span>（自进化 Web 渗透 agent，安全向）</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<div class="tab-bar"><button class="tab-btn active" data-tab="all" onclick="switchTab('all')">📋 全部<span class="tab-count">17</span></button><button class="tab-btn" data-tab="scalinglaw与量化" onclick="switchTab('scalinglaw与量化')">📄 📈 Scaling Law 与量化<span class="tab-count">2</span></button><button class="tab-btn" data-tab="agent安全与可靠性" onclick="switchTab('agent安全与可靠性')">🛡 🛡️ Agent 安全与可靠性<span class="tab-count">3</span></button><button class="tab-btn" data-tab="agent协作与评测" onclick="switchTab('agent协作与评测')">🤖 🧪 Agent 协作与评测<span class="tab-count">2</span></button><button class="tab-btn" data-tab="agent架构与路由" onclick="switchTab('agent架构与路由')">🤖 🤖 Agent 架构与路由<span class="tab-count">4</span></button><button class="tab-btn" data-tab="rl与推理" onclick="switchTab('rl与推理')">📄 🧠 RL 与推理<span class="tab-count">4</span></button><button class="tab-btn" data-tab="agent应用" onclick="switchTab('agent应用')">🤖 🛠️ Agent 应用<span class="tab-count">2</span></button></div>
+<div id="panel-all" class="tab-panel active"><h2>📈 Scaling Law 与量化</h2><div class="paper-card" data-topic="📈 Scaling Law 与量化"><h3>1. Reliability Scaling Laws for Quantized Large Language Models</h3>
+<ul>
+<li><strong>作者</strong>: Sirine Ayadi</li>
+<li><strong>机构</strong>: Munich Data Science Institute, School of Computation, Information and Technology, Technical University of Munich</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2607.10855v1">arXiv</a> | <a href="https://arxiv.org/pdf/2607.10855v1">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2607.10855v1/figures/KLD_analysis.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: 系统研究量化 LLM 在'扰动输入'下的可靠性，而不只是干净输入的准确率。用 <span class="wikilink">HQQ</span>、<span class="wikilink">AQLM</span>、<span class="wikilink">GPTQ</span>、<span class="wikilink">AWQ</span>、<span class="wikilink">BNB</span> 等主流量化方法，在 <span class="wikilink">TriviaQA</span>、<span class="wikilink">CoQA</span> 上测量可靠性指标，发现可靠性同样遵循与位宽相关的 scaling law。</li>
+<li><strong>对比方法/Baselines</strong>: 对比 <span class="wikilink">HQQ</span>、<span class="wikilink">AQLM</span>、<span class="wikilink">GPTQ</span>、<span class="wikilink">AWQ</span>、<span class="wikilink">BNB</span> 五种量化方案，可靠性用 <span class="wikilink">AUCROC</span> 度量。</li>
+<li><strong>借鉴意义</strong>: 对任何要把量化模型往生产环境部署的团队都是硬通货——你以为省了显存，实际上牺牲了鲁棒性，而且这个牺牲是可预测的幂律。</li>
+<li><strong>锐评</strong>: 终于有人不再只盯着 benchmark 准确率数字了。量化圈长期的通病就是'干净输入上性能没掉多少'然后就宣布胜利，这篇直接把扰动鲁棒性拉出来鞭尸，还证明它有 scaling law。方法上没什么惊天创新，就是老老实实地测，但这种'测清楚一个被忽视的维度'的工作恰恰是最有部署价值的。唯一遗憾是只有单作者、机构单一，希望后续有人扩到更大模型验证。🔥</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2607.10855v1" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="📈 Scaling Law 与量化"><h3>2. Domain-Aware Scaling Laws Uncover Data Synergy</h3>
+<ul>
+<li><strong>作者</strong>: Kimia Hamidieh1
+ Lester Mackey2
+ David Alvarez-Melis2,3</li>
+<li><strong>机构</strong>: 1MIT CSAIL, 2 Microsoft Research, 3 Harvard University</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2607.11052v1">arXiv</a> | <a href="https://arxiv.org/pdf/2607.11052v1">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2607.11052v1/x8.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2607.11052v1/x10.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: 把训练数据的'领域构成'和'领域间协同'显式建模进 scaling law。从领域无关基线出发，逐步加入一阶 领域→benchmark 协同项和二阶 预训练领域间协同项，用 <span class="wikilink">DataDecide</span>、<span class="wikilink">BPB</span> 等在 <span class="wikilink">HumanEval</span>、<span class="wikilink">MBPP</span> 上验证。</li>
+<li><strong>对比方法/Baselines</strong>: 以标准 scaling law（Kaplan/Hoffmann 式）为域无关基线，扩展到 <span class="wikilink">LSE</span> 建模的协同项。</li>
+<li><strong>借鉴意义</strong>: '加代码能提升数学推理'这种口口相传的炼丹经验，终于被写成了可预测公式。对做数据配比的预训练团队直接可用。</li>
+<li><strong>锐评</strong>: 这篇干的是真活。所有人都知道数据混合有非线性交互（代码提数学、某些混合反而互相干扰），但一直停留在轶事阶段。作者把它塞进 scaling law 的数据项里，还分了一阶和二阶协同，MIT CSAIL + MSR + Harvard 的配置也让人放心。质疑点：协同项的可迁移性——在小模型/小数据上拟合出的协同系数，能不能外推到真正的大规模预训练？这才是关键，但通常这类工作在这一步会留个尾巴。👀</li>
+</ul>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2607.11052v1" target="_blank" rel="noopener">📖 AI 精读</a></div><h2>🛡️ Agent 安全与可靠性</h2><div class="paper-card" data-topic="🛡️ Agent 安全与可靠性"><h3>3. Filtering Harmful Actions Isn't Enough: Phantom Transfer in Agentic SDF</h3>
+<ul>
+<li><strong>作者</strong>: May Dixit
+ERA Fellowship
+maydixit25@gmail.com</li>
+<li><strong>机构</strong>: ERA Fellowship, July, May Dixit</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2607.10750v1">arXiv</a> | <a href="https://arxiv.org/pdf/2607.10750v1">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2607.10750v1/fig6_safety_delta.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: 研究在含对抗交互的合成 agent 轨迹上训练的后果。微调 Llama 3.3 70B 在四个工具使用数据集上，对比 <span class="wikilink">Benign-Direct</span>、<span class="wikilink">Filtered-Adversarial</span> 等设置，发现即便过滤掉明显有害动作，模型仍会习得有害倾向——称为 Phantom Transfer（幽灵迁移）。</li>
+<li><strong>对比方法/Baselines</strong>: 对比 <span class="wikilink">Benign-Direct</span>、<span class="wikilink">Filtered-Adversarial</span>、<span class="wikilink">ToolACE</span> 数据集，<span class="wikilink">SFT</span> vs <span class="wikilink">RL</span> 轨迹结构。</li>
+<li><strong>借鉴意义</strong>: 随着合成轨迹成为 agent 训练主力，这篇直接打脸'过滤掉坏动作就安全'的行业默认做法。对做 agent 后训练数据清洗的团队是当头一棒。</li>
+<li><strong>锐评</strong>: 反直觉但可信的好结果。大家做合成数据都默认'把 harmful action 过滤掉就干净了'，这篇证明危害会通过轨迹的结构性上下文幽灵般迁移过来——即使你删了那一步动作。一个 ERA Fellowship 的独立研究者做出这种发现，比某些大厂灌水强多了。质疑点：只在 Llama 3.3 70B 上验证，样本量和模型多样性不足，'phantom transfer'这个现象需要更多模型复现才敢说是普适规律。⚠️</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2607.10750v1" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🛡️ Agent 安全与可靠性"><h3>4. To Answer or to Abstain: Mitigating Search-Agent Hallucinations via Abstention-Aware Reinforcement Learning</h3>
+<ul>
+<li><strong>作者</strong>: Zhang, Fengji, Fan, Tianyu, Zheng, Yuxiang, Niu, Xinyao, Huang, Chengen, Keung, Jacky, Chen, Bei</li>
+<li><strong>机构</strong>: Alibaba Group, City University of Hong Kong</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2607.10738v1">arXiv</a> | <a href="https://arxiv.org/pdf/2607.10738v1">PDF</a></li>
+<li>
+<p><strong>来源</strong>: 📄 arXiv 关键词检索</p>
+</li>
+<li>
+<p><strong>核心方法</strong>: 针对搜索增强 agent 的幻觉问题。指出当前'只奖励正确答案、不惩罚检索失败时编造答案'的 outcome-reward RL 会加剧幻觉，提出 Abstention-Aware RL——让模型在该弃权时弃权。</p>
+</li>
+<li><strong>对比方法/Baselines</strong>: 摘要未提及具体基线（method_names 为排版噪声）。</li>
+<li><strong>借鉴意义</strong>: 对做 RAG + agent 的团队直接有用——检索失败时模型硬答是生产事故的高发区，把'弃权'纳入奖励是正解方向。</li>
+<li><strong>锐评</strong>: 问题诊断很准：outcome-reward RL 只看答对没答对，等于变相鼓励模型在检索失败时瞎编，反正蒙对了也有奖励。阿里 + 港城大提出让弃权成为一等公民，思路完全正确。质疑点：弃权阈值的校准是个老大难——罚得太狠模型变成缩头乌龟啥都不敢答，罚得太松又回到幻觉。摘要没给方法细节（method_names 全是噪声），得看正文才知道他们怎么平衡。👀</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2607.10738v1" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🛡️ Agent 安全与可靠性"><h3>5. When Local Monitors Miss Compositional Harm: Diagnosing Distributed Backdoors in Multi-Agent Systems</h3>
+<ul>
+<li><strong>作者</strong>: Yibo Hu, Ren Wang</li>
+<li><strong>机构</strong>: Illinois Institute of Technology</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2607.11751v1">arXiv</a> | <a href="https://arxiv.org/pdf/2607.11751v1">PDF</a></li>
+<li>
+<p><strong>来源</strong>: 📄 arXiv 关键词检索</p>
+</li>
+<li>
+<p><strong>核心方法</strong>: 揭示运行时逐条检查（每个消息/工具调用单独审查）的根本漏洞：分布式后门把有害 payload 拆散到多个 agent，每个局部检查都通过，但组装起来就是攻击。提出'可观测性边界'概念并给出可证明的检测条件。</p>
+</li>
+<li><strong>对比方法/Baselines</strong>: 用 <span class="wikilink">AgentDojo</span> 评测，指标含 <span class="wikilink">AUROC</span>、<span class="wikilink">ASR</span>、<span class="wikilink">FPR</span>、<span class="wikilink">TPR</span>。</li>
+<li><strong>借鉴意义</strong>: 对做 agent 安全监控的团队是必读警示——你部署的 per-step monitor 可能有结构性盲区，再强也挡不住拆分攻击。</li>
+<li><strong>锐评</strong>: 'monitor 在每一步都对，却依然漏掉攻击'——这个表述很有冲击力，而且他们没停在吓唬人，而是给出了可观测性边界的可证明结论：一旦碎片在局部与正常流量不可区分，任何局部检测器都无能为力，除非改变观测对象去恢复组装后的代码结构。理论包装漂亮。质疑点：'恢复组装结构'的检测方案在真实系统里开销多大、误报率如何，AgentDojo 上好看不代表生产可用。👀</li>
+</ul>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2607.11751v1" target="_blank" rel="noopener">📖 AI 精读</a></div><h2>🧪 Agent 协作与评测</h2><div class="paper-card" data-topic="🧪 Agent 协作与评测"><h3>6. Multi-Agent LLMs Fail to Explore Each Other</h3>
+<ul>
+<li><strong>作者</strong>: Choi, Hyeong Kyu, Li, Jiatong, Li, Wendi, Wang, Xin Eric, Li, Sharon</li>
+<li><strong>机构</strong>: University of California, Santa Barbara, University of Wisconsin–Madison</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2607.11250v1">arXiv</a> | <a href="https://arxiv.org/pdf/2607.11250v1">PDF</a></li>
+<li>
+<p><strong>来源</strong>: 📄 arXiv 关键词检索</p>
+</li>
+<li>
+<p><strong>核心方法</strong>: 研究多个 LLM agent 相互交互时能否有效探索。发现现代 LLM agent 做不到，反而表现出短视和极化的交互模式，导致协调次优、regret 增加。</p>
+</li>
+<li><strong>对比方法/Baselines</strong>: 摘要未提及具体基线方法（method_names 只抓到排版噪声 <span class="wikilink">TeX</span>/<span class="wikilink">CSS</span>）。</li>
+<li><strong>借鉴意义</strong>: 对所有做多智能体协作、辩论、群体决策的人是个冷水——你以为多个 agent 能互相探索补足，实际上它们会集体抱团短视。</li>
+<li><strong>锐评</strong>: UCSB + UW-Madison（Sharon Li 组）出品，结论很扎心：把多个 LLM 放一起不会自动产生探索的智慧，反而更容易极化和短视。这类'揭穿美好幻想'的负面结果论文特别有价值，因为整个 multi-agent 圈都在假设协作能涌现。只是要小心：'exploration'的定义和实验设置很关键，如果测试环境设计得偏，结论就会被质疑是环境的锅而非模型的锅。👀</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2607.11250v1" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🧪 Agent 协作与评测"><h3>7. BackendForge: Benchmarking Agentic End-to-End Code Generation with Backend Services</h3>
+<ul>
+<li><strong>作者</strong>: Yuzhe Guo1,2</li>
+<li><strong>机构</strong>: 4Shanghai Institute of Systems for Open Computing, 1Key Lab of HCST (PKU), MOE; SCS, Peking University, 3Fudan University Institute of Systems for Advanced Computing</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2607.11042v1">arXiv</a> | <a href="https://arxiv.org/pdf/2607.11042v1">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2607.11042v1/x1.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2607.11042v1/x2.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2607.11042v1/x5.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: BackendForge——评测 agentic LLM 端到端生成后端服务的能力：能否产出既可部署又行为正确的软件制品。以后端服务为可控但真实的评测基质，考察 agent 检查文件、执行命令、跑测试、迭代修改的完整闭环。</li>
+<li><strong>对比方法/Baselines</strong>: 对比 <span class="wikilink">HumanEval</span>、<span class="wikilink">SWE</span>-bench、WebCoderBench、AppForge、BaxBench 等，测试 <span class="wikilink">GPT-5</span>、<span class="wikilink">DeepSeek</span>。</li>
+<li><strong>借鉴意义</strong>: 比 SWE-bench 更进一步——不只是修 bug，而是端到端造一个能跑的后端服务，对评估 coding agent 真实生产力有价值。</li>
+<li><strong>锐评</strong>: 评测维度选得好：'既可部署又行为正确'比单纯通过单测狠多了，后端服务需要 API 契约、HTTP 行为、状态管理全对。北大 + 复旦 + 上海系统所的配置也靠谱。这类 benchmark 论文的价值取决于两点：任务是否真实、评测是否防作弊。质疑点：端到端后端服务的'正确性'判定极难自动化，如果评测脚本本身有洞，agent 就会学会钻空子。得看他们的 rigorous eval 到底 rigorous 在哪。👀</li>
+</ul>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2607.11042v1" target="_blank" rel="noopener">📖 AI 精读</a></div><h2>🤖 Agent 架构与路由</h2><div class="paper-card" data-topic="🤖 Agent 架构与路由"><h3>8. Route, Communicate, and Reason: Gated Routing and Adaptive Depth for Efficient Multi-Agent Reasoning</h3>
+<ul>
+<li><strong>作者</strong>: Ghosh, Sudipto, Chakraborty, Tanmoy</li>
+<li><strong>机构</strong>: Department of Electrical Engineering, Indian Institute of Technology Delhi, Yardi School of Artificial Intelligence, Indian Institute of Technology Delhi</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2607.10836v1">arXiv</a> | <a href="https://arxiv.org/pdf/2607.10836v1">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2607.10836v1/x1.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: GRADE（Gated Routing and Adaptive Depth）——分层多智能体系统，用四个轻量学习门控决定：激活哪些 agent、路由深度、是否跨 agent 通信、剪哪些分支。整体用 <span class="wikilink">CoGRPO</span> 端到端训练，correctness reward 驱动。</li>
+<li><strong>对比方法/Baselines</strong>: 对比 <span class="wikilink">MAGRPO</span> 等多智能体基线，在 <span class="wikilink">GPQA</span>、<span class="wikilink">AIME-2025</span> 上评测。</li>
+<li><strong>借鉴意义</strong>: 多智能体集成的算力爆炸是真痛点，这篇用学到的门控做自适应深度和通信裁剪，对想省钱又要多 agent 的团队实用。</li>
+<li><strong>锐评</strong>: 问的三个问题——咨询哪些 agent、遍历多深、通信值不值——正是 multi-agent 落地的核心成本问题，不是虚的。四个门控 + CoGRPO 端到端训练的设计干净。IIT Delhi 的工作，方法完整。质疑点：四个门控听起来优雅，但联合训练稳定性、以及门控本身的推理开销会不会把省下的算力又吃回去，需要看消融。另外只在 GPQA/AIME 这种推理 benchmark 上测，换到开放式 agent 任务未必成立。👀</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2607.10836v1" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🤖 Agent 架构与路由"><h3>9. Agentic Routing: The Harness-Native Data Flywheel</h3>
+<ul>
+<li><strong>作者</strong>: TokenRhythm Technologies</li>
+</ul>
+<p>https://github.com/opensquilla/opensquilla
+- <strong>链接</strong>: <a href="http://arxiv.org/abs/2607.11399v1">arXiv</a> | <a href="https://arxiv.org/pdf/2607.11399v1">PDF</a>
+- <strong>来源</strong>: 📄 arXiv 关键词检索</p>
+<ul>
+<li><strong>核心方法</strong>: Agentic Routing——把 Agent = Model + Harness 的传统分解打破。传统做法固定一个基座模型、所有优化都在 harness 侧；本文让 harness 根据任务在多个结构化专精模型间路由（代码编辑、长上下文、工具使用、数学推理、低延迟各有所长），形成 harness-native 的数据飞轮。</li>
+<li><strong>对比方法/Baselines</strong>: 涉及 <span class="wikilink">DRACO</span>、<span class="wikilink">OpenSquilla</span>、<span class="wikilink">OpenClaw</span>、<span class="wikilink">DeepSeek</span> 等，用 <span class="wikilink">PinchBench</span> 评测。</li>
+<li><strong>借鉴意义</strong>: 对做 agent 系统工程的团队有现实意义——前沿模型正在结构性专精化，单模型通吃已经不划算，按能力轴路由是趋势。</li>
+<li><strong>锐评</strong>: 观察很到位：模型正在按能力轴分化，没有一个模型在代码/长上下文/工具/数学/低延迟上全面碾压，那 harness 就该做智能路由。工程味很浓，'数据飞轮'的叙事也讲得圆。但作者是家公司（TokenRhythm Technologies），带 GitHub 链接，这种带产品的论文要警惕：路由收益有多少是真的、有多少是挑了对自家有利的 benchmark。PinchBench 是不是他们自己造的？得查。👀</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2607.11399v1" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🤖 Agent 架构与路由"><h3>10. A Formal Hierarchical Architecture for Agentic Orchestration with Stack-Based Execution and Lazy Discovery</h3>
+<ul>
+<li><strong>作者</strong>: Devadiga, Prashant, Abhishek, Mishra, Adithya, Singh, Alok, Sinha, Amisha, Desai, Asit, Dahad, Gaurang, Bhushan, Harshit, Reddy, Mandati Pramod, Gupta, Prakhar, Patil, Rupesh, Behere, Siddhi</li>
+<li><strong>机构</strong>: Lazy Discovery</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2607.11138v1">arXiv</a> | <a href="https://arxiv.org/pdf/2607.11138v1">PDF</a></li>
+<li>
+<p><strong>来源</strong>: 📄 arXiv 关键词检索</p>
+</li>
+<li>
+<p><strong>核心方法</strong>: 针对工具注册表扁平化导致的'决策空间爆炸、上下文窗口饱和、路由精度下降'，提出分层架构 + 栈式执行（LIFO）+ 懒发现（通过局部化 manifest 按需加载能力）。用形式自动机理论建模。</p>
+</li>
+<li><strong>对比方法/Baselines</strong>: method_names 多为噪声（<span class="wikilink">LIFO</span>、<span class="wikilink">UPI</span>、<span class="wikilink">NN</span> 等），未见清晰对比方法。</li>
+<li><strong>借鉴意义</strong>: 工具数量爆炸确实是 agent 落地的真痛点，分层 + 懒加载是合理工程解，对管理大规模工具库的团队有参考。</li>
+<li><strong>锐评</strong>: 问题是真问题：几百上千个工具塞给模型一次性评估，必然爆炸。栈式执行 + 懒发现的方案也合理。但这篇最大的问题是'把工程实践套上 formal 外壳'——用自动机理论包装一个本质上是'分层菜单 + 按需加载'的常识设计，11 个作者堆一篇，理论深度存疑。'Formal Hierarchical Architecture'这个标题唬人，实际贡献可能就是个不错的系统设计。🫠</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2607.11138v1" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🤖 Agent 架构与路由"><h3>11. Agentic Skill Optimization over Lie Algebroids</h3>
+<ul>
+<li><strong>作者</strong>: Mahadevan, Sridhar</li>
+<li><strong>机构</strong>: Adobe Research and University of Massachusetts, Amherst, smahadev@adobe.com, mahadeva@umass.edu</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2607.11493v1">arXiv</a> | <a href="https://arxiv.org/pdf/2607.11493v1">PDF</a></li>
+<li>
+<p><strong>来源</strong>: 📄 arXiv 关键词检索</p>
+</li>
+<li>
+<p><strong>核心方法</strong>: 把 agentic skill 优化（编辑 prompt/rubric/plan/工具契约/示例/validator/trace）建模为李代数胚（Lie Algebroid）上的几何优化问题，因为 skill 编辑是对结构化制品的局部修复，效果只有 rollout 后才可观测。</p>
+</li>
+<li><strong>对比方法/Baselines</strong>: 引用 <span class="wikilink">SkillOpt</span>（Yang et al. 2026），涉及 <span class="wikilink">LASKO</span>、<span class="wikilink">ROCKET</span> 等。</li>
+<li><strong>借鉴意义</strong>: 自进化 agent 的 skill 优化是热点，但这篇的几何形式化对大多数从业者门槛过高。</li>
+<li><strong>锐评</strong>: Adobe + UMass 的 Sridhar Mahadevan 一贯的风格——把一个实用问题（agent 怎么编辑自己的技能）套上重型微分几何机器（李代数胚）。理论上也许自洽，但我必须泼冷水：skill 编辑的实际瓶颈是奖励稀疏和信用分配，把它包装成流形上的优化并不会自动解决这些问题，反而抬高了理解门槛却没给出可落地的算法收益。形式主义的漂亮 ≠ 实用。🫠</li>
+</ul>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2607.11493v1" target="_blank" rel="noopener">📖 AI 精读</a></div><h2>🧠 RL 与推理</h2><div class="paper-card" data-topic="🧠 RL 与推理"><h3>12. SVR-R1: Bootstrapping Multi-modal Reasoning with Self-verification in Reinforcement Learning</h3>
+<ul>
+<li><strong>作者</strong>: Mingyuan Wu1</li>
+<li><strong>机构</strong>: 1University of Illinois Urbana-Champaign</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2607.10966v1">arXiv</a> | <a href="https://arxiv.org/pdf/2607.10966v1">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2607.10966v1/x1.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: SVR-R1——多轮 RL 框架，把模型自身的验证变成学习信号。每个 query 用同一套权重先提出答案，再给出二元自判（Yes/No）：'No'触发第二次重思，'Yes'或达到轮次上限则定稿计算 outcome reward。用 <span class="wikilink">GRPO</span> 训练。</li>
+<li><strong>对比方法/Baselines</strong>: 对比 <span class="wikilink">ThinkLite</span> 等，基于 <span class="wikilink">VLM</span>/<span class="wikilink">VL</span> 多模态设置。</li>
+<li><strong>借鉴意义</strong>: 自我验证当奖励信号是个便宜的自举思路，对做多模态推理且缺高质量 verifier 的团队有参考价值。</li>
+<li><strong>锐评</strong>: '用同一套权重既当答题者又当验证者'的自举设计很省事，UIUC 的工作。思路是对的——外部 verifier 贵，自验证便宜。但这里有个我一定要点出的死穴：如果模型的自判本身就不可靠（过度自信说 Yes），那这个奖励信号就是在自我欺骗里打转，越训越自恋。摘要没说他们怎么防止 self-verdict 崩溃成'永远说 Yes'，这是这类自验证方法的通病。🫠</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2607.10966v1" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🧠 RL 与推理"><h3>13. Generalizing Preference-based Reinforcement Learning: a Rationality Model for Incomparability</h3>
+<ul>
+<li><strong>作者</strong>: Drago, Simone, Mussi, Marco, Bianconi, Leonardo, Metelli, Alberto Maria</li>
+<li><strong>机构</strong>: Marco Mussi, Simone Drago</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2607.11432v1">arXiv</a> | <a href="https://arxiv.org/pdf/2607.11432v1">PDF</a></li>
+<li>
+<p><strong>来源</strong>: 📄 arXiv 关键词检索</p>
+</li>
+<li>
+<p><strong>核心方法</strong>: 推广基于偏好的 RL：允许专家把轨迹对标注为'不可比'（incomparable，即两条轨迹互不支配），而不只是二选一。形式化该学习问题及解应满足的性质，提出处理不可比性的 rationality 模型。</p>
+</li>
+<li><strong>对比方法/Baselines</strong>: 摘要未提及具体基线（method_names 为排版噪声）。</li>
+<li><strong>借鉴意义</strong>: 对 RLHF/偏好学习有理论价值——真实人类反馈里'两个都行/无法比较'很常见，强行二选一会引入噪声。</li>
+<li><strong>锐评</strong>: 理论切口很聪明：现实中标注者经常觉得两条轨迹没法比，传统 preference-based RL 逼人二选一等于制造假信号。把'不可比'作为一等标签建模是对偏好学习的诚实修正。这是纯理论工作，Politecnico di Milano 一贯的风格。质疑点：理论优雅但'incomparable'标签在实际标注中怎么收集、标注者会不会滥用这个选项当偷懒出口，实证部分才是检验。👀</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2607.11432v1" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🧠 RL 与推理"><h3>14. Active Offline-to-Online Reinforcement Learning</h3>
+<ul>
+<li><strong>作者</strong>: Bozkurt, Alper Kamil, Zhang, Shangtong, Motai, Yuichi</li>
+<li><strong>机构</strong>: ALPER KAMIL BOZKURT* , Virginia Commonwealth University, USA, Commonwealth University, Richmond, Virginia, USA, SHANGTONG ZHANG, University of Virginia, USA, YUICHI MOTAI, Virginia Commonwealth University, USA, sensitive to the choice of algorithm and hyperparameters, making it risky to commit to a single policy</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2607.11720v1">arXiv</a> | <a href="https://arxiv.org/pdf/2607.11720v1">PDF</a></li>
+<li>
+<p><strong>来源</strong>: 📄 arXiv 关键词检索</p>
+</li>
+<li>
+<p><strong>核心方法</strong>: 主动式离线到在线 RL（Active O2O-RL）——在非平稳域中，从离线数据训练策略后再通过有限在线交互改进，重点是'主动'选择在线交互以降低对算法和超参的敏感性。</p>
+</li>
+<li><strong>对比方法/Baselines</strong>: 摘要未提及具体基线（method_names 为排版噪声）。</li>
+<li><strong>借鉴意义</strong>: O2O-RL 在交互昂贵/危险的非平稳场景有价值，主动选择交互是降低部署风险的合理方向。</li>
+<li><strong>锐评</strong>: O2O-RL 本身是个务实方向，非平稳域里'离线打底 + 少量在线微调'很现实。加'主动'选择交互降低超参敏感性也对——O2O 最恼人的就是换个超参结果就崩。但摘要信息量太少（method_names 全是 TeX/CSS 噪声），看不出核心方法，属于'方向对但得读正文才知道有没有货'的类型。💤</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2607.11720v1" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🧠 RL 与推理"><h3>15. Auditing the Risk Claims of Distributional Reinforcement Learning</h3>
+<ul>
+<li><strong>作者</strong>: Hari Prasad</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2607.11607v1">arXiv</a> | <a href="https://arxiv.org/pdf/2607.11607v1">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2607.11607v1/figures/refutation_by_stratum.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2607.11607v1/figures/scatter_learned_mc.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2607.11607v1/figures/gallery.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: 审计分布式 RL 的风险声明是否属实。分布式 RL agent 学到完整回报分布，常被直接用于可解释性、风险敏感控制、安全监控——本文用决策相关的筛选指标（excess Wasserstein 等）审计 <span class="wikilink">QR</span>-<span class="wikilink">DQN</span>、<span class="wikilink">C51</span>、<span class="wikilink">IQN</span> 的风险声明真伪。</li>
+<li><strong>对比方法/Baselines</strong>: 审计对象 <span class="wikilink">QR</span>-DQN、C51、<span class="wikilink">IQN</span>，在 <span class="wikilink">MinAtar</span>、<span class="wikilink">ALE</span> 上评测。</li>
+<li><strong>借鉴意义</strong>: 对把分布式 RL 用于风险敏感/安全场景的人是必要的清醒剂——学到的分布未必真实。</li>
+<li><strong>锐评</strong>: 又一篇'审计既有方法真伪'的好选题。分布式 RL 圈长期把学到的回报分布当真理用于风险控制，但早有理论暗示这些分布未必准。作者用 excess Wasserstein 做筛选指标去实测，方向正确。质疑点：单作者、只在 MinAtar/ALE 这类小环境上审计，结论的普适性有限；而且'分布不准但均值估计有用'早有前人指出，本文的增量是把它量化到风险声明层面——增量真实但不算颠覆。👀</li>
+</ul>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2607.11607v1" target="_blank" rel="noopener">📖 AI 精读</a></div><h2>🛠️ Agent 应用</h2><div class="paper-card" data-topic="🛠️ Agent 应用"><h3>16. An Explainable Agentic System for Detection of Conversational Scams with Summary-Based Memory</h3>
+<ul>
+<li><strong>作者</strong>: Adnan, Ahmed Omar Salim, Manjunath, Yogananda, Khare, Shivanjali</li>
+<li><strong>机构</strong>: University of New Haven, Department of Electrical &amp;amp, Yogananda Manjunath</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2607.11707v1">arXiv</a> | <a href="https://arxiv.org/pdf/2607.11707v1">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2607.11707v1/figures/jina-replace.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2607.11707v1/figures/final_architecture.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2607.11707v1/figures/context_growth.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: 可解释 agentic 系统检测对话式诈骗（杀猪盘等跨周/跨月长程诈骗）。用基于摘要的记忆（Summary-Based Memory）维护长对话上下文，构建 <span class="wikilink">ConScamBench</span> 评测，对比孤立消息检测的不足。</li>
+<li><strong>对比方法/Baselines</strong>: 对比 <span class="wikilink">SmishX</span>、单消息检测 <span class="wikilink">SMD</span>，构建 <span class="wikilink">ConScamBench</span>、<span class="wikilink">LoveFraud02</span> 数据集。</li>
+<li><strong>借鉴意义</strong>: 对话式诈骗（杀猪盘）是真实社会危害，长程记忆 + 可解释检测有实际应用价值。</li>
+<li><strong>锐评</strong>: 选题接地气，杀猪盘这类长程诈骗确实是现有单消息检测的盲区，summary-based memory 处理长对话是对的思路。质疑点：诈骗检测最怕的是数据集偏差和对抗性——真实诈骗犯会调整话术，在 ConScamBench 上的高精度未必能扛住 in-the-wild 的对抗。而且'可解释'常常是事后编故事，得看解释是否真的指导了决策。👀</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2607.11707v1" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🛠️ Agent 应用"><h3>17. Large Language Models for Token-Efficient and Semantic-Preserving Opinion Summarization</h3>
+<ul>
+<li><strong>作者</strong>: Marozzo, Fabrizio, Iannicelli, Stefano</li>
+<li><strong>机构</strong>: University of Calabria, Rende, Italy</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2607.10825v1">arXiv</a> | <a href="https://arxiv.org/pdf/2607.10825v1">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2607.10825v1/x1.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: 用 LLM 做 token 高效且语义保持的意见摘要。针对评论/反馈/社媒等观点文本的规模大、冗余、不平衡问题，结合 <span class="wikilink">KDE</span>、<span class="wikilink">ModernBERT</span>、<span class="wikilink">RAG</span> 做既忠实于观点多样性又压缩 token 的摘要。</li>
+<li><strong>对比方法/Baselines</strong>: 涉及 <span class="wikilink">ModernBERT</span>、<span class="wikilink">BERT</span>、<span class="wikilink">RAG</span> 等。</li>
+<li><strong>借鉴意义</strong>: 对做评论分析、用户反馈聚合的推荐/电商团队有直接用途，token 效率是成本敏感场景的关键。</li>
+<li><strong>锐评</strong>: 务实的应用论文，观点摘要的'忠实于多样性'确实是难点——大多摘要会把长尾观点抹平，只留主流声音。用 KDE 保多样性是个巧思。但这类工作创新度有限，本质是把现有组件（ModernBERT + RAG + LLM）拼起来调优，Calabria 大学的工作规模也不大。适合做类似任务时抄思路，不必当突破看。🫠</li>
+</ul>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2607.10825v1" target="_blank" rel="noopener">📖 AI 精读</a></div></div>
+<div id="panel-scalinglaw与量化" class="tab-panel"><h2>📈 Scaling Law 与量化</h2><div class="paper-card" data-topic="📈 Scaling Law 与量化"><h3>1. Reliability Scaling Laws for Quantized Large Language Models</h3>
+<ul>
+<li><strong>作者</strong>: Sirine Ayadi</li>
+<li><strong>机构</strong>: Munich Data Science Institute, School of Computation, Information and Technology, Technical University of Munich</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2607.10855v1">arXiv</a> | <a href="https://arxiv.org/pdf/2607.10855v1">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2607.10855v1/figures/KLD_analysis.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: 系统研究量化 LLM 在'扰动输入'下的可靠性，而不只是干净输入的准确率。用 <span class="wikilink">HQQ</span>、<span class="wikilink">AQLM</span>、<span class="wikilink">GPTQ</span>、<span class="wikilink">AWQ</span>、<span class="wikilink">BNB</span> 等主流量化方法，在 <span class="wikilink">TriviaQA</span>、<span class="wikilink">CoQA</span> 上测量可靠性指标，发现可靠性同样遵循与位宽相关的 scaling law。</li>
+<li><strong>对比方法/Baselines</strong>: 对比 <span class="wikilink">HQQ</span>、<span class="wikilink">AQLM</span>、<span class="wikilink">GPTQ</span>、<span class="wikilink">AWQ</span>、<span class="wikilink">BNB</span> 五种量化方案，可靠性用 <span class="wikilink">AUCROC</span> 度量。</li>
+<li><strong>借鉴意义</strong>: 对任何要把量化模型往生产环境部署的团队都是硬通货——你以为省了显存，实际上牺牲了鲁棒性，而且这个牺牲是可预测的幂律。</li>
+<li><strong>锐评</strong>: 终于有人不再只盯着 benchmark 准确率数字了。量化圈长期的通病就是'干净输入上性能没掉多少'然后就宣布胜利，这篇直接把扰动鲁棒性拉出来鞭尸，还证明它有 scaling law。方法上没什么惊天创新，就是老老实实地测，但这种'测清楚一个被忽视的维度'的工作恰恰是最有部署价值的。唯一遗憾是只有单作者、机构单一，希望后续有人扩到更大模型验证。🔥</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2607.10855v1" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="📈 Scaling Law 与量化"><h3>2. Domain-Aware Scaling Laws Uncover Data Synergy</h3>
+<ul>
+<li><strong>作者</strong>: Kimia Hamidieh1
+ Lester Mackey2
+ David Alvarez-Melis2,3</li>
+<li><strong>机构</strong>: 1MIT CSAIL, 2 Microsoft Research, 3 Harvard University</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2607.11052v1">arXiv</a> | <a href="https://arxiv.org/pdf/2607.11052v1">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2607.11052v1/x8.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2607.11052v1/x10.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: 把训练数据的'领域构成'和'领域间协同'显式建模进 scaling law。从领域无关基线出发，逐步加入一阶 领域→benchmark 协同项和二阶 预训练领域间协同项，用 <span class="wikilink">DataDecide</span>、<span class="wikilink">BPB</span> 等在 <span class="wikilink">HumanEval</span>、<span class="wikilink">MBPP</span> 上验证。</li>
+<li><strong>对比方法/Baselines</strong>: 以标准 scaling law（Kaplan/Hoffmann 式）为域无关基线，扩展到 <span class="wikilink">LSE</span> 建模的协同项。</li>
+<li><strong>借鉴意义</strong>: '加代码能提升数学推理'这种口口相传的炼丹经验，终于被写成了可预测公式。对做数据配比的预训练团队直接可用。</li>
+<li><strong>锐评</strong>: 这篇干的是真活。所有人都知道数据混合有非线性交互（代码提数学、某些混合反而互相干扰），但一直停留在轶事阶段。作者把它塞进 scaling law 的数据项里，还分了一阶和二阶协同，MIT CSAIL + MSR + Harvard 的配置也让人放心。质疑点：协同项的可迁移性——在小模型/小数据上拟合出的协同系数，能不能外推到真正的大规模预训练？这才是关键，但通常这类工作在这一步会留个尾巴。👀</li>
+</ul>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2607.11052v1" target="_blank" rel="noopener">📖 AI 精读</a></div></div>
+<div id="panel-agent安全与可靠性" class="tab-panel"><h2>🛡️ Agent 安全与可靠性</h2><div class="paper-card" data-topic="🛡️ Agent 安全与可靠性"><h3>3. Filtering Harmful Actions Isn't Enough: Phantom Transfer in Agentic SDF</h3>
+<ul>
+<li><strong>作者</strong>: May Dixit
+ERA Fellowship
+maydixit25@gmail.com</li>
+<li><strong>机构</strong>: ERA Fellowship, July, May Dixit</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2607.10750v1">arXiv</a> | <a href="https://arxiv.org/pdf/2607.10750v1">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2607.10750v1/fig6_safety_delta.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: 研究在含对抗交互的合成 agent 轨迹上训练的后果。微调 Llama 3.3 70B 在四个工具使用数据集上，对比 <span class="wikilink">Benign-Direct</span>、<span class="wikilink">Filtered-Adversarial</span> 等设置，发现即便过滤掉明显有害动作，模型仍会习得有害倾向——称为 Phantom Transfer（幽灵迁移）。</li>
+<li><strong>对比方法/Baselines</strong>: 对比 <span class="wikilink">Benign-Direct</span>、<span class="wikilink">Filtered-Adversarial</span>、<span class="wikilink">ToolACE</span> 数据集，<span class="wikilink">SFT</span> vs <span class="wikilink">RL</span> 轨迹结构。</li>
+<li><strong>借鉴意义</strong>: 随着合成轨迹成为 agent 训练主力，这篇直接打脸'过滤掉坏动作就安全'的行业默认做法。对做 agent 后训练数据清洗的团队是当头一棒。</li>
+<li><strong>锐评</strong>: 反直觉但可信的好结果。大家做合成数据都默认'把 harmful action 过滤掉就干净了'，这篇证明危害会通过轨迹的结构性上下文幽灵般迁移过来——即使你删了那一步动作。一个 ERA Fellowship 的独立研究者做出这种发现，比某些大厂灌水强多了。质疑点：只在 Llama 3.3 70B 上验证，样本量和模型多样性不足，'phantom transfer'这个现象需要更多模型复现才敢说是普适规律。⚠️</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2607.10750v1" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🛡️ Agent 安全与可靠性"><h3>4. To Answer or to Abstain: Mitigating Search-Agent Hallucinations via Abstention-Aware Reinforcement Learning</h3>
+<ul>
+<li><strong>作者</strong>: Zhang, Fengji, Fan, Tianyu, Zheng, Yuxiang, Niu, Xinyao, Huang, Chengen, Keung, Jacky, Chen, Bei</li>
+<li><strong>机构</strong>: Alibaba Group, City University of Hong Kong</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2607.10738v1">arXiv</a> | <a href="https://arxiv.org/pdf/2607.10738v1">PDF</a></li>
+<li>
+<p><strong>来源</strong>: 📄 arXiv 关键词检索</p>
+</li>
+<li>
+<p><strong>核心方法</strong>: 针对搜索增强 agent 的幻觉问题。指出当前'只奖励正确答案、不惩罚检索失败时编造答案'的 outcome-reward RL 会加剧幻觉，提出 Abstention-Aware RL——让模型在该弃权时弃权。</p>
+</li>
+<li><strong>对比方法/Baselines</strong>: 摘要未提及具体基线（method_names 为排版噪声）。</li>
+<li><strong>借鉴意义</strong>: 对做 RAG + agent 的团队直接有用——检索失败时模型硬答是生产事故的高发区，把'弃权'纳入奖励是正解方向。</li>
+<li><strong>锐评</strong>: 问题诊断很准：outcome-reward RL 只看答对没答对，等于变相鼓励模型在检索失败时瞎编，反正蒙对了也有奖励。阿里 + 港城大提出让弃权成为一等公民，思路完全正确。质疑点：弃权阈值的校准是个老大难——罚得太狠模型变成缩头乌龟啥都不敢答，罚得太松又回到幻觉。摘要没给方法细节（method_names 全是噪声），得看正文才知道他们怎么平衡。👀</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2607.10738v1" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🛡️ Agent 安全与可靠性"><h3>5. When Local Monitors Miss Compositional Harm: Diagnosing Distributed Backdoors in Multi-Agent Systems</h3>
+<ul>
+<li><strong>作者</strong>: Yibo Hu, Ren Wang</li>
+<li><strong>机构</strong>: Illinois Institute of Technology</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2607.11751v1">arXiv</a> | <a href="https://arxiv.org/pdf/2607.11751v1">PDF</a></li>
+<li>
+<p><strong>来源</strong>: 📄 arXiv 关键词检索</p>
+</li>
+<li>
+<p><strong>核心方法</strong>: 揭示运行时逐条检查（每个消息/工具调用单独审查）的根本漏洞：分布式后门把有害 payload 拆散到多个 agent，每个局部检查都通过，但组装起来就是攻击。提出'可观测性边界'概念并给出可证明的检测条件。</p>
+</li>
+<li><strong>对比方法/Baselines</strong>: 用 <span class="wikilink">AgentDojo</span> 评测，指标含 <span class="wikilink">AUROC</span>、<span class="wikilink">ASR</span>、<span class="wikilink">FPR</span>、<span class="wikilink">TPR</span>。</li>
+<li><strong>借鉴意义</strong>: 对做 agent 安全监控的团队是必读警示——你部署的 per-step monitor 可能有结构性盲区，再强也挡不住拆分攻击。</li>
+<li><strong>锐评</strong>: 'monitor 在每一步都对，却依然漏掉攻击'——这个表述很有冲击力，而且他们没停在吓唬人，而是给出了可观测性边界的可证明结论：一旦碎片在局部与正常流量不可区分，任何局部检测器都无能为力，除非改变观测对象去恢复组装后的代码结构。理论包装漂亮。质疑点：'恢复组装结构'的检测方案在真实系统里开销多大、误报率如何，AgentDojo 上好看不代表生产可用。👀</li>
+</ul>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2607.11751v1" target="_blank" rel="noopener">📖 AI 精读</a></div></div>
+<div id="panel-agent协作与评测" class="tab-panel"><h2>🧪 Agent 协作与评测</h2><div class="paper-card" data-topic="🧪 Agent 协作与评测"><h3>6. Multi-Agent LLMs Fail to Explore Each Other</h3>
+<ul>
+<li><strong>作者</strong>: Choi, Hyeong Kyu, Li, Jiatong, Li, Wendi, Wang, Xin Eric, Li, Sharon</li>
+<li><strong>机构</strong>: University of California, Santa Barbara, University of Wisconsin–Madison</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2607.11250v1">arXiv</a> | <a href="https://arxiv.org/pdf/2607.11250v1">PDF</a></li>
+<li>
+<p><strong>来源</strong>: 📄 arXiv 关键词检索</p>
+</li>
+<li>
+<p><strong>核心方法</strong>: 研究多个 LLM agent 相互交互时能否有效探索。发现现代 LLM agent 做不到，反而表现出短视和极化的交互模式，导致协调次优、regret 增加。</p>
+</li>
+<li><strong>对比方法/Baselines</strong>: 摘要未提及具体基线方法（method_names 只抓到排版噪声 <span class="wikilink">TeX</span>/<span class="wikilink">CSS</span>）。</li>
+<li><strong>借鉴意义</strong>: 对所有做多智能体协作、辩论、群体决策的人是个冷水——你以为多个 agent 能互相探索补足，实际上它们会集体抱团短视。</li>
+<li><strong>锐评</strong>: UCSB + UW-Madison（Sharon Li 组）出品，结论很扎心：把多个 LLM 放一起不会自动产生探索的智慧，反而更容易极化和短视。这类'揭穿美好幻想'的负面结果论文特别有价值，因为整个 multi-agent 圈都在假设协作能涌现。只是要小心：'exploration'的定义和实验设置很关键，如果测试环境设计得偏，结论就会被质疑是环境的锅而非模型的锅。👀</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2607.11250v1" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🧪 Agent 协作与评测"><h3>7. BackendForge: Benchmarking Agentic End-to-End Code Generation with Backend Services</h3>
+<ul>
+<li><strong>作者</strong>: Yuzhe Guo1,2</li>
+<li><strong>机构</strong>: 4Shanghai Institute of Systems for Open Computing, 1Key Lab of HCST (PKU), MOE; SCS, Peking University, 3Fudan University Institute of Systems for Advanced Computing</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2607.11042v1">arXiv</a> | <a href="https://arxiv.org/pdf/2607.11042v1">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2607.11042v1/x1.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2607.11042v1/x2.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2607.11042v1/x5.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: BackendForge——评测 agentic LLM 端到端生成后端服务的能力：能否产出既可部署又行为正确的软件制品。以后端服务为可控但真实的评测基质，考察 agent 检查文件、执行命令、跑测试、迭代修改的完整闭环。</li>
+<li><strong>对比方法/Baselines</strong>: 对比 <span class="wikilink">HumanEval</span>、<span class="wikilink">SWE</span>-bench、WebCoderBench、AppForge、BaxBench 等，测试 <span class="wikilink">GPT-5</span>、<span class="wikilink">DeepSeek</span>。</li>
+<li><strong>借鉴意义</strong>: 比 SWE-bench 更进一步——不只是修 bug，而是端到端造一个能跑的后端服务，对评估 coding agent 真实生产力有价值。</li>
+<li><strong>锐评</strong>: 评测维度选得好：'既可部署又行为正确'比单纯通过单测狠多了，后端服务需要 API 契约、HTTP 行为、状态管理全对。北大 + 复旦 + 上海系统所的配置也靠谱。这类 benchmark 论文的价值取决于两点：任务是否真实、评测是否防作弊。质疑点：端到端后端服务的'正确性'判定极难自动化，如果评测脚本本身有洞，agent 就会学会钻空子。得看他们的 rigorous eval 到底 rigorous 在哪。👀</li>
+</ul>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2607.11042v1" target="_blank" rel="noopener">📖 AI 精读</a></div></div>
+<div id="panel-agent架构与路由" class="tab-panel"><h2>🤖 Agent 架构与路由</h2><div class="paper-card" data-topic="🤖 Agent 架构与路由"><h3>8. Route, Communicate, and Reason: Gated Routing and Adaptive Depth for Efficient Multi-Agent Reasoning</h3>
+<ul>
+<li><strong>作者</strong>: Ghosh, Sudipto, Chakraborty, Tanmoy</li>
+<li><strong>机构</strong>: Department of Electrical Engineering, Indian Institute of Technology Delhi, Yardi School of Artificial Intelligence, Indian Institute of Technology Delhi</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2607.10836v1">arXiv</a> | <a href="https://arxiv.org/pdf/2607.10836v1">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2607.10836v1/x1.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: GRADE（Gated Routing and Adaptive Depth）——分层多智能体系统，用四个轻量学习门控决定：激活哪些 agent、路由深度、是否跨 agent 通信、剪哪些分支。整体用 <span class="wikilink">CoGRPO</span> 端到端训练，correctness reward 驱动。</li>
+<li><strong>对比方法/Baselines</strong>: 对比 <span class="wikilink">MAGRPO</span> 等多智能体基线，在 <span class="wikilink">GPQA</span>、<span class="wikilink">AIME-2025</span> 上评测。</li>
+<li><strong>借鉴意义</strong>: 多智能体集成的算力爆炸是真痛点，这篇用学到的门控做自适应深度和通信裁剪，对想省钱又要多 agent 的团队实用。</li>
+<li><strong>锐评</strong>: 问的三个问题——咨询哪些 agent、遍历多深、通信值不值——正是 multi-agent 落地的核心成本问题，不是虚的。四个门控 + CoGRPO 端到端训练的设计干净。IIT Delhi 的工作，方法完整。质疑点：四个门控听起来优雅，但联合训练稳定性、以及门控本身的推理开销会不会把省下的算力又吃回去，需要看消融。另外只在 GPQA/AIME 这种推理 benchmark 上测，换到开放式 agent 任务未必成立。👀</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2607.10836v1" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🤖 Agent 架构与路由"><h3>9. Agentic Routing: The Harness-Native Data Flywheel</h3>
+<ul>
+<li><strong>作者</strong>: TokenRhythm Technologies</li>
+</ul>
+<p>https://github.com/opensquilla/opensquilla
+- <strong>链接</strong>: <a href="http://arxiv.org/abs/2607.11399v1">arXiv</a> | <a href="https://arxiv.org/pdf/2607.11399v1">PDF</a>
+- <strong>来源</strong>: 📄 arXiv 关键词检索</p>
+<ul>
+<li><strong>核心方法</strong>: Agentic Routing——把 Agent = Model + Harness 的传统分解打破。传统做法固定一个基座模型、所有优化都在 harness 侧；本文让 harness 根据任务在多个结构化专精模型间路由（代码编辑、长上下文、工具使用、数学推理、低延迟各有所长），形成 harness-native 的数据飞轮。</li>
+<li><strong>对比方法/Baselines</strong>: 涉及 <span class="wikilink">DRACO</span>、<span class="wikilink">OpenSquilla</span>、<span class="wikilink">OpenClaw</span>、<span class="wikilink">DeepSeek</span> 等，用 <span class="wikilink">PinchBench</span> 评测。</li>
+<li><strong>借鉴意义</strong>: 对做 agent 系统工程的团队有现实意义——前沿模型正在结构性专精化，单模型通吃已经不划算，按能力轴路由是趋势。</li>
+<li><strong>锐评</strong>: 观察很到位：模型正在按能力轴分化，没有一个模型在代码/长上下文/工具/数学/低延迟上全面碾压，那 harness 就该做智能路由。工程味很浓，'数据飞轮'的叙事也讲得圆。但作者是家公司（TokenRhythm Technologies），带 GitHub 链接，这种带产品的论文要警惕：路由收益有多少是真的、有多少是挑了对自家有利的 benchmark。PinchBench 是不是他们自己造的？得查。👀</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2607.11399v1" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🤖 Agent 架构与路由"><h3>10. A Formal Hierarchical Architecture for Agentic Orchestration with Stack-Based Execution and Lazy Discovery</h3>
+<ul>
+<li><strong>作者</strong>: Devadiga, Prashant, Abhishek, Mishra, Adithya, Singh, Alok, Sinha, Amisha, Desai, Asit, Dahad, Gaurang, Bhushan, Harshit, Reddy, Mandati Pramod, Gupta, Prakhar, Patil, Rupesh, Behere, Siddhi</li>
+<li><strong>机构</strong>: Lazy Discovery</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2607.11138v1">arXiv</a> | <a href="https://arxiv.org/pdf/2607.11138v1">PDF</a></li>
+<li>
+<p><strong>来源</strong>: 📄 arXiv 关键词检索</p>
+</li>
+<li>
+<p><strong>核心方法</strong>: 针对工具注册表扁平化导致的'决策空间爆炸、上下文窗口饱和、路由精度下降'，提出分层架构 + 栈式执行（LIFO）+ 懒发现（通过局部化 manifest 按需加载能力）。用形式自动机理论建模。</p>
+</li>
+<li><strong>对比方法/Baselines</strong>: method_names 多为噪声（<span class="wikilink">LIFO</span>、<span class="wikilink">UPI</span>、<span class="wikilink">NN</span> 等），未见清晰对比方法。</li>
+<li><strong>借鉴意义</strong>: 工具数量爆炸确实是 agent 落地的真痛点，分层 + 懒加载是合理工程解，对管理大规模工具库的团队有参考。</li>
+<li><strong>锐评</strong>: 问题是真问题：几百上千个工具塞给模型一次性评估，必然爆炸。栈式执行 + 懒发现的方案也合理。但这篇最大的问题是'把工程实践套上 formal 外壳'——用自动机理论包装一个本质上是'分层菜单 + 按需加载'的常识设计，11 个作者堆一篇，理论深度存疑。'Formal Hierarchical Architecture'这个标题唬人，实际贡献可能就是个不错的系统设计。🫠</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2607.11138v1" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🤖 Agent 架构与路由"><h3>11. Agentic Skill Optimization over Lie Algebroids</h3>
+<ul>
+<li><strong>作者</strong>: Mahadevan, Sridhar</li>
+<li><strong>机构</strong>: Adobe Research and University of Massachusetts, Amherst, smahadev@adobe.com, mahadeva@umass.edu</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2607.11493v1">arXiv</a> | <a href="https://arxiv.org/pdf/2607.11493v1">PDF</a></li>
+<li>
+<p><strong>来源</strong>: 📄 arXiv 关键词检索</p>
+</li>
+<li>
+<p><strong>核心方法</strong>: 把 agentic skill 优化（编辑 prompt/rubric/plan/工具契约/示例/validator/trace）建模为李代数胚（Lie Algebroid）上的几何优化问题，因为 skill 编辑是对结构化制品的局部修复，效果只有 rollout 后才可观测。</p>
+</li>
+<li><strong>对比方法/Baselines</strong>: 引用 <span class="wikilink">SkillOpt</span>（Yang et al. 2026），涉及 <span class="wikilink">LASKO</span>、<span class="wikilink">ROCKET</span> 等。</li>
+<li><strong>借鉴意义</strong>: 自进化 agent 的 skill 优化是热点，但这篇的几何形式化对大多数从业者门槛过高。</li>
+<li><strong>锐评</strong>: Adobe + UMass 的 Sridhar Mahadevan 一贯的风格——把一个实用问题（agent 怎么编辑自己的技能）套上重型微分几何机器（李代数胚）。理论上也许自洽，但我必须泼冷水：skill 编辑的实际瓶颈是奖励稀疏和信用分配，把它包装成流形上的优化并不会自动解决这些问题，反而抬高了理解门槛却没给出可落地的算法收益。形式主义的漂亮 ≠ 实用。🫠</li>
+</ul>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2607.11493v1" target="_blank" rel="noopener">📖 AI 精读</a></div></div>
+<div id="panel-rl与推理" class="tab-panel"><h2>🧠 RL 与推理</h2><div class="paper-card" data-topic="🧠 RL 与推理"><h3>12. SVR-R1: Bootstrapping Multi-modal Reasoning with Self-verification in Reinforcement Learning</h3>
+<ul>
+<li><strong>作者</strong>: Mingyuan Wu1</li>
+<li><strong>机构</strong>: 1University of Illinois Urbana-Champaign</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2607.10966v1">arXiv</a> | <a href="https://arxiv.org/pdf/2607.10966v1">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2607.10966v1/x1.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: SVR-R1——多轮 RL 框架，把模型自身的验证变成学习信号。每个 query 用同一套权重先提出答案，再给出二元自判（Yes/No）：'No'触发第二次重思，'Yes'或达到轮次上限则定稿计算 outcome reward。用 <span class="wikilink">GRPO</span> 训练。</li>
+<li><strong>对比方法/Baselines</strong>: 对比 <span class="wikilink">ThinkLite</span> 等，基于 <span class="wikilink">VLM</span>/<span class="wikilink">VL</span> 多模态设置。</li>
+<li><strong>借鉴意义</strong>: 自我验证当奖励信号是个便宜的自举思路，对做多模态推理且缺高质量 verifier 的团队有参考价值。</li>
+<li><strong>锐评</strong>: '用同一套权重既当答题者又当验证者'的自举设计很省事，UIUC 的工作。思路是对的——外部 verifier 贵，自验证便宜。但这里有个我一定要点出的死穴：如果模型的自判本身就不可靠（过度自信说 Yes），那这个奖励信号就是在自我欺骗里打转，越训越自恋。摘要没说他们怎么防止 self-verdict 崩溃成'永远说 Yes'，这是这类自验证方法的通病。🫠</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2607.10966v1" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🧠 RL 与推理"><h3>13. Generalizing Preference-based Reinforcement Learning: a Rationality Model for Incomparability</h3>
+<ul>
+<li><strong>作者</strong>: Drago, Simone, Mussi, Marco, Bianconi, Leonardo, Metelli, Alberto Maria</li>
+<li><strong>机构</strong>: Marco Mussi, Simone Drago</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2607.11432v1">arXiv</a> | <a href="https://arxiv.org/pdf/2607.11432v1">PDF</a></li>
+<li>
+<p><strong>来源</strong>: 📄 arXiv 关键词检索</p>
+</li>
+<li>
+<p><strong>核心方法</strong>: 推广基于偏好的 RL：允许专家把轨迹对标注为'不可比'（incomparable，即两条轨迹互不支配），而不只是二选一。形式化该学习问题及解应满足的性质，提出处理不可比性的 rationality 模型。</p>
+</li>
+<li><strong>对比方法/Baselines</strong>: 摘要未提及具体基线（method_names 为排版噪声）。</li>
+<li><strong>借鉴意义</strong>: 对 RLHF/偏好学习有理论价值——真实人类反馈里'两个都行/无法比较'很常见，强行二选一会引入噪声。</li>
+<li><strong>锐评</strong>: 理论切口很聪明：现实中标注者经常觉得两条轨迹没法比，传统 preference-based RL 逼人二选一等于制造假信号。把'不可比'作为一等标签建模是对偏好学习的诚实修正。这是纯理论工作，Politecnico di Milano 一贯的风格。质疑点：理论优雅但'incomparable'标签在实际标注中怎么收集、标注者会不会滥用这个选项当偷懒出口，实证部分才是检验。👀</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2607.11432v1" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🧠 RL 与推理"><h3>14. Active Offline-to-Online Reinforcement Learning</h3>
+<ul>
+<li><strong>作者</strong>: Bozkurt, Alper Kamil, Zhang, Shangtong, Motai, Yuichi</li>
+<li><strong>机构</strong>: ALPER KAMIL BOZKURT* , Virginia Commonwealth University, USA, Commonwealth University, Richmond, Virginia, USA, SHANGTONG ZHANG, University of Virginia, USA, YUICHI MOTAI, Virginia Commonwealth University, USA, sensitive to the choice of algorithm and hyperparameters, making it risky to commit to a single policy</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2607.11720v1">arXiv</a> | <a href="https://arxiv.org/pdf/2607.11720v1">PDF</a></li>
+<li>
+<p><strong>来源</strong>: 📄 arXiv 关键词检索</p>
+</li>
+<li>
+<p><strong>核心方法</strong>: 主动式离线到在线 RL（Active O2O-RL）——在非平稳域中，从离线数据训练策略后再通过有限在线交互改进，重点是'主动'选择在线交互以降低对算法和超参的敏感性。</p>
+</li>
+<li><strong>对比方法/Baselines</strong>: 摘要未提及具体基线（method_names 为排版噪声）。</li>
+<li><strong>借鉴意义</strong>: O2O-RL 在交互昂贵/危险的非平稳场景有价值，主动选择交互是降低部署风险的合理方向。</li>
+<li><strong>锐评</strong>: O2O-RL 本身是个务实方向，非平稳域里'离线打底 + 少量在线微调'很现实。加'主动'选择交互降低超参敏感性也对——O2O 最恼人的就是换个超参结果就崩。但摘要信息量太少（method_names 全是 TeX/CSS 噪声），看不出核心方法，属于'方向对但得读正文才知道有没有货'的类型。💤</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2607.11720v1" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🧠 RL 与推理"><h3>15. Auditing the Risk Claims of Distributional Reinforcement Learning</h3>
+<ul>
+<li><strong>作者</strong>: Hari Prasad</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2607.11607v1">arXiv</a> | <a href="https://arxiv.org/pdf/2607.11607v1">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2607.11607v1/figures/refutation_by_stratum.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2607.11607v1/figures/scatter_learned_mc.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2607.11607v1/figures/gallery.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: 审计分布式 RL 的风险声明是否属实。分布式 RL agent 学到完整回报分布，常被直接用于可解释性、风险敏感控制、安全监控——本文用决策相关的筛选指标（excess Wasserstein 等）审计 <span class="wikilink">QR</span>-<span class="wikilink">DQN</span>、<span class="wikilink">C51</span>、<span class="wikilink">IQN</span> 的风险声明真伪。</li>
+<li><strong>对比方法/Baselines</strong>: 审计对象 <span class="wikilink">QR</span>-DQN、C51、<span class="wikilink">IQN</span>，在 <span class="wikilink">MinAtar</span>、<span class="wikilink">ALE</span> 上评测。</li>
+<li><strong>借鉴意义</strong>: 对把分布式 RL 用于风险敏感/安全场景的人是必要的清醒剂——学到的分布未必真实。</li>
+<li><strong>锐评</strong>: 又一篇'审计既有方法真伪'的好选题。分布式 RL 圈长期把学到的回报分布当真理用于风险控制，但早有理论暗示这些分布未必准。作者用 excess Wasserstein 做筛选指标去实测，方向正确。质疑点：单作者、只在 MinAtar/ALE 这类小环境上审计，结论的普适性有限；而且'分布不准但均值估计有用'早有前人指出，本文的增量是把它量化到风险声明层面——增量真实但不算颠覆。👀</li>
+</ul>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2607.11607v1" target="_blank" rel="noopener">📖 AI 精读</a></div></div>
+<div id="panel-agent应用" class="tab-panel"><h2>🛠️ Agent 应用</h2><div class="paper-card" data-topic="🛠️ Agent 应用"><h3>16. An Explainable Agentic System for Detection of Conversational Scams with Summary-Based Memory</h3>
+<ul>
+<li><strong>作者</strong>: Adnan, Ahmed Omar Salim, Manjunath, Yogananda, Khare, Shivanjali</li>
+<li><strong>机构</strong>: University of New Haven, Department of Electrical &amp;amp, Yogananda Manjunath</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2607.11707v1">arXiv</a> | <a href="https://arxiv.org/pdf/2607.11707v1">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2607.11707v1/figures/jina-replace.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2607.11707v1/figures/final_architecture.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2607.11707v1/figures/context_growth.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: 可解释 agentic 系统检测对话式诈骗（杀猪盘等跨周/跨月长程诈骗）。用基于摘要的记忆（Summary-Based Memory）维护长对话上下文，构建 <span class="wikilink">ConScamBench</span> 评测，对比孤立消息检测的不足。</li>
+<li><strong>对比方法/Baselines</strong>: 对比 <span class="wikilink">SmishX</span>、单消息检测 <span class="wikilink">SMD</span>，构建 <span class="wikilink">ConScamBench</span>、<span class="wikilink">LoveFraud02</span> 数据集。</li>
+<li><strong>借鉴意义</strong>: 对话式诈骗（杀猪盘）是真实社会危害，长程记忆 + 可解释检测有实际应用价值。</li>
+<li><strong>锐评</strong>: 选题接地气，杀猪盘这类长程诈骗确实是现有单消息检测的盲区，summary-based memory 处理长对话是对的思路。质疑点：诈骗检测最怕的是数据集偏差和对抗性——真实诈骗犯会调整话术，在 ConScamBench 上的高精度未必能扛住 in-the-wild 的对抗。而且'可解释'常常是事后编故事，得看解释是否真的指导了决策。👀</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2607.11707v1" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🛠️ Agent 应用"><h3>17. Large Language Models for Token-Efficient and Semantic-Preserving Opinion Summarization</h3>
+<ul>
+<li><strong>作者</strong>: Marozzo, Fabrizio, Iannicelli, Stefano</li>
+<li><strong>机构</strong>: University of Calabria, Rende, Italy</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2607.10825v1">arXiv</a> | <a href="https://arxiv.org/pdf/2607.10825v1">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2607.10825v1/x1.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: 用 LLM 做 token 高效且语义保持的意见摘要。针对评论/反馈/社媒等观点文本的规模大、冗余、不平衡问题，结合 <span class="wikilink">KDE</span>、<span class="wikilink">ModernBERT</span>、<span class="wikilink">RAG</span> 做既忠实于观点多样性又压缩 token 的摘要。</li>
+<li><strong>对比方法/Baselines</strong>: 涉及 <span class="wikilink">ModernBERT</span>、<span class="wikilink">BERT</span>、<span class="wikilink">RAG</span> 等。</li>
+<li><strong>借鉴意义</strong>: 对做评论分析、用户反馈聚合的推荐/电商团队有直接用途，token 效率是成本敏感场景的关键。</li>
+<li><strong>锐评</strong>: 务实的应用论文，观点摘要的'忠实于多样性'确实是难点——大多摘要会把长尾观点抹平，只留主流声音。用 KDE 保多样性是个巧思。但这类工作创新度有限，本质是把现有组件（ModernBERT + RAG + LLM）拼起来调优，Calabria 大学的工作规模也不大。适合做类似任务时抄思路，不必当突破看。🫠</li>
+</ul>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2607.10825v1" target="_blank" rel="noopener">📖 AI 精读</a></div></div>
+<hr>
+<h2>被排除的论文</h2>
+<ul>
+<li>A Multi-Agent Framework for Zero-Dimensional Reduced-Order Model Planning — 多智能体框架但服务于燃气轮机/复杂装备 0D 建模，领域与用户关注的推荐/广告/通用 Agent 无交集</li>
+<li>Beyond the Single Camera: Agentic Multi-View Reasoning in Sports Video — 体育视频多视角理解，偏 CV 垂直应用，与核心关注方向弱相关</li>
+<li>Time-Lag-Aware Deep RL for Flexible Job-Shop Scheduling in PPVC Module Factories — 预制建筑模块工厂的车间调度，制造业运筹场景，与关注领域无交集</li>
+<li>Reproducing human biases in route choice using LLMs — 交通路径选择的行为建模，属交通工程垂直应用</li>
+<li>MAGIC: Transition-Aware Generation of Navigable Multi-Scene Game Worlds — 3D 游戏场景生成，偏图形学/游戏应用</li>
+<li>Learning Residual Kinematic Corrections for Continuous Neural Decoding via RL — EEG/BCI 脑机接口神经解码，命中医疗相关负向关键词</li>
+<li>A Multimodal Dataset for LLM Applications in the Energy Domain — 能源领域数据集，垂直行业数据资源，非方法创新</li>
+<li>Reinforcement Learning for Execution under Dynamic Fees in a Closed-Loop DEX Simulator — DeFi 自动做市商执行的 RL，金融交易垂直场景</li>
+<li>Q-Learning Lab: Teaching RL Through Learner-Generated Trace Analysis — 教学用浏览器工具，属教育工具而非研究贡献</li>
+<li>World Models as Adversaries: Multi-Agent Self-Play Fine-Tuning for Robust Motion Planning — 自动驾驶运动规划，命中 autonomous driving 负向关键词</li>
+<li>Efficient Test-Time Optimization for Multi-Agent Proof Autoformalization — 证明自动形式化的测试时优化，方向过窄，仅在分流表中提及不单独精评</li>
+<li>Mako: A Self-Evolving Agentic OS for Autonomous Web Exploitation — 自进化 Web 渗透 agent，安全攻击向，仅在分流表提及</li>
+<li>Automated Textbook Auditing with Multi-Agent LLM Systems — 教材审核多智能体流水线，应用较窄，未单独精评</li>
+</ul>
+<p>Agent 研究正从'能不能做'转向'安全吗、可靠吗、省钱吗'——今天扎堆的安全漏洞审计、探索失败、幻觉惩罚、算力门控，标志着 agentic 领域开始进入去泡沫的成熟期。</p></div>
+<footer style="text-align:center;color:var(--text2);margin:3em 0 1em;font-size:0.85em;">
+  Generated by daily-papers-web &middot; Powered by Claude Code
+</footer>
+<script src="tabs.js"></script>
+
+</body>
+</html>
