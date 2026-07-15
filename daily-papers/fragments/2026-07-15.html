@@ -1,0 +1,142 @@
+<h1>🔪 今日锐评</h1>
+<p>今天这批是典型的'agentic'注水日：30篇里超过一半是把'agentic AI'四个字贴到医疗、化学、能源、流体力学论文上骗分的。真正碰用户关注领域（推荐/广告/LLM系统/agent方法）的没几篇，且没有一篇是recsys或广告——空窗。真正有嚼头的是几篇LLM推理效率和agent失败归因的工程文，其余的manifesto和跨学科贴牌可以直接跳。</p>
+<h2>分流表</h2>
+<table>
+<thead>
+<tr>
+<th>等级</th>
+<th>论文</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>👀 值得看</td>
+<td><span class="wikilink">Masked-dLLM-Survey</span>（dLLM推理加速综述，想了解并行生成落地的看它） · <span class="wikilink">Agentic-Failure-Flow</span>（把'成功轨迹'反过来做失败归因，思路有意思且省标注） · <span class="wikilink">VisCo</span>（把LLM本身当视觉token压缩器，VLM降本方向）</td>
+</tr>
+<tr>
+<td>💤 可跳过</td>
+<td><span class="wikilink">EvoGraph-R1</span>（GraphRAG又一变体，自我进化包装） · <span class="wikilink">TRACE</span>（'推理不在语言模型里'的哲学manifesto） · <span class="wikilink">IoAT</span>（Internet of Agentic Things，纯概念架构画饼） · <span class="wikilink">ASOC</span>（Agentic服务计算宣言，20年老SOA换皮）</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<div class="tab-bar"><button class="tab-btn active" data-tab="all" onclick="switchTab('all')">📋 全部<span class="tab-count">3</span></button><button class="tab-btn" data-tab="llm推理效率" onclick="switchTab('llm推理效率')">🤖 ⚡ LLM 推理效率<span class="tab-count">2</span></button><button class="tab-btn" data-tab="agent系统与调试" onclick="switchTab('agent系统与调试')">🤖 🤖 Agent 系统与调试<span class="tab-count">1</span></button></div>
+<div id="panel-all" class="tab-panel active"><h2>⚡ LLM 推理效率</h2><div class="paper-card" data-topic="⚡ LLM 推理效率"><h3>1. Accelerating Masked Diffusion Large Language Models: A Survey of Efficient Inference Techniques</h3>
+<ul>
+<li><strong>作者</strong>: Gwak, Daehoon, Lee, Minhyung, Park, Junwoo, Choo, Jaegul</li>
+<li><strong>机构</strong>: 2Yonsei University, 1KAIST AI, daehoon.gwak@kaist.ac.kr, jchoo@kaist.ac.kr</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2607.12829v1">arXiv</a> | <a href="https://arxiv.org/pdf/2607.12829v1">PDF</a></li>
+<li>
+<p><strong>来源</strong>: 📄 arXiv 关键词检索</p>
+</li>
+<li>
+<p><strong>核心方法</strong>: 综述 <span class="wikilink">Diffusion-LLM</span>（dLLM）的推理加速技术。dLLM相比 <span class="wikilink">Autoregressive</span> 模型理论上能并行生成，但作者点破关键：光有并行不等于真加速，必须配 diffusion-aware caching、<span class="wikilink">KV-Cache</span> 复用等专门机制才能兑现。系统梳理了 masked discrete diffusion 里 Transformer 反复评估这个主要瓶颈及各类缓解手段。</p>
+</li>
+<li><strong>对比方法/Baselines</strong>: 对比 <span class="wikilink">Autoregressive</span> LLM 的 KV cache 复用逻辑，梳理各类 inference-time 加速方法</li>
+<li><strong>借鉴意义</strong>: 如果你在评估 dLLM 能否替代自回归模型做线上服务，这篇能帮你看清'理论并行'和'实际吞吐'之间那道坎——对做推理系统降本的人有直接参考价值。</li>
+<li><strong>锐评</strong>: 综述里少见的'泼冷水'型：直接说并行生成不自动带来加速，得靠工程机制。这个judgment对被dLLM营销词轰炸的人是解毒剂。扣分点是综述终究是二手信息，没有自己的新benchmark，读它是为了建立地图不是找答案。👀</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2607.12829v1" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="⚡ LLM 推理效率"><h3>2. VisCo: Leveraging Large Language Models as Intrinsic Encoders for Visual Token Compression</h3>
+<ul>
+<li><strong>作者</strong>: Zheng, Yupeng, Zou, Kai, Liu, Bin, Yu, Nenghai</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2607.12756v1">arXiv</a> | <a href="https://arxiv.org/pdf/2607.12756v1">PDF</a></li>
+<li>
+<p><strong>来源</strong>: 📄 arXiv 关键词检索</p>
+</li>
+<li>
+<p><strong>核心方法</strong>: VisCo：把 <span class="wikilink">LLM</span> 本身当作内在编码器来做视觉 token 压缩，而不是外挂一个独立压缩模块。针对 VLM 处理大量视觉 token 导致的延迟和显存开销，指出 training-free 启发式方法在高压缩比下崩、training-based 方法又要引入外部模块的两难。</p>
+</li>
+<li><strong>对比方法/Baselines</strong>: 对比 training-free 启发式压缩（高压缩比下性能暴跌）、training-based 外挂压缩模块方法</li>
+<li><strong>借鉴意义</strong>: VLM 的视觉 token 是推理成本大头，'复用LLM自身做压缩、不加外部模块'的路子对做多模态服务降本有参考——省一个模块就是省一份运维和显存。</li>
+<li><strong>锐评</strong>: 问题定位准：视觉token压缩确实卡在'免训练不够狠、训练又要加模块'。用LLM自己当encoder是聪明的省事路子。但摘要没给压缩比vs性能的具体数字，'intrinsic encoder'听着优雅、实测能压到多少不掉点才是关键——保留怀疑。🫠</li>
+</ul>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2607.12756v1" target="_blank" rel="noopener">📖 AI 精读</a></div><h2>🤖 Agent 系统与调试</h2><div class="paper-card" data-topic="🤖 Agent 系统与调试"><h3>3. Tracing Agentic Failure from the Flow of Success</h3>
+<ul>
+<li><strong>作者</strong>: Yeh, Samuel, Zhu, Yiwen, Deep, Shaleen, Li, Sharon</li>
+<li><strong>机构</strong>: 2Microsoft Research, 1Department of Computer Science, University of Wisconsin-Madison</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2607.12747v1">arXiv</a> | <a href="https://arxiv.org/pdf/2607.12747v1">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2607.12747v1/x1.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: 针对 LLM 多智能体系统的失败归因（failure attribution）——定位失败轨迹里到底哪一步搞砸了。不走两条老路（贵的 prompting pipeline、需要 step-level 标注的 post-training），而是反过来从'成功轨迹的流'里学习正常模式，用偏离来定位失败步。Microsoft Research + Wisconsin 出品。</li>
+<li><strong>对比方法/Baselines</strong>: 对比 prompting-based 归因 pipeline、需 step-level 标注的 post-training 方法；引用 Multi-Agent System Failure Taxonomy、TRAIL 错误分类体系</li>
+<li><strong>借鉴意义</strong>: 对任何在跑多agent系统的人都是刚需——线上agent失败后 debug 成本极高，'哪一步错了'是最烧钱的问题。从成功流反推的思路省掉了昂贵的错误标注。</li>
+<li><strong>锐评</strong>: 选题扎实、痛点真实，'从成功流反推失败'比硬标注每步错误确实更scalable。不过要警惕：成功轨迹的分布假设一旦覆盖不全，OOD失败模式就抓不到——这类方法容易在'见过的失败'上刷分、在真正诡异的失败上失灵。摘要没给足证据说明泛化性。👀</li>
+</ul>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2607.12747v1" target="_blank" rel="noopener">📖 AI 精读</a></div></div>
+<div id="panel-llm推理效率" class="tab-panel"><h2>⚡ LLM 推理效率</h2><div class="paper-card" data-topic="⚡ LLM 推理效率"><h3>1. Accelerating Masked Diffusion Large Language Models: A Survey of Efficient Inference Techniques</h3>
+<ul>
+<li><strong>作者</strong>: Gwak, Daehoon, Lee, Minhyung, Park, Junwoo, Choo, Jaegul</li>
+<li><strong>机构</strong>: 2Yonsei University, 1KAIST AI, daehoon.gwak@kaist.ac.kr, jchoo@kaist.ac.kr</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2607.12829v1">arXiv</a> | <a href="https://arxiv.org/pdf/2607.12829v1">PDF</a></li>
+<li>
+<p><strong>来源</strong>: 📄 arXiv 关键词检索</p>
+</li>
+<li>
+<p><strong>核心方法</strong>: 综述 <span class="wikilink">Diffusion-LLM</span>（dLLM）的推理加速技术。dLLM相比 <span class="wikilink">Autoregressive</span> 模型理论上能并行生成，但作者点破关键：光有并行不等于真加速，必须配 diffusion-aware caching、<span class="wikilink">KV-Cache</span> 复用等专门机制才能兑现。系统梳理了 masked discrete diffusion 里 Transformer 反复评估这个主要瓶颈及各类缓解手段。</p>
+</li>
+<li><strong>对比方法/Baselines</strong>: 对比 <span class="wikilink">Autoregressive</span> LLM 的 KV cache 复用逻辑，梳理各类 inference-time 加速方法</li>
+<li><strong>借鉴意义</strong>: 如果你在评估 dLLM 能否替代自回归模型做线上服务，这篇能帮你看清'理论并行'和'实际吞吐'之间那道坎——对做推理系统降本的人有直接参考价值。</li>
+<li><strong>锐评</strong>: 综述里少见的'泼冷水'型：直接说并行生成不自动带来加速，得靠工程机制。这个judgment对被dLLM营销词轰炸的人是解毒剂。扣分点是综述终究是二手信息，没有自己的新benchmark，读它是为了建立地图不是找答案。👀</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2607.12829v1" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="⚡ LLM 推理效率"><h3>2. VisCo: Leveraging Large Language Models as Intrinsic Encoders for Visual Token Compression</h3>
+<ul>
+<li><strong>作者</strong>: Zheng, Yupeng, Zou, Kai, Liu, Bin, Yu, Nenghai</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2607.12756v1">arXiv</a> | <a href="https://arxiv.org/pdf/2607.12756v1">PDF</a></li>
+<li>
+<p><strong>来源</strong>: 📄 arXiv 关键词检索</p>
+</li>
+<li>
+<p><strong>核心方法</strong>: VisCo：把 <span class="wikilink">LLM</span> 本身当作内在编码器来做视觉 token 压缩，而不是外挂一个独立压缩模块。针对 VLM 处理大量视觉 token 导致的延迟和显存开销，指出 training-free 启发式方法在高压缩比下崩、training-based 方法又要引入外部模块的两难。</p>
+</li>
+<li><strong>对比方法/Baselines</strong>: 对比 training-free 启发式压缩（高压缩比下性能暴跌）、training-based 外挂压缩模块方法</li>
+<li><strong>借鉴意义</strong>: VLM 的视觉 token 是推理成本大头，'复用LLM自身做压缩、不加外部模块'的路子对做多模态服务降本有参考——省一个模块就是省一份运维和显存。</li>
+<li><strong>锐评</strong>: 问题定位准：视觉token压缩确实卡在'免训练不够狠、训练又要加模块'。用LLM自己当encoder是聪明的省事路子。但摘要没给压缩比vs性能的具体数字，'intrinsic encoder'听着优雅、实测能压到多少不掉点才是关键——保留怀疑。🫠</li>
+</ul>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2607.12756v1" target="_blank" rel="noopener">📖 AI 精读</a></div></div>
+<div id="panel-agent系统与调试" class="tab-panel"><h2>🤖 Agent 系统与调试</h2><div class="paper-card" data-topic="🤖 Agent 系统与调试"><h3>3. Tracing Agentic Failure from the Flow of Success</h3>
+<ul>
+<li><strong>作者</strong>: Yeh, Samuel, Zhu, Yiwen, Deep, Shaleen, Li, Sharon</li>
+<li><strong>机构</strong>: 2Microsoft Research, 1Department of Computer Science, University of Wisconsin-Madison</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2607.12747v1">arXiv</a> | <a href="https://arxiv.org/pdf/2607.12747v1">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2607.12747v1/x1.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: 针对 LLM 多智能体系统的失败归因（failure attribution）——定位失败轨迹里到底哪一步搞砸了。不走两条老路（贵的 prompting pipeline、需要 step-level 标注的 post-training），而是反过来从'成功轨迹的流'里学习正常模式，用偏离来定位失败步。Microsoft Research + Wisconsin 出品。</li>
+<li><strong>对比方法/Baselines</strong>: 对比 prompting-based 归因 pipeline、需 step-level 标注的 post-training 方法；引用 Multi-Agent System Failure Taxonomy、TRAIL 错误分类体系</li>
+<li><strong>借鉴意义</strong>: 对任何在跑多agent系统的人都是刚需——线上agent失败后 debug 成本极高，'哪一步错了'是最烧钱的问题。从成功流反推的思路省掉了昂贵的错误标注。</li>
+<li><strong>锐评</strong>: 选题扎实、痛点真实，'从成功流反推失败'比硬标注每步错误确实更scalable。不过要警惕：成功轨迹的分布假设一旦覆盖不全，OOD失败模式就抓不到——这类方法容易在'见过的失败'上刷分、在真正诡异的失败上失灵。摘要没给足证据说明泛化性。👀</li>
+</ul>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2607.12747v1" target="_blank" rel="noopener">📖 AI 精读</a></div></div>
+<hr>
+<h2>被排除的论文</h2>
+<ul>
+<li>Fine-Tuned Multi-Agent Framework for Detecting OCEAN in Life Narratives — 人格检测（心理测量），与推荐/广告/LLM系统无关，multi-agent只是包装</li>
+<li>Open-KNEAD: Knowledge-grounded Nutrition Estimation via Agentic Decomposition — 食物图片营养估计，跨到饮食健康领域，命中negative隐含范围</li>
+<li>EvoGraph-R1: Self-Evolving Multimodal Knowledge Hypergraphs — GraphRAG又一变体+医疗VQA背景，增量式，'自我进化'包装偏重</li>
+<li>Multi-Perspective Agentic Program Repair via CPG and Temporal Execution Graphs — 程序自动修复，与用户核心领域（推荐/广告/LLM/agent方法论）关联弱</li>
+<li>TRACE: An Operational Reasoning Schema for Auditable Agentic Commitments — '推理不在语言模型里'的哲学manifesto，schema定义为主，无实证</li>
+<li>How to Realize Recursively Self-Improving Agents and Personal Singularity — 标题党+架构画饼，Personal Singularity口号大于实质</li>
+<li>The Emerging Paradigm of Geospatial Foundation Models — 遥感/卫星影像基础模型，跨领域</li>
+<li>Knowledge- and Gradient-Guided RL for Parametrized Action MDPs — PAMDP强化学习方法，偏控制理论，与用户RL兴趣点（agent/推荐）无交集</li>
+<li>A Multi-Agent System for Autonomous Clinical Symptom Detection — 临床症状抽取，命中negative_keywords（diagnosis）</li>
+<li>Metric-Guided Synthetic Image Data Rendering for Deep Learning — 科学图像合成数据渲染（实例分割），跨领域</li>
+<li>Learning Mechanistic Reasoning for Chemical Reactions with LLMs — 化学反应机理推理，命中negative隐含范围（molecular/化学）</li>
+<li>Constraint-Aware Aggregation for Federated RL in Microgrid Energy — 微电网能源协调联邦RL，跨到能源领域</li>
+<li>Internet of Agentic Things: Networked AI Agents for Closed-Loop IoT — IoT架构manifesto，纯概念画饼无实证</li>
+<li>Evidence-Grounded Verified Agentic Reasoning (EG-VAR) — Lean4定理证明消除幻觉，方向有趣但偏形式化验证小众，与用户主线弱相关</li>
+<li>Agentic Service-Oriented Computing: A Manifesto — 宣言体，20年SOA概念换'agentic'皮，无实证</li>
+<li>Environment Parameter Gradient Theorem for Policy-Environment Co-Design — RL环境参数协同设计理论，偏控制/工程系统</li>
+<li>OOD-RL-Bench: Benchmark for OOD Detection in RL — RL的OOD检测benchmark，偏经典RL鲁棒性，非用户主线</li>
+<li>The Computational Basis of Confidence in LLMs — LLM置信度的认知科学分析，偏理论/心理学，实用性弱</li>
+<li>Comparing Semantic Navigation in Humans and LLMs — 人类vs LLM语义搜索对比，认知科学向，无工程价值</li>
+<li>An Agentic AI Scientific Community for Automated Neural Operator Discovery — 神经算子架构搜索（PDE/流体），跨领域</li>
+<li>AutoTrace: From Patches to Triggers via Agentic Interprocedural Exploration — 漏洞触发点定位，安全领域，与用户主线弱相关</li>
+<li>SymbOmni: Evolving Agentic Omni Models via Symbolic Concept Learning — ComfyUI视觉生成workflow自动化，偏生成工具链，命中multimodal但非核心</li>
+<li>PalmClaw: A Native On-Device Agent Framework for Mobile Phones — 手机端agent框架，score仅2，工程占位性强</li>
+<li>Bulkhead: Container Escape Vulnerability Detection — 容器逃逸漏洞检测，安全/系统领域</li>
+<li>Gradient-free learning of a closed-loop wall controller for turbulent drag — 湍流减阻控制，流体力学，纯跨领域</li>
+<li>PFAdapter: Hierarchical LoRA Decomposition for Personalized Federated MLLMs — 联邦MLLM微调，背景是医疗VQA，score仅2</li>
+<li>Actor as Its Own Critic: CycleGRPO for Region Understanding — 区域理解与定位的GRPO变体，偏视觉grounding，非用户主线，score仅2</li>
+</ul>
+<p>'agentic'正在从技术词退化成蹭分标签——今天30篇里真正做agent方法的没几个，更多是给医疗/化学/能源/流体论文贴agent皮；真正的信号是LLM推理效率（dLLM加速、视觉token压缩）和agent系统的可观测性/失败归因这两条务实工程线在起来。</p>
