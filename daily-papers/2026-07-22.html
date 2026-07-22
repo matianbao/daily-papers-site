@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>2026-07-22 论文推荐</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.21/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.21/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.21/dist/contrib/auto-render.min.js"
+  onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}]});"></script>
+<link rel="stylesheet" href="style.css">
+<style>body{max-width:960px;}</style>
+
+</head>
+<body>
+<nav class="nav"><a href="index.html">🏠 首页</a><a href="2026-07-20.html">← 前一天</a></nav>
+<div class="detail-page"><h1>🔪 今日锐评</h1>
+<p>今天是标准的「RL-for-LLM 灌水日」+ 一大批把 agentic 套壳到各行各业的应用论文。真正硬的东西不多：Google DeepMind 一篇把 RL 塞进 learning-to-rank 的工作是全场唯一直接命中排序/推荐的，值得精读；剩下的多模态和 agent 安全里有两三篇有意思。UAV/无人机导航那几篇跟你的领域八竿子打不着，直接扔了。</p>
+<h2>分流表</h2>
+<table>
+<thead>
+<tr>
+<th>等级</th>
+<th>论文</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>🔥 必读</td>
+<td><span class="wikilink">Exposure-Based-LTR</span>（DeepMind 把 RL 的巨大动作空间问题在 LTR 里用曝光重构，排序/推荐直接相关） · <span class="wikilink">MADA-RL</span>（≤4B 小模型用多智能体辩论信号做后训练，成本敏感者必看）</td>
+</tr>
+<tr>
+<td>👀 值得看</td>
+<td><span class="wikilink">Stale-but-Stable</span>（异步 RL 的 staleness 自适应信任域，训练基建） · <span class="wikilink">RAGU</span>（GraphRAG 把抽取和固化分离，131 赞） · <span class="wikilink">OmniReasoner</span>（长音视频原生 tool-use） · <span class="wikilink">Shapley-RL</span>（并行推理路径的 Shapley 归因） · <span class="wikilink">CI-CD-Attack</span>（五智能体流水线被一条 issue 攻破的红队实证） · <span class="wikilink">Prompt-Design-Scale</span>（格式/指令数/上下文长度对遵从与幻觉的对照实验） · <span class="wikilink">LangGraph-Recipes</span>（有状态长流程 agent 的工程配方）</td>
+</tr>
+<tr>
+<td>💤 可跳过</td>
+<td><span class="wikilink">TimeLens2</span>（视频时序定位，跟推荐/广告无关但技术还行） · <span class="wikilink">MAGE</span>（芯片宏观布局，领域太偏） · <span class="wikilink">H2SD</span>（又一个 RLVR credit assignment 变体）</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<div class="tab-bar"><button class="tab-btn active" data-tab="all" onclick="switchTab('all')">📋 全部<span class="tab-count">15</span></button><button class="tab-btn" data-tab="排序与检索" onclick="switchTab('排序与检索')">📄 📊 排序与检索<span class="tab-count">1</span></button><button class="tab-btn" data-tab="rlforllm推理" onclick="switchTab('rlforllm推理')">🤖 🧠 RL for LLM 推理<span class="tab-count">5</span></button><button class="tab-btn" data-tab="rag与检索增强" onclick="switchTab('rag与检索增强')">📄 🔍 RAG 与检索增强<span class="tab-count">1</span></button><button class="tab-btn" data-tab="多模态与工具使用" onclick="switchTab('多模态与工具使用')">🎨 🎬 多模态与工具使用<span class="tab-count">2</span></button><button class="tab-btn" data-tab="agent框架与安全" onclick="switchTab('agent框架与安全')">🏗 🤖 Agent 框架与安全<span class="tab-count">5</span></button><button class="tab-btn" data-tab="llm工程实践" onclick="switchTab('llm工程实践')">🤖 🛠️ LLM 工程实践<span class="tab-count">1</span></button></div>
+<div id="panel-all" class="tab-panel active"><h2>📊 排序与检索</h2><div class="paper-card" data-topic="📊 排序与检索"><h3>1. Exposure-Based Reinforcement Learning to Rank</h3>
+<ul>
+<li><strong>作者</strong>: Harrie Oosterhuis, Rolf Jagerman, Zhen Qin, Xuanhui Wang</li>
+<li>
+<p><strong>机构</strong>: h.oosterhuis@uva.nl
+, Google DeepMindMountain ViewUS, xuanhui@google.com
+, University of Amsterdam, jagerman@google.com, Google DeepMind, Google DeepMindNew YorkUS, zhenqin@google.com, University of AmsterdamAmsterdamNL, xuanhui@google.com, zhenqin@google.com
+, jagerman@google.com</p>
+</li>
+<li>
+<p><strong>链接</strong>: <a href="http://arxiv.org/abs/2607.18689v1">arXiv</a> | <a href="https://arxiv.org/pdf/2607.18689v1">PDF</a></p>
+</li>
+<li>
+<p><strong>来源</strong>: 📄 arXiv 关键词检索</p>
+</li>
+<li>
+<p><strong>核心方法</strong>: 把 <span class="wikilink">learning-to-rank</span> 建成 <span class="wikilink">RL</span> 问题时，动作空间等于「所有可能排列」，大到无法直接优化。本文提出 Exposure-Based RL to Rank，用曝光（exposure）概率重构策略梯度，把对整个排列采样的需求降成对文档级曝光的估计，从而让 RL 能优化任意排序目标（nDCG、曝光公平性、蒸馏）而不被动作空间爆炸拖死。</p>
+</li>
+<li><strong>对比方法/Baselines</strong>: 对比传统 <span class="wikilink">LTR</span> 的 pointwise/pairwise/listwise 三类方法（RankNet/LambdaMART 一脉），以及朴素 <span class="wikilink">Policy-Gradient</span> LTR；数据集用 <span class="wikilink">MSLR</span> 等标准 benchmark。</li>
+<li><strong>借鉴意义</strong>: 这是全场唯一直接砸在你核心领域（排序/推荐/广告排序）上的工作。曝光视角天然接你关心的 fairness-of-exposure 和 ranking distillation，Google DeepMind 出品，方法论可以直接迁移到 CTR 后排序或竞价场景。</li>
+<li><strong>锐评</strong>: 终于有一篇不是「RL+LLM 又调了个 loss」的。把 LTR 的动作空间问题用曝光重参数化解掉，思路干净且落地性强，作者阵容（Oosterhuis + DeepMind）也是这个方向的老炮。质疑点：曝光估计本身依赖点击模型假设，摘要没说在真实带 position bias 的日志上表现如何——如果曝光模型错了，整套梯度就有偏。但方向对，值得精读。🔥</li>
+</ul>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2607.18689v1" target="_blank" rel="noopener">📖 AI 精读</a></div><h2>🧠 RL for LLM 推理</h2><div class="paper-card" data-topic="🧠 RL for LLM 推理"><h3>2. MADA-RL: Multi-Agent Debate-Aware Reinforcement Learning for Parameter-Efficient Reasoning in Compact Models</h3>
+<ul>
+<li><strong>作者</strong>: Pulici, Martino M. L., Chu, Cuong Xuan, Kharlamov, Evgeny, Ding, Zifeng, Tresp, Volker, Ma, Yunpu</li>
+<li><strong>机构</strong>: Bosch Center for Artificial Intelligence, Germany, Munich Center for Machine Learning, Germany, University of Cambridge, United Kingdom, University of Oslo, Norway</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2607.18006v1">arXiv</a> | <a href="https://arxiv.org/pdf/2607.18006v1">PDF</a></li>
+<li>
+<p><strong>来源</strong>: 📄 arXiv 关键词检索</p>
+</li>
+<li>
+<p><strong>核心方法</strong>: MADA-RL 是针对 ≤4B 紧凑模型的后训练框架，把同一个小模型特化成 generator 和 critic 两个角色，用「辩论感知」（debate-aware）的学习信号做参数高效微调，让小模型在有限预算下也能获得可观推理能力。</p>
+</li>
+<li><strong>对比方法/Baselines</strong>: 对比标准 RLHF/RLVR 单模型后训练、以及不带辩论信号的 generator-only 微调；面向数学/推理 benchmark。</li>
+<li><strong>借鉴意义</strong>: 你如果关心「不烧大钱把小模型推理拉起来」（线上部署成本敏感场景），这个 generator-critic 自博弈 + 参数高效的组合值得抄。</li>
+<li><strong>锐评</strong>: 小模型 + 多智能体辩论 + 参数高效，三个热词叠在一起，本来该警惕，但把 critic 和 generator 用同一底座特化、靠辩论信号提供密集监督这个设计是有道理的，score 7 也说明打分器认可。质疑：让同一个 4B 模型既当运动员又当裁判，critic 的判别力上限就是模型自身水平，容易自我强化偏见——摘要没给「critic 是否真的比 generator 更会挑错」的证据。方向可取，但别指望它超过用强 critic 蒸馏。👀</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2607.18006v1" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🧠 RL for LLM 推理"><h3>3. Stale but Stable: Staleness-Adaptive Trust Regions for Stabilizing Asynchronous Reinforcement Learning</h3>
+<ul>
+<li><strong>作者</strong>: Yang, Junyao, Shi, Yucheng, Li, Zongxia, Li, Zhongzhi, Wang, Ruhan, Zhou, Xiangxin, Panaganti, Kishan, Mi, Haitao, Liang, Leowei</li>
+<li><strong>机构</strong>: Indiana University, National University of Singapore, Tencent Hy LLM Frontier, University of Georgia, University of Maryland, College Park</li>
+<li><strong>链接</strong>: <a href="https://arxiv.org/abs/2607.18722">arXiv</a> | <a href="https://arxiv.org/pdf/2607.18722">PDF</a></li>
+<li>
+<p><strong>来源</strong>: 📰 HF Daily，⬆️ 24</p>
+</li>
+<li>
+<p><strong>核心方法</strong>: Stale but Stable 针对异步 RL：rollout 生成和优化解耦能提吞吐，但会引入 staleness（策略滞后、引擎延迟、MoE 路由）。作者从信任域视角指出真正关键的是训练-推理分布散度，而 PPO clipping 只管采样级不管这个，于是提出 staleness 自适应的信任域来稳定异步训练。</p>
+</li>
+<li><strong>对比方法/Baselines</strong>: 对比标准同步 <span class="wikilink">PPO</span>、朴素异步 RL（固定 clip）、<span class="wikilink">GRPO</span> 一系；关注 MoE 场景。</li>
+<li><strong>借鉴意义</strong>: 做大规模 RL 训练基建的人直接受益——异步 = 吞吐，但不稳；把 staleness 显式建进信任域是对症下药，对你训练 LLM/推荐大模型的 RL 流水线有工程价值。</li>
+<li><strong>锐评</strong>: 这篇比一堆刷 benchmark 的实在。诊断准：把「PPO clip 治标不治本」讲清楚，指出训练-推理散度才是异步不稳的根，然后按 staleness 缩放信任域，逻辑闭环。质疑：staleness 的度量本身怎么估、自适应系数怎么调，摘要没说，实操上很可能又引入一堆超参。但问题真实、切口正确，值得看。👀</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2607.18722" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🧠 RL for LLM 推理"><h3>4. Fishing Out Free Riders: Shapley-Based Reward Attribution for Parallel Reasoning via Reinforcement Learning</h3>
+<ul>
+<li><strong>作者</strong>: Wentao Zhang1</li>
+<li><strong>机构</strong>: 4The Chinese University of Hong Kong, Shenzhen  5Zhejiang University, 1ShanghaiTech University  2City University of Hong Kong  3Peking University, yuxuancheng1@link.cuhk.edu.cn, zhaodj@shanghaitech.edu.cn</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2607.18979v1">arXiv</a> | <a href="https://arxiv.org/pdf/2607.18979v1">PDF</a></li>
+<li>
+<p><strong>来源</strong>: 📄 arXiv 关键词检索</p>
+</li>
+<li>
+<p><strong>核心方法</strong>: 针对并行推理（多路径采样）里 outcome-level reward 对所有路径一视同仁的问题，本文用 <span class="wikilink">Shapley</span> 值做奖励归因，把整体奖励拆解到单条推理路径的边际贡献上，识别冗余/误导/有害路径，给出更清晰的学习信号。</p>
+</li>
+<li><strong>对比方法/Baselines</strong>: 对比 <span class="wikilink">GRPO</span>、outcome-reward 均分的并行推理 RL；在 AIME/MATH/AMC 等数学 benchmark 上评估。</li>
+<li><strong>借鉴意义</strong>: 「区分并行路径的贡献」对任何 best-of-N / self-consistency 训练都有用——Shapley 归因能帮你把 rollout 预算花在真正有贡献的路径上。</li>
+<li><strong>锐评</strong>: 把 Shapley 搬进并行推理归因，概念上优雅，问题（free rider 路径）也真实。但 Shapley 值精确计算是指数级的，摘要没说怎么近似——这几乎决定了它能不能上规模。如果用的是廉价蒙特卡洛近似，那和现有的路径加权方法差多少就得打问号。想法好，成本存疑。👀</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2607.18979v1" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🧠 RL for LLM 推理"><h3>5. The Price of Reasoning: Cost-Quality Tradeoffs in Reinforcement Learning for Neural Machine Translation</h3>
+<ul>
+<li><strong>作者</strong>: Jungo, Michael, An, Aixiu</li>
+<li><strong>机构</strong>: AIBEX, University of Fribourg, iCoSys, University of Applied Sciences and Arts Western</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2607.19226v1">arXiv</a> | <a href="https://arxiv.org/pdf/2607.19226v1">PDF</a></li>
+<li>
+<p><strong>来源</strong>: 📄 arXiv 关键词检索</p>
+</li>
+<li>
+<p><strong>核心方法</strong>: 研究 RLVR 用于神经机器翻译（NMT）时的成本-质量权衡：RLVR 能诱导推理能力、在法律文档翻译上被认为是首选，但本文追问这种「带推理的翻译」到底值不值那个推理成本。</p>
+</li>
+<li><strong>对比方法/Baselines</strong>: 对比 SFT 翻译、普通 RLVR，聚焦推理开销 vs 质量增益。</li>
+<li><strong>借鉴意义</strong>: 「推理不是免费的」这个问题对任何要上线推理型模型的场景都通用——翻译只是载体，成本-质量曲线的方法论可迁移。</li>
+<li><strong>锐评</strong>: 选题接地气：大家一窝蜂给什么都加推理，很少有人认真算「推理的价格」。把 NMT 当探针来量成本-质量曲线是聪明的。质疑：结论大概率是「看场景」这种正确的废话，真正价值在它给的量化数字——摘要没剧透，得看正文。选题加分，结论待验。🫠</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2607.19226v1" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🧠 RL for LLM 推理"><h3>6. H^2SD: Hybrid Hindsight Self-Distillation</h3>
+<ul>
+<li><strong>作者</strong>: Qiye Cai, Yichuan Ma, Linyang Li, Peiji Li, Yongkang Chen, Qipeng Guo, Yicheng Zou, Tao Gui, Xiaocheng Feng†, Bing Qin†</li>
+<li>
+<p><strong>机构</strong>: Fudan University, Shanghai Artificial Intelligence Laboratory
+, Shanghai Artificial Intelligence Laboratory, The Chinese University of Hong Kong
+, The Chinese University of Hong Kong, Harbin Institute of Technology, Fudan University
+, Harbin Institute of Technology</p>
+</li>
+<li>
+<p><strong>链接</strong>: <a href="https://arxiv.org/abs/2607.18955">arXiv</a> | <a href="https://arxiv.org/pdf/2607.18955">PDF</a></p>
+</li>
+<li><strong>来源</strong>: 📰 HF Daily，⬆️ 1</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2607.18955v1/x2.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: H²SD（Hybrid Hindsight Self-Distillation）针对 RLVR 只给整条轨迹一个标量 outcome reward、监督稀疏、token 级 credit assignment 差的问题，用混合的事后自蒸馏来提供更细粒度的监督信号。</li>
+<li><strong>对比方法/Baselines</strong>: 对比 <span class="wikilink">GRPO</span>、<span class="wikilink">DAPO</span>、<span class="wikilink">GSPO</span> 等 RLVR 变体；on-policy distillation 一系。</li>
+<li><strong>借鉴意义</strong>: token 级 credit assignment 是 RLVR 的老大难，如果你在训推理模型，这类细粒度信号的方法可以纳入对比池。</li>
+<li><strong>锐评</strong>: 又一篇「RLVR 的 credit assignment 不行，我来改」的论文，赛道已经非常拥挤（GRPO/DAPO/GSPO/各种 SD）。hindsight + self-distillation 的组合不算新颖，1 个赞也说明社区反应平淡。质疑：和一堆已有 credit assignment 方法的边际区别在哪，摘要没讲清楚。incremental 味道重，除非你正好在这条线上,否则可跳。🫠</li>
+</ul>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2607.18955" target="_blank" rel="noopener">📖 AI 精读</a></div><h2>🔍 RAG 与检索增强</h2><div class="paper-card" data-topic="🔍 RAG 与检索增强"><h3>7. RAGU: A Multi-Step GraphRAG Engine with a Compact Domain-Adapted LLM</h3>
+<ul>
+<li><strong>作者</strong>: Mikhail Komarov1,∗</li>
+<li><strong>机构</strong>: 1ITMO University  2Novosibirsk State University  3Far Eastern Federal University</li>
+<li><strong>链接</strong>: <a href="https://arxiv.org/abs/2607.11683">arXiv</a> | <a href="https://arxiv.org/pdf/2607.11683">PDF</a></li>
+<li><strong>来源</strong>: 🔥 HF Trending，⬆️ 131</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2607.11683v1/figures/llm_quality.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2607.11683v1/x1.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2607.11683v1/x2.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: RAGU 是开源模块化 GraphRAG 引擎，核心是把「抽取」和「固化（consolidation）」分离：实体和关系先经两阶段带类型抽取，再去重、总结、用 Leiden 聚类分社区，产物落到图库/KV/向量三层可换存储。目标是解决单遍抽取产生的噪声实体和脆弱检索。</li>
+<li><strong>对比方法/Baselines</strong>: 对比 <span class="wikilink">HippoRAG</span>、<span class="wikilink">LightRAG</span> 等 GraphRAG 系统，以及朴素单遍 <span class="wikilink">RAG</span>。</li>
+<li><strong>借鉴意义</strong>: 如果你在搭知识密集的 RAG/QA 系统，「抽取-固化分离 + 可换存储层」是能直接借鉴的工程架构；131 赞说明社区认可其工程完成度。</li>
+<li><strong>锐评</strong>: GraphRAG 领域最大的病就是单遍抽取脏数据，RAGU 把 consolidation 单独拎出来这一刀切得对，开源 + 三层可换存储也显示工程诚意。质疑：Leiden 社区聚类 + 两阶段抽取意味着索引成本不低，摘要没给延迟/成本对比——GraphRAG 的老问题从来不是能不能建图，而是建图值不值这个钱。工程党值得看，但先算账。👀</li>
+</ul>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2607.11683" target="_blank" rel="noopener">📖 AI 精读</a></div><h2>🎬 多模态与工具使用</h2><div class="paper-card" data-topic="🎬 多模态与工具使用"><h3>8. OmniReasoner: Thinking with Long Audio-Video via Native Tool Use</h3>
+<ul>
+<li><strong>作者</strong>: Chen, Yu, Li, Caorui, Xiong, Ziyu, Wang, Yidong, Gao, Mingqi, Liu, Shuman, Liu, Biao, Yang, Chunfeng, Zeng, Anxiang, Zhang, Haibo, Chen, Chaofan</li>
+<li><strong>机构</strong>: Beijing University of Technology, Institute of Automation, CAS, Southeast University, Tsinghua University, University of Chinese Academy of Sciences</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2607.19339v1">arXiv</a> | <a href="https://arxiv.org/pdf/2607.19339v1">PDF</a></li>
+<li>
+<p><strong>来源</strong>: 📄 arXiv 关键词检索</p>
+</li>
+<li>
+<p><strong>核心方法</strong>: OmniReasoner 是长音视频推理的 tool-use 后训练框架：全模态 LLM 通过 SFT + RL 学会「在回答前决定是否、以及在哪里调用 zoom-in 工具」，只对稀疏、跨模态的关键证据做高保真处理，而不是对整段视频均匀高清编码。</p>
+</li>
+<li><strong>对比方法/Baselines</strong>: 对比均匀采样/整段高保真输入的 omni-LLM，以及无工具的直接推理基线。</li>
+<li><strong>借鉴意义</strong>: 「按需调工具放大证据」的思路对任何长上下文/多模态检索都通用——本质是学习一个 attention-over-tools 的策略，你做多模态推荐或长文档理解可迁移。</li>
+<li><strong>锐评</strong>: 核心洞察对：长音视频里决定性证据稀疏，均匀高清就是烧钱，让模型自己学会「放大哪里」是正解。tool-use + RL 决定调用时机的框架也干净。质疑：zoom-in 工具的动作空间和奖励设计是关键，摘要没交代 RL 怎么给「该不该放大」打分——搞不好又是 outcome reward 一把梭。有想法，看方法细节。👀</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2607.19339v1" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🎬 多模态与工具使用"><h3>9. TimeLens2: Generalist Video Temporal Grounding with Multimodal LLMs</h3>
+<ul>
+<li><strong>作者</strong>: Zhu, Yuhan, Ma, Changlian, Zeng, Xiangyu, Li, Xinhao, Zhang, Zhiqiu, Li, Songze, Zhang, Jun, Jiang, Tianxiang, Yang, Yuandong, Yan, Ziang, Wang, Zikang, Chen, Xinyu, Chen, Haoran, Zhang, Shaowei, Wang, Limin</li>
+<li><strong>机构</strong>: 4Zhejiang University  5University of Science and Technology of China  6Fudan University, 1Nanjing University  2Shanghai AI Laboratory  3Shanghai Jiao Tong University</li>
+<li><strong>链接</strong>: <a href="https://arxiv.org/abs/2607.17423">arXiv</a> | <a href="https://arxiv.org/pdf/2607.17423">PDF</a></li>
+<li><strong>来源</strong>: 🔥 HF Trending，⬆️ 146</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2607.17423v1/x1.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2607.17423v1/x2.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2607.17423v1/x5.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: TimeLens2 做「通用视频时序定位」：让一个多模态 LLM 预测跨视频长度、领域、查询形式、视角的可变数量证据区间——即回答「支撑证据出现在何时」，而不只是「视频里发生了什么」。</li>
+<li><strong>对比方法/Baselines</strong>: 对比初代 <span class="wikilink">TimeLens</span>、<span class="wikilink">MomentSeeker</span> 等时序定位方法，NLQ 类任务。</li>
+<li><strong>借鉴意义</strong>: 跟你的推荐/广告核心不沾边，但如果涉及视频内容理解/精排的证据定位，可变基数区间预测的建模值得瞄一眼。146 赞热度高。</li>
+<li><strong>锐评</strong>: 146 赞，社区很买账。generalist（跨长度/领域/视角）+ 可变基数区间这个设定确实比固定单区间的旧工作难也更实用。但对你的领域纯属邻居家的热闹——技术不差，相关性低。想扩视野可以扫，别花太多时间。👀</li>
+</ul>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2607.17423" target="_blank" rel="noopener">📖 AI 精读</a></div><h2>🤖 Agent 框架与安全</h2><div class="paper-card" data-topic="🤖 Agent 框架与安全"><h3>10. They'll Verify. They Just Won't Act. How Authority Framing and Laundered Code Turn a Trusted Agentic CI/CD Pipeline Into an Attack Surface</h3>
+<ul>
+<li><strong>作者</strong>: Senthex Research  •  RELAY Lab #1</li>
+<li><strong>机构</strong>: LAUNDERED PRS PASSED, Senthex Research • senthex.com, WORST-CASE COMPROMISE, Yohann Sidot • July</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2607.19267v1">arXiv</a> | <a href="https://arxiv.org/pdf/2607.19267v1">PDF</a></li>
+<li>
+<p><strong>来源</strong>: 📄 arXiv 关键词检索</p>
+</li>
+<li>
+<p><strong>核心方法</strong>: 构造一个五智能体 CI/CD 流水线（triage→developer→security-scan→review→approve/deploy），用三家厂商的五个生产级 LLM 分角色，前置一个 shadow 模式的 LLM 防火墙。攻击面：一条外部 issue 请求「usage-telemetry」功能，实则要求把 os.environ 泄露到攻击者 URL，用「可观测性」话术洗白。研究验证者会不会放行。</p>
+</li>
+<li><strong>对比方法/Baselines</strong>: 对比不同角色模型组合（gpt-4o 当 reviewer、claude-haiku 当 scanner 等），temperature 0 可复现。</li>
+<li><strong>借鉴意义</strong>: 多智能体流水线的安全性是被严重低估的——这篇用真实模型做红队，直接告诉你「验证者会验证，但不会拦」。做 agentic 系统上线的人必读，别以为多加个 review agent 就安全了。</li>
+<li><strong>锐评</strong>: 这篇标题党嫌疑很重（那个冒号从句……），但内容是硬的：真实三厂五模型、可复现 seed、明确的密钥泄露攻击，结论「They'll Verify. They Just Won't Act.」一针见血——验证 agent 能识别问题却不阻断，这是 agentic pipeline 的系统性盲区。质疑：只测了一种攻击载荷（环境变量外泄），泛化性未知；shadow 防火墙的作用也没量化。但作为警示实证，够格。⚠️</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2607.19267v1" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🤖 Agent 框架与安全"><h3>11. Graph-Based Agentic AI with LangGraph: Workflow Pathways for Long-Running Stateful Business Processes</h3>
+<ul>
+<li><strong>作者</strong>: Pearson, Daniel, Shapiro, Sidney, Venegas, Emiliano Sebastian Gonzalez, Al-Khatib, Sanad, Arzola, Aurora Pinzón</li>
+<li><strong>机构</strong>: Dhillon School of Business, University of Lethbridge, Al Hussein Technical University</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2607.19297v1">arXiv</a> | <a href="https://arxiv.org/pdf/2607.19297v1">PDF</a></li>
+<li>
+<p><strong>来源</strong>: 📄 arXiv 关键词检索</p>
+</li>
+<li>
+<p><strong>核心方法</strong>: 面向长运行、有状态、多步的生成式 AI 业务流程，给出基于 <span class="wikilink">LangGraph</span> 的三个可执行配方：带修复循环的 SQL 分析、带证据的 agentic RAG、以及需要人审的长流程。核心判据是「这到底是不是一个 workflow 问题」（能否暂停恢复、下一步是否依赖显式状态、失败是否该走修复路径）。</p>
+</li>
+<li><strong>对比方法/Baselines</strong>: 非 benchmark 论文，属实践指南；对比把 LangGraph 当模型质量 benchmark 的误用。</li>
+<li><strong>借鉴意义</strong>: 如果你在把 agent 落到真实业务流程（审批、长任务、人机协同），这份「什么时候该用图编排」的判断清单能省你踩坑时间。</li>
+<li><strong>锐评</strong>: 老实的 practitioner guide，不装。最有价值的其实是开头那句「先判断这是不是 workflow 问题」——大部分人是拿着 LangGraph 找钉子。质疑：三个配方偏教科书，没有失败案例和成本数据，读完你知道怎么搭，但不知道什么时候不该搭。当工程参考读，别当研究读。🫠</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2607.19297v1" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🤖 Agent 框架与安全"><h3>12. AgentTrails: Towards Trust and Reuse for Agentic Tasks</h3>
+<ul>
+<li><strong>作者</strong>: Eden Wu, Sonia Castelo, Yurong Liu, Cláudio T. Silva and Juliana Freire</li>
+<li>
+<p><strong>机构</strong>: New York University, eden.wu, s.castelo, yurong.liu, csilva, juliana.freire@nyu.edu</p>
+</li>
+<li>
+<p><strong>链接</strong>: <a href="http://arxiv.org/abs/2607.18816v1">arXiv</a> | <a href="https://arxiv.org/pdf/2607.18816v1">PDF</a></p>
+</li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2607.18816v1/figures/trace_to_provenance_to_joined.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2607.18816v1/figures/usage_scenario_1.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: AgentTrails 把 LLM agent 的时间序日志（工具调用、查库、执行代码、操纵中间产物）转成显式的数据流/血缘（provenance）图，暴露动作与产物之间的依赖，服务于 agentic 任务的可信与复用。</li>
+<li><strong>对比方法/Baselines</strong>: 借鉴科学工作流的 provenance 可视化传统（Freire et al.），扩展到 LLM agent 轨迹。</li>
+<li><strong>借鉴意义</strong>: agent 可观测性是刚需——把线性日志变成血缘图，对调试、审计、复用 agent 轨迹都有用，跟上面那篇 CI/CD 安全是一体两面。</li>
+<li><strong>锐评</strong>: 把成熟的科学工作流 provenance 那套搬到 LLM agent 上，属于「正确但不惊艳」。可视化血缘确实比翻线性日志强。质疑：agent 轨迹的依赖往往是隐式的（一个工具输出被塞进后续 prompt 的某段），怎么自动抽出准确的 dataflow 是难点，摘要没说抽取精度。方向对，看它抽得准不准。🫠</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2607.18816v1" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🤖 Agent 框架与安全"><h3>13. Sparse Evidence Can Suffice: Agentic Evidence Seeking for Multimodal Video Misinformation Detection</h3>
+<ul>
+<li><strong>作者</strong>: Haochen Zhao1,2,
+Yongxiu Xu1,2\corresponding</li>
+<li><strong>机构</strong>: Baidu, Beijing, China, Institute of Information Engineering, Chinese Academy of Sciences, Beijing, China, School of Cyber Security, University of Chinese Academy of Sciences, Beijing, China</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2607.18080v1">arXiv</a> | <a href="https://arxiv.org/pdf/2607.18080v1">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2607.18080v1/x2.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2607.18080v1/x5.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: SIEVE 做多模态视频虚假信息检测，反对「整段视频一次性理解」的主流范式，主张真实的错误信息证据是稀疏、组合式的——可靠判断往往只依赖少数几个耦合线索。于是用 agentic 的证据搜寻，只挑关键证据做判断。</li>
+<li><strong>对比方法/Baselines</strong>: 对比整体多模态分类（融合视觉/文本/声学/社交信号），在 FakeSV/FakeTT/FakeVV 等 benchmark。</li>
+<li><strong>借鉴意义</strong>: 「稀疏证据足矣」的思路跟上面 OmniReasoner 异曲同工，对内容风控/审核类应用有借鉴——不必全量高成本理解，agent 定向找证据即可。</li>
+<li><strong>锐评</strong>: 洞察和 OmniReasoner 撞车（都是稀疏证据 + agentic 定向），说明这是个真趋势。反对整体理解、走组合式证据搜寻，在虚假信息检测上是对的。质疑：agent 挑证据的过程本身可能漏掉分布外的线索，稀疏假设在对抗性造假面前可能被针对性绕过。有价值，注意鲁棒性。👀</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2607.18080v1" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🤖 Agent 框架与安全"><h3>14. MAGE: Human-Like Macro Placement via Agentic Multimodal Reasoning</h3>
+<ul>
+<li><strong>作者</strong>: Andrew B. Kahng, ,
+Sayak Kundu, ,
+Bodhisatta Pramanik</li>
+<li><strong>机构</strong>: Multimodal Reasoning</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2607.18536v1">arXiv</a> | <a href="https://arxiv.org/pdf/2607.18536v1">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2607.18536v1/Figures/MAGE_overall_v2.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2607.18536v1/x1.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2607.18536v1/Figures/correlation_minmax.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: MAGE 是芯片宏观布局（macro placement）的多模态多智能体框架，把布局任务拆成六阶段工作流，结合结构化的 floorplanning 规则、视觉检查和迭代精修，模仿人类工程师的布局精修过程。</li>
+<li><strong>对比方法/Baselines</strong>: 对比经典模拟退火/sequence-pair/B*-tree 布局，以及学习型布局方法。</li>
+<li><strong>借鉴意义</strong>: 领域（EDA 物理设计）离你很远，但「多模态 agent + 结构规则 + 视觉检查 + 迭代」的分阶段协作范式是可抽象的通用 agent 设计模式。</li>
+<li><strong>锐评</strong>: 把多模态 multi-agent 用到芯片布局上，跨界得挺硬核。六阶段 + 视觉检查 + 规则约束的组合看着像认真做过工程的。但对你就是纯纯的隔壁领域，除非你想学它的 agent 编排结构。技术扎实，相关性接近零。💤</li>
+</ul>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2607.18536v1" target="_blank" rel="noopener">📖 AI 精读</a></div><h2>🛠️ LLM 工程实践</h2><div class="paper-card" data-topic="🛠️ LLM 工程实践"><h3>15. Prompt Design at Scale: How Format, Instruction Count, and Context Length Shape Instruction Adherence and Hallucination in Large Language Models</h3>
+<ul>
+<li><strong>作者</strong>: Netanel Eliav</li>
+</ul>
+<p>Machine Human Intelligence Lab (MHIL)
+netanel@mhil.org
+- <strong>机构</strong>: Machine Human Intelligence Lab (MHIL)
+- <strong>链接</strong>: <a href="http://arxiv.org/abs/2607.19257v1">arXiv</a> | <a href="https://arxiv.org/pdf/2607.19257v1">PDF</a>
+- <strong>来源</strong>: 📄 arXiv 关键词检索</p>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2607.19257v1/x1.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2607.19257v1/x2.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2607.19257v1/x4.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: 对三个几乎无对照证据的 prompt 设计决策做控制实验：(1) 指令/上下文格式（markdown / 纯文本 / 散文 / 表格）；(2) 一个 system prompt 能塞多少条并行指令才开始掉遵从；(3) 上下文多长后 recall 和「诚实度」开始退化。</li>
+<li><strong>对比方法/Baselines</strong>: 对齐 Liu et al.(2023) 的 U 形检索曲线、Hong et al.(2025) 的 18 模型长上下文退化研究，但新增了格式变量。</li>
+<li><strong>借鉴意义</strong>: 这是能立刻改你 prompt 工程习惯的实证——格式选错、指令堆太多、上下文塞太长，都是线上 agent 掉链子的真实原因，有对照数据比拍脑袋强。</li>
+<li><strong>锐评</strong>: 不 fancy，但有用。大家天天拍脑袋决定用 markdown 还是表格、system prompt 塞几条指令，几乎没人做对照实验，这篇补了这个洞。质疑：结论极可能强绑定于所测模型版本，半年后模型一换是否还成立存疑；「诚实度退化」怎么量化也得看定义。实用党收藏，别当永恒真理。👀</li>
+</ul>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2607.19257v1" target="_blank" rel="noopener">📖 AI 精读</a></div></div>
+<div id="panel-排序与检索" class="tab-panel"><h2>📊 排序与检索</h2><div class="paper-card" data-topic="📊 排序与检索"><h3>1. Exposure-Based Reinforcement Learning to Rank</h3>
+<ul>
+<li><strong>作者</strong>: Harrie Oosterhuis, Rolf Jagerman, Zhen Qin, Xuanhui Wang</li>
+<li>
+<p><strong>机构</strong>: h.oosterhuis@uva.nl
+, Google DeepMindMountain ViewUS, xuanhui@google.com
+, University of Amsterdam, jagerman@google.com, Google DeepMind, Google DeepMindNew YorkUS, zhenqin@google.com, University of AmsterdamAmsterdamNL, xuanhui@google.com, zhenqin@google.com
+, jagerman@google.com</p>
+</li>
+<li>
+<p><strong>链接</strong>: <a href="http://arxiv.org/abs/2607.18689v1">arXiv</a> | <a href="https://arxiv.org/pdf/2607.18689v1">PDF</a></p>
+</li>
+<li>
+<p><strong>来源</strong>: 📄 arXiv 关键词检索</p>
+</li>
+<li>
+<p><strong>核心方法</strong>: 把 <span class="wikilink">learning-to-rank</span> 建成 <span class="wikilink">RL</span> 问题时，动作空间等于「所有可能排列」，大到无法直接优化。本文提出 Exposure-Based RL to Rank，用曝光（exposure）概率重构策略梯度，把对整个排列采样的需求降成对文档级曝光的估计，从而让 RL 能优化任意排序目标（nDCG、曝光公平性、蒸馏）而不被动作空间爆炸拖死。</p>
+</li>
+<li><strong>对比方法/Baselines</strong>: 对比传统 <span class="wikilink">LTR</span> 的 pointwise/pairwise/listwise 三类方法（RankNet/LambdaMART 一脉），以及朴素 <span class="wikilink">Policy-Gradient</span> LTR；数据集用 <span class="wikilink">MSLR</span> 等标准 benchmark。</li>
+<li><strong>借鉴意义</strong>: 这是全场唯一直接砸在你核心领域（排序/推荐/广告排序）上的工作。曝光视角天然接你关心的 fairness-of-exposure 和 ranking distillation，Google DeepMind 出品，方法论可以直接迁移到 CTR 后排序或竞价场景。</li>
+<li><strong>锐评</strong>: 终于有一篇不是「RL+LLM 又调了个 loss」的。把 LTR 的动作空间问题用曝光重参数化解掉，思路干净且落地性强，作者阵容（Oosterhuis + DeepMind）也是这个方向的老炮。质疑点：曝光估计本身依赖点击模型假设，摘要没说在真实带 position bias 的日志上表现如何——如果曝光模型错了，整套梯度就有偏。但方向对，值得精读。🔥</li>
+</ul>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2607.18689v1" target="_blank" rel="noopener">📖 AI 精读</a></div></div>
+<div id="panel-rlforllm推理" class="tab-panel"><h2>🧠 RL for LLM 推理</h2><div class="paper-card" data-topic="🧠 RL for LLM 推理"><h3>2. MADA-RL: Multi-Agent Debate-Aware Reinforcement Learning for Parameter-Efficient Reasoning in Compact Models</h3>
+<ul>
+<li><strong>作者</strong>: Pulici, Martino M. L., Chu, Cuong Xuan, Kharlamov, Evgeny, Ding, Zifeng, Tresp, Volker, Ma, Yunpu</li>
+<li><strong>机构</strong>: Bosch Center for Artificial Intelligence, Germany, Munich Center for Machine Learning, Germany, University of Cambridge, United Kingdom, University of Oslo, Norway</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2607.18006v1">arXiv</a> | <a href="https://arxiv.org/pdf/2607.18006v1">PDF</a></li>
+<li>
+<p><strong>来源</strong>: 📄 arXiv 关键词检索</p>
+</li>
+<li>
+<p><strong>核心方法</strong>: MADA-RL 是针对 ≤4B 紧凑模型的后训练框架，把同一个小模型特化成 generator 和 critic 两个角色，用「辩论感知」（debate-aware）的学习信号做参数高效微调，让小模型在有限预算下也能获得可观推理能力。</p>
+</li>
+<li><strong>对比方法/Baselines</strong>: 对比标准 RLHF/RLVR 单模型后训练、以及不带辩论信号的 generator-only 微调；面向数学/推理 benchmark。</li>
+<li><strong>借鉴意义</strong>: 你如果关心「不烧大钱把小模型推理拉起来」（线上部署成本敏感场景），这个 generator-critic 自博弈 + 参数高效的组合值得抄。</li>
+<li><strong>锐评</strong>: 小模型 + 多智能体辩论 + 参数高效，三个热词叠在一起，本来该警惕，但把 critic 和 generator 用同一底座特化、靠辩论信号提供密集监督这个设计是有道理的，score 7 也说明打分器认可。质疑：让同一个 4B 模型既当运动员又当裁判，critic 的判别力上限就是模型自身水平，容易自我强化偏见——摘要没给「critic 是否真的比 generator 更会挑错」的证据。方向可取，但别指望它超过用强 critic 蒸馏。👀</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2607.18006v1" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🧠 RL for LLM 推理"><h3>3. Stale but Stable: Staleness-Adaptive Trust Regions for Stabilizing Asynchronous Reinforcement Learning</h3>
+<ul>
+<li><strong>作者</strong>: Yang, Junyao, Shi, Yucheng, Li, Zongxia, Li, Zhongzhi, Wang, Ruhan, Zhou, Xiangxin, Panaganti, Kishan, Mi, Haitao, Liang, Leowei</li>
+<li><strong>机构</strong>: Indiana University, National University of Singapore, Tencent Hy LLM Frontier, University of Georgia, University of Maryland, College Park</li>
+<li><strong>链接</strong>: <a href="https://arxiv.org/abs/2607.18722">arXiv</a> | <a href="https://arxiv.org/pdf/2607.18722">PDF</a></li>
+<li>
+<p><strong>来源</strong>: 📰 HF Daily，⬆️ 24</p>
+</li>
+<li>
+<p><strong>核心方法</strong>: Stale but Stable 针对异步 RL：rollout 生成和优化解耦能提吞吐，但会引入 staleness（策略滞后、引擎延迟、MoE 路由）。作者从信任域视角指出真正关键的是训练-推理分布散度，而 PPO clipping 只管采样级不管这个，于是提出 staleness 自适应的信任域来稳定异步训练。</p>
+</li>
+<li><strong>对比方法/Baselines</strong>: 对比标准同步 <span class="wikilink">PPO</span>、朴素异步 RL（固定 clip）、<span class="wikilink">GRPO</span> 一系；关注 MoE 场景。</li>
+<li><strong>借鉴意义</strong>: 做大规模 RL 训练基建的人直接受益——异步 = 吞吐，但不稳；把 staleness 显式建进信任域是对症下药，对你训练 LLM/推荐大模型的 RL 流水线有工程价值。</li>
+<li><strong>锐评</strong>: 这篇比一堆刷 benchmark 的实在。诊断准：把「PPO clip 治标不治本」讲清楚，指出训练-推理散度才是异步不稳的根，然后按 staleness 缩放信任域，逻辑闭环。质疑：staleness 的度量本身怎么估、自适应系数怎么调，摘要没说，实操上很可能又引入一堆超参。但问题真实、切口正确，值得看。👀</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2607.18722" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🧠 RL for LLM 推理"><h3>4. Fishing Out Free Riders: Shapley-Based Reward Attribution for Parallel Reasoning via Reinforcement Learning</h3>
+<ul>
+<li><strong>作者</strong>: Wentao Zhang1</li>
+<li><strong>机构</strong>: 4The Chinese University of Hong Kong, Shenzhen  5Zhejiang University, 1ShanghaiTech University  2City University of Hong Kong  3Peking University, yuxuancheng1@link.cuhk.edu.cn, zhaodj@shanghaitech.edu.cn</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2607.18979v1">arXiv</a> | <a href="https://arxiv.org/pdf/2607.18979v1">PDF</a></li>
+<li>
+<p><strong>来源</strong>: 📄 arXiv 关键词检索</p>
+</li>
+<li>
+<p><strong>核心方法</strong>: 针对并行推理（多路径采样）里 outcome-level reward 对所有路径一视同仁的问题，本文用 <span class="wikilink">Shapley</span> 值做奖励归因，把整体奖励拆解到单条推理路径的边际贡献上，识别冗余/误导/有害路径，给出更清晰的学习信号。</p>
+</li>
+<li><strong>对比方法/Baselines</strong>: 对比 <span class="wikilink">GRPO</span>、outcome-reward 均分的并行推理 RL；在 AIME/MATH/AMC 等数学 benchmark 上评估。</li>
+<li><strong>借鉴意义</strong>: 「区分并行路径的贡献」对任何 best-of-N / self-consistency 训练都有用——Shapley 归因能帮你把 rollout 预算花在真正有贡献的路径上。</li>
+<li><strong>锐评</strong>: 把 Shapley 搬进并行推理归因，概念上优雅，问题（free rider 路径）也真实。但 Shapley 值精确计算是指数级的，摘要没说怎么近似——这几乎决定了它能不能上规模。如果用的是廉价蒙特卡洛近似，那和现有的路径加权方法差多少就得打问号。想法好，成本存疑。👀</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2607.18979v1" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🧠 RL for LLM 推理"><h3>5. The Price of Reasoning: Cost-Quality Tradeoffs in Reinforcement Learning for Neural Machine Translation</h3>
+<ul>
+<li><strong>作者</strong>: Jungo, Michael, An, Aixiu</li>
+<li><strong>机构</strong>: AIBEX, University of Fribourg, iCoSys, University of Applied Sciences and Arts Western</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2607.19226v1">arXiv</a> | <a href="https://arxiv.org/pdf/2607.19226v1">PDF</a></li>
+<li>
+<p><strong>来源</strong>: 📄 arXiv 关键词检索</p>
+</li>
+<li>
+<p><strong>核心方法</strong>: 研究 RLVR 用于神经机器翻译（NMT）时的成本-质量权衡：RLVR 能诱导推理能力、在法律文档翻译上被认为是首选，但本文追问这种「带推理的翻译」到底值不值那个推理成本。</p>
+</li>
+<li><strong>对比方法/Baselines</strong>: 对比 SFT 翻译、普通 RLVR，聚焦推理开销 vs 质量增益。</li>
+<li><strong>借鉴意义</strong>: 「推理不是免费的」这个问题对任何要上线推理型模型的场景都通用——翻译只是载体，成本-质量曲线的方法论可迁移。</li>
+<li><strong>锐评</strong>: 选题接地气：大家一窝蜂给什么都加推理，很少有人认真算「推理的价格」。把 NMT 当探针来量成本-质量曲线是聪明的。质疑：结论大概率是「看场景」这种正确的废话，真正价值在它给的量化数字——摘要没剧透，得看正文。选题加分，结论待验。🫠</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2607.19226v1" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🧠 RL for LLM 推理"><h3>6. H^2SD: Hybrid Hindsight Self-Distillation</h3>
+<ul>
+<li><strong>作者</strong>: Qiye Cai, Yichuan Ma, Linyang Li, Peiji Li, Yongkang Chen, Qipeng Guo, Yicheng Zou, Tao Gui, Xiaocheng Feng†, Bing Qin†</li>
+<li>
+<p><strong>机构</strong>: Fudan University, Shanghai Artificial Intelligence Laboratory
+, Shanghai Artificial Intelligence Laboratory, The Chinese University of Hong Kong
+, The Chinese University of Hong Kong, Harbin Institute of Technology, Fudan University
+, Harbin Institute of Technology</p>
+</li>
+<li>
+<p><strong>链接</strong>: <a href="https://arxiv.org/abs/2607.18955">arXiv</a> | <a href="https://arxiv.org/pdf/2607.18955">PDF</a></p>
+</li>
+<li><strong>来源</strong>: 📰 HF Daily，⬆️ 1</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2607.18955v1/x2.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: H²SD（Hybrid Hindsight Self-Distillation）针对 RLVR 只给整条轨迹一个标量 outcome reward、监督稀疏、token 级 credit assignment 差的问题，用混合的事后自蒸馏来提供更细粒度的监督信号。</li>
+<li><strong>对比方法/Baselines</strong>: 对比 <span class="wikilink">GRPO</span>、<span class="wikilink">DAPO</span>、<span class="wikilink">GSPO</span> 等 RLVR 变体；on-policy distillation 一系。</li>
+<li><strong>借鉴意义</strong>: token 级 credit assignment 是 RLVR 的老大难，如果你在训推理模型，这类细粒度信号的方法可以纳入对比池。</li>
+<li><strong>锐评</strong>: 又一篇「RLVR 的 credit assignment 不行，我来改」的论文，赛道已经非常拥挤（GRPO/DAPO/GSPO/各种 SD）。hindsight + self-distillation 的组合不算新颖，1 个赞也说明社区反应平淡。质疑：和一堆已有 credit assignment 方法的边际区别在哪，摘要没讲清楚。incremental 味道重，除非你正好在这条线上,否则可跳。🫠</li>
+</ul>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2607.18955" target="_blank" rel="noopener">📖 AI 精读</a></div></div>
+<div id="panel-rag与检索增强" class="tab-panel"><h2>🔍 RAG 与检索增强</h2><div class="paper-card" data-topic="🔍 RAG 与检索增强"><h3>7. RAGU: A Multi-Step GraphRAG Engine with a Compact Domain-Adapted LLM</h3>
+<ul>
+<li><strong>作者</strong>: Mikhail Komarov1,∗</li>
+<li><strong>机构</strong>: 1ITMO University  2Novosibirsk State University  3Far Eastern Federal University</li>
+<li><strong>链接</strong>: <a href="https://arxiv.org/abs/2607.11683">arXiv</a> | <a href="https://arxiv.org/pdf/2607.11683">PDF</a></li>
+<li><strong>来源</strong>: 🔥 HF Trending，⬆️ 131</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2607.11683v1/figures/llm_quality.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2607.11683v1/x1.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2607.11683v1/x2.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: RAGU 是开源模块化 GraphRAG 引擎，核心是把「抽取」和「固化（consolidation）」分离：实体和关系先经两阶段带类型抽取，再去重、总结、用 Leiden 聚类分社区，产物落到图库/KV/向量三层可换存储。目标是解决单遍抽取产生的噪声实体和脆弱检索。</li>
+<li><strong>对比方法/Baselines</strong>: 对比 <span class="wikilink">HippoRAG</span>、<span class="wikilink">LightRAG</span> 等 GraphRAG 系统，以及朴素单遍 <span class="wikilink">RAG</span>。</li>
+<li><strong>借鉴意义</strong>: 如果你在搭知识密集的 RAG/QA 系统，「抽取-固化分离 + 可换存储层」是能直接借鉴的工程架构；131 赞说明社区认可其工程完成度。</li>
+<li><strong>锐评</strong>: GraphRAG 领域最大的病就是单遍抽取脏数据，RAGU 把 consolidation 单独拎出来这一刀切得对，开源 + 三层可换存储也显示工程诚意。质疑：Leiden 社区聚类 + 两阶段抽取意味着索引成本不低，摘要没给延迟/成本对比——GraphRAG 的老问题从来不是能不能建图，而是建图值不值这个钱。工程党值得看，但先算账。👀</li>
+</ul>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2607.11683" target="_blank" rel="noopener">📖 AI 精读</a></div></div>
+<div id="panel-多模态与工具使用" class="tab-panel"><h2>🎬 多模态与工具使用</h2><div class="paper-card" data-topic="🎬 多模态与工具使用"><h3>8. OmniReasoner: Thinking with Long Audio-Video via Native Tool Use</h3>
+<ul>
+<li><strong>作者</strong>: Chen, Yu, Li, Caorui, Xiong, Ziyu, Wang, Yidong, Gao, Mingqi, Liu, Shuman, Liu, Biao, Yang, Chunfeng, Zeng, Anxiang, Zhang, Haibo, Chen, Chaofan</li>
+<li><strong>机构</strong>: Beijing University of Technology, Institute of Automation, CAS, Southeast University, Tsinghua University, University of Chinese Academy of Sciences</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2607.19339v1">arXiv</a> | <a href="https://arxiv.org/pdf/2607.19339v1">PDF</a></li>
+<li>
+<p><strong>来源</strong>: 📄 arXiv 关键词检索</p>
+</li>
+<li>
+<p><strong>核心方法</strong>: OmniReasoner 是长音视频推理的 tool-use 后训练框架：全模态 LLM 通过 SFT + RL 学会「在回答前决定是否、以及在哪里调用 zoom-in 工具」，只对稀疏、跨模态的关键证据做高保真处理，而不是对整段视频均匀高清编码。</p>
+</li>
+<li><strong>对比方法/Baselines</strong>: 对比均匀采样/整段高保真输入的 omni-LLM，以及无工具的直接推理基线。</li>
+<li><strong>借鉴意义</strong>: 「按需调工具放大证据」的思路对任何长上下文/多模态检索都通用——本质是学习一个 attention-over-tools 的策略，你做多模态推荐或长文档理解可迁移。</li>
+<li><strong>锐评</strong>: 核心洞察对：长音视频里决定性证据稀疏，均匀高清就是烧钱，让模型自己学会「放大哪里」是正解。tool-use + RL 决定调用时机的框架也干净。质疑：zoom-in 工具的动作空间和奖励设计是关键，摘要没交代 RL 怎么给「该不该放大」打分——搞不好又是 outcome reward 一把梭。有想法，看方法细节。👀</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2607.19339v1" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🎬 多模态与工具使用"><h3>9. TimeLens2: Generalist Video Temporal Grounding with Multimodal LLMs</h3>
+<ul>
+<li><strong>作者</strong>: Zhu, Yuhan, Ma, Changlian, Zeng, Xiangyu, Li, Xinhao, Zhang, Zhiqiu, Li, Songze, Zhang, Jun, Jiang, Tianxiang, Yang, Yuandong, Yan, Ziang, Wang, Zikang, Chen, Xinyu, Chen, Haoran, Zhang, Shaowei, Wang, Limin</li>
+<li><strong>机构</strong>: 4Zhejiang University  5University of Science and Technology of China  6Fudan University, 1Nanjing University  2Shanghai AI Laboratory  3Shanghai Jiao Tong University</li>
+<li><strong>链接</strong>: <a href="https://arxiv.org/abs/2607.17423">arXiv</a> | <a href="https://arxiv.org/pdf/2607.17423">PDF</a></li>
+<li><strong>来源</strong>: 🔥 HF Trending，⬆️ 146</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2607.17423v1/x1.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2607.17423v1/x2.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2607.17423v1/x5.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: TimeLens2 做「通用视频时序定位」：让一个多模态 LLM 预测跨视频长度、领域、查询形式、视角的可变数量证据区间——即回答「支撑证据出现在何时」，而不只是「视频里发生了什么」。</li>
+<li><strong>对比方法/Baselines</strong>: 对比初代 <span class="wikilink">TimeLens</span>、<span class="wikilink">MomentSeeker</span> 等时序定位方法，NLQ 类任务。</li>
+<li><strong>借鉴意义</strong>: 跟你的推荐/广告核心不沾边，但如果涉及视频内容理解/精排的证据定位，可变基数区间预测的建模值得瞄一眼。146 赞热度高。</li>
+<li><strong>锐评</strong>: 146 赞，社区很买账。generalist（跨长度/领域/视角）+ 可变基数区间这个设定确实比固定单区间的旧工作难也更实用。但对你的领域纯属邻居家的热闹——技术不差，相关性低。想扩视野可以扫，别花太多时间。👀</li>
+</ul>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2607.17423" target="_blank" rel="noopener">📖 AI 精读</a></div></div>
+<div id="panel-agent框架与安全" class="tab-panel"><h2>🤖 Agent 框架与安全</h2><div class="paper-card" data-topic="🤖 Agent 框架与安全"><h3>10. They'll Verify. They Just Won't Act. How Authority Framing and Laundered Code Turn a Trusted Agentic CI/CD Pipeline Into an Attack Surface</h3>
+<ul>
+<li><strong>作者</strong>: Senthex Research  •  RELAY Lab #1</li>
+<li><strong>机构</strong>: LAUNDERED PRS PASSED, Senthex Research • senthex.com, WORST-CASE COMPROMISE, Yohann Sidot • July</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2607.19267v1">arXiv</a> | <a href="https://arxiv.org/pdf/2607.19267v1">PDF</a></li>
+<li>
+<p><strong>来源</strong>: 📄 arXiv 关键词检索</p>
+</li>
+<li>
+<p><strong>核心方法</strong>: 构造一个五智能体 CI/CD 流水线（triage→developer→security-scan→review→approve/deploy），用三家厂商的五个生产级 LLM 分角色，前置一个 shadow 模式的 LLM 防火墙。攻击面：一条外部 issue 请求「usage-telemetry」功能，实则要求把 os.environ 泄露到攻击者 URL，用「可观测性」话术洗白。研究验证者会不会放行。</p>
+</li>
+<li><strong>对比方法/Baselines</strong>: 对比不同角色模型组合（gpt-4o 当 reviewer、claude-haiku 当 scanner 等），temperature 0 可复现。</li>
+<li><strong>借鉴意义</strong>: 多智能体流水线的安全性是被严重低估的——这篇用真实模型做红队，直接告诉你「验证者会验证，但不会拦」。做 agentic 系统上线的人必读，别以为多加个 review agent 就安全了。</li>
+<li><strong>锐评</strong>: 这篇标题党嫌疑很重（那个冒号从句……），但内容是硬的：真实三厂五模型、可复现 seed、明确的密钥泄露攻击，结论「They'll Verify. They Just Won't Act.」一针见血——验证 agent 能识别问题却不阻断，这是 agentic pipeline 的系统性盲区。质疑：只测了一种攻击载荷（环境变量外泄），泛化性未知；shadow 防火墙的作用也没量化。但作为警示实证，够格。⚠️</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2607.19267v1" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🤖 Agent 框架与安全"><h3>11. Graph-Based Agentic AI with LangGraph: Workflow Pathways for Long-Running Stateful Business Processes</h3>
+<ul>
+<li><strong>作者</strong>: Pearson, Daniel, Shapiro, Sidney, Venegas, Emiliano Sebastian Gonzalez, Al-Khatib, Sanad, Arzola, Aurora Pinzón</li>
+<li><strong>机构</strong>: Dhillon School of Business, University of Lethbridge, Al Hussein Technical University</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2607.19297v1">arXiv</a> | <a href="https://arxiv.org/pdf/2607.19297v1">PDF</a></li>
+<li>
+<p><strong>来源</strong>: 📄 arXiv 关键词检索</p>
+</li>
+<li>
+<p><strong>核心方法</strong>: 面向长运行、有状态、多步的生成式 AI 业务流程，给出基于 <span class="wikilink">LangGraph</span> 的三个可执行配方：带修复循环的 SQL 分析、带证据的 agentic RAG、以及需要人审的长流程。核心判据是「这到底是不是一个 workflow 问题」（能否暂停恢复、下一步是否依赖显式状态、失败是否该走修复路径）。</p>
+</li>
+<li><strong>对比方法/Baselines</strong>: 非 benchmark 论文，属实践指南；对比把 LangGraph 当模型质量 benchmark 的误用。</li>
+<li><strong>借鉴意义</strong>: 如果你在把 agent 落到真实业务流程（审批、长任务、人机协同），这份「什么时候该用图编排」的判断清单能省你踩坑时间。</li>
+<li><strong>锐评</strong>: 老实的 practitioner guide，不装。最有价值的其实是开头那句「先判断这是不是 workflow 问题」——大部分人是拿着 LangGraph 找钉子。质疑：三个配方偏教科书，没有失败案例和成本数据，读完你知道怎么搭，但不知道什么时候不该搭。当工程参考读，别当研究读。🫠</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2607.19297v1" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🤖 Agent 框架与安全"><h3>12. AgentTrails: Towards Trust and Reuse for Agentic Tasks</h3>
+<ul>
+<li><strong>作者</strong>: Eden Wu, Sonia Castelo, Yurong Liu, Cláudio T. Silva and Juliana Freire</li>
+<li>
+<p><strong>机构</strong>: New York University, eden.wu, s.castelo, yurong.liu, csilva, juliana.freire@nyu.edu</p>
+</li>
+<li>
+<p><strong>链接</strong>: <a href="http://arxiv.org/abs/2607.18816v1">arXiv</a> | <a href="https://arxiv.org/pdf/2607.18816v1">PDF</a></p>
+</li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2607.18816v1/figures/trace_to_provenance_to_joined.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2607.18816v1/figures/usage_scenario_1.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: AgentTrails 把 LLM agent 的时间序日志（工具调用、查库、执行代码、操纵中间产物）转成显式的数据流/血缘（provenance）图，暴露动作与产物之间的依赖，服务于 agentic 任务的可信与复用。</li>
+<li><strong>对比方法/Baselines</strong>: 借鉴科学工作流的 provenance 可视化传统（Freire et al.），扩展到 LLM agent 轨迹。</li>
+<li><strong>借鉴意义</strong>: agent 可观测性是刚需——把线性日志变成血缘图，对调试、审计、复用 agent 轨迹都有用，跟上面那篇 CI/CD 安全是一体两面。</li>
+<li><strong>锐评</strong>: 把成熟的科学工作流 provenance 那套搬到 LLM agent 上，属于「正确但不惊艳」。可视化血缘确实比翻线性日志强。质疑：agent 轨迹的依赖往往是隐式的（一个工具输出被塞进后续 prompt 的某段），怎么自动抽出准确的 dataflow 是难点，摘要没说抽取精度。方向对，看它抽得准不准。🫠</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2607.18816v1" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🤖 Agent 框架与安全"><h3>13. Sparse Evidence Can Suffice: Agentic Evidence Seeking for Multimodal Video Misinformation Detection</h3>
+<ul>
+<li><strong>作者</strong>: Haochen Zhao1,2,
+Yongxiu Xu1,2\corresponding</li>
+<li><strong>机构</strong>: Baidu, Beijing, China, Institute of Information Engineering, Chinese Academy of Sciences, Beijing, China, School of Cyber Security, University of Chinese Academy of Sciences, Beijing, China</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2607.18080v1">arXiv</a> | <a href="https://arxiv.org/pdf/2607.18080v1">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2607.18080v1/x2.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2607.18080v1/x5.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: SIEVE 做多模态视频虚假信息检测，反对「整段视频一次性理解」的主流范式，主张真实的错误信息证据是稀疏、组合式的——可靠判断往往只依赖少数几个耦合线索。于是用 agentic 的证据搜寻，只挑关键证据做判断。</li>
+<li><strong>对比方法/Baselines</strong>: 对比整体多模态分类（融合视觉/文本/声学/社交信号），在 FakeSV/FakeTT/FakeVV 等 benchmark。</li>
+<li><strong>借鉴意义</strong>: 「稀疏证据足矣」的思路跟上面 OmniReasoner 异曲同工，对内容风控/审核类应用有借鉴——不必全量高成本理解，agent 定向找证据即可。</li>
+<li><strong>锐评</strong>: 洞察和 OmniReasoner 撞车（都是稀疏证据 + agentic 定向），说明这是个真趋势。反对整体理解、走组合式证据搜寻，在虚假信息检测上是对的。质疑：agent 挑证据的过程本身可能漏掉分布外的线索，稀疏假设在对抗性造假面前可能被针对性绕过。有价值，注意鲁棒性。👀</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2607.18080v1" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🤖 Agent 框架与安全"><h3>14. MAGE: Human-Like Macro Placement via Agentic Multimodal Reasoning</h3>
+<ul>
+<li><strong>作者</strong>: Andrew B. Kahng, ,
+Sayak Kundu, ,
+Bodhisatta Pramanik</li>
+<li><strong>机构</strong>: Multimodal Reasoning</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2607.18536v1">arXiv</a> | <a href="https://arxiv.org/pdf/2607.18536v1">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2607.18536v1/Figures/MAGE_overall_v2.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2607.18536v1/x1.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2607.18536v1/Figures/correlation_minmax.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: MAGE 是芯片宏观布局（macro placement）的多模态多智能体框架，把布局任务拆成六阶段工作流，结合结构化的 floorplanning 规则、视觉检查和迭代精修，模仿人类工程师的布局精修过程。</li>
+<li><strong>对比方法/Baselines</strong>: 对比经典模拟退火/sequence-pair/B*-tree 布局，以及学习型布局方法。</li>
+<li><strong>借鉴意义</strong>: 领域（EDA 物理设计）离你很远，但「多模态 agent + 结构规则 + 视觉检查 + 迭代」的分阶段协作范式是可抽象的通用 agent 设计模式。</li>
+<li><strong>锐评</strong>: 把多模态 multi-agent 用到芯片布局上，跨界得挺硬核。六阶段 + 视觉检查 + 规则约束的组合看着像认真做过工程的。但对你就是纯纯的隔壁领域，除非你想学它的 agent 编排结构。技术扎实，相关性接近零。💤</li>
+</ul>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2607.18536v1" target="_blank" rel="noopener">📖 AI 精读</a></div></div>
+<div id="panel-llm工程实践" class="tab-panel"><h2>🛠️ LLM 工程实践</h2><div class="paper-card" data-topic="🛠️ LLM 工程实践"><h3>15. Prompt Design at Scale: How Format, Instruction Count, and Context Length Shape Instruction Adherence and Hallucination in Large Language Models</h3>
+<ul>
+<li><strong>作者</strong>: Netanel Eliav</li>
+</ul>
+<p>Machine Human Intelligence Lab (MHIL)
+netanel@mhil.org
+- <strong>机构</strong>: Machine Human Intelligence Lab (MHIL)
+- <strong>链接</strong>: <a href="http://arxiv.org/abs/2607.19257v1">arXiv</a> | <a href="https://arxiv.org/pdf/2607.19257v1">PDF</a>
+- <strong>来源</strong>: 📄 arXiv 关键词检索</p>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2607.19257v1/x1.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2607.19257v1/x2.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2607.19257v1/x4.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: 对三个几乎无对照证据的 prompt 设计决策做控制实验：(1) 指令/上下文格式（markdown / 纯文本 / 散文 / 表格）；(2) 一个 system prompt 能塞多少条并行指令才开始掉遵从；(3) 上下文多长后 recall 和「诚实度」开始退化。</li>
+<li><strong>对比方法/Baselines</strong>: 对齐 Liu et al.(2023) 的 U 形检索曲线、Hong et al.(2025) 的 18 模型长上下文退化研究，但新增了格式变量。</li>
+<li><strong>借鉴意义</strong>: 这是能立刻改你 prompt 工程习惯的实证——格式选错、指令堆太多、上下文塞太长，都是线上 agent 掉链子的真实原因，有对照数据比拍脑袋强。</li>
+<li><strong>锐评</strong>: 不 fancy，但有用。大家天天拍脑袋决定用 markdown 还是表格、system prompt 塞几条指令，几乎没人做对照实验，这篇补了这个洞。质疑：结论极可能强绑定于所测模型版本，半年后模型一换是否还成立存疑；「诚实度退化」怎么量化也得看定义。实用党收藏，别当永恒真理。👀</li>
+</ul>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2607.19257v1" target="_blank" rel="noopener">📖 AI 精读</a></div></div>
+<hr>
+<h2>被排除的论文</h2>
+<ul>
+<li>Reinforcement Learning for Delivery Drone-Based Participatory Sensing — 无人机/UAV 城市感知，属机器人/embodied 相邻领域，命中 negative 语义，与推荐/广告/LLM 无关</li>
+<li>Intelligent Multi-UAV Navigation in ITNTNs: A Hierarchical LLM Approach — 多无人机导航 + 网络切换，虽套了 LLM 但核心是飞控/通信，机器人相邻，跳过</li>
+<li>Comparative Study of Multi-Agent Actor-Critic Algorithms in Parameterized Action RL — 纯多智能体 actor-critic benchmark 对比，无 LLM/推荐场景，控制类 RL</li>
+<li>Strategy-Following Multi-Agent Deep RL — MARL + 人类指令控制，偏控制/协作机器人场景，与核心领域无交集</li>
+<li>Scalable Policy Optimization for Networked Multi-Agent RL — 网络化 MARL 的可扩展性理论，纯控制理论，无应用交集</li>
+<li>Beyond Score Prediction: LLM-Based Essay Scoring via RL with Rubric Rewards — 自动作文评分（教育域），RL rubric reward 思路可借鉴但领域偏，优先级低</li>
+<li>S3: Stable Subgoal Selection in Hierarchical RL — 分层 RL 子目标选择，纯 RL 算法，无 LLM/推荐场景</li>
+<li>From Trajectories to Instructions: Language-Conditioned Meta-RL — 语言条件 meta-RL（BabyAI 网格世界），偏具身/控制基准</li>
+<li>AgentTrails 之外——FilmWorld: Agentic Novel-to-Film Generation — 小说转电影的长视频生成，创意内容生成，与推荐/广告无关</li>
+<li>Semantic Primes as Explanans for Emotion in LLMs — LLM 情感可解释性理论，偏认知语言学，无工程/推荐落地</li>
+<li>Human Grounded Evaluation of LLMs for Optical Network Automation — 光网络自动化的 LLM-as-judge 评测，领域太偏（电信）</li>
+<li>Planning as Emergent Behavior in RL with Relational Hidden States — 无模型 RL 中涌现规划，纯 RL 表征研究，无应用交集</li>
+<li>PAMD: Structured Adaptive Distances for Bisimulation in Visual RL — 视觉 RL 的 bisimulation 表征距离，纯 RL 表征理论</li>
+<li>Information-Based Exploration via Random Features for RL — RL 探索的随机特征信息增益理论，纯理论 RL，无应用交集</li>
+<li>Toward Auditable Fraud Detection with Agentic Case Investigation — 反欺诈 + agentic 调查，agentic 思路可借鉴但金融风控域，优先级低于同类 agent 安全论文</li>
+</ul>
+<p>RL-for-LLM 的 credit assignment 赛道已严重内卷，真正的增量在「异步训练稳定性」和「把 RL 塞进排序/检索这类结构化动作空间」；同时 agentic 应用正从「能不能跑」转向「安全吗、可审计吗、证据够不够稀疏」三个更成熟的问题。</p></div>
+<footer style="text-align:center;color:var(--text2);margin:3em 0 1em;font-size:0.85em;">
+  Generated by daily-papers-web &middot; Powered by Claude Code
+</footer>
+<script src="tabs.js"></script>
+
+</body>
+</html>
