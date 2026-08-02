@@ -1,0 +1,462 @@
+<h1>🔪 今日锐评</h1>
+<p>今天是彻头彻尾的「Agentic + RL」大杂烩日：一半论文在给 agent 灌自蒸馏/自验证的续命汤，另一半在造各种花名 benchmark。真正有工业含金量的就 Meta 的 ROCS 一根独苗，剩下大量是「换个名词包装 GRPO」的灌水。金融、SVG、蛋白质外围的就当路过。</p>
+<h2>分流表</h2>
+<table>
+<thead>
+<tr>
+<th>等级</th>
+<th>论文</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>🔥 必读</td>
+<td><span class="wikilink">ROCS</span>（Meta 生产级推荐推理的请求-候选算力复用，真·省钱工程）</td>
+</tr>
+<tr>
+<td>👀 值得看</td>
+<td><span class="wikilink">GRSD</span>（把 group 内轨迹反思做进 RLVR，思路比大多数自蒸馏干净） · <span class="wikilink">Beacon</span>（agentic visual reasoning 该不该调工具的判断，HF 39 赞不是白来的） · <span class="wikilink">MANTA</span>（多智能体拓扑自适应，L0-L7 自我改进分层图值得一看） · <span class="wikilink">SVR</span>（自验证当算力控制策略，test-time compute 省得有道理） · <span class="wikilink">LightRot</span>（低比特 LLM 推理的轻量旋转+硬件加速，落地味浓）</td>
+</tr>
+<tr>
+<td>💤 可跳过</td>
+<td><span class="wikilink">Agentic-Metaverse</span>（AaaS/XaaS 词汇发生器，纯 position paper） · <span class="wikilink">Asymmetric-Communication</span>（哲学思辨，LLM 没有 agency 的长篇大论） · <span class="wikilink">FinSMART</span>（金融情感分析套 GRPO，边缘相关）</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<div class="tab-bar"><button class="tab-btn active" data-tab="all" onclick="switchTab('all')">📋 全部<span class="tab-count">12</span></button><button class="tab-btn" data-tab="agenticrl与自蒸馏" onclick="switchTab('agenticrl与自蒸馏')">🤖 🤖 Agentic RL 与自蒸馏<span class="tab-count">2</span></button><button class="tab-btn" data-tab="多模态agentic推理" onclick="switchTab('多模态agentic推理')">🎨 🖼️ 多模态 Agentic 推理<span class="tab-count">3</span></button><button class="tab-btn" data-tab="视频生成" onclick="switchTab('视频生成')">🎨 🎬 视频生成<span class="tab-count">1</span></button><button class="tab-btn" data-tab="金融llm" onclick="switchTab('金融llm')">🤖 💰 金融 LLM<span class="tab-count">2</span></button><button class="tab-btn" data-tab="推理与testtimecompute" onclick="switchTab('推理与testtimecompute')">📄 🧠 推理与 test-time compute<span class="tab-count">1</span></button><button class="tab-btn" data-tab="效率与压缩" onclick="switchTab('效率与压缩')">📄 ⚡ 效率与压缩<span class="tab-count">2</span></button><button class="tab-btn" data-tab="推荐系统" onclick="switchTab('推荐系统')">📈 📊 推荐系统<span class="tab-count">1</span></button></div>
+<div id="panel-all" class="tab-panel active"><h2>🤖 Agentic RL 与自蒸馏</h2><div class="paper-card" data-topic="🤖 Agentic RL 与自蒸馏"><h3>1. Group-Reflective Self-Distillation for Agentic Reinforcement Learning</h3>
+<ul>
+<li><strong>作者</strong>: Binbin Zheng1,2,
+Zijun Xie2,311footnotemark:</li>
+<li><strong>机构</strong>: Equal contribution.This work was done during an internship at Baidu</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2607.28076v1">arXiv</a> | <a href="https://arxiv.org/pdf/2607.28076v1">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2607.28076v1/x2.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: GRSD（<span class="wikilink">Group-Reflective</span> Self-Distillation）针对 <span class="wikilink">RLVR</span> 只有轨迹级终端奖励、成功行为/重复错误/偶然选择全部纠缠在一个信号里的问题，做 group 内的反思式自蒸馏。基于 <span class="wikilink">GRPO</span> 的 group 采样结构，让同组轨迹互相对照提炼可复用技能，比单条轨迹的自然语言 skill 蒸馏信号更密。</li>
+<li><strong>对比方法/Baselines</strong>: 对比 <span class="wikilink">GRPO</span>、<span class="wikilink">SDAR</span>、常规 agentic self-distillation，在 <span class="wikilink">WebShop</span>、<span class="wikilink">HotpotQA</span> 上评测。</li>
+<li><strong>借鉴意义</strong>: 对做 agent RL 训练的人有直接价值——group-relative 的框架里本来就有天然的对照组，拿来做反思几乎是免费午餐。</li>
+<li><strong>锐评</strong>: 思路是我今天看到最顺的：既然 GRPO 已经在采一整组了，不用来做组内对照式反思才是浪费。质疑点是「反思提炼」这一步的可靠性——自然语言技能蒸馏最怕自欺，group 内如果集体走偏，反思只会强化错误。摘要没给消融证明反思质量，等看正文。百度实习产出，工程味重。👀</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2607.28076v1" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🤖 Agentic RL 与自蒸馏"><h3>2. MANTA: Multi-Agent Network Topology Adaptation for Self-Evolving Multi-Agent Systems</h3>
+<ul>
+<li><strong>作者</strong>: Huang, Mao-xun, Wang, Jerry, Lai, Yi-Cheng, Zhang, Zhengxin, Cardie, Claire, Huang, Hen-Hsen</li>
+<li><strong>机构</strong>: Department of Computer Science, Cornell University, United States, Department of Computer Science, University of Illinois Urbana-Champaign, United States, Institute of Information Science, Academia Sinica, Taiwan</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2607.28527v1">arXiv</a> | <a href="https://arxiv.org/pdf/2607.28527v1">PDF</a></li>
+<li>
+<p><strong>来源</strong>: 📄 arXiv 关键词检索</p>
+</li>
+<li>
+<p><strong>核心方法</strong>: MANTA 把多智能体系统的通信拓扑从「固定设计/离线优化」变成在线自适应演化。最大亮点是那张 L0-L7 自我改进分层图（Output/Prompt/Trace/Skill/Memory/Role/Topology/Weights），把 <span class="wikilink">ReAct</span>、<span class="wikilink">Reflexion</span>、<span class="wikilink">MetaGPT</span>、<span class="wikilink">MASS</span>、<span class="wikilink">ADAS</span> 全部归位，MANTA 定位在 L6 拓扑层。</p>
+</li>
+<li><strong>对比方法/Baselines</strong>: <span class="wikilink">MASS</span>、<span class="wikilink">AFlow</span>、<span class="wikilink">ADAS</span>、<span class="wikilink">AgentSquare</span>，在 <span class="wikilink">PlanCraft</span>、<span class="wikilink">WorkBench</span>、<span class="wikilink">BrowseComp</span>、<span class="wikilink">StableToolBench</span> 上评。</li>
+<li><strong>借鉴意义</strong>: 对研究多智能体架构的人，那张 self-improvement 分层图本身就值票价，是很好的领域坐标系。</li>
+<li><strong>锐评</strong>: 拓扑自适应不是新概念（ADAS/AFlow 早做过），MANTA 的增量在「在线」两字。真正让我记住的是那张 L0-L7 图——把整个 agent 自我改进的谱系讲清楚了，教科书级别的整理。质疑：在线改拓扑的稳定性和收敛性摘要没提，动态图很容易训崩。Cornell+UIUC+中研院联合，署名豪华。👀</li>
+</ul>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2607.28527v1" target="_blank" rel="noopener">📖 AI 精读</a></div><h2>🖼️ 多模态 Agentic 推理</h2><div class="paper-card" data-topic="🖼️ 多模态 Agentic 推理"><h3>3. Beacon: Knowing When and How to Perform Agentic Visual Reasoning</h3>
+<ul>
+<li><strong>作者</strong>: Wang, Qixun, Shi, Yang, Cheng, Letian, Zhang, Zhuoran, He, Yan, Tang, Yuqi, Zhang, Qi, Yu, Xinlei, Chen, Ruizhe, Xu, Tianrun, Zhang, Yuanxing, Wan, Pengfei, Wang, Haotian, Ying, Xianghua</li>
+<li><strong>机构</strong>: 4CUHK, 3HKUST(GZ), 1Peking University</li>
+<li><strong>链接</strong>: <a href="https://arxiv.org/abs/2607.28595">arXiv</a> | <a href="https://arxiv.org/pdf/2607.28595">PDF</a></li>
+<li><strong>来源</strong>: 📰 HF Daily，⬆️ 39</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2607.28595v1/x9.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: Beacon 把 agentic visual reasoning 拆成两个维度：<span class="wikilink">MA</span>（Mode Adaptiveness，什么时候该调工具）和 Tool Effect（调了有没有用），核心主张是别为了炫技而堆低效推理范式，目标是复杂任务成功率而非「看起来会思考」。用 <span class="wikilink">RL</span>+<span class="wikilink">GRPO</span> 训练，对比 <span class="wikilink">SFT</span>、<span class="wikilink">DeepEyesV2</span>。</li>
+<li><strong>对比方法/Baselines</strong>: <span class="wikilink">SFT</span>、<span class="wikilink">GRPO</span>、<span class="wikilink">DeepEyesV2</span>、<span class="wikilink">CodeV</span> 等 agentic MLLM。</li>
+<li><strong>借鉴意义</strong>: 对做多模态 agent 的人是个清醒剂——「知道何时不调工具」和「知道怎么调」同样重要，直接影响推理成本。</li>
+<li><strong>锐评</strong>: 标题点破了当下 agentic visual reasoning 的通病：一堆模型为了 interleave 而 interleave，crop 来 crop 去成功率没涨多少。把「该不该动手」显式建模是对的方向。HF 39 赞说明痛点戳中了。扣分项：MA/TE 这套二维框架听着漂亮，怕的是评测集里工具收益本来就稀疏，导致「不调」总是安全选择而显得聪明。👀</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2607.28595" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🖼️ 多模态 Agentic 推理"><h3>4. RefineSVG: Visual Feedback-Driven Reinforcement Learning for Image-to-SVG Generation</h3>
+<ul>
+<li><strong>作者</strong>: Shaobo Liu, Feiqiao Mao, Shuaishuai Zhou, Yan Zhan, Weiqi Tan, Zhiqiong Lu, Zhengping Liang</li>
+<li><strong>机构</strong>: 2400101044@mails.szu.edu.cn
+, Shenzhen University, liangzp@szu.edu.cn
+, 2400101088@mails.szu.edu.cn
+, feiqiao@szu.edu.cn
+, 2410105037@mails.szu.edu.cn
+, Shenzhen UniversityShenzhenChina, Peking UniversityBeijingChina, 2401210760@stu.pku.edu.cn
+, 2410105049@mails.szu.edu.cn
+, Peking University</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2607.27699v1">arXiv</a> | <a href="https://arxiv.org/pdf/2607.27699v1">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2607.27699v1/x4.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: RefineSVG 做单步闭环视觉反馈的 image-to-SVG 生成，让 <span class="wikilink">MLLM</span> 自我纠错。针对现有方法单次开环推理、要一口气吐几千个 SVG token 却无中间校验的问题，引入 <span class="wikilink">Diff-Map</span> 做视觉差异反馈，用 <span class="wikilink">SFT</span>+<span class="wikilink">RL</span> 训练，<span class="wikilink">DINO</span> 做感知相似度。</li>
+<li><strong>对比方法/Baselines</strong>: <span class="wikilink">LIVE</span>、开环 MLLM SVG 生成方法，<span class="wikilink">DINO</span> 特征评估。</li>
+<li><strong>借鉴意义</strong>: 跟你关注的推荐/广告核心不搭，但闭环视觉反馈+RL 的自纠错范式可以迁移到其他生成任务。</li>
+<li><strong>锐评</strong>: image-to-SVG 是个小众赛道，但「单步闭环反馈」的工程设计有借鉴价值——让模型看到自己画歪了再改，比开环盲生成靠谱。深大+北大的活。放在你的关注面里属于边缘，方法可看，任务本身没必要深追。🫠</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2607.27699v1" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🖼️ 多模态 Agentic 推理"><h3>5. Can Large Language Models Execute Parent Orders?</h3>
+<ul>
+<li><strong>作者</strong>: Shen, Zane, Xu, Xinli, Zhang, Guangyi, Chen, Jialong, Zhou, Jinsong, Chen, Cong, Shen, Guibao, Yan, Dongyu, Wang, Luozhou, Yang, Zhen</li>
+<li><strong>机构</strong>: HKUST(GZ)</li>
+<li><strong>链接</strong>: <a href="https://arxiv.org/abs/2607.28410">arXiv</a> | <a href="https://arxiv.org/pdf/2607.28410">PDF</a></li>
+<li>
+<p><strong>来源</strong>: 📰 HF Daily，⬆️ 10</p>
+</li>
+<li>
+<p><strong>核心方法</strong>: LedgerMind 做溯源约束的多模态 agentic 推理，引入结构化证据账本（Evidence Ledger），针对多模态 agent 只看最终答案准确率、无法区分「靠证据得出」还是「靠语言先验/侥幸抵消」的问题。用 <span class="wikilink">ECC</span>/<span class="wikilink">NCC</span> 等约束追踪证据链。</p>
+</li>
+<li><strong>对比方法/Baselines</strong>: GPT 系多模态 agent，在 <span class="wikilink">MMMU</span> 等上评。</li>
+<li><strong>借鉴意义</strong>: 对做可信/可审计 agent 的人有价值，证据账本的思路可迁移到推荐系统的可解释性。</li>
+<li><strong>锐评</strong>: 戳中了 agent 评测的真痛点：final-answer accuracy 掩盖了「对的答案是不是蒙的」。证据账本这个设计有审计价值。但 HF 只有 3 赞说明关注度低，且约束式证据追踪很容易变成又一套繁琐的标注 overhead。方向对，落地成本存疑。👀</li>
+</ul>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2607.28410" target="_blank" rel="noopener">📖 AI 精读</a></div><h2>🎬 视频生成</h2><div class="paper-card" data-topic="🎬 视频生成"><h3>6. VideoCoCo: Code-as-CoT for Physically-Consistent Video Generation via an Agentic Dual-Engine System</h3>
+<ul>
+<li><strong>作者</strong>: Haodong Li, Tianfei Ren, Xiaoxiao Ma, Chunmei Qing, Zhen Fang, Sipeng He, Ziyu Guo, Haoyu Wu, Juanxi Tian, Yihang Zou, Ruichuan An, Dongzhi Jiang, Boxue Yang, Ji Xie, Xu Huang, Wenhao Yan, Jialv Zou, Zhengrong Yue, Yaxin Luo, Xiaotong Li, Yuzhu Wang, Junyan Ye, Jinjing Zhao, Zehui Chen, Lin Chen, Renye Yan, Feng Zhao, Pheng-Ann Heng</li>
+<li><strong>机构</strong>: 1]CUHK, mickyhimself4@gmail.com
+, 8]CMU, 2]USTC, 7]SJTU</li>
+<li><strong>链接</strong>: <a href="https://arxiv.org/abs/2607.27380">arXiv</a> | <a href="https://arxiv.org/pdf/2607.27380">PDF</a></li>
+<li><strong>来源</strong>: 📰 HF Daily，⬆️ 32</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2607.27380v1/x2.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: VideoCoCo 提出 Code-as-CoT：把视频生成的物理一致性推理写成可执行代码而非非执行的中间计划，走 agentic 双引擎系统。针对 T2V 模型物理动态不一致、现有 CoT 的中间表示不可执行/时间稀疏的问题，用 <span class="wikilink">Draft-Conditioned</span> 生成+<span class="wikilink">LoRA</span> 微调。</li>
+<li><strong>对比方法/Baselines</strong>: <span class="wikilink">CogVideoX</span>、<span class="wikilink">HunyuanVideo</span>、<span class="wikilink">LTX</span>，在 <span class="wikilink">PhyGenBench</span> 上评物理一致性。</li>
+<li><strong>借鉴意义</strong>: 视频生成不在你主线上，但「Code-as-CoT」这个把推理落成可执行代码的思路，对 agent 规划的可验证性有启发。</li>
+<li><strong>锐评</strong>: 「Code-as-CoT」这个名字起得比方法本身聪明——用可执行代码当推理链，确实比自然语言 plan 更能保证物理一致性可验证。HF 32 赞。质疑点：双引擎+代码生成+LoRA 一套下来推理成本爆炸，物理一致性提升能不能撑得起这个开销，摘要没算账。作者名单近三十人，典型的大团队堆料。👀</li>
+</ul>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2607.27380" target="_blank" rel="noopener">📖 AI 精读</a></div><h2>💰 金融 LLM</h2><div class="paper-card" data-topic="💰 金融 LLM"><h3>7. FinSMART: Financial Sentiment Analysis for Algorithmic Trading through Market-Aligned Reinforcement Learning</h3>
+<ul>
+<li><strong>作者</strong>: Giorgos Iacovides, Wuyang Zhou, Danilo Mandic</li>
+<li><strong>机构</strong>: giorgos.iacovides20@imperial.ac.uk
+, d.mandic@imperial.ac.uk
+, Imperial College LondonLondonUK, wuyang.zhou19@imperial.ac.uk
+, Imperial College London</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2607.28127v1">arXiv</a> | <a href="https://arxiv.org/pdf/2607.28127v1">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2607.28127v1/x1.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2607.28127v1/x2.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: FinSMART 做面向算法交易的金融情感分析，用 market-aligned RL（<span class="wikilink">GRPO</span>）取代 market-agnostic 的监督学习，让情感信号能适应演化的市场状态而非死磕静态人工标注集。对比 <span class="wikilink">FinBERT</span>、<span class="wikilink">FinDPO</span>，用 <span class="wikilink">RankIC</span> 衡量与收益的对齐。</li>
+<li><strong>对比方法/Baselines</strong>: <span class="wikilink">FinBERT</span>、<span class="wikilink">FinDPO</span>、<span class="wikilink">SFT</span> 基线，<span class="wikilink">RankIC</span> 评估。</li>
+<li><strong>借鉴意义</strong>: 跟你的推荐/广告主线弱相关，属于 LLM+RL 的金融应用案例，看用 market signal 当奖励的设计即可。</li>
+<li><strong>锐评</strong>: 把「情感标签对不对」换成「情感信号能不能预测收益」当奖励，这个 market-aligned 的动机是对的——静态标注集确实脱离交易现实。但金融情感分析这条路 FinBERT 时代就人满为患，RankIC 提升几个点很容易是数据窥探。帝国理工三人小队，规模不大。相关性偏低。🫠</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2607.28127v1" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="💰 金融 LLM"><h3>8. Beyond Similarity: Grounded Agentic Extraction and Expert-Adjudicated Evaluation of Intertextuality in Classical Chinese Histories</h3>
+<ul>
+<li><strong>作者</strong>: Zhaoji Wang1,2, Wanyu Si1,2, Jun Wang1,2,*</li>
+<li><strong>机构</strong>: Department of Information Management, Peking University, Beijing, China, Research Center for Digital Humanities, Peking University, Beijing, China</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2607.27595v1">arXiv</a> | <a href="https://arxiv.org/pdf/2607.27595v1">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2607.27595v1/x4.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2607.27595v1/x51.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2607.27595v1/x64.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: 探讨 LLM 能否执行父订单（parent-order execution）——把大单拆成小单以降低执行成本。针对静态方法（<span class="wikilink">TWAP</span>、Almgren-Chriss）依赖预设市场假设、学习型方法需任务特定训练难迁移的问题，测 <span class="wikilink">GPT-5</span> 等 LLM 的零样本执行能力，用 <span class="wikilink">PACE</span> 框架、<span class="wikilink">HHI</span> 衡量。</li>
+<li><strong>对比方法/Baselines</strong>: <span class="wikilink">TWAP</span>、Almgren-Chriss（AC）、学习型执行策略。</li>
+<li><strong>借鉴意义</strong>: 算法交易执行不在你主线，但「LLM 直接当决策器 vs 传统最优控制」的对比范式，对评估 LLM 能否替代专用模型有参考。</li>
+<li><strong>锐评</strong>: 问「LLM 能不能拆单」本身就带点标题党味——大概率结论是「能但不如专用方法且贵」。价值在于它把 LLM 放进一个有严格 benchmark（AC 框架）的经典问题里裸测，比那些自嗨的 agent demo 诚实。HF 只有 10 赞，市场也觉得平淡。⚠️</li>
+</ul>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2607.27595v1" target="_blank" rel="noopener">📖 AI 精读</a></div><h2>🧠 推理与 test-time compute</h2><div class="paper-card" data-topic="🧠 推理与 test-time compute"><h3>9. SVR: Self-Verifying Refinement via Joint Verdict-Confidence Reinforcement Learning for Adaptive Test-Time Compute</h3>
+<ul>
+<li><strong>作者</strong>: Hongyu Chen1,
+Liang Lin1,2,3,
+Guangrun Wang1,2,3,*</li>
+</ul>
+<p>Email:
+- <strong>机构</strong>: 
+1Sun Yat-sen University; 2Guangdong Key Laboratory of Big Data Analysis and Processing;3X-Era AI Lab
+, 1Sun Yat-sen University; 2Guangdong Key Laboratory of Big Data Analysis and Processing;3X-Era AI Lab
+- <strong>链接</strong>: <a href="http://arxiv.org/abs/2607.28457v1">arXiv</a> | <a href="https://arxiv.org/pdf/2607.28457v1">PDF</a>
+- <strong>来源</strong>: 📄 arXiv 关键词检索</p>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2607.28457v1/x2.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: SVR（Self-Verifying Refinement）把自验证当成算力控制策略：oracle-free 的多轮 RL 框架，让模型学会用自验证决定还要不要继续算，而非给所有输入均匀砸算力或依赖外部 verifier。联合优化 verdict（判对错）和 confidence（置信度），用 <span class="wikilink">GRPO</span> 训练。</li>
+<li><strong>对比方法/Baselines</strong>: 均匀 test-time budget、verifier-guided refinement，在 <span class="wikilink">MATH</span>、<span class="wikilink">OlympiadBench</span>、<span class="wikilink">MinervaMath</span> 上评。</li>
+<li><strong>借鉴意义</strong>: 对关心推理成本的人有价值——让模型自己判断「简单题少算、难题多算」，是 test-time scaling 的省钱正解。</li>
+<li><strong>锐评</strong>: 自验证既做判决又做算力开关，这个 verdict-confidence 联合优化的设计比单纯堆 test-time compute 聪明，oracle-free 也更实用。质疑核心：自验证的老问题是模型对自己错的答案也很自信，joint 优化 confidence 能不能真的校准，是成败关键，摘要没给 calibration 曲线。中山大学出品。👀</li>
+</ul>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2607.28457v1" target="_blank" rel="noopener">📖 AI 精读</a></div><h2>⚡ 效率与压缩</h2><div class="paper-card" data-topic="⚡ 效率与压缩"><h3>10. Capturing Token Tendencies for Training-Free Token Pruning in Multimodal Large Language Models</h3>
+<ul>
+<li><strong>作者</strong>: Jie Ma, Zhike Qiu, Jie Gao, Jiayi Ji, Qian Chen, Xiaoshuai Sun, Rongrong Ji</li>
+<li>
+<p><strong>机构</strong>: Key Laboratory of Multimedia Trusted Perception and Efficient Computing, Ministry of Education of China, Xiamen UniversityXiamenFujianChina, jjyxmu@gmail.com
+, jiegao@stu.xmu.edu.cn
+, School of Information Engineering, Xiamen Ocean Vocational CollegeXiamenFujianChina, xssun@xmu.edu.cn
+, jiema100@stu.xmu.edu.cn
+, zhikeqiu@outlook.com
+, School of Information Engineering, Xiamen Ocean Vocational College, Key Laboratory of Multimedia Trusted Perception and Efficient Computing, Ministry of Education of China, Xiamen UniversitySino-Russian Research Center for Digital EconomyXiamenFujianChina, chenqian@xmoc.edu.cn
+, Key Laboratory of Multimedia Trusted Perception and Efficient Computing, Ministry of Education of China, Xiamen University, rrji@xmu.edu.cn</p>
+</li>
+<li>
+<p><strong>链接</strong>: <a href="http://arxiv.org/abs/2607.28341v1">arXiv</a> | <a href="https://arxiv.org/pdf/2607.28341v1">PDF</a></p>
+</li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2607.28341v1/x3.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: 针对训练-free 视觉 token 剪枝依赖静态瞬时启发式、做不可逆过滤、忽略 MLLM 层级性（token 重要性跨层动态演化）的问题，提出捕捉 token 倾向（token tendencies）的剪枝方法。对比 <span class="wikilink">FastV</span>、<span class="wikilink">SparseVLM</span>，在 <span class="wikilink">GQA</span> 上评。</li>
+<li><strong>对比方法/Baselines</strong>: <span class="wikilink">FastV</span>、<span class="wikilink">SparseVLM</span> 等 training-free 剪枝。</li>
+<li><strong>借鉴意义</strong>: 对做 MLLM 推理加速的人有直接价值，动态跨层剪枝比一刀切更精细。</li>
+<li><strong>锐评</strong>: 抓住了现有剪枝方法的死穴：在某一层拍脑袋剪掉的 token，可能在深层才变重要，不可逆过滤太粗暴。捕捉跨层倾向是合理修正。但 training-free 剪枝这个赛道 FastV 之后卷到飞起，提升空间越来越薄，得看它省了多少 FLOPs 换多少精度。厦大 Rongrong Ji 组，稳定产出。🫠</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2607.28341v1" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="⚡ 效率与压缩"><h3>11. LightRot: A Light-Weighted Rotation Scheme and Architecture for Accurate Low-Bit Large Language Model Inference</h3>
+<ul>
+<li><strong>作者</strong>: Sangjin Kim, 
+Yuseon Choi, 
+Jungjun Oh, 
+Byeongcheol Kim, 
+and Hoi-Jun Yoo</li>
+<li><strong>机构</strong>: The Authors are with the PIM Semiconductor Design Research Center (AI-PIM), Daejeon 34141, South Korea (e-mail: sangjinkim@kaist.ac.kr; hjyoo@kaist.ac.kr), This work was supported in part by Samsung Electronics Company Ltd. under Grant IO201207-07799-01 and in part by the Institute of Information and Communications Technology Planning and Evaluation (IITP) grant funded by the Korea Government (MSIT) (2022-0-01170, PIM Semiconductor Design Research Center) (Corresponding author: Hoi-Jun Yoo)</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2607.27704v1">arXiv</a> | <a href="https://arxiv.org/pdf/2607.27704v1">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2607.27704v1/Figure/F2.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2607.27704v1/Figure/F11.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2607.27704v1/Figure/F8_a_R2.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: LightRot 针对低比特 LLM 推理，提出轻量旋转方案+专用硬件加速器。核心是处理输入激活（<span class="wikilink">IA</span>）跨通道分布差异大、outlier 通道幅值高的量化难题，用快速哈达玛变换（<span class="wikilink">FHT</span>）类旋转在线/离线抹平 outlier，配硬件实现能效。</li>
+<li><strong>对比方法/Baselines</strong>: 常规旋转量化（如 QuaRot 类）、低比特 LLM 推理方案。</li>
+<li><strong>借鉴意义</strong>: 对做 LLM 端侧/低功耗部署的人有价值，软硬协同的量化落地。</li>
+<li><strong>锐评</strong>: 旋转抹 outlier 不是新招（QuaRot 一脉），LightRot 的卖点在「轻量」和配套硬件加速器——KAIST 的 PIM 中心+三星资助，这是奔着流片去的真硬件活，不是纯算法灌水。质疑：旋转方案再轻，在线旋转的实时开销和硬件面积 tradeoff 是关键，摘要只说了能效好没给对比数字。落地味最浓的一篇。👀</li>
+</ul>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2607.27704v1" target="_blank" rel="noopener">📖 AI 精读</a></div><h2>📊 推荐系统</h2><div class="paper-card" data-topic="📊 推荐系统"><h3>12. SKIMIX: Multi-Agent Harness-Time Scaling with Skill Mixture for Dynamic Harness Engineering</h3>
+<ul>
+<li><strong>作者</strong>: Jia Luo</li>
+<li><strong>机构</strong>: Huazhong University of Science and Technology</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2607.27994v1">arXiv</a> | <a href="https://arxiv.org/pdf/2607.27994v1">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2607.27994v1/x1.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2607.27994v1/x7.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: ROCS（Request-Oriented Compute Sharing）利用推荐推理的独特性质：每个用户请求要对很多候选打分，而请求侧特征（时间/地点/用户行为序列）在所有候选间是共享的。据此把请求侧算力只算一次、跨候选复用，在特征交互和序列模块 scale 的同时压住生产成本。涉及 <span class="wikilink">FlashAttention</span>、<span class="wikilink">GEMM</span> 优化、<span class="wikilink">QPS</span> 指标。</li>
+<li><strong>对比方法/Baselines</strong>: 常规 per-candidate 全量计算的大推荐模型推理。</li>
+<li><strong>借鉴意义</strong>: 这是今天唯一跟你的推荐/CTR 主线正面相关且来自 Meta 生产系统的论文，请求-候选算力复用是可直接落地的省钱范式。</li>
+<li><strong>锐评</strong>: 今天唯一的必读。命中了大推荐模型推理的本质浪费：request-side 特征在几百个候选间被重复算了几百遍。把它抽出来算一次再复用，这是那种「一说就对、但没人系统做过」的工程洞见。Meta AI 近四十人署名，明显是撑起线上系统的真活，不是 paper 玩具。唯一想追问的是共享粒度和候选侧交互的边界——哪些特征真能安全共享而不损精度。🔥</li>
+</ul>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2607.27994v1" target="_blank" rel="noopener">📖 AI 精读</a></div></div>
+<div id="panel-agenticrl与自蒸馏" class="tab-panel"><h2>🤖 Agentic RL 与自蒸馏</h2><div class="paper-card" data-topic="🤖 Agentic RL 与自蒸馏"><h3>1. Group-Reflective Self-Distillation for Agentic Reinforcement Learning</h3>
+<ul>
+<li><strong>作者</strong>: Binbin Zheng1,2,
+Zijun Xie2,311footnotemark:</li>
+<li><strong>机构</strong>: Equal contribution.This work was done during an internship at Baidu</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2607.28076v1">arXiv</a> | <a href="https://arxiv.org/pdf/2607.28076v1">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2607.28076v1/x2.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: GRSD（<span class="wikilink">Group-Reflective</span> Self-Distillation）针对 <span class="wikilink">RLVR</span> 只有轨迹级终端奖励、成功行为/重复错误/偶然选择全部纠缠在一个信号里的问题，做 group 内的反思式自蒸馏。基于 <span class="wikilink">GRPO</span> 的 group 采样结构，让同组轨迹互相对照提炼可复用技能，比单条轨迹的自然语言 skill 蒸馏信号更密。</li>
+<li><strong>对比方法/Baselines</strong>: 对比 <span class="wikilink">GRPO</span>、<span class="wikilink">SDAR</span>、常规 agentic self-distillation，在 <span class="wikilink">WebShop</span>、<span class="wikilink">HotpotQA</span> 上评测。</li>
+<li><strong>借鉴意义</strong>: 对做 agent RL 训练的人有直接价值——group-relative 的框架里本来就有天然的对照组，拿来做反思几乎是免费午餐。</li>
+<li><strong>锐评</strong>: 思路是我今天看到最顺的：既然 GRPO 已经在采一整组了，不用来做组内对照式反思才是浪费。质疑点是「反思提炼」这一步的可靠性——自然语言技能蒸馏最怕自欺，group 内如果集体走偏，反思只会强化错误。摘要没给消融证明反思质量，等看正文。百度实习产出，工程味重。👀</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2607.28076v1" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🤖 Agentic RL 与自蒸馏"><h3>2. MANTA: Multi-Agent Network Topology Adaptation for Self-Evolving Multi-Agent Systems</h3>
+<ul>
+<li><strong>作者</strong>: Huang, Mao-xun, Wang, Jerry, Lai, Yi-Cheng, Zhang, Zhengxin, Cardie, Claire, Huang, Hen-Hsen</li>
+<li><strong>机构</strong>: Department of Computer Science, Cornell University, United States, Department of Computer Science, University of Illinois Urbana-Champaign, United States, Institute of Information Science, Academia Sinica, Taiwan</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2607.28527v1">arXiv</a> | <a href="https://arxiv.org/pdf/2607.28527v1">PDF</a></li>
+<li>
+<p><strong>来源</strong>: 📄 arXiv 关键词检索</p>
+</li>
+<li>
+<p><strong>核心方法</strong>: MANTA 把多智能体系统的通信拓扑从「固定设计/离线优化」变成在线自适应演化。最大亮点是那张 L0-L7 自我改进分层图（Output/Prompt/Trace/Skill/Memory/Role/Topology/Weights），把 <span class="wikilink">ReAct</span>、<span class="wikilink">Reflexion</span>、<span class="wikilink">MetaGPT</span>、<span class="wikilink">MASS</span>、<span class="wikilink">ADAS</span> 全部归位，MANTA 定位在 L6 拓扑层。</p>
+</li>
+<li><strong>对比方法/Baselines</strong>: <span class="wikilink">MASS</span>、<span class="wikilink">AFlow</span>、<span class="wikilink">ADAS</span>、<span class="wikilink">AgentSquare</span>，在 <span class="wikilink">PlanCraft</span>、<span class="wikilink">WorkBench</span>、<span class="wikilink">BrowseComp</span>、<span class="wikilink">StableToolBench</span> 上评。</li>
+<li><strong>借鉴意义</strong>: 对研究多智能体架构的人，那张 self-improvement 分层图本身就值票价，是很好的领域坐标系。</li>
+<li><strong>锐评</strong>: 拓扑自适应不是新概念（ADAS/AFlow 早做过），MANTA 的增量在「在线」两字。真正让我记住的是那张 L0-L7 图——把整个 agent 自我改进的谱系讲清楚了，教科书级别的整理。质疑：在线改拓扑的稳定性和收敛性摘要没提，动态图很容易训崩。Cornell+UIUC+中研院联合，署名豪华。👀</li>
+</ul>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2607.28527v1" target="_blank" rel="noopener">📖 AI 精读</a></div></div>
+<div id="panel-多模态agentic推理" class="tab-panel"><h2>🖼️ 多模态 Agentic 推理</h2><div class="paper-card" data-topic="🖼️ 多模态 Agentic 推理"><h3>3. Beacon: Knowing When and How to Perform Agentic Visual Reasoning</h3>
+<ul>
+<li><strong>作者</strong>: Wang, Qixun, Shi, Yang, Cheng, Letian, Zhang, Zhuoran, He, Yan, Tang, Yuqi, Zhang, Qi, Yu, Xinlei, Chen, Ruizhe, Xu, Tianrun, Zhang, Yuanxing, Wan, Pengfei, Wang, Haotian, Ying, Xianghua</li>
+<li><strong>机构</strong>: 4CUHK, 3HKUST(GZ), 1Peking University</li>
+<li><strong>链接</strong>: <a href="https://arxiv.org/abs/2607.28595">arXiv</a> | <a href="https://arxiv.org/pdf/2607.28595">PDF</a></li>
+<li><strong>来源</strong>: 📰 HF Daily，⬆️ 39</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2607.28595v1/x9.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: Beacon 把 agentic visual reasoning 拆成两个维度：<span class="wikilink">MA</span>（Mode Adaptiveness，什么时候该调工具）和 Tool Effect（调了有没有用），核心主张是别为了炫技而堆低效推理范式，目标是复杂任务成功率而非「看起来会思考」。用 <span class="wikilink">RL</span>+<span class="wikilink">GRPO</span> 训练，对比 <span class="wikilink">SFT</span>、<span class="wikilink">DeepEyesV2</span>。</li>
+<li><strong>对比方法/Baselines</strong>: <span class="wikilink">SFT</span>、<span class="wikilink">GRPO</span>、<span class="wikilink">DeepEyesV2</span>、<span class="wikilink">CodeV</span> 等 agentic MLLM。</li>
+<li><strong>借鉴意义</strong>: 对做多模态 agent 的人是个清醒剂——「知道何时不调工具」和「知道怎么调」同样重要，直接影响推理成本。</li>
+<li><strong>锐评</strong>: 标题点破了当下 agentic visual reasoning 的通病：一堆模型为了 interleave 而 interleave，crop 来 crop 去成功率没涨多少。把「该不该动手」显式建模是对的方向。HF 39 赞说明痛点戳中了。扣分项：MA/TE 这套二维框架听着漂亮，怕的是评测集里工具收益本来就稀疏，导致「不调」总是安全选择而显得聪明。👀</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2607.28595" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🖼️ 多模态 Agentic 推理"><h3>4. RefineSVG: Visual Feedback-Driven Reinforcement Learning for Image-to-SVG Generation</h3>
+<ul>
+<li><strong>作者</strong>: Shaobo Liu, Feiqiao Mao, Shuaishuai Zhou, Yan Zhan, Weiqi Tan, Zhiqiong Lu, Zhengping Liang</li>
+<li><strong>机构</strong>: 2400101044@mails.szu.edu.cn
+, Shenzhen University, liangzp@szu.edu.cn
+, 2400101088@mails.szu.edu.cn
+, feiqiao@szu.edu.cn
+, 2410105037@mails.szu.edu.cn
+, Shenzhen UniversityShenzhenChina, Peking UniversityBeijingChina, 2401210760@stu.pku.edu.cn
+, 2410105049@mails.szu.edu.cn
+, Peking University</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2607.27699v1">arXiv</a> | <a href="https://arxiv.org/pdf/2607.27699v1">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2607.27699v1/x4.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: RefineSVG 做单步闭环视觉反馈的 image-to-SVG 生成，让 <span class="wikilink">MLLM</span> 自我纠错。针对现有方法单次开环推理、要一口气吐几千个 SVG token 却无中间校验的问题，引入 <span class="wikilink">Diff-Map</span> 做视觉差异反馈，用 <span class="wikilink">SFT</span>+<span class="wikilink">RL</span> 训练，<span class="wikilink">DINO</span> 做感知相似度。</li>
+<li><strong>对比方法/Baselines</strong>: <span class="wikilink">LIVE</span>、开环 MLLM SVG 生成方法，<span class="wikilink">DINO</span> 特征评估。</li>
+<li><strong>借鉴意义</strong>: 跟你关注的推荐/广告核心不搭，但闭环视觉反馈+RL 的自纠错范式可以迁移到其他生成任务。</li>
+<li><strong>锐评</strong>: image-to-SVG 是个小众赛道，但「单步闭环反馈」的工程设计有借鉴价值——让模型看到自己画歪了再改，比开环盲生成靠谱。深大+北大的活。放在你的关注面里属于边缘，方法可看，任务本身没必要深追。🫠</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2607.27699v1" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🖼️ 多模态 Agentic 推理"><h3>5. Can Large Language Models Execute Parent Orders?</h3>
+<ul>
+<li><strong>作者</strong>: Shen, Zane, Xu, Xinli, Zhang, Guangyi, Chen, Jialong, Zhou, Jinsong, Chen, Cong, Shen, Guibao, Yan, Dongyu, Wang, Luozhou, Yang, Zhen</li>
+<li><strong>机构</strong>: HKUST(GZ)</li>
+<li><strong>链接</strong>: <a href="https://arxiv.org/abs/2607.28410">arXiv</a> | <a href="https://arxiv.org/pdf/2607.28410">PDF</a></li>
+<li>
+<p><strong>来源</strong>: 📰 HF Daily，⬆️ 10</p>
+</li>
+<li>
+<p><strong>核心方法</strong>: LedgerMind 做溯源约束的多模态 agentic 推理，引入结构化证据账本（Evidence Ledger），针对多模态 agent 只看最终答案准确率、无法区分「靠证据得出」还是「靠语言先验/侥幸抵消」的问题。用 <span class="wikilink">ECC</span>/<span class="wikilink">NCC</span> 等约束追踪证据链。</p>
+</li>
+<li><strong>对比方法/Baselines</strong>: GPT 系多模态 agent，在 <span class="wikilink">MMMU</span> 等上评。</li>
+<li><strong>借鉴意义</strong>: 对做可信/可审计 agent 的人有价值，证据账本的思路可迁移到推荐系统的可解释性。</li>
+<li><strong>锐评</strong>: 戳中了 agent 评测的真痛点：final-answer accuracy 掩盖了「对的答案是不是蒙的」。证据账本这个设计有审计价值。但 HF 只有 3 赞说明关注度低，且约束式证据追踪很容易变成又一套繁琐的标注 overhead。方向对，落地成本存疑。👀</li>
+</ul>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2607.28410" target="_blank" rel="noopener">📖 AI 精读</a></div></div>
+<div id="panel-视频生成" class="tab-panel"><h2>🎬 视频生成</h2><div class="paper-card" data-topic="🎬 视频生成"><h3>6. VideoCoCo: Code-as-CoT for Physically-Consistent Video Generation via an Agentic Dual-Engine System</h3>
+<ul>
+<li><strong>作者</strong>: Haodong Li, Tianfei Ren, Xiaoxiao Ma, Chunmei Qing, Zhen Fang, Sipeng He, Ziyu Guo, Haoyu Wu, Juanxi Tian, Yihang Zou, Ruichuan An, Dongzhi Jiang, Boxue Yang, Ji Xie, Xu Huang, Wenhao Yan, Jialv Zou, Zhengrong Yue, Yaxin Luo, Xiaotong Li, Yuzhu Wang, Junyan Ye, Jinjing Zhao, Zehui Chen, Lin Chen, Renye Yan, Feng Zhao, Pheng-Ann Heng</li>
+<li><strong>机构</strong>: 1]CUHK, mickyhimself4@gmail.com
+, 8]CMU, 2]USTC, 7]SJTU</li>
+<li><strong>链接</strong>: <a href="https://arxiv.org/abs/2607.27380">arXiv</a> | <a href="https://arxiv.org/pdf/2607.27380">PDF</a></li>
+<li><strong>来源</strong>: 📰 HF Daily，⬆️ 32</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2607.27380v1/x2.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: VideoCoCo 提出 Code-as-CoT：把视频生成的物理一致性推理写成可执行代码而非非执行的中间计划，走 agentic 双引擎系统。针对 T2V 模型物理动态不一致、现有 CoT 的中间表示不可执行/时间稀疏的问题，用 <span class="wikilink">Draft-Conditioned</span> 生成+<span class="wikilink">LoRA</span> 微调。</li>
+<li><strong>对比方法/Baselines</strong>: <span class="wikilink">CogVideoX</span>、<span class="wikilink">HunyuanVideo</span>、<span class="wikilink">LTX</span>，在 <span class="wikilink">PhyGenBench</span> 上评物理一致性。</li>
+<li><strong>借鉴意义</strong>: 视频生成不在你主线上，但「Code-as-CoT」这个把推理落成可执行代码的思路，对 agent 规划的可验证性有启发。</li>
+<li><strong>锐评</strong>: 「Code-as-CoT」这个名字起得比方法本身聪明——用可执行代码当推理链，确实比自然语言 plan 更能保证物理一致性可验证。HF 32 赞。质疑点：双引擎+代码生成+LoRA 一套下来推理成本爆炸，物理一致性提升能不能撑得起这个开销，摘要没算账。作者名单近三十人，典型的大团队堆料。👀</li>
+</ul>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2607.27380" target="_blank" rel="noopener">📖 AI 精读</a></div></div>
+<div id="panel-金融llm" class="tab-panel"><h2>💰 金融 LLM</h2><div class="paper-card" data-topic="💰 金融 LLM"><h3>7. FinSMART: Financial Sentiment Analysis for Algorithmic Trading through Market-Aligned Reinforcement Learning</h3>
+<ul>
+<li><strong>作者</strong>: Giorgos Iacovides, Wuyang Zhou, Danilo Mandic</li>
+<li><strong>机构</strong>: giorgos.iacovides20@imperial.ac.uk
+, d.mandic@imperial.ac.uk
+, Imperial College LondonLondonUK, wuyang.zhou19@imperial.ac.uk
+, Imperial College London</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2607.28127v1">arXiv</a> | <a href="https://arxiv.org/pdf/2607.28127v1">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2607.28127v1/x1.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2607.28127v1/x2.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: FinSMART 做面向算法交易的金融情感分析，用 market-aligned RL（<span class="wikilink">GRPO</span>）取代 market-agnostic 的监督学习，让情感信号能适应演化的市场状态而非死磕静态人工标注集。对比 <span class="wikilink">FinBERT</span>、<span class="wikilink">FinDPO</span>，用 <span class="wikilink">RankIC</span> 衡量与收益的对齐。</li>
+<li><strong>对比方法/Baselines</strong>: <span class="wikilink">FinBERT</span>、<span class="wikilink">FinDPO</span>、<span class="wikilink">SFT</span> 基线，<span class="wikilink">RankIC</span> 评估。</li>
+<li><strong>借鉴意义</strong>: 跟你的推荐/广告主线弱相关，属于 LLM+RL 的金融应用案例，看用 market signal 当奖励的设计即可。</li>
+<li><strong>锐评</strong>: 把「情感标签对不对」换成「情感信号能不能预测收益」当奖励，这个 market-aligned 的动机是对的——静态标注集确实脱离交易现实。但金融情感分析这条路 FinBERT 时代就人满为患，RankIC 提升几个点很容易是数据窥探。帝国理工三人小队，规模不大。相关性偏低。🫠</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2607.28127v1" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="💰 金融 LLM"><h3>8. Beyond Similarity: Grounded Agentic Extraction and Expert-Adjudicated Evaluation of Intertextuality in Classical Chinese Histories</h3>
+<ul>
+<li><strong>作者</strong>: Zhaoji Wang1,2, Wanyu Si1,2, Jun Wang1,2,*</li>
+<li><strong>机构</strong>: Department of Information Management, Peking University, Beijing, China, Research Center for Digital Humanities, Peking University, Beijing, China</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2607.27595v1">arXiv</a> | <a href="https://arxiv.org/pdf/2607.27595v1">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2607.27595v1/x4.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2607.27595v1/x51.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2607.27595v1/x64.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: 探讨 LLM 能否执行父订单（parent-order execution）——把大单拆成小单以降低执行成本。针对静态方法（<span class="wikilink">TWAP</span>、Almgren-Chriss）依赖预设市场假设、学习型方法需任务特定训练难迁移的问题，测 <span class="wikilink">GPT-5</span> 等 LLM 的零样本执行能力，用 <span class="wikilink">PACE</span> 框架、<span class="wikilink">HHI</span> 衡量。</li>
+<li><strong>对比方法/Baselines</strong>: <span class="wikilink">TWAP</span>、Almgren-Chriss（AC）、学习型执行策略。</li>
+<li><strong>借鉴意义</strong>: 算法交易执行不在你主线，但「LLM 直接当决策器 vs 传统最优控制」的对比范式，对评估 LLM 能否替代专用模型有参考。</li>
+<li><strong>锐评</strong>: 问「LLM 能不能拆单」本身就带点标题党味——大概率结论是「能但不如专用方法且贵」。价值在于它把 LLM 放进一个有严格 benchmark（AC 框架）的经典问题里裸测，比那些自嗨的 agent demo 诚实。HF 只有 10 赞，市场也觉得平淡。⚠️</li>
+</ul>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2607.27595v1" target="_blank" rel="noopener">📖 AI 精读</a></div></div>
+<div id="panel-推理与testtimecompute" class="tab-panel"><h2>🧠 推理与 test-time compute</h2><div class="paper-card" data-topic="🧠 推理与 test-time compute"><h3>9. SVR: Self-Verifying Refinement via Joint Verdict-Confidence Reinforcement Learning for Adaptive Test-Time Compute</h3>
+<ul>
+<li><strong>作者</strong>: Hongyu Chen1,
+Liang Lin1,2,3,
+Guangrun Wang1,2,3,*</li>
+</ul>
+<p>Email:
+- <strong>机构</strong>: 
+1Sun Yat-sen University; 2Guangdong Key Laboratory of Big Data Analysis and Processing;3X-Era AI Lab
+, 1Sun Yat-sen University; 2Guangdong Key Laboratory of Big Data Analysis and Processing;3X-Era AI Lab
+- <strong>链接</strong>: <a href="http://arxiv.org/abs/2607.28457v1">arXiv</a> | <a href="https://arxiv.org/pdf/2607.28457v1">PDF</a>
+- <strong>来源</strong>: 📄 arXiv 关键词检索</p>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2607.28457v1/x2.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: SVR（Self-Verifying Refinement）把自验证当成算力控制策略：oracle-free 的多轮 RL 框架，让模型学会用自验证决定还要不要继续算，而非给所有输入均匀砸算力或依赖外部 verifier。联合优化 verdict（判对错）和 confidence（置信度），用 <span class="wikilink">GRPO</span> 训练。</li>
+<li><strong>对比方法/Baselines</strong>: 均匀 test-time budget、verifier-guided refinement，在 <span class="wikilink">MATH</span>、<span class="wikilink">OlympiadBench</span>、<span class="wikilink">MinervaMath</span> 上评。</li>
+<li><strong>借鉴意义</strong>: 对关心推理成本的人有价值——让模型自己判断「简单题少算、难题多算」，是 test-time scaling 的省钱正解。</li>
+<li><strong>锐评</strong>: 自验证既做判决又做算力开关，这个 verdict-confidence 联合优化的设计比单纯堆 test-time compute 聪明，oracle-free 也更实用。质疑核心：自验证的老问题是模型对自己错的答案也很自信，joint 优化 confidence 能不能真的校准，是成败关键，摘要没给 calibration 曲线。中山大学出品。👀</li>
+</ul>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2607.28457v1" target="_blank" rel="noopener">📖 AI 精读</a></div></div>
+<div id="panel-效率与压缩" class="tab-panel"><h2>⚡ 效率与压缩</h2><div class="paper-card" data-topic="⚡ 效率与压缩"><h3>10. Capturing Token Tendencies for Training-Free Token Pruning in Multimodal Large Language Models</h3>
+<ul>
+<li><strong>作者</strong>: Jie Ma, Zhike Qiu, Jie Gao, Jiayi Ji, Qian Chen, Xiaoshuai Sun, Rongrong Ji</li>
+<li>
+<p><strong>机构</strong>: Key Laboratory of Multimedia Trusted Perception and Efficient Computing, Ministry of Education of China, Xiamen UniversityXiamenFujianChina, jjyxmu@gmail.com
+, jiegao@stu.xmu.edu.cn
+, School of Information Engineering, Xiamen Ocean Vocational CollegeXiamenFujianChina, xssun@xmu.edu.cn
+, jiema100@stu.xmu.edu.cn
+, zhikeqiu@outlook.com
+, School of Information Engineering, Xiamen Ocean Vocational College, Key Laboratory of Multimedia Trusted Perception and Efficient Computing, Ministry of Education of China, Xiamen UniversitySino-Russian Research Center for Digital EconomyXiamenFujianChina, chenqian@xmoc.edu.cn
+, Key Laboratory of Multimedia Trusted Perception and Efficient Computing, Ministry of Education of China, Xiamen University, rrji@xmu.edu.cn</p>
+</li>
+<li>
+<p><strong>链接</strong>: <a href="http://arxiv.org/abs/2607.28341v1">arXiv</a> | <a href="https://arxiv.org/pdf/2607.28341v1">PDF</a></p>
+</li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2607.28341v1/x3.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: 针对训练-free 视觉 token 剪枝依赖静态瞬时启发式、做不可逆过滤、忽略 MLLM 层级性（token 重要性跨层动态演化）的问题，提出捕捉 token 倾向（token tendencies）的剪枝方法。对比 <span class="wikilink">FastV</span>、<span class="wikilink">SparseVLM</span>，在 <span class="wikilink">GQA</span> 上评。</li>
+<li><strong>对比方法/Baselines</strong>: <span class="wikilink">FastV</span>、<span class="wikilink">SparseVLM</span> 等 training-free 剪枝。</li>
+<li><strong>借鉴意义</strong>: 对做 MLLM 推理加速的人有直接价值，动态跨层剪枝比一刀切更精细。</li>
+<li><strong>锐评</strong>: 抓住了现有剪枝方法的死穴：在某一层拍脑袋剪掉的 token，可能在深层才变重要，不可逆过滤太粗暴。捕捉跨层倾向是合理修正。但 training-free 剪枝这个赛道 FastV 之后卷到飞起，提升空间越来越薄，得看它省了多少 FLOPs 换多少精度。厦大 Rongrong Ji 组，稳定产出。🫠</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2607.28341v1" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="⚡ 效率与压缩"><h3>11. LightRot: A Light-Weighted Rotation Scheme and Architecture for Accurate Low-Bit Large Language Model Inference</h3>
+<ul>
+<li><strong>作者</strong>: Sangjin Kim, 
+Yuseon Choi, 
+Jungjun Oh, 
+Byeongcheol Kim, 
+and Hoi-Jun Yoo</li>
+<li><strong>机构</strong>: The Authors are with the PIM Semiconductor Design Research Center (AI-PIM), Daejeon 34141, South Korea (e-mail: sangjinkim@kaist.ac.kr; hjyoo@kaist.ac.kr), This work was supported in part by Samsung Electronics Company Ltd. under Grant IO201207-07799-01 and in part by the Institute of Information and Communications Technology Planning and Evaluation (IITP) grant funded by the Korea Government (MSIT) (2022-0-01170, PIM Semiconductor Design Research Center) (Corresponding author: Hoi-Jun Yoo)</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2607.27704v1">arXiv</a> | <a href="https://arxiv.org/pdf/2607.27704v1">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2607.27704v1/Figure/F2.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2607.27704v1/Figure/F11.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2607.27704v1/Figure/F8_a_R2.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: LightRot 针对低比特 LLM 推理，提出轻量旋转方案+专用硬件加速器。核心是处理输入激活（<span class="wikilink">IA</span>）跨通道分布差异大、outlier 通道幅值高的量化难题，用快速哈达玛变换（<span class="wikilink">FHT</span>）类旋转在线/离线抹平 outlier，配硬件实现能效。</li>
+<li><strong>对比方法/Baselines</strong>: 常规旋转量化（如 QuaRot 类）、低比特 LLM 推理方案。</li>
+<li><strong>借鉴意义</strong>: 对做 LLM 端侧/低功耗部署的人有价值，软硬协同的量化落地。</li>
+<li><strong>锐评</strong>: 旋转抹 outlier 不是新招（QuaRot 一脉），LightRot 的卖点在「轻量」和配套硬件加速器——KAIST 的 PIM 中心+三星资助，这是奔着流片去的真硬件活，不是纯算法灌水。质疑：旋转方案再轻，在线旋转的实时开销和硬件面积 tradeoff 是关键，摘要只说了能效好没给对比数字。落地味最浓的一篇。👀</li>
+</ul>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2607.27704v1" target="_blank" rel="noopener">📖 AI 精读</a></div></div>
+<div id="panel-推荐系统" class="tab-panel"><h2>📊 推荐系统</h2><div class="paper-card" data-topic="📊 推荐系统"><h3>12. SKIMIX: Multi-Agent Harness-Time Scaling with Skill Mixture for Dynamic Harness Engineering</h3>
+<ul>
+<li><strong>作者</strong>: Jia Luo</li>
+<li><strong>机构</strong>: Huazhong University of Science and Technology</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2607.27994v1">arXiv</a> | <a href="https://arxiv.org/pdf/2607.27994v1">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2607.27994v1/x1.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2607.27994v1/x7.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: ROCS（Request-Oriented Compute Sharing）利用推荐推理的独特性质：每个用户请求要对很多候选打分，而请求侧特征（时间/地点/用户行为序列）在所有候选间是共享的。据此把请求侧算力只算一次、跨候选复用，在特征交互和序列模块 scale 的同时压住生产成本。涉及 <span class="wikilink">FlashAttention</span>、<span class="wikilink">GEMM</span> 优化、<span class="wikilink">QPS</span> 指标。</li>
+<li><strong>对比方法/Baselines</strong>: 常规 per-candidate 全量计算的大推荐模型推理。</li>
+<li><strong>借鉴意义</strong>: 这是今天唯一跟你的推荐/CTR 主线正面相关且来自 Meta 生产系统的论文，请求-候选算力复用是可直接落地的省钱范式。</li>
+<li><strong>锐评</strong>: 今天唯一的必读。命中了大推荐模型推理的本质浪费：request-side 特征在几百个候选间被重复算了几百遍。把它抽出来算一次再复用，这是那种「一说就对、但没人系统做过」的工程洞见。Meta AI 近四十人署名，明显是撑起线上系统的真活，不是 paper 玩具。唯一想追问的是共享粒度和候选侧交互的边界——哪些特征真能安全共享而不损精度。🔥</li>
+</ul>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2607.27994v1" target="_blank" rel="noopener">📖 AI 精读</a></div></div>
+<hr>
+<h2>被排除的论文</h2>
+<ul>
+<li>Specification-Guided Synthesis of Deadlock-Free Communication Protocol Refinements with LLMs — 分布式协议形式化验证，与推荐/广告/agent 主线无交集</li>
+<li>Towards joint scaling laws with optimal batch size schedules — 命中 scaling law 关键词但纯优化理论，偏离你的应用主线，价值有限暂略</li>
+<li>Beyond Similarity: Intertextuality in Classical Chinese Histories — 古典文献互文性抽取，人文计算方向，不相关</li>
+<li>AISPA: User-Centric System Prompt Auditing — 系统提示审计/治理，偏合规方向，与核心关注弱相关</li>
+<li>(Towards) Scalable Reliable Automated Evaluation with LLMs — LLM-as-judge 自动评测，泛化 position 味重，无突出增量</li>
+<li>Agentic Method for Deterministic Validation of Legacy Code Migration — COBOL→Java 迁移测试合成，工程小众，不相关</li>
+<li>Agentic Metaverse Services: A New As-a-Service Paradigm — AaaS/XaaS 词汇发生器式 position paper，无技术增量</li>
+<li>Asymmetric Communication: LLMs and Language Games — 哲学思辨论文，论证 LLM 无 agency，非技术方法</li>
+<li>Distilling Answer Set Programming Theories from LLMs — 神经符号 ASP 理论蒸馏，小众逻辑编程方向</li>
+<li>Contrastive Reinforced Policy Optimization via Privileged Self-Distillation — 又一个 GRPO 自蒸馏变体（CRPO），与 GRSD 高度同质，取其一即可</li>
+<li>RepBench: Compiling Benchmarks into Capability Representations — 表征工程 benchmark，可解释性外围方向</li>
+<li>SKIMIX: Multi-Agent Harness-Time Scaling with Skill Mixture — 多智能体技能混合，单作者且证据薄，与 MANTA 主题重叠</li>
+<li>Σ-Mem: An Online Reliability Memory for LLM-based Multi-Agent Systems — agent 记忆可靠性建模，摘要信息量低、无图，暂略</li>
+<li>IFHierBench: Hierarchical Instruction Following — 分层指令遵循 benchmark，评测类无方法增量</li>
+<li>Class-Aware RL for Counterfactual Explanation Generation — 反事实解释生成，XAI 方向，与主线不相关</li>
+<li>An Empirical Study of Coordination Mode in Multi-Agent Coding — 多智能体编码协调实证，摘要无图信息量低</li>
+<li>Benchmarking Foundation Models for Few-Shot Medical Image Segmentation — 命中 negative_keywords（medical imaging/segmentation），直接排除</li>
+<li>Safety-Gated Agentic Supervisory Control on Distillation Benchmark — 化工过程控制安全门，工业控制方向，不相关</li>
+</ul>
+<p>Agentic RL 正在从「加自然语言技能」卷向「加自验证/组内反思」的更细粒度自监督，但大量是 GRPO 换皮；真正能落地省钱的工业工作（如 Meta ROCS 的算力复用）才是稀缺品。</p>
