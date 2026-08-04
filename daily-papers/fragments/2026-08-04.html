@@ -1,0 +1,695 @@
+<h1>🔪 今日锐评</h1>
+<p>今天是彻头彻尾的「Agentic RL + 自蒸馏」大礼包——光是 On-Policy Self-Distillation 的变体我数出来至少四篇，标题不同、公式高度雷同，一看就是同一波人在卷同一个坑。真正有价值的是那篇「为什么 LLM 做不了表格预测」的负面结果，和几篇把 agent 失败模式拆开看的观测性工作。其余大多是「换个 benchmark 刷 GRPO」的流水线产物。</p>
+<h2>分流表</h2>
+<table>
+<thead>
+<tr>
+<th>等级</th>
+<th>论文</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>🔥 必读</td>
+<td><span class="wikilink">Read-Gate</span>（把 Agentic RAG 的错误拆成「读之前就废了」和「读了金证据还答错」两类，方法论干净，直接能用） · <span class="wikilink">Tabular-LLM-Fail</span>（罕见的诚实负面结果，讲清楚 LLM 为什么在表格预测上被 GP 吊打）</td>
+</tr>
+<tr>
+<td>👀 值得看</td>
+<td><span class="wikilink">VC-Tooler</span>（视觉工具组合调用，Alibaba 出品，工程细节到位） · <span class="wikilink">TreeCredit</span>（多智能体推理的信用分配，用共享前缀做细粒度归因，思路巧） · <span class="wikilink">IACM-RL</span>（工具调用中的意图漂移问题，Fudan 一大票作者堆出来的） · <span class="wikilink">SPEE</span>（把交互经验蒸馏进参数的自进化框架） · <span class="wikilink">FutureBridge</span>（先看未来轨迹再决定要不要蒸馏，给 on-policy distillation 打补丁） · <span class="wikilink">Observability-Ladder</span>（reasoning summary 到底泄露了多少真实推理？观测性分层）</td>
+</tr>
+<tr>
+<td>💤 可跳过</td>
+<td><span class="wikilink">PCSD</span>（又一篇 OPSD 变体，increment 到看不出新意） · <span class="wikilink">CoKL</span>（KL 正则防遗忘，坑很老了） · <span class="wikilink">ERILS</span>（diffusion LM 引外部 rollout，缝合味重） · <span class="wikilink">Categorical-Critics</span>（把 critic 从回归改成分类，HL-Gauss 老配方换个场景）</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<div class="tab-bar"><button class="tab-btn active" data-tab="all" onclick="switchTab('all')">📋 全部<span class="tab-count">21</span></button><button class="tab-btn" data-tab="agenticrl与自蒸馏今日重灾区" onclick="switchTab('agenticrl与自蒸馏今日重灾区')">🤖 🎯 Agentic RL 与自蒸馏（今日重灾区）<span class="tab-count">4</span></button><button class="tab-btn" data-tab="agent工具使用与上下文管理" onclick="switchTab('agent工具使用与上下文管理')">🔧 🛠️ Agent 工具使用与上下文管理<span class="tab-count">3</span></button><button class="tab-btn" data-tab="硬核洞察与负面结果" onclick="switchTab('硬核洞察与负面结果')">📄 🔬 硬核洞察与负面结果<span class="tab-count">1</span></button><button class="tab-btn" data-tab="应用型agent代码安全" onclick="switchTab('应用型agent代码安全')">🛡 🏗️ 应用型 Agent（代码/安全）<span class="tab-count">1</span></button><button class="tab-btn" data-tab="多智能体系统" onclick="switchTab('多智能体系统')">📄 🤝 多智能体系统<span class="tab-count">3</span></button><button class="tab-btn" data-tab="llmrl训练机制" onclick="switchTab('llmrl训练机制')">🤖 🧠 LLM RL 训练机制<span class="tab-count">3</span></button><button class="tab-btn" data-tab="agent记忆与自进化" onclick="switchTab('agent记忆与自进化')">🧠 💾 Agent 记忆与自进化<span class="tab-count">2</span></button><button class="tab-btn" data-tab="综述与框架" onclick="switchTab('综述与框架')">🏗 📚 综述与框架<span class="tab-count">1</span></button><button class="tab-btn" data-tab="评测与可观测性" onclick="switchTab('评测与可观测性')">📄 🔬 评测与可观测性<span class="tab-count">3</span></button></div>
+<div id="panel-all" class="tab-panel active"><h2>🎯 Agentic RL 与自蒸馏（今日重灾区）</h2><div class="paper-card" data-topic="🎯 Agentic RL 与自蒸馏（今日重灾区）"><h3>1. PCSD: Persistent Consistency for Self-Distillation in Agentic Reinforcement Learning</h3>
+<ul>
+<li><strong>作者</strong>: Lv, Chunji, Wei, Yangguang, Liu, Junlin, Gao, Yang, Liu, Ming, Wang, Xinming, Wu, Jinyang, Wang, Guoren, Li, Changsheng</li>
+<li><strong>机构</strong>: Beijing Institute of Technology, Institute of Automation, Chinese Academy of Sciences, Tsinghua University</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2608.01837v1">arXiv</a> | <a href="https://arxiv.org/pdf/2608.01837v1">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2608.01837v1/x1.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2608.01837v1/x3.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: 针对 agentic RL 稀疏奖励问题，在 <span class="wikilink">On-Policy</span> <span class="wikilink">Self-Distillation</span>（OPSD）基础上加了一个「持续一致性」约束——teacher 不是每个位置都可靠，所以只在 teacher 表现稳定的 token 上做密集监督。底座是 <span class="wikilink">GRPO</span>，在 <span class="wikilink">WebShop</span> 等交互环境测。</li>
+<li><strong>对比方法/Baselines</strong>: 对比 <span class="wikilink">OPSD</span>、<span class="wikilink">GRPO</span>、<span class="wikilink">SDAR</span>。</li>
+<li><strong>借鉴意义</strong>: 对做 agent post-training 的人，指出「teacher 局部不可靠」是个真问题；但解法本身不够惊艳。</li>
+<li><strong>锐评</strong>: 问题诊断是对的——teacher 不是处处可信——但「持续一致性」这个补丁太保守了，本质是「不确定就别学」。今天同一批坑里挤了至少四篇 self-distillation，这篇的差异化说服力最弱。🫠</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2608.01837v1" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🎯 Agentic RL 与自蒸馏（今日重灾区）"><h3>2. Cooperative Coevolution for Resource-Constrained Agentic LLM Post-Training</h3>
+<ul>
+<li><strong>作者</strong>: Zhiyuan Wang1, Shengcai Liu1\corresponding</li>
+<li><strong>机构</strong>: Engineering, Southern University of Science and Technology, Guangdong Provincial Key Laboratory of Brain-inspired Intelligent Computation, Department of Computer Science and, Hong Kong Polytechnic University, Hong Kong University of Science and Technology, Shenzhen Loop Area Institute, Zhongguancun Academy</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2608.02391v1">arXiv</a> | <a href="https://arxiv.org/pdf/2608.02391v1">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2608.02391v1/x3.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2608.02391v1/x2.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: 用协同协进化的 <span class="wikilink">Evolution Strategies</span>（<span class="wikilink">CoPES</span>）替代反向传播做 agentic LLM 全参数 post-training。核心卖点是省显存：长多轮轨迹用梯度做 RL 太吃内存，ES 不需要 backprop，还能配 <span class="wikilink">LoRA</span>，最终追上 <span class="wikilink">GRPO</span> 的效果。</li>
+<li><strong>对比方法/Baselines</strong>: 对比 <span class="wikilink">GRPO</span>（梯度 RL）、常规 <span class="wikilink">ES</span>、<span class="wikilink">LoRA</span> 微调。</li>
+<li><strong>借鉴意义</strong>: 资源受限场景下训 agent 的一条替代路线，对显卡不够的团队有实际意义。</li>
+<li><strong>锐评</strong>: 「ES 最终能追上 RL」这句话里的「最终」才是魔鬼——收敛要多少样本、墙钟时间多少，摘要里没说清楚就是耍流氓。但把 ES 从「玩具级 RL 替代」推到长轨迹 agentic 场景，方向是新的，值得盯一眼实验表。👀</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2608.02391v1" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🎯 Agentic RL 与自蒸馏（今日重灾区）"><h3>3. Instruction-Conditioned Exploration with Asymmetric Reinforcement Learning and Self-Distillation</h3>
+<ul>
+<li><strong>作者</strong>: Dilkes, Jim, Yazdanpanah, Vahid, Stein, Sebastian</li>
+<li><strong>机构</strong>: University of Southampton</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2608.02087v1">arXiv</a> | <a href="https://arxiv.org/pdf/2608.02087v1">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2608.02087v1/figures/v3_fig_alpha_dynamics.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: <span class="wikilink">ICE</span>（Instruction-Conditioned Exploration）：用非对称 RL + 自蒸馏，让预训练 LLM 在训练时按指令主动生成多样化经验来诱导探索。针对 LLM 动作空间结构与经典 RL 不同、探索难的问题。</li>
+<li><strong>对比方法/Baselines</strong>: 对比 <span class="wikilink">DAPO</span>、常规 <span class="wikilink">Self-Distillation</span>。</li>
+<li><strong>借鉴意义</strong>: 探索不足是 RLVR 的老大难，用指令来 condition 探索是个轻量思路。</li>
+<li><strong>锐评</strong>: 「让模型按指令自己造多样性数据」听着优雅，实则风险是造出来的多样性是表面的（措辞变了、推理路径没变）。Southampton 三人小组，规模不大，希望别是又一篇「加个探索项 AIME 涨两个点」的流水账。🫠</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2608.02087v1" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🎯 Agentic RL 与自蒸馏（今日重灾区）"><h3>4. Look Ahead Before You Distill: Future Trajectory Validation of Teacher Guidance for Agentic On-Policy Distillation</h3>
+<ul>
+<li><strong>作者</strong>: Chen, Chishui, Fan, Yaoyou, Sun, Te, Yang, Yi, Sun, Chenghao, Mao, Delin, Qiao, Hongbo, Zhang, Zuowei, Wang, Junxi, Sun, Chenxing, Hu, Yangen, Pan, Lu, Liu, Xuyang, Zhang, Linfeng</li>
+<li><strong>机构</strong>: 1Meituan LongCat Interaction   2Shanghai Jiao Tong University   3Fudan University, 4Peking University   5Nanjing University   6University of Chinese Academy of Sciences, 9The Hong Kong Polytechnic University, 7Jilin University   8University of Science and Technology of China</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2608.01953v1">arXiv</a> | <a href="https://arxiv.org/pdf/2608.01953v1">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2608.01953v1/x1.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2608.01953v1/x2.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: <span class="wikilink">FutureBridge</span>：on-policy distillation（<span class="wikilink">OPD</span>）在多轮 agentic 任务里，学生偏差会累积，轨迹逐渐漂离 teacher 有效指导的状态。这篇提出「蒸馏前先验证未来轨迹」——<span class="wikilink">FTB</span> 用 teacher guidance 的 future trajectory validation 判断该不该在当前状态蒸馏，在 <span class="wikilink">WebShop</span>/<span class="wikilink">ScienceWorld</span> 测。</li>
+<li><strong>对比方法/Baselines</strong>: 对比标准 <span class="wikilink">OPD</span>、<span class="wikilink">TCOD</span>。</li>
+<li><strong>借鉴意义</strong>: 给 on-policy distillation 的「累积漂移」问题打补丁，对做 agent 蒸馏的有用。</li>
+<li><strong>锐评</strong>: 和今天的 <span class="wikilink">PCSD</span> 是同一个病（teacher 不是处处可靠）的不同药方：PCSD 看「一致性」，这篇看「未来轨迹」——后者更主动，先预演一步再决定蒸不蒸，思路比 PCSD 高明。Meituan LongCat 的班底工程能力在线。但「验证未来」意味着额外 rollout 开销，性价比得看正文。这一坑里它算头部。👀</li>
+</ul>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2608.01953v1" target="_blank" rel="noopener">📖 AI 精读</a></div><h2>🛠️ Agent 工具使用与上下文管理</h2><div class="paper-card" data-topic="🛠️ Agent 工具使用与上下文管理"><h3>5. VC-Tooler: Learning Compositional and Adaptive Visual Tool Use</h3>
+<ul>
+<li><strong>作者</strong>: Yizheng Wu, Jiashen Hua\corresponding</li>
+<li><strong>机构</strong>: Alibaba Group</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2608.02217v1">arXiv</a> | <a href="https://arxiv.org/pdf/2608.02217v1">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2608.02217v1/figure/fig1-sub1.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2608.02217v1/figure/fig2-sub1.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: <span class="wikilink">VC-Tooler</span> 让 VLM 主动调用视觉工具来获取和精炼视觉证据，训三种能力：把工具调用 grounding 到视觉上下文、跨步骤组合工具、根据工具返回结果调整推理。走 <span class="wikilink">SFT</span>+<span class="wikilink">RL</span> 两阶段，强调 System 1→System 2 的多模态推理转变。</li>
+<li><strong>对比方法/Baselines</strong>: 对比常规多模态 CoT、纯感知型 VLM。</li>
+<li><strong>借鉴意义</strong>: 对做多模态 agent / 视觉工具编排的人有参考价值，Alibaba 的工程落地一般比较扎实。</li>
+<li><strong>锐评</strong>: 「组合工具 + 根据观测自适应」是视觉 agent 的正确难点，比那些只会裁剪放大的 baseline 高一档。就是这类工作永远绕不开一个问题：到底是 RL 学到了组合能力，还是 SFT 阶段就把答案喂进去了？希望正文的消融能自证清白。👀</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2608.02217v1" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🛠️ Agent 工具使用与上下文管理"><h3>6. IACM-RL: Intent-Aware Context Management and Reinforcement Learning for Complex Tool Invocation under Dynamic Intent Fluctuations</h3>
+<ul>
+<li><strong>作者</strong>: Dingwei Zhu1<em>, Jiahan Li1</em>, Chengjun Pan3, Yunxian Yang1, Yunbin Zhao2,, Zhonghang Lu1, Zhuohui Sheng1, Chenhao Huang1, Jiahang Lin1,, Junlin Shang1, Shichun Liu1, Yuhui Wang1, Honglin Guo1,, Xin Guo1, Jiazheng Zhang1, Ming Zhang1, Shihan Dou1,, Tao Gui1†, Qi Zhang1, Xipeng Qiu1</li>
+<li><strong>机构</strong>: Ltd. 3Peking University, dwzhu25@m.fudan.edu.cn, tgui@fudan.edu.cn, 1Fudan University 2Honor Device Co</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2608.02110v1">arXiv</a> | <a href="https://arxiv.org/pdf/2608.02110v1">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2608.02110v1/main21.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2608.02110v1/pipeline3.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2608.02110v1/figs/xian.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: <span class="wikilink">IACM-RL</span>：长程工具调用中，动态用户意图噪声会导致灾难。现有方法靠隐式历史扫描或文本压缩，且假设指令完美。这篇做意图感知的上下文管理 + <span class="wikilink">RL</span>（<span class="wikilink">PPO</span>），维护一个 <span class="wikilink">BeliefState</span> 剥离历史噪声、捕捉真实需求漂移，避免无限 API 循环，在 <span class="wikilink">BFCL</span> 上测 OOD/ID。</li>
+<li><strong>对比方法/Baselines</strong>: 对比隐式历史扫描、文本压缩方法，<span class="wikilink">BFCL</span> benchmark。</li>
+<li><strong>借鉴意义</strong>: 多轮工具调用里的意图漂移和无限循环是真实生产事故，对做 function-calling agent 的直接相关。</li>
+<li><strong>锐评</strong>: 「动态意图漂移导致无限 API 循环」——这是每个上线过 tool-calling agent 的人都踩过的坑，问题选得非常真。用显式 BeliefState 追踪意图比无脑塞历史强。就是作者列表长到能组一个足球队（Fudan + Honor + PKU 一大串），这种大兵团论文常见的毛病是各模块拼盘、消融不干净。带着看消融的心态读。👀</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2608.02110v1" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🛠️ Agent 工具使用与上下文管理"><h3>7. Before Reasoning Fails: Pre-Evidence Procedural Failures in Agentic RAG</h3>
+<ul>
+<li><strong>作者</strong>: Daeyoung Roh
+Independent Researcher
+dybroh@gmail.com, Donghee Han
+KAIST
+handonghee@kaist.ac.kr</li>
+<li><strong>机构</strong>: handonghee@kaist.ac.kr, KAIST</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2608.02011v1">arXiv</a> | <a href="https://arxiv.org/pdf/2608.02011v1">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2608.02011v1/x2.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2608.02011v1/figures/r12_rank_distribution.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: <span class="wikilink">Read-Gate</span>：Agentic RAG 可能在「证据条件推理」被测试之前就失败——agent 检索到候选片段却没看就 finalize。这篇把错误答案拆成 pre-evidence discipline 失败（读之前就废）和 post-gold-read 失败（读了金证据还答错），用保存的 tool-call 轨迹 + 检索证据 + 已读段落做可观测的失败标注，在 <span class="wikilink">HotpotQA</span>/<span class="wikilink">MuSiQue</span> 上用 <span class="wikilink">McNemar</span> 检验。</li>
+<li><strong>对比方法/Baselines</strong>: 对比常规 agentic RAG 失败分析，<span class="wikilink">HotpotQA</span>/<span class="wikilink">MuSiQue</span> 多跳 QA。</li>
+<li><strong>借鉴意义</strong>: 把 RAG agent 的失败按「程序性纪律」拆开，直接指导该修 retrieval 还是修 reasoning。</li>
+<li><strong>锐评</strong>: 这才是我想看的 agent 分析工作：不玄学地猜「模型意图」，只标注轨迹里可观测的失败模式——「检索到了但没读就答」这种蠢错，比推理错误更容易修也更该先修。把错误归因到 pre-evidence vs post-gold-read 两类，直接告诉你钱该花在哪。方法论朴素但极其实用，独立研究者 + KAIST 的组合反而做出了最干净的东西。🔥</li>
+</ul>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2608.02011v1" target="_blank" rel="noopener">📖 AI 精读</a></div><h2>🔬 硬核洞察与负面结果</h2><div class="paper-card" data-topic="🔬 硬核洞察与负面结果"><h3>8. Why Large Language Models Fail at Tabular Prediction</h3>
+<ul>
+<li><strong>作者</strong>: Marta Garnelo 
+Fundamental Technologies 
+marta.garnelo@gmail.com</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2608.02412v1">arXiv</a> | <a href="https://arxiv.org/pdf/2608.02412v1">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2608.02412v1/figures/numerical_precision_rounding.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2608.02412v1/figures/llm_vs_gp249_disagreement_overlay_all_2d.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2608.02412v1/figures/uci_noise_delta_2d_synthetic_top30_combined.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: 系统性回答「为什么通用 <span class="wikilink">LLM</span> 在表格预测上失败」。定义了纯推理模式（把全部训练数据塞进 prompt 一次生成），对比 <span class="wikilink">GP</span>（高斯过程）、<span class="wikilink">AdaBoost</span> 等，发现 LLM 在数值精度、噪声鲁棒性上系统性输给经典方法，并定位到具体失败机制（如数值四舍五入、与 GP 预测的系统性分歧）。</li>
+<li><strong>对比方法/Baselines</strong>: 对比 <span class="wikilink">GP</span>、<span class="wikilink">AdaBoost</span>、<span class="wikilink">NN</span>、<span class="wikilink">RBF</span> 等经典 tabular 方法。</li>
+<li><strong>借鉴意义</strong>: 给 tabular foundation model 这个热门领域泼了盆冷水，也给「什么任务别硬上 LLM」画了条线。</li>
+<li><strong>锐评</strong>: 终于有人认真做负面结果而不是又发一篇 SOTA 了。把 LLM 表格预测的失败拆到「数值精度」「噪声敏感」这种可检验的机制层面，比空喊「LLM 不适合结构化数据」有用一万倍。做推荐/CTR 这类强表格特征场景的，读完能省下不少无谓的 LLM 化尝试。🔥</li>
+</ul>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2608.02412v1" target="_blank" rel="noopener">📖 AI 精读</a></div><h2>🏗️ 应用型 Agent（代码/安全）</h2><div class="paper-card" data-topic="🏗️ 应用型 Agent（代码/安全）"><h3>9. Antares: Foundation Models for Agentic Vulnerability Localization</h3>
+<ul>
+<li><strong>作者</strong>: Supriti Vijay∗,1, Aman Priyanshu∗,1, Didier Chapoteau1, Arthur Goldblatt1, Jianliang He1,2,†, Kimia Majd1, Fraser Burch1, Baturay Saglam1,2,†, Takahiro Matsumoto1, Zhuoran Yang1,2,†, Amin Karbasi1</li>
+<li><strong>机构</strong>: Yale University</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2608.02407v1">arXiv</a> | <a href="https://arxiv.org/pdf/2608.02407v1">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2608.02407v1/x1.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2608.02407v1/x4.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2608.02407v1/x5.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: <span class="wikilink">Antares</span> 是一族 350M/1B/3B 的紧凑模型，专做 agentic 漏洞定位。基于 IBM Granite，两阶段训练 <span class="wikilink">SFT</span>+<span class="wikilink">GRPO</span>，在大代码库里迭代定位漏洞实现，对标 <span class="wikilink">OpenHands</span> 这类 agent 框架和 <span class="wikilink">CWE</span> 分类。</li>
+<li><strong>对比方法/Baselines</strong>: 对比 <span class="wikilink">GPT-5</span>、<span class="wikilink">OpenHands</span>、<span class="wikilink">CodeScout</span> 等。</li>
+<li><strong>借鉴意义</strong>: 小模型专精 agentic 安全任务的路线，对想在本地/边缘跑安全 agent 的团队有意义。</li>
+<li><strong>锐评</strong>: 用 3B 模型去打 GPT-5 的漏洞定位，赌的是「专精 &gt; 通用规模」——这个赌注在垂直任务上经常能赢。Yale 的班底靠谱。唯一担心：漏洞定位的评测极易被数据泄漏污染，Granite 预训练里到底见过多少 CWE 样本，是这篇能不能立住的关键。👀</li>
+</ul>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2608.02407v1" target="_blank" rel="noopener">📖 AI 精读</a></div><h2>🤝 多智能体系统</h2><div class="paper-card" data-topic="🤝 多智能体系统"><h3>10. Shared Prefixes, Better Credit: Adaptive Routing for Multi-Agent Reasoning</h3>
+<ul>
+<li><strong>作者</strong>: Yiqing Liu,
+Zihao Wang,
+Hantao Yao,
+Wu Liu,
+Yongdong Zhang</li>
+<li><strong>机构</strong>: University of Science and Technology of China</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2608.02291v1">arXiv</a> | <a href="https://arxiv.org/pdf/2608.02291v1">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2608.02291v1/Figures/2.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: <span class="wikilink">TreeCredit</span> 解决多智能体推理（<span class="wikilink">MAR</span>）里的信用分配：现有自适应路由只从 query 级标签或轨迹级回报学，粒度太粗，估不准单个 operator 在多步协作中的「状态条件效用」。它利用智能体间的共享前缀做更细粒度的信用归因，进而自适应路由。</li>
+<li><strong>对比方法/Baselines</strong>: 对比 <span class="wikilink">MAD</span>、<span class="wikilink">BAMAS</span>、<span class="wikilink">DAAO</span> 等自适应多智能体方法。</li>
+<li><strong>借鉴意义</strong>: 多智能体协作中「谁贡献了什么」一直是黑盒，细粒度信用分配是刚需。</li>
+<li><strong>锐评</strong>: 「共享前缀 → 更好信用」这个切入点很聪明——多个 agent 从同一前缀分叉，正好构成天然的反事实对照。比那些拍脑袋加一个 router 的工作有理论味。就怕共享前缀假设在真实异构 agent 系统里不成立，那整个信用估计就塌了。👀</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2608.02291v1" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🤝 多智能体系统"><h3>11. Agentic Commerce World: An Auditable and Verifiable Environment for Vibe Commerce</h3>
+<ul>
+<li><strong>作者</strong>: Shicheng Fan1,</li>
+<li><strong>机构</strong>: 1University of Illinois at Chicago, 5Arizona State University, 7Carnegie Mellon University, 3Northwestern University, sfan25@uic.edu and zhiweiliu@microsoft.com, 4Rutgers University, 9Microsoft AI, 6University of California San Diego</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2608.02441v1">arXiv</a> | <a href="https://arxiv.org/pdf/2608.02441v1">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2608.02441v1/x2.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2608.02441v1/x3.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2608.02441v1/x4.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: <span class="wikilink">Agentic Commerce World</span>（ACWorld）：类比 vibe coding，提出 vibe commerce——用自然语言表达买卖目标、委托给 agent。核心是让独立控制的 Buyer 和 Merchant agent 在共享市场交互，同时保留各自私有目标。提出 <span class="wikilink">VCP</span> 协议做可审计、可验证的评估边界，对比 <span class="wikilink">ACP</span>/<span class="wikilink">UCP</span> 等商业 agent 协议。</li>
+<li><strong>对比方法/Baselines</strong>: 对比 OpenAI <span class="wikilink">ACP</span>、Google <span class="wikilink">UCP</span>、AgenticPay、Magentic Marketplace。</li>
+<li><strong>借鉴意义</strong>: agentic commerce 是巨头都在抢的赛道（对广告/交易撮合场景直接相关），一个可审计的评测环境有基建价值。</li>
+<li><strong>锐评</strong>: 赶在 OpenAI ACP / Google UCP 之后立一个「可审计可验证」的第三方评测环境，卡位意识很强。做广告投放和交易撮合的应该关注——买卖双方私有目标 + 共享市场，本质就是机制设计问题。就怕环境太玩具，撑不起真实市场的博弈复杂度。UIC + Microsoft AI + CMU 的豪华阵容值一看。👀</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2608.02441v1" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🤝 多智能体系统"><h3>12. PosterMELD: Multi-Agent Paper-to-Poster Generation for Controllable Design Diversity with Editable Print-Ready Outputs</h3>
+<ul>
+<li><strong>作者</strong>: Haojie Hu\equalcontrib</li>
+<li><strong>机构</strong>: Renmin University of China, Shanghai Artificial Intelligence Laboratory, Shanghai Jiao Tong University, Tongji University, Tsinghua Shenzhen International Graduate School, Tsinghua University</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2608.02218v1">arXiv</a> | <a href="https://arxiv.org/pdf/2608.02218v1">PDF</a></li>
+<li>
+<p><strong>来源</strong>: 📄 arXiv 关键词检索</p>
+</li>
+<li>
+<p><strong>核心方法</strong>: <span class="wikilink">PosterMELD</span>：模板条件化的多智能体论文转海报流水线。用容量感知的 slot 在渲染前先指导写作，确定性渲染保证可编辑。现有系统只给完成品打分、藏起 request 级失败；直接图像生成不可编辑，coding-agent 工作流又贵。输出可编辑 PPTX + PNG + provenance manifest。</p>
+</li>
+<li><strong>对比方法/Baselines</strong>: 对比 <span class="wikilink">PosterGen</span>、直接图像生成、coding-agent 工作流。</li>
+<li><strong>借鉴意义</strong>: 论文转海报是学术圈刚需，「可编辑 + 打印就绪」比直接出图实用。</li>
+<li><strong>锐评</strong>: 「capacity-aware slots：先规划容量再写内容」是这篇真正的巧思——直接让 LLM 写满一版然后爆版才是常见灾难。输出可编辑 PPTX 而非死图，实用主义满分。多智能体在这里更像流水线分工而非真协作，但对场景够用。做学术工具的可以借鉴那套 acceptance gate 设计。👀</li>
+</ul>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2608.02218v1" target="_blank" rel="noopener">📖 AI 精读</a></div><h2>🧠 LLM RL 训练机制</h2><div class="paper-card" data-topic="🧠 LLM RL 训练机制"><h3>13. Start Classifying: Categorical Critics for LLM Reinforcement Learning</h3>
+<ul>
+<li><strong>作者</strong>: Zhijian Zhou∗,1,2,3</li>
+<li><strong>机构</strong>: 1Fudan University  2Shanghai Innovation Institute  3Tencent YoutuLab, 4Griffith University  5Shanghai Academy of Artificial Intelligence for Science, arthurtan@tencent.com  quchao@fudan.edu.cn  qiyuan@fudan.edu.cn</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2608.02181v1">arXiv</a> | <a href="https://arxiv.org/pdf/2608.02181v1">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2608.02181v1/x3.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2608.02181v1/x4.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: <span class="wikilink">Categorical-Critics</span>：把 <span class="wikilink">PPO</span> 里用 MSE 回归标量 value 的 critic，改成分类式（categorical / <span class="wikilink">HL</span>-Gauss 风格）目标。论点是稀疏二值奖励（<span class="wikilink">RLVR</span>）下，标量 MSE 的 critic 校准很脆弱，分类式目标更稳。</li>
+<li><strong>对比方法/Baselines</strong>: 对比标量 MSE critic 的 <span class="wikilink">PPO</span>、<span class="wikilink">GAE</span>、<span class="wikilink">DAPO</span>。</li>
+<li><strong>借鉴意义</strong>: 对认真调 PPO critic 的 RLVR 团队有用，属于「训练稳定性」类改进。</li>
+<li><strong>锐评</strong>: regression-as-classification 这套（HL-Gauss、two-hot）在 value-based RL 里是老配方了，这篇把它搬到 LLM RLVR 场景。工程上大概率有用，但「新意」基本靠场景迁移撑着。属于会用就好、不必细读理论的那类。🫠</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2608.02181v1" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🧠 LLM RL 训练机制"><h3>14. Toward Plasticity-Preserving KL Regularization for Capability Retention in LLM Reinforcement Learning</h3>
+<ul>
+<li><strong>作者</strong>: Li Wang1,</li>
+<li><strong>机构</strong>: Nanyang Technological University</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2608.01743v1">arXiv</a> | <a href="https://arxiv.org/pdf/2608.01743v1">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2608.01743v1/x8.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2608.01743v1/x12.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: <span class="wikilink">CoKL</span>：RL post-training 会破坏 base 模型已有能力，KL 正则常用来防遗忘但会限制可塑性。这篇提出保可塑性的 KL 正则，权衡「保留旧能力」与「学新目标」，讨论了 <span class="wikilink">RKL</span>/<span class="wikilink">FKL</span>/<span class="wikilink">ZRKL</span> 等多种 KL 形式。</li>
+<li><strong>对比方法/Baselines</strong>: 对比标准 KL 正则的 <span class="wikilink">GRPO</span>、<span class="wikilink">RKL</span>/<span class="wikilink">FKL</span>。</li>
+<li><strong>借鉴意义</strong>: capability retention 是把 RLVR 用到生产模型时的实际约束。</li>
+<li><strong>锐评</strong>: KL 正则的各种变体已经被翻来覆去研究过了，「可塑性 vs 保留」的 trade-off 也不是新框架。这篇更像是把已知的 KL 形式做了个系统对比 + 提个折中项。有用，但很难说是必读。💤</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2608.01743v1" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🧠 LLM RL 训练机制"><h3>15. Beyond On-Policy Exploration: Integrating External Policy Rollouts for Reinforcement Learning in Diffusion Language Models</h3>
+<ul>
+<li><strong>作者</strong>: WONSEOK LEE1, JIMYEONG KIM2, JUNGMIN KO1, AND WONJONG RHEE1,3</li>
+<li><strong>机构</strong>: Department of Intelligence and Information, Seoul National University, This work was supported by Institute of Information &amp; communications Technology Planning &amp; Evaluation (IITP) grant funded by the Korea government (MSIT) ([NO.RS-2021-II211343, Artificial Intelligence Graduate School Program (Seoul National University)], [No.RS-2023-00235293, Development of autonomous driving big data processing, management, search, and sharing interface technology to provide autonomous driving data according to the purpose of usage]), Artificial Intelligence Institute, Seoul National University, Department of Intelligence and Information, Seoul National University
+, Interdisciplinary Program in Artificial Intelligence, Seoul National University
+, Artificial Intelligence Institute, Seoul National University
+, Interdisciplinary Program in Artificial Intelligence, Seoul National University</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2608.01717v1">arXiv</a> | <a href="https://arxiv.org/pdf/2608.01717v1">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2608.01717v1/x8.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: <span class="wikilink">ERILS</span>：diffusion LLM 的 RL 通常靠自身 on-policy rollout，成功样本稀缺时正奖励太少。这篇引入更强外部策略生成的高奖励 rollout 来补充，做 source-specific 处理，配 <span class="wikilink">SFT</span>+<span class="wikilink">LoRA</span>。</li>
+<li><strong>对比方法/Baselines</strong>: 对比纯 on-policy 的 <span class="wikilink">SPG</span>、dLLM RL。</li>
+<li><strong>借鉴意义</strong>: diffusion LM 的 RL 还很不成熟，补充外部经验是合理方向。</li>
+<li><strong>锐评</strong>: 「on-policy 不够就掺 off-policy 强者数据」——这在自回归 RL 里早被玩烂了，搬到 dLLM 上算是补课。source-specific 处理是唯一的技术亮点。缝合感偏重，dLLM 圈内可看，圈外不必追。🫠</li>
+</ul>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2608.01717v1" target="_blank" rel="noopener">📖 AI 精读</a></div><h2>💾 Agent 记忆与自进化</h2><div class="paper-card" data-topic="💾 Agent 记忆与自进化"><h3>16. Self-Improving Large Language Models via Progressive Experience Evolution</h3>
+<ul>
+<li><strong>作者</strong>: Shijie Ren1,
+Xiting Wang1\corresponding</li>
+<li><strong>机构</strong>: Gaoling School of Artificial Intelligence, Renmin University of China, WeChat AI, Tencent Inc, China</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2608.02139v1">arXiv</a> | <a href="https://arxiv.org/pdf/2608.02139v1">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2608.02139v1/x1.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2608.02139v1/x2.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: <span class="wikilink">SPEE</span>（Progressive Experience Evolution）：现有自进化范式割裂——test-time 方法能抽经验但内化不进参数，training-time 方法能改参数但不显式抽经验。SPEE 从交互轨迹演化出一个全局经验池，把蒸馏后的知识既改进策略、又支撑后续 reward 驱动的探索。</li>
+<li><strong>对比方法/Baselines</strong>: 对比 <span class="wikilink">GRPO</span>、prompt-based 经验方法、<span class="wikilink">SDPO</span>/<span class="wikilink">OPSD</span> 类自蒸馏。</li>
+<li><strong>借鉴意义</strong>: 「显式经验 vs 参数内化」的割裂是 self-improving LLM 的真痛点，这篇想两头通吃。</li>
+<li><strong>锐评</strong>: 把「经验池」和「参数更新」缝成一个闭环，愿景很对——人类学习就是显式记忆 + 内化并行。但「全局经验池」怎么防止越滚越脏、旧经验怎么淘汰，是这类工作永远的暗礁。RUC + WeChat AI 的组合执行力在线，值得看它怎么处理经验腐化。👀</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2608.02139v1" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="💾 Agent 记忆与自进化"><h3>17. Progressive Agent Skill Generation via Reinforcement Learning</h3>
+<ul>
+<li><strong>作者</strong>: Junhao Shen1</li>
+<li><strong>机构</strong>: hcheng@se.cuhk.edu.hk, 1The Chinese University of Hong Kong</li>
+<li><strong>链接</strong>: <a href="https://arxiv.org/abs/2608.01678">arXiv</a> | <a href="https://arxiv.org/pdf/2608.01678">PDF</a></li>
+<li>
+<p><strong>来源</strong>: 📰 HF Daily，⬆️ 22</p>
+</li>
+<li>
+<p><strong>核心方法</strong>: <span class="wikilink">Skill-Creator</span>（Progressive Agent Skill Generation）：现有 skill 生成靠启发式或 pipeline 拼接，需为不同证据源专门设计。这篇用 <span class="wikilink">RL</span>（<span class="wikilink">GRPO</span>）做统一的学习式 skill 生成，跨异构来源建模，解决 skill 缺乏自然监督信号的难题，在 <span class="wikilink">SpreadsheetBench</span> 等上测。</p>
+</li>
+<li><strong>对比方法/Baselines</strong>: 对比启发式/pipeline 式 skill consolidation，用 <span class="wikilink">GPT</span>/<span class="wikilink">Claude-Sonnet</span> 做底座对比。</li>
+<li><strong>借鉴意义</strong>: Agent skill（可复用程序化模块）是 Anthropic 带火的方向，用 RL 统一生成有前瞻性。HF 22 赞说明社区关注。</li>
+<li><strong>锐评</strong>: 蹭上了 Agent Skills 这个 2025 热词，切入点是「skill 没有天然监督信号」——这个观察很准。但用 RL 去优化「什么是好 skill」，reward 怎么设计才是命门，摘要里语焉不详。CUHK 出品 + 高 upvote，值得看它怎么定义 skill 质量的 reward。👀</li>
+</ul>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2608.01678" target="_blank" rel="noopener">📖 AI 精读</a></div><h2>📚 综述与框架</h2><div class="paper-card" data-topic="📚 综述与框架"><h3>18. A Taxonomy of Cognitive Capability Gaps in Generative and Agentic AI</h3>
+<ul>
+<li><strong>作者</strong>: Akinrele, Taye, Penchala, Sindhuja, Golilarz, Noorbakhsh Amiri, Mittal, Sudip, Rahimi, Shahram</li>
+<li><strong>机构</strong>: Department of Computer Science, The University of Alabama</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2608.02553v1">arXiv</a> | <a href="https://arxiv.org/pdf/2608.02553v1">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2608.02553v1/x2.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2608.02553v1/x3.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2608.02553v1/x4.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: <span class="wikilink">A Taxonomy of Cognitive Capability Gaps</span>：一篇综述，把生成式/agentic AI 与「认知 AI」（持续推理、自适应、持久记忆、自我调节）对比，梳理从规则系统到认知 AI 的演化，建立认知能力缺口的分类体系。</li>
+<li><strong>对比方法/Baselines</strong>: 非实验论文，梳理 generative/agentic/cognitive AI 三种范式。</li>
+<li><strong>借鉴意义</strong>: 适合想建立 agent 能力全景图、找研究空白的人快速扫一遍。</li>
+<li><strong>锐评</strong>: 又一篇「XX 的分类学」综述——这类论文的价值全看分类维度切得准不准，以及有没有指出真正的空白而非罗列已知。作为 landscape 扫盲图能用，但别指望从里面挖到能落地的方法。想快速补齐 agent「认知能力」词汇表的可以翻，赶时间的直接看那张演化图。💤</li>
+</ul>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2608.02553v1" target="_blank" rel="noopener">📖 AI 精读</a></div><h2>🔬 评测与可观测性</h2><div class="paper-card" data-topic="🔬 评测与可观测性"><h3>19. MonitrLLM: A Community-Centered Evaluation Infrastructure for Large Language Models</h3>
+<ul>
+<li><strong>作者</strong>: Victor Ojewale1,
+Ro Encarnación2,
+Suresh Venkatasubramanian1
+Danaé Metaxa2</li>
+<li><strong>机构</strong>: Center for Tech Responsibility, Brown University, University of Pennsylvania</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2608.02409v1">arXiv</a> | <a href="https://arxiv.org/pdf/2608.02409v1">PDF</a></li>
+<li>
+<p><strong>来源</strong>: 📄 arXiv 关键词检索</p>
+</li>
+<li>
+<p><strong>核心方法</strong>: <span class="wikilink">MonitrLLM</span>：指出现有 LLM 评测的空白——benchmark 测能力、对话语料无反馈、界面反馈无任务目的，没有基础设施把交互轨迹和用户定义的结果关联起来。提出社区中心的评测基建，把交互 trajectory 链接到 user-defined outcomes，区别于 <span class="wikilink">RLHF</span> 的成对偏好。</p>
+</li>
+<li><strong>对比方法/Baselines</strong>: 对比 benchmark 套件、<span class="wikilink">RLHF</span> 偏好信号、界面满意度反馈。</li>
+<li><strong>借鉴意义</strong>: 「评测脱离真实用户目标」是行业通病，社区化的结果导向评测有现实意义。</li>
+<li><strong>锐评</strong>: 戳中了一个真痛点：RLHF 的偏好信号只告诉你「A 比 B 好」，不告诉你「用户的真实目标达成没有」。把评测锚定到 user-defined outcome 是正确方向。但「community-centered」四个字往往意味着数据收集成本高、规模难起来——这类基建能不能活下来，看的是采纳率不是方法优雅度。👀</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2608.02409v1" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🔬 评测与可观测性"><h3>20. Can AI Agents Simulate A/B Test Outcomes? A Validation Framework for Agentic Experimentation</h3>
+<ul>
+<li><strong>作者</strong>: Stefan Hut 
+hutstefa@amazon.com</li>
+<li><strong>机构</strong>: masoerl@amazon.com, hutstefa@amazon.com &amp;Lorenzo Masoero11footnotemark: 1</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2608.02345v1">arXiv</a> | <a href="https://arxiv.org/pdf/2608.02345v1">PDF</a></li>
+<li>
+<p><strong>来源</strong>: 📄 arXiv 关键词检索</p>
+</li>
+<li>
+<p><strong>核心方法</strong>: <span class="wikilink">AgentA/B</span>：Amazon 的工作，问 AI agent 能否在真实上线前模拟 A/B 测试结果。给 agent 灌行为画像 + 干预的上下文描述，让它模拟处理效应（<span class="wikilink">ATE</span>），形式化为一个验证框架，对比真实 <span class="wikilink">RCT</span> 结果，涉及 <span class="wikilink">CTR</span> 等指标。</p>
+</li>
+<li><strong>对比方法/Baselines</strong>: 对比真实 <span class="wikilink">RCT</span> / A/B 实验的 <span class="wikilink">ATE</span> 估计。</li>
+<li><strong>借鉴意义</strong>: 对做实验平台、增长、广告 A/B 的团队极其对口——如果 agent 真能预筛干预，能省大量真实流量和数周迭代。</li>
+<li><strong>锐评</strong>: Amazon 问了个所有增长团队都想问的问题：能不能让 agent 先跑一遍 A/B 省掉真流量？答案大概率是「某些场景能、别全信」——关键看它诚不诚实地报告失败案例。这类模拟最危险的是给出「看起来合理」的假 ATE 把人带沟里。做实验平台的必须读，但要带着怀疑读。👀</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2608.02345v1" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🔬 评测与可观测性"><h3>21. How Much Does a Reasoning Summary Reveal? An Observability Ladder for Large Language Models</h3>
+<ul>
+<li><strong>作者</strong>: Algaba, Andres, Carlon, Francesca, Delcon, Lynn, Ballon, Marthe, Verbruggen, Bert, Ginis, Vincent</li>
+<li><strong>机构</strong>: Data Analytics Lab, Vrije Universiteit Brussel, Pleinlaan, School of Engineering and Applied Sciences, Harvard University, Cambridge, Massachusetts 02138, USA, imec-SMIT, Vrije Universiteit Brussel, Pleinlaan, what they reveal. In commercial deployments such as those from OpenAI, Google, and Anthropic, a user may receive</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2608.02089v1">arXiv</a> | <a href="https://arxiv.org/pdf/2608.02089v1">PDF</a></li>
+<li>
+<p><strong>来源</strong>: 📄 arXiv 关键词检索</p>
+</li>
+<li>
+<p><strong>核心方法</strong>: <span class="wikilink">Observability-Ladder</span>：LLM 常只给用户最终答案 + 简短推理摘要，完整推理轨迹藏起来。这篇提出「观测性阶梯」，固定每次完整运行，只改变读者能看什么来判断答案对错：response、模型自写的 self-summary、trace 本身、internal signals，各带/不带 prompt，量化「reasoning summary 到底透露了多少」。</p>
+</li>
+<li><strong>对比方法/Baselines</strong>: 对照 response / self-summary / full trace / internal signals 四个观测层级。</li>
+<li><strong>借鉴意义</strong>: 对做 AI 安全、可解释性、以及依赖 reasoning summary 做监控的人有直接价值。</li>
+<li><strong>锐评</strong>: 实验设计干净得让人舒服：固定运行、只动「观测者能看什么」这一个变量，就把「摘要 vs 真轨迹的信息差」量化出来了。这正是当前大家用 reasoning summary 做监控时最该问却没人认真答的问题——如果摘要系统性隐藏了关键推理，那基于摘要的安全监控就是自欺。VUB + Harvard，方法论必读。🔥</li>
+</ul>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2608.02089v1" target="_blank" rel="noopener">📖 AI 精读</a></div></div>
+<div id="panel-agenticrl与自蒸馏今日重灾区" class="tab-panel"><h2>🎯 Agentic RL 与自蒸馏（今日重灾区）</h2><div class="paper-card" data-topic="🎯 Agentic RL 与自蒸馏（今日重灾区）"><h3>1. PCSD: Persistent Consistency for Self-Distillation in Agentic Reinforcement Learning</h3>
+<ul>
+<li><strong>作者</strong>: Lv, Chunji, Wei, Yangguang, Liu, Junlin, Gao, Yang, Liu, Ming, Wang, Xinming, Wu, Jinyang, Wang, Guoren, Li, Changsheng</li>
+<li><strong>机构</strong>: Beijing Institute of Technology, Institute of Automation, Chinese Academy of Sciences, Tsinghua University</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2608.01837v1">arXiv</a> | <a href="https://arxiv.org/pdf/2608.01837v1">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2608.01837v1/x1.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2608.01837v1/x3.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: 针对 agentic RL 稀疏奖励问题，在 <span class="wikilink">On-Policy</span> <span class="wikilink">Self-Distillation</span>（OPSD）基础上加了一个「持续一致性」约束——teacher 不是每个位置都可靠，所以只在 teacher 表现稳定的 token 上做密集监督。底座是 <span class="wikilink">GRPO</span>，在 <span class="wikilink">WebShop</span> 等交互环境测。</li>
+<li><strong>对比方法/Baselines</strong>: 对比 <span class="wikilink">OPSD</span>、<span class="wikilink">GRPO</span>、<span class="wikilink">SDAR</span>。</li>
+<li><strong>借鉴意义</strong>: 对做 agent post-training 的人，指出「teacher 局部不可靠」是个真问题；但解法本身不够惊艳。</li>
+<li><strong>锐评</strong>: 问题诊断是对的——teacher 不是处处可信——但「持续一致性」这个补丁太保守了，本质是「不确定就别学」。今天同一批坑里挤了至少四篇 self-distillation，这篇的差异化说服力最弱。🫠</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2608.01837v1" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🎯 Agentic RL 与自蒸馏（今日重灾区）"><h3>2. Cooperative Coevolution for Resource-Constrained Agentic LLM Post-Training</h3>
+<ul>
+<li><strong>作者</strong>: Zhiyuan Wang1, Shengcai Liu1\corresponding</li>
+<li><strong>机构</strong>: Engineering, Southern University of Science and Technology, Guangdong Provincial Key Laboratory of Brain-inspired Intelligent Computation, Department of Computer Science and, Hong Kong Polytechnic University, Hong Kong University of Science and Technology, Shenzhen Loop Area Institute, Zhongguancun Academy</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2608.02391v1">arXiv</a> | <a href="https://arxiv.org/pdf/2608.02391v1">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2608.02391v1/x3.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2608.02391v1/x2.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: 用协同协进化的 <span class="wikilink">Evolution Strategies</span>（<span class="wikilink">CoPES</span>）替代反向传播做 agentic LLM 全参数 post-training。核心卖点是省显存：长多轮轨迹用梯度做 RL 太吃内存，ES 不需要 backprop，还能配 <span class="wikilink">LoRA</span>，最终追上 <span class="wikilink">GRPO</span> 的效果。</li>
+<li><strong>对比方法/Baselines</strong>: 对比 <span class="wikilink">GRPO</span>（梯度 RL）、常规 <span class="wikilink">ES</span>、<span class="wikilink">LoRA</span> 微调。</li>
+<li><strong>借鉴意义</strong>: 资源受限场景下训 agent 的一条替代路线，对显卡不够的团队有实际意义。</li>
+<li><strong>锐评</strong>: 「ES 最终能追上 RL」这句话里的「最终」才是魔鬼——收敛要多少样本、墙钟时间多少，摘要里没说清楚就是耍流氓。但把 ES 从「玩具级 RL 替代」推到长轨迹 agentic 场景，方向是新的，值得盯一眼实验表。👀</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2608.02391v1" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🎯 Agentic RL 与自蒸馏（今日重灾区）"><h3>3. Instruction-Conditioned Exploration with Asymmetric Reinforcement Learning and Self-Distillation</h3>
+<ul>
+<li><strong>作者</strong>: Dilkes, Jim, Yazdanpanah, Vahid, Stein, Sebastian</li>
+<li><strong>机构</strong>: University of Southampton</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2608.02087v1">arXiv</a> | <a href="https://arxiv.org/pdf/2608.02087v1">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2608.02087v1/figures/v3_fig_alpha_dynamics.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: <span class="wikilink">ICE</span>（Instruction-Conditioned Exploration）：用非对称 RL + 自蒸馏，让预训练 LLM 在训练时按指令主动生成多样化经验来诱导探索。针对 LLM 动作空间结构与经典 RL 不同、探索难的问题。</li>
+<li><strong>对比方法/Baselines</strong>: 对比 <span class="wikilink">DAPO</span>、常规 <span class="wikilink">Self-Distillation</span>。</li>
+<li><strong>借鉴意义</strong>: 探索不足是 RLVR 的老大难，用指令来 condition 探索是个轻量思路。</li>
+<li><strong>锐评</strong>: 「让模型按指令自己造多样性数据」听着优雅，实则风险是造出来的多样性是表面的（措辞变了、推理路径没变）。Southampton 三人小组，规模不大，希望别是又一篇「加个探索项 AIME 涨两个点」的流水账。🫠</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2608.02087v1" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🎯 Agentic RL 与自蒸馏（今日重灾区）"><h3>4. Look Ahead Before You Distill: Future Trajectory Validation of Teacher Guidance for Agentic On-Policy Distillation</h3>
+<ul>
+<li><strong>作者</strong>: Chen, Chishui, Fan, Yaoyou, Sun, Te, Yang, Yi, Sun, Chenghao, Mao, Delin, Qiao, Hongbo, Zhang, Zuowei, Wang, Junxi, Sun, Chenxing, Hu, Yangen, Pan, Lu, Liu, Xuyang, Zhang, Linfeng</li>
+<li><strong>机构</strong>: 1Meituan LongCat Interaction   2Shanghai Jiao Tong University   3Fudan University, 4Peking University   5Nanjing University   6University of Chinese Academy of Sciences, 9The Hong Kong Polytechnic University, 7Jilin University   8University of Science and Technology of China</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2608.01953v1">arXiv</a> | <a href="https://arxiv.org/pdf/2608.01953v1">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2608.01953v1/x1.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2608.01953v1/x2.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: <span class="wikilink">FutureBridge</span>：on-policy distillation（<span class="wikilink">OPD</span>）在多轮 agentic 任务里，学生偏差会累积，轨迹逐渐漂离 teacher 有效指导的状态。这篇提出「蒸馏前先验证未来轨迹」——<span class="wikilink">FTB</span> 用 teacher guidance 的 future trajectory validation 判断该不该在当前状态蒸馏，在 <span class="wikilink">WebShop</span>/<span class="wikilink">ScienceWorld</span> 测。</li>
+<li><strong>对比方法/Baselines</strong>: 对比标准 <span class="wikilink">OPD</span>、<span class="wikilink">TCOD</span>。</li>
+<li><strong>借鉴意义</strong>: 给 on-policy distillation 的「累积漂移」问题打补丁，对做 agent 蒸馏的有用。</li>
+<li><strong>锐评</strong>: 和今天的 <span class="wikilink">PCSD</span> 是同一个病（teacher 不是处处可靠）的不同药方：PCSD 看「一致性」，这篇看「未来轨迹」——后者更主动，先预演一步再决定蒸不蒸，思路比 PCSD 高明。Meituan LongCat 的班底工程能力在线。但「验证未来」意味着额外 rollout 开销，性价比得看正文。这一坑里它算头部。👀</li>
+</ul>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2608.01953v1" target="_blank" rel="noopener">📖 AI 精读</a></div></div>
+<div id="panel-agent工具使用与上下文管理" class="tab-panel"><h2>🛠️ Agent 工具使用与上下文管理</h2><div class="paper-card" data-topic="🛠️ Agent 工具使用与上下文管理"><h3>5. VC-Tooler: Learning Compositional and Adaptive Visual Tool Use</h3>
+<ul>
+<li><strong>作者</strong>: Yizheng Wu, Jiashen Hua\corresponding</li>
+<li><strong>机构</strong>: Alibaba Group</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2608.02217v1">arXiv</a> | <a href="https://arxiv.org/pdf/2608.02217v1">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2608.02217v1/figure/fig1-sub1.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2608.02217v1/figure/fig2-sub1.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: <span class="wikilink">VC-Tooler</span> 让 VLM 主动调用视觉工具来获取和精炼视觉证据，训三种能力：把工具调用 grounding 到视觉上下文、跨步骤组合工具、根据工具返回结果调整推理。走 <span class="wikilink">SFT</span>+<span class="wikilink">RL</span> 两阶段，强调 System 1→System 2 的多模态推理转变。</li>
+<li><strong>对比方法/Baselines</strong>: 对比常规多模态 CoT、纯感知型 VLM。</li>
+<li><strong>借鉴意义</strong>: 对做多模态 agent / 视觉工具编排的人有参考价值，Alibaba 的工程落地一般比较扎实。</li>
+<li><strong>锐评</strong>: 「组合工具 + 根据观测自适应」是视觉 agent 的正确难点，比那些只会裁剪放大的 baseline 高一档。就是这类工作永远绕不开一个问题：到底是 RL 学到了组合能力，还是 SFT 阶段就把答案喂进去了？希望正文的消融能自证清白。👀</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2608.02217v1" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🛠️ Agent 工具使用与上下文管理"><h3>6. IACM-RL: Intent-Aware Context Management and Reinforcement Learning for Complex Tool Invocation under Dynamic Intent Fluctuations</h3>
+<ul>
+<li><strong>作者</strong>: Dingwei Zhu1<em>, Jiahan Li1</em>, Chengjun Pan3, Yunxian Yang1, Yunbin Zhao2,, Zhonghang Lu1, Zhuohui Sheng1, Chenhao Huang1, Jiahang Lin1,, Junlin Shang1, Shichun Liu1, Yuhui Wang1, Honglin Guo1,, Xin Guo1, Jiazheng Zhang1, Ming Zhang1, Shihan Dou1,, Tao Gui1†, Qi Zhang1, Xipeng Qiu1</li>
+<li><strong>机构</strong>: Ltd. 3Peking University, dwzhu25@m.fudan.edu.cn, tgui@fudan.edu.cn, 1Fudan University 2Honor Device Co</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2608.02110v1">arXiv</a> | <a href="https://arxiv.org/pdf/2608.02110v1">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2608.02110v1/main21.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2608.02110v1/pipeline3.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2608.02110v1/figs/xian.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: <span class="wikilink">IACM-RL</span>：长程工具调用中，动态用户意图噪声会导致灾难。现有方法靠隐式历史扫描或文本压缩，且假设指令完美。这篇做意图感知的上下文管理 + <span class="wikilink">RL</span>（<span class="wikilink">PPO</span>），维护一个 <span class="wikilink">BeliefState</span> 剥离历史噪声、捕捉真实需求漂移，避免无限 API 循环，在 <span class="wikilink">BFCL</span> 上测 OOD/ID。</li>
+<li><strong>对比方法/Baselines</strong>: 对比隐式历史扫描、文本压缩方法，<span class="wikilink">BFCL</span> benchmark。</li>
+<li><strong>借鉴意义</strong>: 多轮工具调用里的意图漂移和无限循环是真实生产事故，对做 function-calling agent 的直接相关。</li>
+<li><strong>锐评</strong>: 「动态意图漂移导致无限 API 循环」——这是每个上线过 tool-calling agent 的人都踩过的坑，问题选得非常真。用显式 BeliefState 追踪意图比无脑塞历史强。就是作者列表长到能组一个足球队（Fudan + Honor + PKU 一大串），这种大兵团论文常见的毛病是各模块拼盘、消融不干净。带着看消融的心态读。👀</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2608.02110v1" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🛠️ Agent 工具使用与上下文管理"><h3>7. Before Reasoning Fails: Pre-Evidence Procedural Failures in Agentic RAG</h3>
+<ul>
+<li><strong>作者</strong>: Daeyoung Roh
+Independent Researcher
+dybroh@gmail.com, Donghee Han
+KAIST
+handonghee@kaist.ac.kr</li>
+<li><strong>机构</strong>: handonghee@kaist.ac.kr, KAIST</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2608.02011v1">arXiv</a> | <a href="https://arxiv.org/pdf/2608.02011v1">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2608.02011v1/x2.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2608.02011v1/figures/r12_rank_distribution.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: <span class="wikilink">Read-Gate</span>：Agentic RAG 可能在「证据条件推理」被测试之前就失败——agent 检索到候选片段却没看就 finalize。这篇把错误答案拆成 pre-evidence discipline 失败（读之前就废）和 post-gold-read 失败（读了金证据还答错），用保存的 tool-call 轨迹 + 检索证据 + 已读段落做可观测的失败标注，在 <span class="wikilink">HotpotQA</span>/<span class="wikilink">MuSiQue</span> 上用 <span class="wikilink">McNemar</span> 检验。</li>
+<li><strong>对比方法/Baselines</strong>: 对比常规 agentic RAG 失败分析，<span class="wikilink">HotpotQA</span>/<span class="wikilink">MuSiQue</span> 多跳 QA。</li>
+<li><strong>借鉴意义</strong>: 把 RAG agent 的失败按「程序性纪律」拆开，直接指导该修 retrieval 还是修 reasoning。</li>
+<li><strong>锐评</strong>: 这才是我想看的 agent 分析工作：不玄学地猜「模型意图」，只标注轨迹里可观测的失败模式——「检索到了但没读就答」这种蠢错，比推理错误更容易修也更该先修。把错误归因到 pre-evidence vs post-gold-read 两类，直接告诉你钱该花在哪。方法论朴素但极其实用，独立研究者 + KAIST 的组合反而做出了最干净的东西。🔥</li>
+</ul>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2608.02011v1" target="_blank" rel="noopener">📖 AI 精读</a></div></div>
+<div id="panel-硬核洞察与负面结果" class="tab-panel"><h2>🔬 硬核洞察与负面结果</h2><div class="paper-card" data-topic="🔬 硬核洞察与负面结果"><h3>8. Why Large Language Models Fail at Tabular Prediction</h3>
+<ul>
+<li><strong>作者</strong>: Marta Garnelo 
+Fundamental Technologies 
+marta.garnelo@gmail.com</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2608.02412v1">arXiv</a> | <a href="https://arxiv.org/pdf/2608.02412v1">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2608.02412v1/figures/numerical_precision_rounding.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2608.02412v1/figures/llm_vs_gp249_disagreement_overlay_all_2d.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2608.02412v1/figures/uci_noise_delta_2d_synthetic_top30_combined.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: 系统性回答「为什么通用 <span class="wikilink">LLM</span> 在表格预测上失败」。定义了纯推理模式（把全部训练数据塞进 prompt 一次生成），对比 <span class="wikilink">GP</span>（高斯过程）、<span class="wikilink">AdaBoost</span> 等，发现 LLM 在数值精度、噪声鲁棒性上系统性输给经典方法，并定位到具体失败机制（如数值四舍五入、与 GP 预测的系统性分歧）。</li>
+<li><strong>对比方法/Baselines</strong>: 对比 <span class="wikilink">GP</span>、<span class="wikilink">AdaBoost</span>、<span class="wikilink">NN</span>、<span class="wikilink">RBF</span> 等经典 tabular 方法。</li>
+<li><strong>借鉴意义</strong>: 给 tabular foundation model 这个热门领域泼了盆冷水，也给「什么任务别硬上 LLM」画了条线。</li>
+<li><strong>锐评</strong>: 终于有人认真做负面结果而不是又发一篇 SOTA 了。把 LLM 表格预测的失败拆到「数值精度」「噪声敏感」这种可检验的机制层面，比空喊「LLM 不适合结构化数据」有用一万倍。做推荐/CTR 这类强表格特征场景的，读完能省下不少无谓的 LLM 化尝试。🔥</li>
+</ul>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2608.02412v1" target="_blank" rel="noopener">📖 AI 精读</a></div></div>
+<div id="panel-应用型agent代码安全" class="tab-panel"><h2>🏗️ 应用型 Agent（代码/安全）</h2><div class="paper-card" data-topic="🏗️ 应用型 Agent（代码/安全）"><h3>9. Antares: Foundation Models for Agentic Vulnerability Localization</h3>
+<ul>
+<li><strong>作者</strong>: Supriti Vijay∗,1, Aman Priyanshu∗,1, Didier Chapoteau1, Arthur Goldblatt1, Jianliang He1,2,†, Kimia Majd1, Fraser Burch1, Baturay Saglam1,2,†, Takahiro Matsumoto1, Zhuoran Yang1,2,†, Amin Karbasi1</li>
+<li><strong>机构</strong>: Yale University</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2608.02407v1">arXiv</a> | <a href="https://arxiv.org/pdf/2608.02407v1">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2608.02407v1/x1.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2608.02407v1/x4.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2608.02407v1/x5.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: <span class="wikilink">Antares</span> 是一族 350M/1B/3B 的紧凑模型，专做 agentic 漏洞定位。基于 IBM Granite，两阶段训练 <span class="wikilink">SFT</span>+<span class="wikilink">GRPO</span>，在大代码库里迭代定位漏洞实现，对标 <span class="wikilink">OpenHands</span> 这类 agent 框架和 <span class="wikilink">CWE</span> 分类。</li>
+<li><strong>对比方法/Baselines</strong>: 对比 <span class="wikilink">GPT-5</span>、<span class="wikilink">OpenHands</span>、<span class="wikilink">CodeScout</span> 等。</li>
+<li><strong>借鉴意义</strong>: 小模型专精 agentic 安全任务的路线，对想在本地/边缘跑安全 agent 的团队有意义。</li>
+<li><strong>锐评</strong>: 用 3B 模型去打 GPT-5 的漏洞定位，赌的是「专精 &gt; 通用规模」——这个赌注在垂直任务上经常能赢。Yale 的班底靠谱。唯一担心：漏洞定位的评测极易被数据泄漏污染，Granite 预训练里到底见过多少 CWE 样本，是这篇能不能立住的关键。👀</li>
+</ul>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2608.02407v1" target="_blank" rel="noopener">📖 AI 精读</a></div></div>
+<div id="panel-多智能体系统" class="tab-panel"><h2>🤝 多智能体系统</h2><div class="paper-card" data-topic="🤝 多智能体系统"><h3>10. Shared Prefixes, Better Credit: Adaptive Routing for Multi-Agent Reasoning</h3>
+<ul>
+<li><strong>作者</strong>: Yiqing Liu,
+Zihao Wang,
+Hantao Yao,
+Wu Liu,
+Yongdong Zhang</li>
+<li><strong>机构</strong>: University of Science and Technology of China</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2608.02291v1">arXiv</a> | <a href="https://arxiv.org/pdf/2608.02291v1">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2608.02291v1/Figures/2.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: <span class="wikilink">TreeCredit</span> 解决多智能体推理（<span class="wikilink">MAR</span>）里的信用分配：现有自适应路由只从 query 级标签或轨迹级回报学，粒度太粗，估不准单个 operator 在多步协作中的「状态条件效用」。它利用智能体间的共享前缀做更细粒度的信用归因，进而自适应路由。</li>
+<li><strong>对比方法/Baselines</strong>: 对比 <span class="wikilink">MAD</span>、<span class="wikilink">BAMAS</span>、<span class="wikilink">DAAO</span> 等自适应多智能体方法。</li>
+<li><strong>借鉴意义</strong>: 多智能体协作中「谁贡献了什么」一直是黑盒，细粒度信用分配是刚需。</li>
+<li><strong>锐评</strong>: 「共享前缀 → 更好信用」这个切入点很聪明——多个 agent 从同一前缀分叉，正好构成天然的反事实对照。比那些拍脑袋加一个 router 的工作有理论味。就怕共享前缀假设在真实异构 agent 系统里不成立，那整个信用估计就塌了。👀</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2608.02291v1" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🤝 多智能体系统"><h3>11. Agentic Commerce World: An Auditable and Verifiable Environment for Vibe Commerce</h3>
+<ul>
+<li><strong>作者</strong>: Shicheng Fan1,</li>
+<li><strong>机构</strong>: 1University of Illinois at Chicago, 5Arizona State University, 7Carnegie Mellon University, 3Northwestern University, sfan25@uic.edu and zhiweiliu@microsoft.com, 4Rutgers University, 9Microsoft AI, 6University of California San Diego</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2608.02441v1">arXiv</a> | <a href="https://arxiv.org/pdf/2608.02441v1">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2608.02441v1/x2.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2608.02441v1/x3.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2608.02441v1/x4.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: <span class="wikilink">Agentic Commerce World</span>（ACWorld）：类比 vibe coding，提出 vibe commerce——用自然语言表达买卖目标、委托给 agent。核心是让独立控制的 Buyer 和 Merchant agent 在共享市场交互，同时保留各自私有目标。提出 <span class="wikilink">VCP</span> 协议做可审计、可验证的评估边界，对比 <span class="wikilink">ACP</span>/<span class="wikilink">UCP</span> 等商业 agent 协议。</li>
+<li><strong>对比方法/Baselines</strong>: 对比 OpenAI <span class="wikilink">ACP</span>、Google <span class="wikilink">UCP</span>、AgenticPay、Magentic Marketplace。</li>
+<li><strong>借鉴意义</strong>: agentic commerce 是巨头都在抢的赛道（对广告/交易撮合场景直接相关），一个可审计的评测环境有基建价值。</li>
+<li><strong>锐评</strong>: 赶在 OpenAI ACP / Google UCP 之后立一个「可审计可验证」的第三方评测环境，卡位意识很强。做广告投放和交易撮合的应该关注——买卖双方私有目标 + 共享市场，本质就是机制设计问题。就怕环境太玩具，撑不起真实市场的博弈复杂度。UIC + Microsoft AI + CMU 的豪华阵容值一看。👀</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2608.02441v1" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🤝 多智能体系统"><h3>12. PosterMELD: Multi-Agent Paper-to-Poster Generation for Controllable Design Diversity with Editable Print-Ready Outputs</h3>
+<ul>
+<li><strong>作者</strong>: Haojie Hu\equalcontrib</li>
+<li><strong>机构</strong>: Renmin University of China, Shanghai Artificial Intelligence Laboratory, Shanghai Jiao Tong University, Tongji University, Tsinghua Shenzhen International Graduate School, Tsinghua University</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2608.02218v1">arXiv</a> | <a href="https://arxiv.org/pdf/2608.02218v1">PDF</a></li>
+<li>
+<p><strong>来源</strong>: 📄 arXiv 关键词检索</p>
+</li>
+<li>
+<p><strong>核心方法</strong>: <span class="wikilink">PosterMELD</span>：模板条件化的多智能体论文转海报流水线。用容量感知的 slot 在渲染前先指导写作，确定性渲染保证可编辑。现有系统只给完成品打分、藏起 request 级失败；直接图像生成不可编辑，coding-agent 工作流又贵。输出可编辑 PPTX + PNG + provenance manifest。</p>
+</li>
+<li><strong>对比方法/Baselines</strong>: 对比 <span class="wikilink">PosterGen</span>、直接图像生成、coding-agent 工作流。</li>
+<li><strong>借鉴意义</strong>: 论文转海报是学术圈刚需，「可编辑 + 打印就绪」比直接出图实用。</li>
+<li><strong>锐评</strong>: 「capacity-aware slots：先规划容量再写内容」是这篇真正的巧思——直接让 LLM 写满一版然后爆版才是常见灾难。输出可编辑 PPTX 而非死图，实用主义满分。多智能体在这里更像流水线分工而非真协作，但对场景够用。做学术工具的可以借鉴那套 acceptance gate 设计。👀</li>
+</ul>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2608.02218v1" target="_blank" rel="noopener">📖 AI 精读</a></div></div>
+<div id="panel-llmrl训练机制" class="tab-panel"><h2>🧠 LLM RL 训练机制</h2><div class="paper-card" data-topic="🧠 LLM RL 训练机制"><h3>13. Start Classifying: Categorical Critics for LLM Reinforcement Learning</h3>
+<ul>
+<li><strong>作者</strong>: Zhijian Zhou∗,1,2,3</li>
+<li><strong>机构</strong>: 1Fudan University  2Shanghai Innovation Institute  3Tencent YoutuLab, 4Griffith University  5Shanghai Academy of Artificial Intelligence for Science, arthurtan@tencent.com  quchao@fudan.edu.cn  qiyuan@fudan.edu.cn</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2608.02181v1">arXiv</a> | <a href="https://arxiv.org/pdf/2608.02181v1">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2608.02181v1/x3.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2608.02181v1/x4.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: <span class="wikilink">Categorical-Critics</span>：把 <span class="wikilink">PPO</span> 里用 MSE 回归标量 value 的 critic，改成分类式（categorical / <span class="wikilink">HL</span>-Gauss 风格）目标。论点是稀疏二值奖励（<span class="wikilink">RLVR</span>）下，标量 MSE 的 critic 校准很脆弱，分类式目标更稳。</li>
+<li><strong>对比方法/Baselines</strong>: 对比标量 MSE critic 的 <span class="wikilink">PPO</span>、<span class="wikilink">GAE</span>、<span class="wikilink">DAPO</span>。</li>
+<li><strong>借鉴意义</strong>: 对认真调 PPO critic 的 RLVR 团队有用，属于「训练稳定性」类改进。</li>
+<li><strong>锐评</strong>: regression-as-classification 这套（HL-Gauss、two-hot）在 value-based RL 里是老配方了，这篇把它搬到 LLM RLVR 场景。工程上大概率有用，但「新意」基本靠场景迁移撑着。属于会用就好、不必细读理论的那类。🫠</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2608.02181v1" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🧠 LLM RL 训练机制"><h3>14. Toward Plasticity-Preserving KL Regularization for Capability Retention in LLM Reinforcement Learning</h3>
+<ul>
+<li><strong>作者</strong>: Li Wang1,</li>
+<li><strong>机构</strong>: Nanyang Technological University</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2608.01743v1">arXiv</a> | <a href="https://arxiv.org/pdf/2608.01743v1">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2608.01743v1/x8.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2608.01743v1/x12.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: <span class="wikilink">CoKL</span>：RL post-training 会破坏 base 模型已有能力，KL 正则常用来防遗忘但会限制可塑性。这篇提出保可塑性的 KL 正则，权衡「保留旧能力」与「学新目标」，讨论了 <span class="wikilink">RKL</span>/<span class="wikilink">FKL</span>/<span class="wikilink">ZRKL</span> 等多种 KL 形式。</li>
+<li><strong>对比方法/Baselines</strong>: 对比标准 KL 正则的 <span class="wikilink">GRPO</span>、<span class="wikilink">RKL</span>/<span class="wikilink">FKL</span>。</li>
+<li><strong>借鉴意义</strong>: capability retention 是把 RLVR 用到生产模型时的实际约束。</li>
+<li><strong>锐评</strong>: KL 正则的各种变体已经被翻来覆去研究过了，「可塑性 vs 保留」的 trade-off 也不是新框架。这篇更像是把已知的 KL 形式做了个系统对比 + 提个折中项。有用，但很难说是必读。💤</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2608.01743v1" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🧠 LLM RL 训练机制"><h3>15. Beyond On-Policy Exploration: Integrating External Policy Rollouts for Reinforcement Learning in Diffusion Language Models</h3>
+<ul>
+<li><strong>作者</strong>: WONSEOK LEE1, JIMYEONG KIM2, JUNGMIN KO1, AND WONJONG RHEE1,3</li>
+<li><strong>机构</strong>: Department of Intelligence and Information, Seoul National University, This work was supported by Institute of Information &amp; communications Technology Planning &amp; Evaluation (IITP) grant funded by the Korea government (MSIT) ([NO.RS-2021-II211343, Artificial Intelligence Graduate School Program (Seoul National University)], [No.RS-2023-00235293, Development of autonomous driving big data processing, management, search, and sharing interface technology to provide autonomous driving data according to the purpose of usage]), Artificial Intelligence Institute, Seoul National University, Department of Intelligence and Information, Seoul National University
+, Interdisciplinary Program in Artificial Intelligence, Seoul National University
+, Artificial Intelligence Institute, Seoul National University
+, Interdisciplinary Program in Artificial Intelligence, Seoul National University</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2608.01717v1">arXiv</a> | <a href="https://arxiv.org/pdf/2608.01717v1">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2608.01717v1/x8.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: <span class="wikilink">ERILS</span>：diffusion LLM 的 RL 通常靠自身 on-policy rollout，成功样本稀缺时正奖励太少。这篇引入更强外部策略生成的高奖励 rollout 来补充，做 source-specific 处理，配 <span class="wikilink">SFT</span>+<span class="wikilink">LoRA</span>。</li>
+<li><strong>对比方法/Baselines</strong>: 对比纯 on-policy 的 <span class="wikilink">SPG</span>、dLLM RL。</li>
+<li><strong>借鉴意义</strong>: diffusion LM 的 RL 还很不成熟，补充外部经验是合理方向。</li>
+<li><strong>锐评</strong>: 「on-policy 不够就掺 off-policy 强者数据」——这在自回归 RL 里早被玩烂了，搬到 dLLM 上算是补课。source-specific 处理是唯一的技术亮点。缝合感偏重，dLLM 圈内可看，圈外不必追。🫠</li>
+</ul>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2608.01717v1" target="_blank" rel="noopener">📖 AI 精读</a></div></div>
+<div id="panel-agent记忆与自进化" class="tab-panel"><h2>💾 Agent 记忆与自进化</h2><div class="paper-card" data-topic="💾 Agent 记忆与自进化"><h3>16. Self-Improving Large Language Models via Progressive Experience Evolution</h3>
+<ul>
+<li><strong>作者</strong>: Shijie Ren1,
+Xiting Wang1\corresponding</li>
+<li><strong>机构</strong>: Gaoling School of Artificial Intelligence, Renmin University of China, WeChat AI, Tencent Inc, China</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2608.02139v1">arXiv</a> | <a href="https://arxiv.org/pdf/2608.02139v1">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2608.02139v1/x1.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2608.02139v1/x2.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: <span class="wikilink">SPEE</span>（Progressive Experience Evolution）：现有自进化范式割裂——test-time 方法能抽经验但内化不进参数，training-time 方法能改参数但不显式抽经验。SPEE 从交互轨迹演化出一个全局经验池，把蒸馏后的知识既改进策略、又支撑后续 reward 驱动的探索。</li>
+<li><strong>对比方法/Baselines</strong>: 对比 <span class="wikilink">GRPO</span>、prompt-based 经验方法、<span class="wikilink">SDPO</span>/<span class="wikilink">OPSD</span> 类自蒸馏。</li>
+<li><strong>借鉴意义</strong>: 「显式经验 vs 参数内化」的割裂是 self-improving LLM 的真痛点，这篇想两头通吃。</li>
+<li><strong>锐评</strong>: 把「经验池」和「参数更新」缝成一个闭环，愿景很对——人类学习就是显式记忆 + 内化并行。但「全局经验池」怎么防止越滚越脏、旧经验怎么淘汰，是这类工作永远的暗礁。RUC + WeChat AI 的组合执行力在线，值得看它怎么处理经验腐化。👀</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2608.02139v1" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="💾 Agent 记忆与自进化"><h3>17. Progressive Agent Skill Generation via Reinforcement Learning</h3>
+<ul>
+<li><strong>作者</strong>: Junhao Shen1</li>
+<li><strong>机构</strong>: hcheng@se.cuhk.edu.hk, 1The Chinese University of Hong Kong</li>
+<li><strong>链接</strong>: <a href="https://arxiv.org/abs/2608.01678">arXiv</a> | <a href="https://arxiv.org/pdf/2608.01678">PDF</a></li>
+<li>
+<p><strong>来源</strong>: 📰 HF Daily，⬆️ 22</p>
+</li>
+<li>
+<p><strong>核心方法</strong>: <span class="wikilink">Skill-Creator</span>（Progressive Agent Skill Generation）：现有 skill 生成靠启发式或 pipeline 拼接，需为不同证据源专门设计。这篇用 <span class="wikilink">RL</span>（<span class="wikilink">GRPO</span>）做统一的学习式 skill 生成，跨异构来源建模，解决 skill 缺乏自然监督信号的难题，在 <span class="wikilink">SpreadsheetBench</span> 等上测。</p>
+</li>
+<li><strong>对比方法/Baselines</strong>: 对比启发式/pipeline 式 skill consolidation，用 <span class="wikilink">GPT</span>/<span class="wikilink">Claude-Sonnet</span> 做底座对比。</li>
+<li><strong>借鉴意义</strong>: Agent skill（可复用程序化模块）是 Anthropic 带火的方向，用 RL 统一生成有前瞻性。HF 22 赞说明社区关注。</li>
+<li><strong>锐评</strong>: 蹭上了 Agent Skills 这个 2025 热词，切入点是「skill 没有天然监督信号」——这个观察很准。但用 RL 去优化「什么是好 skill」，reward 怎么设计才是命门，摘要里语焉不详。CUHK 出品 + 高 upvote，值得看它怎么定义 skill 质量的 reward。👀</li>
+</ul>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2608.01678" target="_blank" rel="noopener">📖 AI 精读</a></div></div>
+<div id="panel-综述与框架" class="tab-panel"><h2>📚 综述与框架</h2><div class="paper-card" data-topic="📚 综述与框架"><h3>18. A Taxonomy of Cognitive Capability Gaps in Generative and Agentic AI</h3>
+<ul>
+<li><strong>作者</strong>: Akinrele, Taye, Penchala, Sindhuja, Golilarz, Noorbakhsh Amiri, Mittal, Sudip, Rahimi, Shahram</li>
+<li><strong>机构</strong>: Department of Computer Science, The University of Alabama</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2608.02553v1">arXiv</a> | <a href="https://arxiv.org/pdf/2608.02553v1">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2608.02553v1/x2.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2608.02553v1/x3.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2608.02553v1/x4.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: <span class="wikilink">A Taxonomy of Cognitive Capability Gaps</span>：一篇综述，把生成式/agentic AI 与「认知 AI」（持续推理、自适应、持久记忆、自我调节）对比，梳理从规则系统到认知 AI 的演化，建立认知能力缺口的分类体系。</li>
+<li><strong>对比方法/Baselines</strong>: 非实验论文，梳理 generative/agentic/cognitive AI 三种范式。</li>
+<li><strong>借鉴意义</strong>: 适合想建立 agent 能力全景图、找研究空白的人快速扫一遍。</li>
+<li><strong>锐评</strong>: 又一篇「XX 的分类学」综述——这类论文的价值全看分类维度切得准不准，以及有没有指出真正的空白而非罗列已知。作为 landscape 扫盲图能用，但别指望从里面挖到能落地的方法。想快速补齐 agent「认知能力」词汇表的可以翻，赶时间的直接看那张演化图。💤</li>
+</ul>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2608.02553v1" target="_blank" rel="noopener">📖 AI 精读</a></div></div>
+<div id="panel-评测与可观测性" class="tab-panel"><h2>🔬 评测与可观测性</h2><div class="paper-card" data-topic="🔬 评测与可观测性"><h3>19. MonitrLLM: A Community-Centered Evaluation Infrastructure for Large Language Models</h3>
+<ul>
+<li><strong>作者</strong>: Victor Ojewale1,
+Ro Encarnación2,
+Suresh Venkatasubramanian1
+Danaé Metaxa2</li>
+<li><strong>机构</strong>: Center for Tech Responsibility, Brown University, University of Pennsylvania</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2608.02409v1">arXiv</a> | <a href="https://arxiv.org/pdf/2608.02409v1">PDF</a></li>
+<li>
+<p><strong>来源</strong>: 📄 arXiv 关键词检索</p>
+</li>
+<li>
+<p><strong>核心方法</strong>: <span class="wikilink">MonitrLLM</span>：指出现有 LLM 评测的空白——benchmark 测能力、对话语料无反馈、界面反馈无任务目的，没有基础设施把交互轨迹和用户定义的结果关联起来。提出社区中心的评测基建，把交互 trajectory 链接到 user-defined outcomes，区别于 <span class="wikilink">RLHF</span> 的成对偏好。</p>
+</li>
+<li><strong>对比方法/Baselines</strong>: 对比 benchmark 套件、<span class="wikilink">RLHF</span> 偏好信号、界面满意度反馈。</li>
+<li><strong>借鉴意义</strong>: 「评测脱离真实用户目标」是行业通病，社区化的结果导向评测有现实意义。</li>
+<li><strong>锐评</strong>: 戳中了一个真痛点：RLHF 的偏好信号只告诉你「A 比 B 好」，不告诉你「用户的真实目标达成没有」。把评测锚定到 user-defined outcome 是正确方向。但「community-centered」四个字往往意味着数据收集成本高、规模难起来——这类基建能不能活下来，看的是采纳率不是方法优雅度。👀</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2608.02409v1" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🔬 评测与可观测性"><h3>20. Can AI Agents Simulate A/B Test Outcomes? A Validation Framework for Agentic Experimentation</h3>
+<ul>
+<li><strong>作者</strong>: Stefan Hut 
+hutstefa@amazon.com</li>
+<li><strong>机构</strong>: masoerl@amazon.com, hutstefa@amazon.com &amp;Lorenzo Masoero11footnotemark: 1</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2608.02345v1">arXiv</a> | <a href="https://arxiv.org/pdf/2608.02345v1">PDF</a></li>
+<li>
+<p><strong>来源</strong>: 📄 arXiv 关键词检索</p>
+</li>
+<li>
+<p><strong>核心方法</strong>: <span class="wikilink">AgentA/B</span>：Amazon 的工作，问 AI agent 能否在真实上线前模拟 A/B 测试结果。给 agent 灌行为画像 + 干预的上下文描述，让它模拟处理效应（<span class="wikilink">ATE</span>），形式化为一个验证框架，对比真实 <span class="wikilink">RCT</span> 结果，涉及 <span class="wikilink">CTR</span> 等指标。</p>
+</li>
+<li><strong>对比方法/Baselines</strong>: 对比真实 <span class="wikilink">RCT</span> / A/B 实验的 <span class="wikilink">ATE</span> 估计。</li>
+<li><strong>借鉴意义</strong>: 对做实验平台、增长、广告 A/B 的团队极其对口——如果 agent 真能预筛干预，能省大量真实流量和数周迭代。</li>
+<li><strong>锐评</strong>: Amazon 问了个所有增长团队都想问的问题：能不能让 agent 先跑一遍 A/B 省掉真流量？答案大概率是「某些场景能、别全信」——关键看它诚不诚实地报告失败案例。这类模拟最危险的是给出「看起来合理」的假 ATE 把人带沟里。做实验平台的必须读，但要带着怀疑读。👀</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2608.02345v1" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🔬 评测与可观测性"><h3>21. How Much Does a Reasoning Summary Reveal? An Observability Ladder for Large Language Models</h3>
+<ul>
+<li><strong>作者</strong>: Algaba, Andres, Carlon, Francesca, Delcon, Lynn, Ballon, Marthe, Verbruggen, Bert, Ginis, Vincent</li>
+<li><strong>机构</strong>: Data Analytics Lab, Vrije Universiteit Brussel, Pleinlaan, School of Engineering and Applied Sciences, Harvard University, Cambridge, Massachusetts 02138, USA, imec-SMIT, Vrije Universiteit Brussel, Pleinlaan, what they reveal. In commercial deployments such as those from OpenAI, Google, and Anthropic, a user may receive</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2608.02089v1">arXiv</a> | <a href="https://arxiv.org/pdf/2608.02089v1">PDF</a></li>
+<li>
+<p><strong>来源</strong>: 📄 arXiv 关键词检索</p>
+</li>
+<li>
+<p><strong>核心方法</strong>: <span class="wikilink">Observability-Ladder</span>：LLM 常只给用户最终答案 + 简短推理摘要，完整推理轨迹藏起来。这篇提出「观测性阶梯」，固定每次完整运行，只改变读者能看什么来判断答案对错：response、模型自写的 self-summary、trace 本身、internal signals，各带/不带 prompt，量化「reasoning summary 到底透露了多少」。</p>
+</li>
+<li><strong>对比方法/Baselines</strong>: 对照 response / self-summary / full trace / internal signals 四个观测层级。</li>
+<li><strong>借鉴意义</strong>: 对做 AI 安全、可解释性、以及依赖 reasoning summary 做监控的人有直接价值。</li>
+<li><strong>锐评</strong>: 实验设计干净得让人舒服：固定运行、只动「观测者能看什么」这一个变量，就把「摘要 vs 真轨迹的信息差」量化出来了。这正是当前大家用 reasoning summary 做监控时最该问却没人认真答的问题——如果摘要系统性隐藏了关键推理，那基于摘要的安全监控就是自欺。VUB + Harvard，方法论必读。🔥</li>
+</ul>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2608.02089v1" target="_blank" rel="noopener">📖 AI 精读</a></div></div>
+<hr>
+<h2>被排除的论文</h2>
+<ul>
+<li>Heterogeneous Multi-Agent RL for Radio Resource Management under Coupled Finite-Horizon Constraints — 无线通信基站资源调度，虽是 MARL 但领域与推荐/广告/LLM/Agent 无交集</li>
+<li>Constructing Executable Analytical Knowledge Representations for Meta-Analysis Synthesis Using an Agentic Harness — 科研 meta 分析领域的 agentic 工具，应用过于小众</li>
+<li>PICopilot: An LLM-based Agentic Framework for Photonic Integrated Circuit Design — 光子集成电路脚本生成，垂直硬件设计领域，离用户关注太远</li>
+<li>Agentic Incident Response through Digital Twin-Enhanced Multiscale Planning — 安全运维事件响应，偏控制论/数字孪生，agentic 成分薄</li>
+<li>AtumAI: A Principled Framework for Agentic Generation of Datacenter Control-Plane Policies — 数据中心控制平面策略生成，系统运维垂直场景</li>
+<li>Grounding Agentic VLMs with Dedicated Segmentation for Fine-Grained Vehicle Damage Assessment — 车辆定损 VLM，应用垂直且偏 CV 分割</li>
+<li>Chess on Ice: Curling Tactical Decision-Making via Backward Induction and Deep RL — 冰壶战术决策，纯体育应用 RL，与关注领域无关</li>
+<li>Diffusion Policy with Behavioral Advantage Correction for Offline RL — MuJoCo/FrankaKitchen/AntMaze 机器人控制基准，命中 negative keyword: manipulation</li>
+<li>Finite-Time Analysis of Discounted Exponential-Utility Reinforcement Learning — 纯理论 RL 收敛性分析（有限时间界），离应用太远</li>
+</ul>
+<p>今日 arXiv 被「Agentic RL + On-Policy 自蒸馏」的同质化论文淹没——teacher 不可靠这一个问题就催生了 PCSD/FutureBridge 等多篇换汤不换药的补丁；真正稀缺的是像 Read-Gate、Observability Ladder、Tabular-LLM-Fail 这类「诚实拆解失败模式 / 敢发负面结果」的工作。</p>
