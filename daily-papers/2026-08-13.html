@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>2026-08-13 论文推荐</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.21/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.21/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.21/dist/contrib/auto-render.min.js"
+  onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}]});"></script>
+<link rel="stylesheet" href="style.css">
+<style>body{max-width:960px;}</style>
+
+</head>
+<body>
+<nav class="nav"><a href="index.html">🏠 首页</a><a href="2026-08-11.html">← 前一天</a></nav>
+<div class="detail-page"><h1>🔪 今日锐评</h1>
+<p>今天是 Agent 大杂烩日：满屏都是 multi-agent、RL post-training 和 agentic safety，真正硬核的推荐系统只有一篇 HCGRec 撑场面。好消息是有几篇难得的「打脸型」实证工作——simulator collapse、learning to persuade、toxic mimicry——专门拆穿 agentic/RL 圈子里那些自我感觉良好的假设。坏消息是幸存者偏差严重：一半的 survey 和 benchmark 都在重复「我们提出了一个统一框架」的经文。</p>
+<h2>分流表</h2>
+<table>
+<thead>
+<tr>
+<th>等级</th>
+<th>论文</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>🔥 必读</td>
+<td><span class="wikilink">HCGRec</span>（唯一一篇正经生成式推荐，直击 semantic-ID RL 后训练的结构性瓶颈，做推荐的必看） · <span class="wikilink">Simulator-Collapse</span>（用 simulator collapse 一句话拆穿单一 LLM 模拟用户的 multi-agent RL 范式，方法论警钟） · <span class="wikilink">Learning-to-Persuade</span>（实证证明 LLM 有多容易被说服放弃正确答案，对任何用 LLM 做决策/辩论的场景是硬警告）</td>
+</tr>
+<tr>
+<td>👀 值得看</td>
+<td><span class="wikilink">LoongReflect</span>（长程搜索 agent 的反思蒸馏，agentic RAG 值得看） · <span class="wikilink">Multilingual-Tool-Use</span>（Argument Language Mismatch，function calling 的隐蔽失败模式） · <span class="wikilink">GCPO</span>（诊断 GRPO 子空间几何漂移，做 RL 后训练的可以看） · <span class="wikilink">ExRole</span>（把 role 从 prompt 标签变成可训练控制变量，多智能体组织的新角度） · <span class="wikilink">Localizing-Safety-Alignment</span>（refusal 行为集中在 MLP 层的实证，可解释性向） · <span class="wikilink">AI-Trader</span>（实时金融市场 agent benchmark，想做金融 agent 的看） · <span class="wikilink">Scheduling-RL-Rollouts</span>（RL rollout 的 KV-cache 调度，训练基建向）</td>
+</tr>
+<tr>
+<td>💤 可跳过</td>
+<td><span class="wikilink">CoRR</span>（又一篇 agentic 自演化 survey，缝合怪） · <span class="wikilink">Semantic-Lenia</span>（把 LLM 推理包装成人工生命，玄学味太重） · <span class="wikilink">Diagram-MMU</span>（TikZ 图理解 benchmark，蹭 OpenAI Prism 热度） · <span class="wikilink">Governing-Agentic-FinTech</span>（治理 position paper，观点大于干货）</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<div class="tab-bar"><button class="tab-btn active" data-tab="all" onclick="switchTab('all')">📋 全部<span class="tab-count">17</span></button><button class="tab-btn" data-tab="生成式推荐" onclick="switchTab('生成式推荐')">🎨 📊 生成式推荐<span class="tab-count">1</span></button><button class="tab-btn" data-tab="多智能体与rl" onclick="switchTab('多智能体与rl')">📄 🤖 多智能体与 RL<span class="tab-count">5</span></button><button class="tab-btn" data-tab="工具调用" onclick="switchTab('工具调用')">🔧 🛠️ 工具调用<span class="tab-count">1</span></button><button class="tab-btn" data-tab="rl后训练" onclick="switchTab('rl后训练')">📄 🧠 RL 后训练<span class="tab-count">2</span></button><button class="tab-btn" data-tab="llm分析与安全" onclick="switchTab('llm分析与安全')">🛡 🔬 LLM 分析与安全<span class="tab-count">3</span></button><button class="tab-btn" data-tab="金融agent" onclick="switchTab('金融agent')">🤖 💰 金融 Agent<span class="tab-count">2</span></button><button class="tab-btn" data-tab="agent安全" onclick="switchTab('agent安全')">🛡 🛡️ Agent 安全<span class="tab-count">2</span></button><button class="tab-btn" data-tab="科研agent" onclick="switchTab('科研agent')">🤖 🔬 科研 Agent<span class="tab-count">1</span></button></div>
+<div id="panel-all" class="tab-panel active"><h2>📊 生成式推荐</h2><div class="paper-card" data-topic="📊 生成式推荐"><h3>1. HCGRec: Hint-Conditioned Generative Recommendation with Semantic IDs</h3>
+<ul>
+<li><strong>作者</strong>: Kangning Zhang, Haotian Fang, Xukun Luo, Hao Yin, Yang Gao, Peng Yan, Weiwen Liu, Weinan Zhang, Yong Yu</li>
+<li><strong>机构</strong>: Affiliation: Shanghai Jiao Tong University, email: wnzhang@sjtu.edu.cn, email: zhangkangning@sjtu.edu.cn, email: wwliu@sjtu.edu.cn, email:, email: yyu@apex.sjtu.edu.cn, email: fanghaotian@sjtu.edu.cn, Affiliation: </li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2608.11980v1">arXiv</a> | <a href="https://arxiv.org/pdf/2608.11980v1">PDF</a></li>
+<li>
+<p><strong>来源</strong>: 📄 arXiv 关键词检索</p>
+</li>
+<li>
+<p><strong>核心方法</strong>: 针对 <span class="wikilink">Semantic-ID</span> 生成式推荐的结构性优化瓶颈：自回归生成 item token 序列时，一旦早期 token 走偏，后面全盘皆输，reward-based 后训练很难纠正。HCGRec 引入 <span class="wikilink">Hint-Conditioned</span> 机制，用 hint 条件化生成过程，配合 <span class="wikilink">GRPO</span> 做 RL 后训练，缓解早期 token 主导整个序列奖励的问题。</p>
+</li>
+<li><strong>对比方法/Baselines</strong>: 对比标准 <span class="wikilink">Semantic-ID</span> 生成式推荐 baseline + <span class="wikilink">SFT</span>，用 <span class="wikilink">GRPO</span> 做 RL，指标用 <span class="wikilink">NDCG</span> / <span class="wikilink">HR</span>。</li>
+<li><strong>借鉴意义</strong>: 这是今天唯一一篇正经的生成式推荐，而且切中了 semantic-ID 范式最痛的点——自回归 token 序列的误差传播。做 generative retrieval / 生成式推荐的直接相关。</li>
+<li><strong>锐评</strong>: 终于有一篇不是 agent 的了。问题定位很准：semantic-ID 生成式推荐的 reward 后训练确实卡在早期 token 上，这不是拍脑袋想出来的伪问题。但「hint-conditioned」这个词听着就像给模型开小灶——hint 从哪来？测试时能不能拿到？如果 hint 本身依赖 ground truth 那就是自欺。摘要没说清 hint 的来源，这是决定成色的关键。👀</li>
+</ul>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2608.11980v1" target="_blank" rel="noopener">📖 AI 精读</a></div><h2>🤖 多智能体与 RL</h2><div class="paper-card" data-topic="🤖 多智能体与 RL"><h3>2. One Frozen Simulator Is Not Enough: Simulator Collapse in Multi-Agent RL</h3>
+<ul>
+<li><strong>作者</strong>: Simon Yu, Nicholas Tomlin, Marwa Abdulhai, Ximing Lu, Derek Chong, Abe Hou, Dilara Soylu, Sergey Levine, Christopher D. Manning, Weiyan Shi</li>
+<li><strong>机构</strong>: Affiliation: University of Washington, Affiliation: UC Berkeley, Affiliation: Northeastern University, Affiliation: Stanford University, Affiliation: New York University, Affiliation: </li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2608.12253v1">arXiv</a> | <a href="https://arxiv.org/pdf/2608.12253v1">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2608.12253v1/figures/human_study/fig_human_study_tau2_landing.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2608.12253v1/figures/human_study/fig_human_study_debrief.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: 把多轮对话建模成两人 <span class="wikilink">POMDP</span>，指出 multi-agent RL 中普遍用单个冻结 LLM 模拟用户行为的做法会导致 <span class="wikilink">Simulator-Collapse</span>：模拟器 LLM 本身 mode-collapse，训出来的 agent policy 就过拟合到利用模拟器主导模式的狭窄策略，无法泛化。用 <span class="wikilink">Co-Training</span> 和多模拟器缓解。</li>
+<li><strong>对比方法/Baselines</strong>: 在 Persuasion for Good、τ²-bench、CooperBench 三个环境上验证，对比单冻结模拟器 vs 多模拟器，用 <span class="wikilink">GPT-5</span> 等做 backbone。</li>
+<li><strong>借鉴意义</strong>: 对任何用「LLM 模拟用户」来训 RL agent 的团队都是当头一棒——推荐、对话、客服 agent 训练里这个坑非常常见。</li>
+<li><strong>锐评</strong>: 这才是有价值的负面结果。作者阵容豪华（Levine、Manning、Shi），而且抓的是一个大家都在犯、但没人愿意承认的错：拿一个冻结 LLM 当用户模拟器，训出来的 agent 只是学会了怎么钻这个模拟器的空子。三个环境交叉验证，不是 cherry-pick。唯一的问题是「多模拟器」听起来像是用钱堆——到底要几个模拟器才够、成本几何，是落地时的真问题。🔥</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2608.12253v1" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🤖 多智能体与 RL"><h3>3. Learning to Persuade Exposes How Easily LLMs Abandon Correct Beliefs</h3>
+<ul>
+<li><strong>作者</strong>: Nimet Beyza Bozdag, Emre Can Acikgoz, Gokhan Tur, Dilek Hakkani-Tür</li>
+<li><strong>机构</strong>: Affiliation: University of Illinois Urbana-Champaign, Affiliation: </li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2608.11624v1">arXiv</a> | <a href="https://arxiv.org/pdf/2608.11624v1">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2608.11624v1/technique_heatmaps_stacked.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: 研究 LLM 在被说服时放弃正确信念的失败模式。构造 persuasion 攻击，训练一个 persuader 去说服目标 LLM 改变答案，度量 <span class="wikilink">PSR</span>（说服成功率）和 <span class="wikilink">ASR</span>。发现即使模型一开始答对，也极容易被有技巧的说服话术带偏。</li>
+<li><strong>对比方法/Baselines</strong>: 在 <span class="wikilink">TruthfulQA</span>、<span class="wikilink">MedQA</span>、<span class="wikilink">CommonsenseQA</span>、<span class="wikilink">MMLU</span> 上评测多个模型，含 <span class="wikilink">GPT</span> 系列。</li>
+<li><strong>借鉴意义</strong>: 对多智能体辩论、LLM-as-judge、人机协同决策都是硬警告——你的 agent 可能一被怼就投降。</li>
+<li><strong>锐评</strong>: 标题就是结论，而且结论很扎心：LLM 的「信念」薄得像纸，一说就倒。这对现在流行的 multi-agent debate、self-refine 是釜底抽薪——如果模型对正确答案毫无坚持，那多轮辩论收敛到的可能是最会说话的那个 agent 的错误答案。方法直接、数据集覆盖广。扣分项：persuader 的强度和真实对抗场景差多远没量化，容易高估风险。🔥</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2608.11624v1" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🤖 多智能体与 RL"><h3>4. LoongReflect: Boosting Long-Horizon Reflection in Search Agents via Global Perspective Distillation</h3>
+<ul>
+<li><strong>作者</strong>: Zhixin Zhang, Xinke Jiang, Zhibang Yang, Weixuan Xu, Guohong Qiu, Xu Chu\corresponding, Junfeng Zhao\corresponding, Yasha Wang\corresponding</li>
+<li><strong>机构</strong>: Center on Frontiers of Computing Studies, Peking University, Beijing, China, Key Laboratory of High Confidence Software Technologies, Ministry of Education, Beijing, China, National Engineering Research Center for Software Engineering, Peking University, Beijing, China, Peking University Information Technology Institute (Tianjin Binhai), Tianjin, China, School of Computer Science, Peking University, Beijing, China</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2608.11967v1">arXiv</a> | <a href="https://arxiv.org/pdf/2608.11967v1">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2608.11967v1/method_overview.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2608.11967v1/intro_reflect.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: 针对长程搜索 agent 的反思能力：agent 在多步推理中需要判断轨迹进展、识别缺失证据、决定继续/修正/放弃当前分支。<span class="wikilink">LoongReflect</span> 用全局视角蒸馏（Global Perspective Distillation）教 agent 做更好的反思，结合 <span class="wikilink">SFT</span> + <span class="wikilink">GRPO</span>。</li>
+<li><strong>对比方法/Baselines</strong>: 在 <span class="wikilink">HotpotQA</span> 等多跳 QA 上对比 <span class="wikilink">AgenticRAG</span> baseline，用 <span class="wikilink">GRPO</span> 训练。</li>
+<li><strong>借鉴意义</strong>: 做 agentic RAG / 深度搜索 agent 的直接相关，反思质量往往是长程任务成败的关键。</li>
+<li><strong>锐评</strong>: 反思这个方向做的人不少，LoongReflect 的卖点是「全局视角蒸馏」——让学生 agent 学到一个能俯瞰整条轨迹的老师的判断。思路合理，长程任务里局部反思确实容易只见树木。但蒸馏的老师从哪来、老师本身的反思对不对，是个鸡生蛋问题。而且 HotpotQA 这种 benchmark 已经被刷烂了，能不能在真·长程任务上站住是另一回事。👀</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2608.11967v1" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🤖 多智能体与 RL"><h3>5. ExRole: From Team Trajectories to Executable Roles in Multi-Agent Language Models</h3>
+<ul>
+<li><strong>作者</strong>: Zhou Liu, Chaoyang Han, Zewei Pan, Zeli Su, Wentao Zhang\corresponding</li>
+<li><strong>机构</strong>: Peking University, Shanghai Jiao Tong University</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2608.11949v1">arXiv</a> | <a href="https://arxiv.org/pdf/2608.11949v1">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2608.11949v1/01_exrole_trajectory_roles.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2608.11949v1/02_role_prototype_resolver_execution.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2608.11949v1/fig_role_agent_turn_schedule_matrix.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: 多数多智能体系统把 role 当成手写的 prompt 标签，与学到的行为和参数更新脱节。<span class="wikilink">ExRole</span> 主张 role 应该是可执行的控制变量：能总结预测未来效用的行为、指导后续交互、并定位负责该行为的可训练参数容量。用 <span class="wikilink">LoRA</span> + <span class="wikilink">GRPO</span> 实现。</li>
+<li><strong>对比方法/Baselines</strong>: 在 <span class="wikilink">HotpotQA</span>、<span class="wikilink">MuSiQue</span> 上对比 <span class="wikilink">MAS</span> baseline，用 <span class="wikilink">GRPO</span> 训练。</li>
+<li><strong>借鉴意义</strong>: 做多智能体系统的可以看——把 role 从提示词工程升级为可训练模块是个有意思的方向。</li>
+<li><strong>锐评</strong>: 观点挺好：现在的 multi-agent role 基本就是给 prompt 起了个花名（「你是研究员」「你是批评家」），和模型实际学到的东西毫无绑定。ExRole 想把 role 变成可训练、可定位的容量单元，方向对。但「executable role」这个概念很容易变成又一层玄学包装——如果最后还是靠 LoRA 微调那点参数，那和普通的专家路由有多大区别？需要看实验里 role 的可解释性是否真的成立。👀</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2608.11949v1" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🤖 多智能体与 RL"><h3>6. Is Per-Agent Policy Composition Safe? Rethinking Successor-Feature Transfer in Cooperative Multi-Agent Reinforcement Learning</h3>
+<ul>
+<li><strong>作者</strong>: Zijian Zhao, Sen Li</li>
+<li><strong>机构</strong>: Affiliation: The Hong Kong University of Science and Technology, Affiliation: The Hong Kong University of Science and Technology (Guangzhou), Thanks: , Affiliation: </li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2608.11658v1">arXiv</a> | <a href="https://arxiv.org/pdf/2608.11658v1">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2608.11658v1/fig_sfworld.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: 多智能体协作 RL 中的策略组合安全性问题。单 agent 场景下 <span class="wikilink">USFA</span>（Universal Successor Features Approximator）配合 <span class="wikilink">GPI</span>（Generalized Policy Improvement）能重组策略库应对动态变化的目标，但本文质疑这种 per-agent 策略组合在合作多智能体设置下是否安全。</li>
+<li><strong>对比方法/Baselines</strong>: 分析 <span class="wikilink">USFA</span>、<span class="wikilink">UVFA</span>、<span class="wikilink">GPI</span> 在合作 MARL 下的迁移安全性。</li>
+<li><strong>借鉴意义</strong>: 偏理论的 MARL 工作，对做多智能体策略迁移的有参考，但离 LLM agent 较远。</li>
+<li><strong>锐评</strong>: 这是传统 MARL 的理论活，不是 LLM agent。质疑「successor feature 迁移在合作场景下安全吗」这个问题本身有价值——把单 agent 成立的东西直接搬到多 agent 是常见的想当然。但它和现在大家关心的 LLM-based agent 几乎是两个世界，术语体系（USFA/GPI/UVFA）也劝退。做经典 MARL 迁移的看，做 LLM agent 的可以跳过。🫠</li>
+</ul>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2608.11658v1" target="_blank" rel="noopener">📖 AI 精读</a></div><h2>🛠️ 工具调用</h2><div class="paper-card" data-topic="🛠️ 工具调用"><h3>7. When the API Speaks the Wrong Language: Revisiting Post-Training for Multilingual Tool Use</h3>
+<ul>
+<li><strong>作者</strong>: Siddharth Chauhan, Thomas Butler, Abhishek Singhania, Pankaj Porwal, Honey Gupta</li>
+<li><strong>机构</strong>: Correspondence to: ghoney@amazon.com, Affiliation: Amazon, Correspondence to:, Affiliation: </li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2608.11715v1">arXiv</a> | <a href="https://arxiv.org/pdf/2608.11715v1">PDF</a></li>
+<li>
+<p><strong>来源</strong>: 📄 arXiv 关键词检索</p>
+</li>
+<li>
+<p><strong>核心方法</strong>: 把多语言 API 调用建模成结构化预测，隔离出 <span class="wikilink">ALM</span>（Argument Language Mismatch）这一失败模式：模型选对了工具，但参数值用了不一致的语言，语义正确但操作上无效，标准 API 调用指标抓不到。用 <span class="wikilink">GRPO</span>/<span class="wikilink">PPO</span> 等后训练方法缓解。</p>
+</li>
+<li><strong>对比方法/Baselines</strong>: 对比 <span class="wikilink">SFT</span>、<span class="wikilink">GRPO</span>、<span class="wikilink">PPO</span>，提出 <span class="wikilink">ALC</span> 指标衡量参数语言一致性。</li>
+<li><strong>借鉴意义</strong>: 做多语言 function calling / tool use 的必看，这是个真实但被主流指标掩盖的坑。</li>
+<li><strong>锐评</strong>: Amazon 出品，切口刁钻但真实：工具选对了、参数语言错了，标准指标一片绿，线上直接炸。这种「指标盲区」型的问题最有价值，因为它揭示了评测本身的缺陷。方法上就是常规后训练三件套，没什么惊喜，真正的贡献是提出了 ALM 这个概念和对应指标。做多语言 agent 的应该扫一眼，纯英文场景可以跳过。👀</li>
+</ul>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2608.11715v1" target="_blank" rel="noopener">📖 AI 精读</a></div><h2>🧠 RL 后训练</h2><div class="paper-card" data-topic="🧠 RL 后训练"><h3>8. GCPO: Diagnosing and Constraining Subspace Geometry in Rollout RL for LLMs</h3>
+<ul>
+<li><strong>作者</strong>: Kai Yang, Jingwei Xu, Wanyu Wang, Kai-Yuan Guo, Zhenbo Yu\corresponding, Yi Wang\corresponding, Yu Qiao\corresponding</li>
+<li><strong>机构</strong>: Thanks: , Thanks: Contributions made while affiliated with Shanghai AI Lab</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2608.11674v1">arXiv</a> | <a href="https://arxiv.org/pdf/2608.11674v1">PDF</a></li>
+<li>
+<p><strong>来源</strong>: 📄 arXiv 关键词检索</p>
+</li>
+<li>
+<p><strong>核心方法</strong>: 诊断 rollout-based RL（<span class="wikilink">GRPO</span> 等）在 LLM 后训练中的不稳定性、跨任务能力退化、response 长度膨胀问题。<span class="wikilink">GCPO</span> 分析每步更新的子空间几何变化及其与性能的关系，通过约束子空间几何来稳定训练。</p>
+</li>
+<li><strong>对比方法/Baselines</strong>: 对比 <span class="wikilink">GRPO</span>、<span class="wikilink">DAPO</span>、<span class="wikilink">GSPO</span>、<span class="wikilink">GMPO</span>，在 <span class="wikilink">ToolAlpaca</span>、<span class="wikilink">HumanEval</span> 上评测，用 <span class="wikilink">LoRA</span>。</li>
+<li><strong>借鉴意义</strong>: 做 RL 后训练的团队相关——GRPO 的训练不稳定和长度膨胀是普遍痛点。</li>
+<li><strong>锐评</strong>: GRPO 家族的续集又来了，这次卖点是「子空间几何诊断」。诊断做得比前作细（逐步而非聚合），指出更新几何和性能退化的关系，这是有意义的分析。但一堆缩写 baseline（DAPO/GSPO/GMPO）堆在一起，读者很难判断 GCPO 的增量到底有多大——是稳定性质变还是又一个 +2% 的调参技巧？而且只在 ToolAlpaca/HumanEval 这种小规模上验证，说服力打折。🫠</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2608.11674v1" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🧠 RL 后训练"><h3>9. Scheduling Mixed RL Rollouts Beyond Prefix Locality</h3>
+<ul>
+<li><strong>作者</strong>: Zetao Hong, Song Yuan, Yuanhao Ding, Yibo Zhu, Daxin Jiang, Zhibin Wang, Chen Tian</li>
+<li><strong>机构</strong>: Affiliation: </li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2608.11152v1">arXiv</a> | <a href="https://arxiv.org/pdf/2608.11152v1">PDF</a></li>
+<li>
+<p><strong>来源</strong>: 📄 arXiv 关键词检索</p>
+</li>
+<li>
+<p><strong>核心方法</strong>: 现代 LLM 的 RL 后训练 pipeline 混合多域、多反馈范式的 rollout 工作负载。前缀感知路由能通过 cache 复用和负载均衡提升推理效率，但不控制异构 rollout session 如何竞争 <span class="wikilink">KV</span>-cache 容量。本文研究超越前缀局部性的混合 RL rollout 调度。</p>
+</li>
+<li><strong>对比方法/Baselines</strong>: 对比前缀感知路由 baseline，指标含 <span class="wikilink">TPS</span>（吞吐）。</li>
+<li><strong>借鉴意义</strong>: 做 RL 训练基建的相关——rollout 效率直接决定后训练成本。</li>
+<li><strong>锐评</strong>: 纯系统/基建向的活，不性感但很实在。指出前缀路由只顾 cache 复用、不管 KV-cache 容量竞争这个盲点，是做过大规模 RL 训练的人才会踩到的坑。价值取决于加速比数字，摘要没给，得翻正文。对绝大多数只调 API 的用户无关，但对自建 RL 训练栈的团队是省钱的干货。💤</li>
+</ul>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2608.11152v1" target="_blank" rel="noopener">📖 AI 精读</a></div><h2>🔬 LLM 分析与安全</h2><div class="paper-card" data-topic="🔬 LLM 分析与安全"><h3>10. Localizing Safety Alignment: MLP Layers and Mid-Network Blocks Encode Refusal Behavior in Large Language Models</h3>
+<ul>
+<li><strong>作者</strong>: Mingyu Zong, Sampad Mohanty, Bhaskar Krishnamachari</li>
+<li><strong>机构</strong>: Thanks: , Thanks: The authors thank collaborators Jwala Dhamala and Rahul Gupta from Amazon for helpful directions and inputs, Affiliation: University of Southern California, Email: , Affiliation: Department of Electrical and Computer Engineering, Affiliation: Department of Computer Science, Affiliation: </li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2608.11583v1">arXiv</a> | <a href="https://arxiv.org/pdf/2608.11583v1">PDF</a></li>
+<li>
+<p><strong>来源</strong>: 📄 arXiv 关键词检索</p>
+</li>
+<li>
+<p><strong>核心方法</strong>: 研究 LLM 的 refusal（拒答）行为编码在哪里。通过把对齐模型的权重移植到匹配的未对齐 base 模型上（多粒度：层级、块级），定位 safety alignment 的物理位置，发现 refusal 行为集中在 <span class="wikilink">MLP</span> 层和网络中段的 blocks。</p>
+</li>
+<li><strong>对比方法/Baselines</strong>: 在 <span class="wikilink">AdvBench</span> 等安全 benchmark 上评测移植后的模型。</li>
+<li><strong>借鉴意义</strong>: 可解释性 + 安全交叉，对理解/审计 LLM 安全对齐的鲁棒性有帮助。</li>
+<li><strong>锐评</strong>: 「权重移植」这个实验设计很聪明——直接把对齐模型的某几层塞进未对齐 base，看拒答行为能不能跟着搬家，这是干净的因果实验而非相关性观察。结论（refusal 集中在 MLP 中段）也和近期机制可解释性的发现互相印证。风险是这类定位结论高度依赖模型架构和对齐方法，换个模型可能就不成立，泛化性存疑。做安全审计的值得看。👀</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2608.11583v1" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🔬 LLM 分析与安全"><h3>11. Locating and Controlling Implicit Personalization in Large Language Models</h3>
+<ul>
+<li><strong>作者</strong>: Yueru Yan, Siqi Wu, Thai Le</li>
+<li><strong>机构</strong>: Affiliation: Indiana University, Email: , Affiliation: </li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2608.11735v1">arXiv</a> | <a href="https://arxiv.org/pdf/2608.11735v1">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2608.11735v1/latex/overview_implicit.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2608.11735v1/latex/fig_psi_race_gender.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2608.11735v1/latex/fig_phenomenon_heatmap.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: 研究 LLM 的隐式个性化：即使用户从未声明人口统计学身份，模型也会因隐含线索而改变输出。用匹配的「有线索/中性」对话跨五个 LLM，建立行为变化与模型内部激活的联系，定位并控制这种隐式个性化。</li>
+<li><strong>对比方法/Baselines</strong>: 对比 <span class="wikilink">StereoSet</span>、<span class="wikilink">BOLD</span>、<span class="wikilink">CEB</span> 等偏见 benchmark，用 <span class="wikilink">NIE</span>（自然间接效应）等因果指标。</li>
+<li><strong>借鉴意义</strong>: 涉及 user modeling / 个性化的公平性，对做推荐和对话个性化的有参考价值。</li>
+<li><strong>锐评</strong>: 问题本身很重要：模型会脑补你的身份然后区别对待，而你根本没说。用因果中介分析（NIE）把行为变化和内部激活挂钩，比单纯统计输出差异高级。五个模型的横向对比也扎实。但「控制」这部分往往是这类论文的软肋——定位容易，干预后不伤害正常性能难。做个性化的可以借鉴其审计方法。👀</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2608.11735v1" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🔬 LLM 分析与安全"><h3>12. CLAIM: Leading Open-domain Active Clarification of Large Language Models with Uncertainty Measurement</h3>
+<ul>
+<li><strong>作者</strong>: Kuangzhao Yang, Ziliang Zhao, Zhicheng Dou</li>
+<li><strong>机构</strong>: email:, Affiliation: Gaoling School of Artificial Intelligence, Renmin University of China, Note: , Affiliation: </li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2608.11631v1">arXiv</a> | <a href="https://arxiv.org/pdf/2608.11631v1">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2608.11631v1/method.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: 开放域人机交互中 LLM 常遇到模糊/不完整的 query，直接作答会导致过度泛化或低信息回复，而提出澄清问题能显著提升交互质量。<span class="wikilink">CLAIM</span> 用不确定性度量引导 LLM 主动澄清，训练 <span class="wikilink">ClariLM</span>，结合 <span class="wikilink">SFT</span> + <span class="wikilink">GRPO</span>。</li>
+<li><strong>对比方法/Baselines</strong>: 在 <span class="wikilink">CLAMBER</span> 等澄清 benchmark 上评测，用 <span class="wikilink">GRPO</span> 训练。</li>
+<li><strong>借鉴意义</strong>: 做对话/交互式推荐的相关——什么时候该反问而不是硬答，是提升体验的关键。</li>
+<li><strong>锐评</strong>: 「主动澄清」是个正确但拥挤的方向。CLAIM 的差异化在于用不确定性度量来触发澄清，这比用固定规则或纯 prompt 判断更有原则。问题是不确定性估计本身在 LLM 上就不可靠（校准差是老大难），拿一个不靠谱的信号去决定要不要反问，可能只是把问题往下推了一层。人大出品，方法完整，但根基（uncertainty 校准）存疑。👀</li>
+</ul>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2608.11631v1" target="_blank" rel="noopener">📖 AI 精读</a></div><h2>💰 金融 Agent</h2><div class="paper-card" data-topic="💰 金融 Agent"><h3>13. AI-Trader: Benchmarking Autonomous Agents in Real-Time Financial Markets</h3>
+<ul>
+<li><strong>作者</strong>: Tianyu Fan, Yuhao Yang, Yangqin Jiang, Yifei Zhang, Yuxuan Chen, Chao Huang</li>
+<li><strong>机构</strong>: Affiliation: University of Hong Kong, Thanks: , Email: , Affiliation: </li>
+<li><strong>链接</strong>: <a href="https://arxiv.org/abs/2512.10971">arXiv</a> | <a href="https://arxiv.org/pdf/2512.10971">PDF</a></li>
+<li><strong>来源</strong>: 🔥 HF Trending，⬆️ 12</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2512.10971v1/aitrader_mainmodel.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: <span class="wikilink">AI-Trader</span>：在真实实时金融市场中 benchmark 自主 LLM agent 的决策能力，强调实时信息整合和自适应响应。评测多个 LLM（<span class="wikilink">GPT-5</span>、<span class="wikilink">DeepSeek</span>、<span class="wikilink">MiniMax</span>）在动态、live 环境下的交易表现。</li>
+<li><strong>对比方法/Baselines</strong>: 对比多个前沿 LLM，指标含 <span class="wikilink">CR</span>（累计收益）、<span class="wikilink">MDD</span>（最大回撤）、<span class="wikilink">SR</span>（夏普比率）。</li>
+<li><strong>借鉴意义</strong>: 想做金融/交易 agent 的直接相关，实时环境比回测 benchmark 更接近真实。</li>
+<li><strong>锐评</strong>: HF 上 12 赞，港大出品。「实时金融市场」这个卖点比那些用历史数据回测的强，因为回测最容易过拟合和信息泄露。但金融 agent 的老问题一个没少：短窗口的实时收益里运气占多大比重？夏普比率在几周的评测期里几乎没有统计意义。而且 live 交易不可复现，别人没法验证。当 benchmark 框架看可以，当「LLM 能炒股」的证据就太天真了。⚠️</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2512.10971" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="💰 金融 Agent"><h3>14. From Numbers to Judgment: Specialist LLM Agents and Reinforcement Learning for European Listed Real Estate</h3>
+<ul>
+<li><strong>作者</strong>: Taghavi, Pardis, Bhavani, Santosh</li>
+<li><strong>机构</strong>: benefit from the same form of LLM specialization. Larix maps a 16-lens European listed-real-estate</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2608.11381v1">arXiv</a> | <a href="https://arxiv.org/pdf/2608.11381v1">PDF</a></li>
+<li>
+<p><strong>来源</strong>: 📄 arXiv 关键词检索</p>
+</li>
+<li>
+<p><strong>核心方法</strong>: 研究金融分析的局部数值操作和整合判断能否受益于 LLM 专业化。<span class="wikilink">Larix</span> 把 16-lens 的欧洲上市房地产分析框架映射到八个 lens 对齐的专家，对比前沿 LLM 在单体 vs 专家分解 prompting 下的表现，并把专家层（而非端到端 pipeline）作为 <span class="wikilink">RL</span> 优化单元，用 <span class="wikilink">GRPO</span>。</p>
+</li>
+<li><strong>对比方法/Baselines</strong>: 对比 <span class="wikilink">Claude-Mono</span>（单体）vs <span class="wikilink">Claude-Spec</span>（专家分解），用 <span class="wikilink">GRPO</span> 后训练。</li>
+<li><strong>借鉴意义</strong>: 做垂域多智能体 + RL 专业化的可以参考，尤其是「把专家层而非整条 pipeline 作为 RL 单元」的设计。</li>
+<li><strong>锐评</strong>: 亮点是那句「把 specialist layer 而非 end-to-end pipeline 当作 RL 优化单元」——这确实是多智能体 RL 里一个被忽视的粒度选择。但 domain 太窄（欧洲上市房地产），16-lens 框架也是人为设定，很难说结论能迁移到别的领域。而且用一个专有框架当 ground truth，本质上是在教模型模仿分析师的固定套路，创新上限被框住了。垂域从业者看，通用读者跳过。🫠</li>
+</ul>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2608.11381v1" target="_blank" rel="noopener">📖 AI 精读</a></div><h2>🛡️ Agent 安全</h2><div class="paper-card" data-topic="🛡️ Agent 安全"><h3>15. AI Guardrail Survival under Single-Cycle Agentic Self-Summarization</h3>
+<ul>
+<li><strong>作者</strong>: Kwartler, Ted, Aqrawi, Alan, Abbasi, Arian</li>
+<li><strong>机构</strong>: Lead, Practice, ² AI Safety and Responsible AI Senior Manager, Accenture. alan.aqrawi@accenture.com, ³ Responsible AI Specialist, Accenture. arian.abbasi@accenture.com</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2608.11392v1">arXiv</a> | <a href="https://arxiv.org/pdf/2608.11392v1">PDF</a></li>
+<li>
+<p><strong>来源</strong>: 📄 arXiv 关键词检索</p>
+</li>
+<li>
+<p><strong>核心方法</strong>: 长程 agent 会周期性压缩 context，用模型生成的摘要替换原始 transcript。已有工作显示压缩时丢弃安全约束会导致行为违规（Governance Decay）。本文追问更细的问题：单次压缩循环中，安全规则是如何丢失的，对检测和评估意味着什么。</p>
+</li>
+<li><strong>对比方法/Baselines</strong>: 分析单次 self-summarization 压缩循环中安全规则的存活情况。</li>
+<li><strong>借鉴意义</strong>: 对做长程 agent / context 管理的相关——压缩导致安全约束丢失是真实的工程风险。</li>
+<li><strong>锐评</strong>: 选题很及时——现在人人都在做 context 压缩/记忆管理，但没几个人认真想过压缩会不会把「你不能做 X」这条约束一起摘要掉。把粒度细化到「单次压缩循环」是有价值的，因为它能指导什么时候该重新注入安全约束。Accenture 出品，偏工业实践视角。担心的是样本和模型覆盖可能有限，结论的普适性待考。👀</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2608.11392v1" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🛡️ Agent 安全"><h3>16. The Next Challenge for Agentic Cybersecurity: A Realistic, Contamination-Free Reverse Engineering Benchmark</h3>
+<ul>
+<li><strong>作者</strong>: Jeremy Spence11
+          1, Nicholas Assaderaghi, Jinhao Zhu, Nikil Ravi, Raluca Ada Popa, Guannan Wei, Yangruibo Ding, Zhuo Zhang11
+          1</li>
+<li><strong>机构</strong>: Columbia University, Affiliation: Tufts University, Affiliation: UC Berkeley, Affiliation: </li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2608.11469v1">arXiv</a> | <a href="https://arxiv.org/pdf/2608.11469v1">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2608.11469v1/pipeline.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: 现有 AI agent 的网络安全能力评测大多依赖源码可用，但恶意软件、固件、专有程序只有二进制。分析这类软件需要逆向工程（<span class="wikilink">RE</span>）：先恢复程序语义。本文提出一个真实、无污染的逆向工程 benchmark <span class="wikilink">AgentRE</span> 来评测 agent 的 RE 能力。</li>
+<li><strong>对比方法/Baselines</strong>: 在 <span class="wikilink">CTF</span> 等场景评测 <span class="wikilink">GPT-5</span>、<span class="wikilink">GLM-5</span> 等 agent 的逆向工程能力。</li>
+<li><strong>借鉴意义</strong>: 防御性安全 + agent 评测交叉，对评估 agent 真实攻防能力有价值。</li>
+<li><strong>锐评</strong>: 补了个真空——大家都在测「有源码时 agent 能不能找漏洞」，但现实里最危险的恶意软件恰恰只有二进制。强调「无污染」（contamination-free）也说明作者知道现在 benchmark 被训练数据泄露污染得多严重。Columbia+Berkeley 阵容可靠。当然，逆向工程 benchmark 的天花板是任务能否真实反映 RE 的开放性——CTF 题和真·固件分析差距很大。做安全评测的看。👀</li>
+</ul>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2608.11469v1" target="_blank" rel="noopener">📖 AI 精读</a></div><h2>🔬 科研 Agent</h2><div class="paper-card" data-topic="🔬 科研 Agent"><h3>17. ResearchStudio-Idea: An Evidence-Grounded Research-Ideation Skill Suite from ML Conference Outcomes</h3>
+<ul>
+<li><strong>作者</strong>: Qihao Zhao1</li>
+<li><strong>机构</strong>: Microsoft Research, Nanyang Technological University, National University of Singapore</li>
+<li><strong>链接</strong>: <a href="https://arxiv.org/abs/2607.04439">arXiv</a> | <a href="https://arxiv.org/pdf/2607.04439">PDF</a></li>
+<li><strong>来源</strong>: 🔥 HF Trending，⬆️ 63</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2607.04439v1/fig2.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: <span class="wikilink">ResearchStudio-Idea</span>：面向研究构思「第一公里」的可复用 skill 套件，帮研究者把问题锚定到当前文献、识别瓶颈、和已有方案区分、评估风险。填补 end-to-end 系统和生成之间缺失的「技能层」，从 ML 会议的 outcome 数据中提炼。</li>
+<li><strong>对比方法/Baselines</strong>: 对比 end-to-end、multi-agent、检索增强、novelty 检测等构思系统，用 <span class="wikilink">HDBSCAN</span> 聚类、<span class="wikilink">OpenReview</span> 数据。</li>
+<li><strong>借鉴意义</strong>: 做科研辅助 agent / 自动化研究的可以参考其「技能层」定位。</li>
+<li><strong>锐评</strong>: HF 63 赞，微软+NTU+NUS。定位聪明——不做端到端自动科研（那个吹得多做得烂），而是聚焦「构思第一公里」这个可落地的窄环节。用真实会议 outcome 数据来学「什么是好想法」也比拍脑袋强。但「skill suite」这个包装有点虚，本质上还是检索+聚类+prompt 的组合，创新度撑不起 63 个赞，更多是选题踩中了大家的焦虑。👀</li>
+</ul>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2607.04439" target="_blank" rel="noopener">📖 AI 精读</a></div></div>
+<div id="panel-生成式推荐" class="tab-panel"><h2>📊 生成式推荐</h2><div class="paper-card" data-topic="📊 生成式推荐"><h3>1. HCGRec: Hint-Conditioned Generative Recommendation with Semantic IDs</h3>
+<ul>
+<li><strong>作者</strong>: Kangning Zhang, Haotian Fang, Xukun Luo, Hao Yin, Yang Gao, Peng Yan, Weiwen Liu, Weinan Zhang, Yong Yu</li>
+<li><strong>机构</strong>: Affiliation: Shanghai Jiao Tong University, email: wnzhang@sjtu.edu.cn, email: zhangkangning@sjtu.edu.cn, email: wwliu@sjtu.edu.cn, email:, email: yyu@apex.sjtu.edu.cn, email: fanghaotian@sjtu.edu.cn, Affiliation: </li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2608.11980v1">arXiv</a> | <a href="https://arxiv.org/pdf/2608.11980v1">PDF</a></li>
+<li>
+<p><strong>来源</strong>: 📄 arXiv 关键词检索</p>
+</li>
+<li>
+<p><strong>核心方法</strong>: 针对 <span class="wikilink">Semantic-ID</span> 生成式推荐的结构性优化瓶颈：自回归生成 item token 序列时，一旦早期 token 走偏，后面全盘皆输，reward-based 后训练很难纠正。HCGRec 引入 <span class="wikilink">Hint-Conditioned</span> 机制，用 hint 条件化生成过程，配合 <span class="wikilink">GRPO</span> 做 RL 后训练，缓解早期 token 主导整个序列奖励的问题。</p>
+</li>
+<li><strong>对比方法/Baselines</strong>: 对比标准 <span class="wikilink">Semantic-ID</span> 生成式推荐 baseline + <span class="wikilink">SFT</span>，用 <span class="wikilink">GRPO</span> 做 RL，指标用 <span class="wikilink">NDCG</span> / <span class="wikilink">HR</span>。</li>
+<li><strong>借鉴意义</strong>: 这是今天唯一一篇正经的生成式推荐，而且切中了 semantic-ID 范式最痛的点——自回归 token 序列的误差传播。做 generative retrieval / 生成式推荐的直接相关。</li>
+<li><strong>锐评</strong>: 终于有一篇不是 agent 的了。问题定位很准：semantic-ID 生成式推荐的 reward 后训练确实卡在早期 token 上，这不是拍脑袋想出来的伪问题。但「hint-conditioned」这个词听着就像给模型开小灶——hint 从哪来？测试时能不能拿到？如果 hint 本身依赖 ground truth 那就是自欺。摘要没说清 hint 的来源，这是决定成色的关键。👀</li>
+</ul>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2608.11980v1" target="_blank" rel="noopener">📖 AI 精读</a></div></div>
+<div id="panel-多智能体与rl" class="tab-panel"><h2>🤖 多智能体与 RL</h2><div class="paper-card" data-topic="🤖 多智能体与 RL"><h3>2. One Frozen Simulator Is Not Enough: Simulator Collapse in Multi-Agent RL</h3>
+<ul>
+<li><strong>作者</strong>: Simon Yu, Nicholas Tomlin, Marwa Abdulhai, Ximing Lu, Derek Chong, Abe Hou, Dilara Soylu, Sergey Levine, Christopher D. Manning, Weiyan Shi</li>
+<li><strong>机构</strong>: Affiliation: University of Washington, Affiliation: UC Berkeley, Affiliation: Northeastern University, Affiliation: Stanford University, Affiliation: New York University, Affiliation: </li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2608.12253v1">arXiv</a> | <a href="https://arxiv.org/pdf/2608.12253v1">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2608.12253v1/figures/human_study/fig_human_study_tau2_landing.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2608.12253v1/figures/human_study/fig_human_study_debrief.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: 把多轮对话建模成两人 <span class="wikilink">POMDP</span>，指出 multi-agent RL 中普遍用单个冻结 LLM 模拟用户行为的做法会导致 <span class="wikilink">Simulator-Collapse</span>：模拟器 LLM 本身 mode-collapse，训出来的 agent policy 就过拟合到利用模拟器主导模式的狭窄策略，无法泛化。用 <span class="wikilink">Co-Training</span> 和多模拟器缓解。</li>
+<li><strong>对比方法/Baselines</strong>: 在 Persuasion for Good、τ²-bench、CooperBench 三个环境上验证，对比单冻结模拟器 vs 多模拟器，用 <span class="wikilink">GPT-5</span> 等做 backbone。</li>
+<li><strong>借鉴意义</strong>: 对任何用「LLM 模拟用户」来训 RL agent 的团队都是当头一棒——推荐、对话、客服 agent 训练里这个坑非常常见。</li>
+<li><strong>锐评</strong>: 这才是有价值的负面结果。作者阵容豪华（Levine、Manning、Shi），而且抓的是一个大家都在犯、但没人愿意承认的错：拿一个冻结 LLM 当用户模拟器，训出来的 agent 只是学会了怎么钻这个模拟器的空子。三个环境交叉验证，不是 cherry-pick。唯一的问题是「多模拟器」听起来像是用钱堆——到底要几个模拟器才够、成本几何，是落地时的真问题。🔥</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2608.12253v1" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🤖 多智能体与 RL"><h3>3. Learning to Persuade Exposes How Easily LLMs Abandon Correct Beliefs</h3>
+<ul>
+<li><strong>作者</strong>: Nimet Beyza Bozdag, Emre Can Acikgoz, Gokhan Tur, Dilek Hakkani-Tür</li>
+<li><strong>机构</strong>: Affiliation: University of Illinois Urbana-Champaign, Affiliation: </li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2608.11624v1">arXiv</a> | <a href="https://arxiv.org/pdf/2608.11624v1">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2608.11624v1/technique_heatmaps_stacked.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: 研究 LLM 在被说服时放弃正确信念的失败模式。构造 persuasion 攻击，训练一个 persuader 去说服目标 LLM 改变答案，度量 <span class="wikilink">PSR</span>（说服成功率）和 <span class="wikilink">ASR</span>。发现即使模型一开始答对，也极容易被有技巧的说服话术带偏。</li>
+<li><strong>对比方法/Baselines</strong>: 在 <span class="wikilink">TruthfulQA</span>、<span class="wikilink">MedQA</span>、<span class="wikilink">CommonsenseQA</span>、<span class="wikilink">MMLU</span> 上评测多个模型，含 <span class="wikilink">GPT</span> 系列。</li>
+<li><strong>借鉴意义</strong>: 对多智能体辩论、LLM-as-judge、人机协同决策都是硬警告——你的 agent 可能一被怼就投降。</li>
+<li><strong>锐评</strong>: 标题就是结论，而且结论很扎心：LLM 的「信念」薄得像纸，一说就倒。这对现在流行的 multi-agent debate、self-refine 是釜底抽薪——如果模型对正确答案毫无坚持，那多轮辩论收敛到的可能是最会说话的那个 agent 的错误答案。方法直接、数据集覆盖广。扣分项：persuader 的强度和真实对抗场景差多远没量化，容易高估风险。🔥</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2608.11624v1" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🤖 多智能体与 RL"><h3>4. LoongReflect: Boosting Long-Horizon Reflection in Search Agents via Global Perspective Distillation</h3>
+<ul>
+<li><strong>作者</strong>: Zhixin Zhang, Xinke Jiang, Zhibang Yang, Weixuan Xu, Guohong Qiu, Xu Chu\corresponding, Junfeng Zhao\corresponding, Yasha Wang\corresponding</li>
+<li><strong>机构</strong>: Center on Frontiers of Computing Studies, Peking University, Beijing, China, Key Laboratory of High Confidence Software Technologies, Ministry of Education, Beijing, China, National Engineering Research Center for Software Engineering, Peking University, Beijing, China, Peking University Information Technology Institute (Tianjin Binhai), Tianjin, China, School of Computer Science, Peking University, Beijing, China</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2608.11967v1">arXiv</a> | <a href="https://arxiv.org/pdf/2608.11967v1">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2608.11967v1/method_overview.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2608.11967v1/intro_reflect.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: 针对长程搜索 agent 的反思能力：agent 在多步推理中需要判断轨迹进展、识别缺失证据、决定继续/修正/放弃当前分支。<span class="wikilink">LoongReflect</span> 用全局视角蒸馏（Global Perspective Distillation）教 agent 做更好的反思，结合 <span class="wikilink">SFT</span> + <span class="wikilink">GRPO</span>。</li>
+<li><strong>对比方法/Baselines</strong>: 在 <span class="wikilink">HotpotQA</span> 等多跳 QA 上对比 <span class="wikilink">AgenticRAG</span> baseline，用 <span class="wikilink">GRPO</span> 训练。</li>
+<li><strong>借鉴意义</strong>: 做 agentic RAG / 深度搜索 agent 的直接相关，反思质量往往是长程任务成败的关键。</li>
+<li><strong>锐评</strong>: 反思这个方向做的人不少，LoongReflect 的卖点是「全局视角蒸馏」——让学生 agent 学到一个能俯瞰整条轨迹的老师的判断。思路合理，长程任务里局部反思确实容易只见树木。但蒸馏的老师从哪来、老师本身的反思对不对，是个鸡生蛋问题。而且 HotpotQA 这种 benchmark 已经被刷烂了，能不能在真·长程任务上站住是另一回事。👀</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2608.11967v1" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🤖 多智能体与 RL"><h3>5. ExRole: From Team Trajectories to Executable Roles in Multi-Agent Language Models</h3>
+<ul>
+<li><strong>作者</strong>: Zhou Liu, Chaoyang Han, Zewei Pan, Zeli Su, Wentao Zhang\corresponding</li>
+<li><strong>机构</strong>: Peking University, Shanghai Jiao Tong University</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2608.11949v1">arXiv</a> | <a href="https://arxiv.org/pdf/2608.11949v1">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2608.11949v1/01_exrole_trajectory_roles.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2608.11949v1/02_role_prototype_resolver_execution.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2608.11949v1/fig_role_agent_turn_schedule_matrix.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: 多数多智能体系统把 role 当成手写的 prompt 标签，与学到的行为和参数更新脱节。<span class="wikilink">ExRole</span> 主张 role 应该是可执行的控制变量：能总结预测未来效用的行为、指导后续交互、并定位负责该行为的可训练参数容量。用 <span class="wikilink">LoRA</span> + <span class="wikilink">GRPO</span> 实现。</li>
+<li><strong>对比方法/Baselines</strong>: 在 <span class="wikilink">HotpotQA</span>、<span class="wikilink">MuSiQue</span> 上对比 <span class="wikilink">MAS</span> baseline，用 <span class="wikilink">GRPO</span> 训练。</li>
+<li><strong>借鉴意义</strong>: 做多智能体系统的可以看——把 role 从提示词工程升级为可训练模块是个有意思的方向。</li>
+<li><strong>锐评</strong>: 观点挺好：现在的 multi-agent role 基本就是给 prompt 起了个花名（「你是研究员」「你是批评家」），和模型实际学到的东西毫无绑定。ExRole 想把 role 变成可训练、可定位的容量单元，方向对。但「executable role」这个概念很容易变成又一层玄学包装——如果最后还是靠 LoRA 微调那点参数，那和普通的专家路由有多大区别？需要看实验里 role 的可解释性是否真的成立。👀</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2608.11949v1" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🤖 多智能体与 RL"><h3>6. Is Per-Agent Policy Composition Safe? Rethinking Successor-Feature Transfer in Cooperative Multi-Agent Reinforcement Learning</h3>
+<ul>
+<li><strong>作者</strong>: Zijian Zhao, Sen Li</li>
+<li><strong>机构</strong>: Affiliation: The Hong Kong University of Science and Technology, Affiliation: The Hong Kong University of Science and Technology (Guangzhou), Thanks: , Affiliation: </li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2608.11658v1">arXiv</a> | <a href="https://arxiv.org/pdf/2608.11658v1">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2608.11658v1/fig_sfworld.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: 多智能体协作 RL 中的策略组合安全性问题。单 agent 场景下 <span class="wikilink">USFA</span>（Universal Successor Features Approximator）配合 <span class="wikilink">GPI</span>（Generalized Policy Improvement）能重组策略库应对动态变化的目标，但本文质疑这种 per-agent 策略组合在合作多智能体设置下是否安全。</li>
+<li><strong>对比方法/Baselines</strong>: 分析 <span class="wikilink">USFA</span>、<span class="wikilink">UVFA</span>、<span class="wikilink">GPI</span> 在合作 MARL 下的迁移安全性。</li>
+<li><strong>借鉴意义</strong>: 偏理论的 MARL 工作，对做多智能体策略迁移的有参考，但离 LLM agent 较远。</li>
+<li><strong>锐评</strong>: 这是传统 MARL 的理论活，不是 LLM agent。质疑「successor feature 迁移在合作场景下安全吗」这个问题本身有价值——把单 agent 成立的东西直接搬到多 agent 是常见的想当然。但它和现在大家关心的 LLM-based agent 几乎是两个世界，术语体系（USFA/GPI/UVFA）也劝退。做经典 MARL 迁移的看，做 LLM agent 的可以跳过。🫠</li>
+</ul>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2608.11658v1" target="_blank" rel="noopener">📖 AI 精读</a></div></div>
+<div id="panel-工具调用" class="tab-panel"><h2>🛠️ 工具调用</h2><div class="paper-card" data-topic="🛠️ 工具调用"><h3>7. When the API Speaks the Wrong Language: Revisiting Post-Training for Multilingual Tool Use</h3>
+<ul>
+<li><strong>作者</strong>: Siddharth Chauhan, Thomas Butler, Abhishek Singhania, Pankaj Porwal, Honey Gupta</li>
+<li><strong>机构</strong>: Correspondence to: ghoney@amazon.com, Affiliation: Amazon, Correspondence to:, Affiliation: </li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2608.11715v1">arXiv</a> | <a href="https://arxiv.org/pdf/2608.11715v1">PDF</a></li>
+<li>
+<p><strong>来源</strong>: 📄 arXiv 关键词检索</p>
+</li>
+<li>
+<p><strong>核心方法</strong>: 把多语言 API 调用建模成结构化预测，隔离出 <span class="wikilink">ALM</span>（Argument Language Mismatch）这一失败模式：模型选对了工具，但参数值用了不一致的语言，语义正确但操作上无效，标准 API 调用指标抓不到。用 <span class="wikilink">GRPO</span>/<span class="wikilink">PPO</span> 等后训练方法缓解。</p>
+</li>
+<li><strong>对比方法/Baselines</strong>: 对比 <span class="wikilink">SFT</span>、<span class="wikilink">GRPO</span>、<span class="wikilink">PPO</span>，提出 <span class="wikilink">ALC</span> 指标衡量参数语言一致性。</li>
+<li><strong>借鉴意义</strong>: 做多语言 function calling / tool use 的必看，这是个真实但被主流指标掩盖的坑。</li>
+<li><strong>锐评</strong>: Amazon 出品，切口刁钻但真实：工具选对了、参数语言错了，标准指标一片绿，线上直接炸。这种「指标盲区」型的问题最有价值，因为它揭示了评测本身的缺陷。方法上就是常规后训练三件套，没什么惊喜，真正的贡献是提出了 ALM 这个概念和对应指标。做多语言 agent 的应该扫一眼，纯英文场景可以跳过。👀</li>
+</ul>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2608.11715v1" target="_blank" rel="noopener">📖 AI 精读</a></div></div>
+<div id="panel-rl后训练" class="tab-panel"><h2>🧠 RL 后训练</h2><div class="paper-card" data-topic="🧠 RL 后训练"><h3>8. GCPO: Diagnosing and Constraining Subspace Geometry in Rollout RL for LLMs</h3>
+<ul>
+<li><strong>作者</strong>: Kai Yang, Jingwei Xu, Wanyu Wang, Kai-Yuan Guo, Zhenbo Yu\corresponding, Yi Wang\corresponding, Yu Qiao\corresponding</li>
+<li><strong>机构</strong>: Thanks: , Thanks: Contributions made while affiliated with Shanghai AI Lab</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2608.11674v1">arXiv</a> | <a href="https://arxiv.org/pdf/2608.11674v1">PDF</a></li>
+<li>
+<p><strong>来源</strong>: 📄 arXiv 关键词检索</p>
+</li>
+<li>
+<p><strong>核心方法</strong>: 诊断 rollout-based RL（<span class="wikilink">GRPO</span> 等）在 LLM 后训练中的不稳定性、跨任务能力退化、response 长度膨胀问题。<span class="wikilink">GCPO</span> 分析每步更新的子空间几何变化及其与性能的关系，通过约束子空间几何来稳定训练。</p>
+</li>
+<li><strong>对比方法/Baselines</strong>: 对比 <span class="wikilink">GRPO</span>、<span class="wikilink">DAPO</span>、<span class="wikilink">GSPO</span>、<span class="wikilink">GMPO</span>，在 <span class="wikilink">ToolAlpaca</span>、<span class="wikilink">HumanEval</span> 上评测，用 <span class="wikilink">LoRA</span>。</li>
+<li><strong>借鉴意义</strong>: 做 RL 后训练的团队相关——GRPO 的训练不稳定和长度膨胀是普遍痛点。</li>
+<li><strong>锐评</strong>: GRPO 家族的续集又来了，这次卖点是「子空间几何诊断」。诊断做得比前作细（逐步而非聚合），指出更新几何和性能退化的关系，这是有意义的分析。但一堆缩写 baseline（DAPO/GSPO/GMPO）堆在一起，读者很难判断 GCPO 的增量到底有多大——是稳定性质变还是又一个 +2% 的调参技巧？而且只在 ToolAlpaca/HumanEval 这种小规模上验证，说服力打折。🫠</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2608.11674v1" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🧠 RL 后训练"><h3>9. Scheduling Mixed RL Rollouts Beyond Prefix Locality</h3>
+<ul>
+<li><strong>作者</strong>: Zetao Hong, Song Yuan, Yuanhao Ding, Yibo Zhu, Daxin Jiang, Zhibin Wang, Chen Tian</li>
+<li><strong>机构</strong>: Affiliation: </li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2608.11152v1">arXiv</a> | <a href="https://arxiv.org/pdf/2608.11152v1">PDF</a></li>
+<li>
+<p><strong>来源</strong>: 📄 arXiv 关键词检索</p>
+</li>
+<li>
+<p><strong>核心方法</strong>: 现代 LLM 的 RL 后训练 pipeline 混合多域、多反馈范式的 rollout 工作负载。前缀感知路由能通过 cache 复用和负载均衡提升推理效率，但不控制异构 rollout session 如何竞争 <span class="wikilink">KV</span>-cache 容量。本文研究超越前缀局部性的混合 RL rollout 调度。</p>
+</li>
+<li><strong>对比方法/Baselines</strong>: 对比前缀感知路由 baseline，指标含 <span class="wikilink">TPS</span>（吞吐）。</li>
+<li><strong>借鉴意义</strong>: 做 RL 训练基建的相关——rollout 效率直接决定后训练成本。</li>
+<li><strong>锐评</strong>: 纯系统/基建向的活，不性感但很实在。指出前缀路由只顾 cache 复用、不管 KV-cache 容量竞争这个盲点，是做过大规模 RL 训练的人才会踩到的坑。价值取决于加速比数字，摘要没给，得翻正文。对绝大多数只调 API 的用户无关，但对自建 RL 训练栈的团队是省钱的干货。💤</li>
+</ul>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2608.11152v1" target="_blank" rel="noopener">📖 AI 精读</a></div></div>
+<div id="panel-llm分析与安全" class="tab-panel"><h2>🔬 LLM 分析与安全</h2><div class="paper-card" data-topic="🔬 LLM 分析与安全"><h3>10. Localizing Safety Alignment: MLP Layers and Mid-Network Blocks Encode Refusal Behavior in Large Language Models</h3>
+<ul>
+<li><strong>作者</strong>: Mingyu Zong, Sampad Mohanty, Bhaskar Krishnamachari</li>
+<li><strong>机构</strong>: Thanks: , Thanks: The authors thank collaborators Jwala Dhamala and Rahul Gupta from Amazon for helpful directions and inputs, Affiliation: University of Southern California, Email: , Affiliation: Department of Electrical and Computer Engineering, Affiliation: Department of Computer Science, Affiliation: </li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2608.11583v1">arXiv</a> | <a href="https://arxiv.org/pdf/2608.11583v1">PDF</a></li>
+<li>
+<p><strong>来源</strong>: 📄 arXiv 关键词检索</p>
+</li>
+<li>
+<p><strong>核心方法</strong>: 研究 LLM 的 refusal（拒答）行为编码在哪里。通过把对齐模型的权重移植到匹配的未对齐 base 模型上（多粒度：层级、块级），定位 safety alignment 的物理位置，发现 refusal 行为集中在 <span class="wikilink">MLP</span> 层和网络中段的 blocks。</p>
+</li>
+<li><strong>对比方法/Baselines</strong>: 在 <span class="wikilink">AdvBench</span> 等安全 benchmark 上评测移植后的模型。</li>
+<li><strong>借鉴意义</strong>: 可解释性 + 安全交叉，对理解/审计 LLM 安全对齐的鲁棒性有帮助。</li>
+<li><strong>锐评</strong>: 「权重移植」这个实验设计很聪明——直接把对齐模型的某几层塞进未对齐 base，看拒答行为能不能跟着搬家，这是干净的因果实验而非相关性观察。结论（refusal 集中在 MLP 中段）也和近期机制可解释性的发现互相印证。风险是这类定位结论高度依赖模型架构和对齐方法，换个模型可能就不成立，泛化性存疑。做安全审计的值得看。👀</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2608.11583v1" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🔬 LLM 分析与安全"><h3>11. Locating and Controlling Implicit Personalization in Large Language Models</h3>
+<ul>
+<li><strong>作者</strong>: Yueru Yan, Siqi Wu, Thai Le</li>
+<li><strong>机构</strong>: Affiliation: Indiana University, Email: , Affiliation: </li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2608.11735v1">arXiv</a> | <a href="https://arxiv.org/pdf/2608.11735v1">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2608.11735v1/latex/overview_implicit.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2608.11735v1/latex/fig_psi_race_gender.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2608.11735v1/latex/fig_phenomenon_heatmap.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: 研究 LLM 的隐式个性化：即使用户从未声明人口统计学身份，模型也会因隐含线索而改变输出。用匹配的「有线索/中性」对话跨五个 LLM，建立行为变化与模型内部激活的联系，定位并控制这种隐式个性化。</li>
+<li><strong>对比方法/Baselines</strong>: 对比 <span class="wikilink">StereoSet</span>、<span class="wikilink">BOLD</span>、<span class="wikilink">CEB</span> 等偏见 benchmark，用 <span class="wikilink">NIE</span>（自然间接效应）等因果指标。</li>
+<li><strong>借鉴意义</strong>: 涉及 user modeling / 个性化的公平性，对做推荐和对话个性化的有参考价值。</li>
+<li><strong>锐评</strong>: 问题本身很重要：模型会脑补你的身份然后区别对待，而你根本没说。用因果中介分析（NIE）把行为变化和内部激活挂钩，比单纯统计输出差异高级。五个模型的横向对比也扎实。但「控制」这部分往往是这类论文的软肋——定位容易，干预后不伤害正常性能难。做个性化的可以借鉴其审计方法。👀</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2608.11735v1" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🔬 LLM 分析与安全"><h3>12. CLAIM: Leading Open-domain Active Clarification of Large Language Models with Uncertainty Measurement</h3>
+<ul>
+<li><strong>作者</strong>: Kuangzhao Yang, Ziliang Zhao, Zhicheng Dou</li>
+<li><strong>机构</strong>: email:, Affiliation: Gaoling School of Artificial Intelligence, Renmin University of China, Note: , Affiliation: </li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2608.11631v1">arXiv</a> | <a href="https://arxiv.org/pdf/2608.11631v1">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2608.11631v1/method.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: 开放域人机交互中 LLM 常遇到模糊/不完整的 query，直接作答会导致过度泛化或低信息回复，而提出澄清问题能显著提升交互质量。<span class="wikilink">CLAIM</span> 用不确定性度量引导 LLM 主动澄清，训练 <span class="wikilink">ClariLM</span>，结合 <span class="wikilink">SFT</span> + <span class="wikilink">GRPO</span>。</li>
+<li><strong>对比方法/Baselines</strong>: 在 <span class="wikilink">CLAMBER</span> 等澄清 benchmark 上评测，用 <span class="wikilink">GRPO</span> 训练。</li>
+<li><strong>借鉴意义</strong>: 做对话/交互式推荐的相关——什么时候该反问而不是硬答，是提升体验的关键。</li>
+<li><strong>锐评</strong>: 「主动澄清」是个正确但拥挤的方向。CLAIM 的差异化在于用不确定性度量来触发澄清，这比用固定规则或纯 prompt 判断更有原则。问题是不确定性估计本身在 LLM 上就不可靠（校准差是老大难），拿一个不靠谱的信号去决定要不要反问，可能只是把问题往下推了一层。人大出品，方法完整，但根基（uncertainty 校准）存疑。👀</li>
+</ul>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2608.11631v1" target="_blank" rel="noopener">📖 AI 精读</a></div></div>
+<div id="panel-金融agent" class="tab-panel"><h2>💰 金融 Agent</h2><div class="paper-card" data-topic="💰 金融 Agent"><h3>13. AI-Trader: Benchmarking Autonomous Agents in Real-Time Financial Markets</h3>
+<ul>
+<li><strong>作者</strong>: Tianyu Fan, Yuhao Yang, Yangqin Jiang, Yifei Zhang, Yuxuan Chen, Chao Huang</li>
+<li><strong>机构</strong>: Affiliation: University of Hong Kong, Thanks: , Email: , Affiliation: </li>
+<li><strong>链接</strong>: <a href="https://arxiv.org/abs/2512.10971">arXiv</a> | <a href="https://arxiv.org/pdf/2512.10971">PDF</a></li>
+<li><strong>来源</strong>: 🔥 HF Trending，⬆️ 12</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2512.10971v1/aitrader_mainmodel.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: <span class="wikilink">AI-Trader</span>：在真实实时金融市场中 benchmark 自主 LLM agent 的决策能力，强调实时信息整合和自适应响应。评测多个 LLM（<span class="wikilink">GPT-5</span>、<span class="wikilink">DeepSeek</span>、<span class="wikilink">MiniMax</span>）在动态、live 环境下的交易表现。</li>
+<li><strong>对比方法/Baselines</strong>: 对比多个前沿 LLM，指标含 <span class="wikilink">CR</span>（累计收益）、<span class="wikilink">MDD</span>（最大回撤）、<span class="wikilink">SR</span>（夏普比率）。</li>
+<li><strong>借鉴意义</strong>: 想做金融/交易 agent 的直接相关，实时环境比回测 benchmark 更接近真实。</li>
+<li><strong>锐评</strong>: HF 上 12 赞，港大出品。「实时金融市场」这个卖点比那些用历史数据回测的强，因为回测最容易过拟合和信息泄露。但金融 agent 的老问题一个没少：短窗口的实时收益里运气占多大比重？夏普比率在几周的评测期里几乎没有统计意义。而且 live 交易不可复现，别人没法验证。当 benchmark 框架看可以，当「LLM 能炒股」的证据就太天真了。⚠️</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2512.10971" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="💰 金融 Agent"><h3>14. From Numbers to Judgment: Specialist LLM Agents and Reinforcement Learning for European Listed Real Estate</h3>
+<ul>
+<li><strong>作者</strong>: Taghavi, Pardis, Bhavani, Santosh</li>
+<li><strong>机构</strong>: benefit from the same form of LLM specialization. Larix maps a 16-lens European listed-real-estate</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2608.11381v1">arXiv</a> | <a href="https://arxiv.org/pdf/2608.11381v1">PDF</a></li>
+<li>
+<p><strong>来源</strong>: 📄 arXiv 关键词检索</p>
+</li>
+<li>
+<p><strong>核心方法</strong>: 研究金融分析的局部数值操作和整合判断能否受益于 LLM 专业化。<span class="wikilink">Larix</span> 把 16-lens 的欧洲上市房地产分析框架映射到八个 lens 对齐的专家，对比前沿 LLM 在单体 vs 专家分解 prompting 下的表现，并把专家层（而非端到端 pipeline）作为 <span class="wikilink">RL</span> 优化单元，用 <span class="wikilink">GRPO</span>。</p>
+</li>
+<li><strong>对比方法/Baselines</strong>: 对比 <span class="wikilink">Claude-Mono</span>（单体）vs <span class="wikilink">Claude-Spec</span>（专家分解），用 <span class="wikilink">GRPO</span> 后训练。</li>
+<li><strong>借鉴意义</strong>: 做垂域多智能体 + RL 专业化的可以参考，尤其是「把专家层而非整条 pipeline 作为 RL 单元」的设计。</li>
+<li><strong>锐评</strong>: 亮点是那句「把 specialist layer 而非 end-to-end pipeline 当作 RL 优化单元」——这确实是多智能体 RL 里一个被忽视的粒度选择。但 domain 太窄（欧洲上市房地产），16-lens 框架也是人为设定，很难说结论能迁移到别的领域。而且用一个专有框架当 ground truth，本质上是在教模型模仿分析师的固定套路，创新上限被框住了。垂域从业者看，通用读者跳过。🫠</li>
+</ul>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2608.11381v1" target="_blank" rel="noopener">📖 AI 精读</a></div></div>
+<div id="panel-agent安全" class="tab-panel"><h2>🛡️ Agent 安全</h2><div class="paper-card" data-topic="🛡️ Agent 安全"><h3>15. AI Guardrail Survival under Single-Cycle Agentic Self-Summarization</h3>
+<ul>
+<li><strong>作者</strong>: Kwartler, Ted, Aqrawi, Alan, Abbasi, Arian</li>
+<li><strong>机构</strong>: Lead, Practice, ² AI Safety and Responsible AI Senior Manager, Accenture. alan.aqrawi@accenture.com, ³ Responsible AI Specialist, Accenture. arian.abbasi@accenture.com</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2608.11392v1">arXiv</a> | <a href="https://arxiv.org/pdf/2608.11392v1">PDF</a></li>
+<li>
+<p><strong>来源</strong>: 📄 arXiv 关键词检索</p>
+</li>
+<li>
+<p><strong>核心方法</strong>: 长程 agent 会周期性压缩 context，用模型生成的摘要替换原始 transcript。已有工作显示压缩时丢弃安全约束会导致行为违规（Governance Decay）。本文追问更细的问题：单次压缩循环中，安全规则是如何丢失的，对检测和评估意味着什么。</p>
+</li>
+<li><strong>对比方法/Baselines</strong>: 分析单次 self-summarization 压缩循环中安全规则的存活情况。</li>
+<li><strong>借鉴意义</strong>: 对做长程 agent / context 管理的相关——压缩导致安全约束丢失是真实的工程风险。</li>
+<li><strong>锐评</strong>: 选题很及时——现在人人都在做 context 压缩/记忆管理，但没几个人认真想过压缩会不会把「你不能做 X」这条约束一起摘要掉。把粒度细化到「单次压缩循环」是有价值的，因为它能指导什么时候该重新注入安全约束。Accenture 出品，偏工业实践视角。担心的是样本和模型覆盖可能有限，结论的普适性待考。👀</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2608.11392v1" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🛡️ Agent 安全"><h3>16. The Next Challenge for Agentic Cybersecurity: A Realistic, Contamination-Free Reverse Engineering Benchmark</h3>
+<ul>
+<li><strong>作者</strong>: Jeremy Spence11
+          1, Nicholas Assaderaghi, Jinhao Zhu, Nikil Ravi, Raluca Ada Popa, Guannan Wei, Yangruibo Ding, Zhuo Zhang11
+          1</li>
+<li><strong>机构</strong>: Columbia University, Affiliation: Tufts University, Affiliation: UC Berkeley, Affiliation: </li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2608.11469v1">arXiv</a> | <a href="https://arxiv.org/pdf/2608.11469v1">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2608.11469v1/pipeline.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: 现有 AI agent 的网络安全能力评测大多依赖源码可用，但恶意软件、固件、专有程序只有二进制。分析这类软件需要逆向工程（<span class="wikilink">RE</span>）：先恢复程序语义。本文提出一个真实、无污染的逆向工程 benchmark <span class="wikilink">AgentRE</span> 来评测 agent 的 RE 能力。</li>
+<li><strong>对比方法/Baselines</strong>: 在 <span class="wikilink">CTF</span> 等场景评测 <span class="wikilink">GPT-5</span>、<span class="wikilink">GLM-5</span> 等 agent 的逆向工程能力。</li>
+<li><strong>借鉴意义</strong>: 防御性安全 + agent 评测交叉，对评估 agent 真实攻防能力有价值。</li>
+<li><strong>锐评</strong>: 补了个真空——大家都在测「有源码时 agent 能不能找漏洞」，但现实里最危险的恶意软件恰恰只有二进制。强调「无污染」（contamination-free）也说明作者知道现在 benchmark 被训练数据泄露污染得多严重。Columbia+Berkeley 阵容可靠。当然，逆向工程 benchmark 的天花板是任务能否真实反映 RE 的开放性——CTF 题和真·固件分析差距很大。做安全评测的看。👀</li>
+</ul>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2608.11469v1" target="_blank" rel="noopener">📖 AI 精读</a></div></div>
+<div id="panel-科研agent" class="tab-panel"><h2>🔬 科研 Agent</h2><div class="paper-card" data-topic="🔬 科研 Agent"><h3>17. ResearchStudio-Idea: An Evidence-Grounded Research-Ideation Skill Suite from ML Conference Outcomes</h3>
+<ul>
+<li><strong>作者</strong>: Qihao Zhao1</li>
+<li><strong>机构</strong>: Microsoft Research, Nanyang Technological University, National University of Singapore</li>
+<li><strong>链接</strong>: <a href="https://arxiv.org/abs/2607.04439">arXiv</a> | <a href="https://arxiv.org/pdf/2607.04439">PDF</a></li>
+<li><strong>来源</strong>: 🔥 HF Trending，⬆️ 63</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2607.04439v1/fig2.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: <span class="wikilink">ResearchStudio-Idea</span>：面向研究构思「第一公里」的可复用 skill 套件，帮研究者把问题锚定到当前文献、识别瓶颈、和已有方案区分、评估风险。填补 end-to-end 系统和生成之间缺失的「技能层」，从 ML 会议的 outcome 数据中提炼。</li>
+<li><strong>对比方法/Baselines</strong>: 对比 end-to-end、multi-agent、检索增强、novelty 检测等构思系统，用 <span class="wikilink">HDBSCAN</span> 聚类、<span class="wikilink">OpenReview</span> 数据。</li>
+<li><strong>借鉴意义</strong>: 做科研辅助 agent / 自动化研究的可以参考其「技能层」定位。</li>
+<li><strong>锐评</strong>: HF 63 赞，微软+NTU+NUS。定位聪明——不做端到端自动科研（那个吹得多做得烂），而是聚焦「构思第一公里」这个可落地的窄环节。用真实会议 outcome 数据来学「什么是好想法」也比拍脑袋强。但「skill suite」这个包装有点虚，本质上还是检索+聚类+prompt 的组合，创新度撑不起 63 个赞，更多是选题踩中了大家的焦虑。👀</li>
+</ul>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2607.04439" target="_blank" rel="noopener">📖 AI 精读</a></div></div>
+<hr>
+<h2>被排除的论文</h2>
+<ul>
+<li>Co-Evolution in Agentic Systems (survey) — 又一篇 agentic 自演化综述，缝合现有工作，无原创方法，HF 122 赞更多是蹭 agent 热度</li>
+<li>Semantic Lenia: Homeostatic Solitons in LLM Semantic Space — 把 LLM 推理包装成人工生命/动力系统，概念玄学，与关注领域无实际交集</li>
+<li>Beyond Trial-and-Error: Agentic Optimization for Image-to-Video — 偏图生视频（multimodal generation 的 video 分支），agent 只是外壳，与推荐/LLM 核心关注度低</li>
+<li>Advancing MLLM-based UAV Image Understanding — 无人机航拍图像理解 benchmark，CV + 遥感领域为主，偏离关注方向</li>
+<li>MeViS-Text Track Winning Report (LSVOS 2026) — 视频目标分割竞赛报告，纯 CV，multi-agent 只是技巧组合</li>
+<li>Dynamic Master Logic Models as Knowledge Graphs — 可靠性工程领域的 RAG 应用，与关注领域无交集</li>
+<li>Diagram-MMU: Multi-Modal Benchmark for Scientific Diagrams — TikZ 图理解 benchmark，蹭 OpenAI Prism 热度，与核心关注度低</li>
+<li>Conflict and Congruency Effects in LLMs — 认知科学向的 Stroop/flanker 任务分析，偏心理学，非工程应用</li>
+<li>Unmasking Toxic Mimicry in Medical Offline RL for ICU Sepsis — 命中 negative keywords（medical/diagnosis），ICU 脓毒症治疗领域</li>
+<li>Governing Agentic AI in FinTech — 治理 position paper，观点为主无实质方法，干货有限</li>
+<li>Contextual Quality-Diversity Evolutionary RL for HVAC Control — 热带建筑冷水机组控制，纯建筑能源领域 RL，无 LLM，偏离关注方向</li>
+<li>VidForensics-M1: AI-Generated Video Forensics — AI 生成视频检测，CV 取证方向为主，与推荐/agent 核心关注度低</li>
+</ul>
+<p>Agent 圈子正从「我造了个新框架」转向「我拆穿了一个大家默认成立的假设」——simulator collapse、learning to persuade、toxic mimicry 都是这类打脸型实证，这比又一篇 survey 有营养得多。</p></div>
+<footer style="text-align:center;color:var(--text2);margin:3em 0 1em;font-size:0.85em;">
+  Generated by daily-papers-web &middot; Powered by Claude Code
+</footer>
+<script src="tabs.js"></script>
+
+</body>
+</html>
