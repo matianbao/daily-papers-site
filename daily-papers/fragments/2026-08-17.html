@@ -1,0 +1,448 @@
+<h1>🔪 今日锐评</h1>
+<p>今天是标准的『Agent 灌水日』——30 篇里塞了十几个『Multi-Agent + 某垂直领域』的排列组合，多半是把 GPT 套个 orchestrator 就敢叫 framework。但金子还是有的：Qwen 团队的 <span class="wikilink">SAPO</span> 是继 GRPO/GSPO 之后又一次认真的策略优化迭代，推荐侧的 <span class="wikilink">EchoRec</span> 把 MTP 从『提速工具』重新解读成『监督信号』有真东西，微软的 <span class="wikilink">AdsWorldEngine</span> 则难得地把对话式广告当成一个严肃的 gated 决策问题来做。</p>
+<h2>分流表</h2>
+<table>
+<thead>
+<tr>
+<th>等级</th>
+<th>论文</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>🔥 必读</td>
+<td><span class="wikilink">SAPO</span>（Qwen 出品，正面刚 token 级重要性比的高方差，MoE 训练党必看） · <span class="wikilink">EchoRec</span>（生成式推荐把 MTP 当稠密监督，是你本命方向） · <span class="wikilink">AdsWorldEngine</span>（对话式广告的 Opportunity Gate 设计，做广告投放的直接抄作业）</td>
+</tr>
+<tr>
+<td>👀 值得看</td>
+<td><span class="wikilink">MACS</span>（固定 catalog 约束下的可靠对话推荐，工业落地味浓） · <span class="wikilink">RL-Diffusion</span>（用 path-space 统一 diffusion 的 RL 后训练，理论党） · <span class="wikilink">Wrong-but-Useful</span>（错误答案也有价值——反直觉但可能改变多智能体过滤范式） · <span class="wikilink">MonkeyOCRv2</span>（78 赞的文档 AI 基座） · <span class="wikilink">SheetCompass</span>（层次关系图做表格推理 Agent）</td>
+</tr>
+<tr>
+<td>💤 可跳过</td>
+<td><span class="wikilink">Polaris</span>（又一个 supervisor-led 企业分析多智能体） · <span class="wikilink">Wyvern</span>（grounded 多模态报告生成，STORM 换皮） · <span class="wikilink">CLAIR-Fin</span>（对抗式多智能体金融 QA，堆料） · <span class="wikilink">ATLAS</span>（用自动机学习解释 Agent 策略，方向有趣但小众）</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<div class="tab-bar"><button class="tab-btn active" data-tab="all" onclick="switchTab('all')">📋 全部<span class="tab-count">14</span></button><button class="tab-btn" data-tab="强化学习与策略优化" onclick="switchTab('强化学习与策略优化')">📄 🎯 强化学习与策略优化<span class="tab-count">2</span></button><button class="tab-btn" data-tab="推荐与广告" onclick="switchTab('推荐与广告')">📈 📊 推荐与广告<span class="tab-count">3</span></button><button class="tab-btn" data-tab="多智能体推理与验证" onclick="switchTab('多智能体推理与验证')">📄 🧠 多智能体推理与验证<span class="tab-count">3</span></button><button class="tab-btn" data-tab="多模态与文档ai" onclick="switchTab('多模态与文档ai')">🎨 🖼️ 多模态与文档 AI<span class="tab-count">2</span></button><button class="tab-btn" data-tab="agent框架与应用" onclick="switchTab('agent框架与应用')">🏗 🤖 Agent 框架与应用<span class="tab-count">4</span></button></div>
+<div id="panel-all" class="tab-panel active"><h2>🎯 强化学习与策略优化</h2><div class="paper-card" data-topic="🎯 强化学习与策略优化"><h3>1. Soft Adaptive Policy Optimization</h3>
+<ul>
+<li><strong>作者</strong>: Gao, Chang, Zheng, Chujie, Chen, Xiong-Hui, Dang, Kai, Liu, Shixuan, Yu, Bowen, Yang, An, Bai, Shuai, Zhou, Jingren, Lin, Junyang</li>
+<li><strong>机构</strong>: Thanks: , Qwen Team, Alibaba Inc, Affiliation: </li>
+<li><strong>链接</strong>: <a href="https://arxiv.org/abs/2511.20347">arXiv</a> | <a href="https://arxiv.org/pdf/2511.20347">PDF</a></li>
+<li>
+<p><strong>来源</strong>: 🔥 HF Trending，⬆️ 43</p>
+</li>
+<li>
+<p><strong>核心方法</strong>: <span class="wikilink">SAPO</span> 针对 RL 训 LLM 时 token 级重要性比 (importance ratio) 高方差的老问题——尤其在 <span class="wikilink">MoE</span> 模型里被放大——提出用『软自适应』的方式裁剪/加权更新，而不是像 <span class="wikilink">GRPO</span>/<span class="wikilink">GSPO</span> 那样硬 clip。核心是把不稳定的 token 更新平滑化，在 <span class="wikilink">AIME</span> 等推理 benchmark 上验证。</p>
+</li>
+<li><strong>对比方法/Baselines</strong>: 直接对标 <span class="wikilink">GRPO</span> 和 <span class="wikilink">GSPO</span>（序列级重要性比那一派），本质是在 clip 策略上做文章。</li>
+<li><strong>借鉴意义</strong>: 你要是在训 RL reasoning 或者碰 MoE 的策略优化，这是继 GRPO/GSPO 之后必须跟的一条线。Qwen 团队亲自下场，工程可信度高。</li>
+<li><strong>锐评</strong>: Qwen 团队对 GRPO 家族的又一次外科手术，问题定位（MoE 放大 token 方差）很准，不是无病呻吟。43 个赞不是白来的。唯一警惕：『soft/adaptive』这类词是 RL 论文重灾区，得看清它的自适应机制到底是原则性的还是又一个调参旋钮。但冲着 Qwen 的落地记录，值得精读。🔥</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2511.20347" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🎯 强化学习与策略优化"><h3>2. Designing Reinforcement Learning for Diffusion Models: A Unified Path-Space View</h3>
+<ul>
+<li><strong>作者</strong>: Yixian Xu, Yuanrui Zhang, Shengjie Luo, Liwei Wang, Di He</li>
+<li><strong>机构</strong>: Affiliation: , Thanks: , Thanks: Correspondence to: Shengjie Luo &lt;shengjieluo@bytedance.com&gt;, Di He&lt;dihe@pku.edu.cn&amp;gt, Affiliation: ByteDance Seedxyx050@stu.pku.edu.cn, yuanruizhang25@stu.pku.edu.cn,shengjieluo@bytedance.com, {wanglw,dihe}@pku.edu.cn, Affiliation: State Key Laboratory of General Artificial Intelligence,School of Intelligence Science and Technology, Peking University</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2608.14430v1">arXiv</a> | <a href="https://arxiv.org/pdf/2608.14430v1">PDF</a></li>
+<li>
+<p><strong>来源</strong>: 📄 arXiv 关键词检索</p>
+</li>
+<li>
+<p><strong>核心方法</strong>: <span class="wikilink">RL-Diffusion</span> 提出用统一的 path-space（路径空间）视角来设计 diffusion 模型的 RL 后训练。它指出当前算法碎片化：reverse-trajectory 方法依赖离散化似然比，forward-matching 方法在带 reward 标注的加噪样本上训练。用路径空间统一两者。</p>
+</li>
+<li><strong>对比方法/Baselines</strong>: 对标 <span class="wikilink">GRPO</span>、<span class="wikilink">DiffusionNFT</span>、<span class="wikilink">TempFlow</span> 等 diffusion RL 方法；在 <span class="wikilink">Qwen-Image</span> 上验证。</li>
+<li><strong>借鉴意义</strong>: 如果你关注多模态生成 + RLHF 对齐，这篇的理论统一框架能帮你理清 diffusion RL 那一堆看似无关的算法背后的共性。</li>
+<li><strong>锐评</strong>: 北大 + 字节 Seed 出品，『统一碎片化领域』这种论文要么是真洞见要么是套壳综述，这篇看起来偏前者——path-space 视角确实能把 reverse/forward 两派放进一个框架。理论党会喜欢。风险：统一框架常常在每个具体任务上都不如专用方法，得看实验是不是只赢在『解释性』上。👀</li>
+</ul>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2608.14430v1" target="_blank" rel="noopener">📖 AI 精读</a></div><h2>📊 推荐与广告</h2><div class="paper-card" data-topic="📊 推荐与广告"><h3>3. EchoRec: Multi-Item Prediction-Empowered Generative Recommendation via Cycle-Consistent Preference Alignment</h3>
+<ul>
+<li><strong>作者</strong>: Haokai Ma, Aoqi Hu, Yueao Xing, Ruobing Xie, Yonghui Yang, Teng Tu, Lei Meng, Tat-Seng Chua</li>
+<li><strong>机构</strong>: Affiliation: Shandong University, Affiliation: , Affiliation: National University of Singapore, email:, Affiliation: Beijing University of Posts and Telecommunications, Affiliation: Tencent</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2608.14011v1">arXiv</a> | <a href="https://arxiv.org/pdf/2608.14011v1">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2608.14011v1/Overall_Structure.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: <span class="wikilink">EchoRec</span> 做生成式推荐（自回归生成目标 item 的 <span class="wikilink">SID</span>）。它指出前人把 <span class="wikilink">MTP</span>（Multi-Token Prediction）引入生成推荐只吃到了『提速』红利，而没挖它作为稠密监督的潜力。核心问 future behavior 是否算有信息量的监督，并用 cycle-consistent 偏好对齐 + 多 item 预测来解决。</li>
+<li><strong>对比方法/Baselines</strong>: 对标 <span class="wikilink">RPG</span>、<span class="wikilink">HPG</span> 等生成推荐路线，以及 VQ-Rec / SeeDRec 这类 SID tokenization 方法。</li>
+<li><strong>借鉴意义</strong>: 生成式推荐 + 语义 ID 是你的核心战场，这篇把 MTP 从工程 trick 上升到监督信号的视角转换，是能改进召回/排序建模的实打实思路。</li>
+<li><strong>锐评</strong>: 这才是我想看的推荐论文：不是又发一个 SID 变体，而是重新审视 MTP 到底该怎么用。『efficiency merit vs dense supervision』这个二分切得漂亮，cycle-consistent 对齐也不是硬凑。腾讯 + 山大 + NUS 的组合，作者阵容（Ruobing Xie、Tat-Seng Chua）够硬。质疑点：cycle-consistency 在推荐里容易变成正则化玄学，得看消融是否撑得住。🔥</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2608.14011v1" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="📊 推荐与广告"><h3>4. AdsWorldEngine: A Self-Evolving Conversational Advertising Agent through Orchestrator and Tool Coevolution</h3>
+<ul>
+<li><strong>作者</strong>: Simiao Zuo, Chenhui Xu, Yimeng Jia, Qiang Lou, Jian Jiao, Denis Charles</li>
+<li><strong>机构</strong>: Affiliation: Microsoft, email:, email: simiaozuo@microsoft.com, Affiliation: </li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2608.13833v1">arXiv</a> | <a href="https://arxiv.org/pdf/2608.13833v1">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2608.13833v1/fig1.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: <span class="wikilink">AdsWorldEngine</span> 把对话式广告建模成一个 gated agentic 决策过程：四个组件——Opportunity Gate（判断要不要插广告）、Orchestrator、Tool Set、Evaluator。关键是把『是否展示广告』和『展示哪个广告』解耦，并让 orchestrator 和 tool 协同进化（coevolution）。用 <span class="wikilink">SFT</span>+<span class="wikilink">GRPO</span> 训练。</li>
+<li><strong>对比方法/Baselines</strong>: 对话式广告 vs 传统 query-based 广告；用 <span class="wikilink">GPT-5</span> 做 backbone，评估 <span class="wikilink">TPR</span>/<span class="wikilink">FPR</span> 等指标。</li>
+<li><strong>借鉴意义</strong>: 做计算广告/广告投放的直接相关。Opportunity Gate 的『何时插广告而不惹人烦』是对话式商业化的核心难题，这个解耦框架有落地参考价值。</li>
+<li><strong>锐评</strong>: 微软出的，问题定义比一堆学术界的对话广告论文靠谱——真正抓住了『latent commercial intent 推断 + 不打扰用户』的张力。gate/select 解耦是对的工程直觉。self-evolving/coevolution 这词有点营销嫌疑，得看 tool 进化到底是自动化的还是人肉迭代包装。做广告的值得看，纯学术的可能觉得工程味过重。👀</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2608.13833v1" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="📊 推荐与广告"><h3>5. MACS: A Hybrid Multi-Agent Framework for Reliable Conversational E-Commerce Recommendation</h3>
+<ul>
+<li><strong>作者</strong>: Juli Huang, Hannah Clay, Thomas Sarda, Sajjad Beygi, Negin Golrezaei, Amin Saberi</li>
+<li><strong>机构</strong>:  Stanford, CA, USA, Note: , email: julih@stanford.edu,  Department of Computer Science, email: hclay116@stanford.edu, Note: Now at Google DeepMind, Affiliation: Stanford University, email: tsarda@stanford.edu,  MIT Sloan School of Management, Affiliation: Amazon, email: saberi@stanford.edu, Affiliation: , Affiliation: Massachusetts Institute of Technology,  Department of Management Science &amp; Engineering, email:, Affiliation: University of Southern California</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2608.14068v1">arXiv</a> | <a href="https://arxiv.org/pdf/2608.14068v1">PDF</a></li>
+<li>
+<p><strong>来源</strong>: 📄 arXiv 关键词检索</p>
+</li>
+<li>
+<p><strong>核心方法</strong>: <span class="wikilink">MACS</span> 是混合式多智能体框架，专攻电商对话推荐在『硬约束』下的可靠性：推荐只能来自商家固定 catalog，不许 web search、不许编造产品声明。结合确定性约束执行 + 会话级偏好状态 + 固定 catalog grounding。</p>
+</li>
+<li><strong>对比方法/Baselines</strong>: 对话推荐系统 + 知识图谱增强检索 + LLM 硬约束可靠性三个方向的交叉。</li>
+<li><strong>借鉴意义</strong>: 工业界电商推荐的真实痛点：LLM 一放飞就推不存在的商品。这篇把『可靠性 under hard constraints』作为一等公民，对做落地对话推荐的团队很实用。</li>
+<li><strong>锐评</strong>: Stanford + Amazon + MIT 的组合，问题选得务实——真实部署里 catalog grounding 就是生死线。把确定性约束和 LLM 生成缝合是对的方向。但『hybrid multi-agent』听着就像把规则引擎和 LLM 各塞一个 agent，创新度可能不如工程完整度。适合抄架构，别指望理论惊喜。👀</li>
+</ul>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2608.14068v1" target="_blank" rel="noopener">📖 AI 精读</a></div><h2>🧠 多智能体推理与验证</h2><div class="paper-card" data-topic="🧠 多智能体推理与验证"><h3>6. Wrong but Useful: Trajectory Value Beyond Answer Correctness in Multi-Agent Messages</h3>
+<ul>
+<li><strong>作者</strong>: Chih-Hsuan Yang\corresponding, Anjir Ahmed Chowdhury, Cheng-Hau Yang, Weijian Zheng, Fernando Llorente, Xiaolong Ma, Xinyang Li, Eliu A. Huerta, Ian T. Foster, Rajeev Thakur</li>
+<li><strong>机构</strong>: Argonne National Laboratory, Lemont, IL, USA, Brookhaven National Laboratory, Upton, NY, USA, University of Chicago, Chicago, IL, USA, University of Houston, Houston, TX, USA</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2608.14375v1">arXiv</a> | <a href="https://arxiv.org/pdf/2608.14375v1">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2608.14375v1/fig_DHD_diagram_corrected.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: <span class="wikilink">Wrong-but-Useful</span> 挑战多智能体系统『用正确性/置信度过滤消息』的默认假设：一个错误答案里可能藏着有用的分解、约束或科学原理。它用 <span class="wikilink">DHD</span>、<span class="wikilink">LOO</span> 等度量，看单条消息是否改变独立 integrator 的最终结果，而非它本身对不对。</li>
+<li><strong>对比方法/Baselines</strong>: 对标过程奖励模型 (process reward models)、self-refinement/critique 系统。在 <span class="wikilink">SciBench</span>、<span class="wikilink">MaScQA</span>、<span class="wikilink">MATH-2</span> 上评估。</li>
+<li><strong>借鉴意义</strong>: 对多智能体系统设计有直接启发：你的消息过滤/聚合策略可能正在扔掉有价值的『错误』推理。这是能改变 orchestration 设计原则的视角。</li>
+<li><strong>锐评</strong>: Argonne 国家实验室出品，视角反直觉但有料——『correctness ≠ usefulness』这个切口比大多数多智能体论文的『我又加了个 agent』深刻得多。用『是否改变 integrator 输出』代替『答案对不对』作为度量是聪明的。质疑：这套度量在多少任务上泛化？会不会只在特定 benchmark 成立？但光是这个 framing 就值得读。👀</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2608.14375v1" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🧠 多智能体推理与验证"><h3>7. CLAIR-Fin: An Adversarial Multi-Agent Framework for Claim-Level Verification and Adaptive Debate in Cross-Modal Financial QA</h3>
+<ul>
+<li><strong>作者</strong>: Fatema Tuj Johora Faria, Mukaffi Bin Moin, Jubayer Al Mahmud, M. F. Mridha, Md. Alam Hossain</li>
+<li><strong>机构</strong>: Affiliation: American International University - Bangladesh, Affiliation: Ahsanullah University of Science and Technology, Bangladesh, Affiliation: Jashore University of Science and Technology, Bangladesh, Affiliation: </li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2608.13706v1">arXiv</a> | <a href="https://arxiv.org/pdf/2608.13706v1">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2608.13706v1/CLAIR-Fin_Workflow.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: <span class="wikilink">CLAIR-Fin</span> 是对抗式多智能体框架，做跨模态金融 QA 的 claim 级验证 + 自适应辩论。针对现有防幻觉方案的三个漏洞：模态不一致时仍信任证据、辩论只验证聚合报告而非单条 claim、验证发生在起草之后。</li>
+<li><strong>对比方法/Baselines</strong>: 对标 RAG + 多智能体 pipeline 的幻觉防御，用 <span class="wikilink">FinQA</span> 评估。</li>
+<li><strong>借鉴意义</strong>: claim 级验证 + 起草前验证的思路，对任何需要事实可靠性的多智能体系统（不止金融）都有借鉴。</li>
+<li><strong>锐评</strong>: 问题拆解（模态不一致、聚合级 vs claim 级、事后 vs 事中验证）是这篇的亮点，三刀切得清楚。但作者团队（孟加拉几所大学）连发了 TeachMateGPT 和这篇，都是『多智能体 + 某垂直 + RAG』的模板化产出，工程堆料味重。方法组件多但缺乏一个尖锐的核心 insight。做金融 QA 可看架构，否则跳过。⚠️</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2608.13706v1" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🧠 多智能体推理与验证"><h3>8. ATLAS: Discovering Agent Strategies through LLM-Guided Abstraction and Automata Learning</h3>
+<ul>
+<li><strong>作者</strong>: Ignacio D. Lopez-Miguel, Andreas Happe, Jürgen Cito, Ezio Bartocci, Bettina Könighofer, Martin Tappler</li>
+<li><strong>机构</strong>: Martin Tappler, Affiliation: </li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2608.14352v1">arXiv</a> | <a href="https://arxiv.org/pdf/2608.14352v1">PDF</a></li>
+<li>
+<p><strong>来源</strong>: 📄 arXiv 关键词检索</p>
+</li>
+<li>
+<p><strong>核心方法</strong>: <span class="wikilink">ATLAS</span> 通过 LLM 引导的抽象 + 自动机学习（Automata Learning）来发现 Agent 策略。针对 LLM Agent 行为难理解的问题，从执行轨迹中学出符号化行为模型，捕捉 Agent 的策略而非仅任务成功率。用渗透测试 Agent（<span class="wikilink">HackingBuddyGPT</span>）做 case。</p>
+</li>
+<li><strong>对比方法/Baselines</strong>: 对比现有只看任务成功率和执行 trace 的评估方法。</li>
+<li><strong>借鉴意义</strong>: Agent 可解释性/可分析性是被严重低估的方向。如果你需要审计或调试 Agent 行为，用自动机学出符号模型是个新颖工具。</li>
+<li><strong>锐评</strong>: TU Wien 一帮做形式化方法的人跨界搞 Agent 可解释性，视角够独特——把 Agent 轨迹蒸馏成自动机，比看一堆 trace 强太多。渗透测试的 case 也接地气。缺点是自动机学习对状态空间敏感，复杂 Agent 会不会学出一团意大利面？小众但有品味的工作，形式化 + Agent 交叉方向值得关注。👀</li>
+</ul>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2608.14352v1" target="_blank" rel="noopener">📖 AI 精读</a></div><h2>🖼️ 多模态与文档 AI</h2><div class="paper-card" data-topic="🖼️ 多模态与文档 AI"><h3>9. MonkeyOCRv2: A Visual-Text Foundation Model for Document AI</h3>
+<ul>
+<li><strong>作者</strong>: Yuliang Liu1,
+Zhang Li111footnotemark:</li>
+<li><strong>机构</strong>: Thanks: , 1Huazhong University of Science and Technology, 2Kingsoft Office</li>
+<li><strong>链接</strong>: <a href="https://arxiv.org/abs/2607.11562">arXiv</a> | <a href="https://arxiv.org/pdf/2607.11562">PDF</a></li>
+<li>
+<p><strong>来源</strong>: 🔥 HF Trending，⬆️ 78</p>
+</li>
+<li>
+<p><strong>核心方法</strong>: <span class="wikilink">MonkeyOCRv2</span> 是文档 AI 的视觉-文本预训练基座模型。核心论点：主流视觉编码器在自然图像上预训练，无法直接用于文档图像——密集文字和精细笔画需要字符级视觉感知。因此做了文档导向的预训练适配。</p>
+</li>
+<li><strong>对比方法/Baselines</strong>: 对标 <span class="wikilink">PaddleOCR</span>、<span class="wikilink">UniMERNet</span>、<span class="wikilink">CRNN</span> 等 OCR 方法，用了 <span class="wikilink">MonkeyDoc</span> 数据集。</li>
+<li><strong>借鉴意义</strong>: 如果你的推荐/广告 pipeline 需要处理文档、票据、结构化图文，一个专门的文档基座模型能省不少事。多模态方向的实用基建。</li>
+<li><strong>锐评</strong>: 78 个赞是今天最高的，社区认可度摆在这。『自然图像编码器不适配文档』是个真问题，字符级感知的定位没毛病。华科 + 金山办公，落地场景明确（WPS 背后）。不过 OCR 基座模型是红海，v2 的增量到底有多少、相比 v1 提升几个点，得翻实验表——标题党嫌疑不大，但『foundation model』的帽子扣得有点重。👀</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2607.11562" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🖼️ 多模态与文档 AI"><h3>10. SPARGen: Unifying Spatial Perception and Reasoning through Native Multimodal Generation</h3>
+<ul>
+<li><strong>作者</strong>: Jinsheng Quan, Jianhua Li, Siyi Xie, Xuanke Shi, Kewang Deng, Zukai Chen, Feifei Shao, Lei Yang, Quan Wang\corresponding, Yawei Luo\corresponding</li>
+<li><strong>机构</strong>: Peking University, Zhejiang University</li>
+<li><strong>链接</strong>: <a href="https://arxiv.org/abs/2608.14138">arXiv</a> | <a href="https://arxiv.org/pdf/2608.14138">PDF</a></li>
+<li><strong>来源</strong>: 📰 HF Daily，⬆️ 0</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2608.14138v1/overview.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: <span class="wikilink">SPARGen</span> 通过原生多模态生成来统一空间感知与推理。反对用 task-specific 架构或外部几何模块分别处理，主张在一个生成模型里恢复几何结构、建立对应、理解空间关系。</li>
+<li><strong>对比方法/Baselines</strong>: 对标 <span class="wikilink">VGGT</span>、DUSt3R 等前馈重建模型；在 <span class="wikilink">KITTI</span>、<span class="wikilink">MindCube</span> 等上评估。</li>
+<li><strong>借鉴意义</strong>: 多模态生成 + 空间理解的统一尝试。如果你关注多模态生成模型的能力边界，这是把『感知』塞进生成范式的一个数据点。</li>
+<li><strong>锐评</strong>: 北大 + 浙大。『用生成统一一切几何任务』是当下时髦叙事（受 VGGT 启发），野心可嘉。但空间/几何任务对精度极敏感，生成式方法在 3D 重建上打得过专用 feed-forward 模型（VGGT）吗？HF 0 赞说明社区还在观望。方向前沿，但要提防『统一但样样不精』。🫠</li>
+</ul>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2608.14138" target="_blank" rel="noopener">📖 AI 精读</a></div><h2>🤖 Agent 框架与应用</h2><div class="paper-card" data-topic="🤖 Agent 框架与应用"><h3>11. SheetCompass: Hierarchical Relation Graphs for Agentic Spreadsheet Reasoning</h3>
+<ul>
+<li><strong>作者</strong>: Panjing He, Mingyue Cheng, Yucong Luo,Li Li, Xiaohan Zhang</li>
+<li><strong>机构</strong>: email: hepanjing,lili0516,zxh25126485，prime666@mail.ustc.edu.cn, Affiliation: , Affiliation: State Key Laboratory of Cognitive Intelligence, University of Science and Technology of China, email:, email: mycheng@ustc.edu.cn</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2608.14452v1">arXiv</a> | <a href="https://arxiv.org/pdf/2608.14452v1">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2608.14452v1/methods.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: <span class="wikilink">SheetCompass</span> 用层次关系图（Hierarchical Relation Graphs）做表格推理 Agent。针对真实工作簿里的隐式跨表关联、细粒度列依赖、复杂空间布局，构建图结构辅助 LLM 推理。</li>
+<li><strong>对比方法/Baselines</strong>: 对标 <span class="wikilink">SheetAgent</span>、<span class="wikilink">SheetCopilot</span> 等表格 Agent，用 <span class="wikilink">SheetRM</span> 评估。</li>
+<li><strong>借鉴意义</strong>: 表格是企业数据的主战场，如果你做数据分析 Agent 或表格理解，这个层次关系图的建模思路值得借鉴。</li>
+<li><strong>锐评</strong>: USTC 认知智能国重出品。把表格的隐式结构显式建成层次图是对的方向——LLM 直接读 flatten 的表格确实丢空间/依赖信息。问题在于：关系图的构建本身要不要人工规则？如果构图靠启发式，那泛化性存疑。相比 SheetCopilot 的增量得看 benchmark。方向扎实，非爆款。👀</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2608.14452v1" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🤖 Agent 框架与应用"><h3>12. Polaris : Multi Agentic System for Conversational Enterprise Analytics</h3>
+<ul>
+<li><strong>作者</strong>: Varuni H K, Soham Sarkar, Jay Kumar, Goutham Krishnan, Tanvi Johari, Avinash Bharadwaj, Santosh Hegde</li>
+<li><strong>机构</strong>: Couchbase Inc, India, Santosh Hegde</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2608.14246v1">arXiv</a> | <a href="https://arxiv.org/pdf/2608.14246v1">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2608.14246v1/LaTeX/Architecture.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: <span class="wikilink">Polaris</span> 是 supervisor-led 多智能体框架，做对话式企业分析。核心是 Dynamic Task Coordination (<span class="wikilink">DTC</span>) 框架，supervisor 求解一个匹配问题，随用户目标/工具延迟/数据可用性演化，维护跨会话持久状态，保证多模态输出（可视化、查询结果、叙述）语义一致。</li>
+<li><strong>对比方法/Baselines</strong>: 用 <span class="wikilink">ReAct</span>、<span class="wikilink">SQL</span> 工具，对比 <span class="wikilink">MAS</span> 基线，用 SemanticSimilarity / ContextPrecision 评估。</li>
+<li><strong>借鉴意义</strong>: 企业分析 Agent 的又一个参考架构，DTC 的动态协调如果做得好对多工具编排有借鉴。</li>
+<li><strong>锐评</strong>: Couchbase 出的产品向论文，supervisor + 专门化 agent 网络是最标准不过的多智能体模板，DTC 换个名字本质还是任务路由。工程完整但学术新意稀薄——这类『我们搭了个企业分析系统』的论文一抓一大把。做类似产品可参考，找 idea 别来。🫠</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2608.14246v1" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🤖 Agent 框架与应用"><h3>13. Wyvern: An Agentic Framework for Generating Grounded Multimodal Reports</h3>
+<ul>
+<li><strong>作者</strong>: Beatrice Alessandra Motetti, Emilien Guandalino, Daniele Jahier Pagliari, Alessio Burrello, Lorenz K. Müller, Konstantin Berestizshevsky, Lukas Cavigelli</li>
+<li><strong>机构</strong>: Computing Systems Lab, Huawei Research, Switzerland, Affiliation: </li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2608.14446v1">arXiv</a> | <a href="https://arxiv.org/pdf/2608.14446v1">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2608.14446v1/Overview.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2608.14446v1/Method.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2608.14446v1/Method_figures.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: <span class="wikilink">Wyvern</span> 是多智能体框架，自动生成 grounded、多模态的技术报告。针对生成模型『内容合成但缺乏信息 grounding』的问题，用多 agent 协作保证报告的信息落地性。</li>
+<li><strong>对比方法/Baselines</strong>: 对标 <span class="wikilink">WebThinker</span>、<span class="wikilink">STORM</span>、<span class="wikilink">WikiAutoGen</span> 等报告/长文生成系统。</li>
+<li><strong>借鉴意义</strong>: 自动报告生成如果 grounding 做得好有实用价值，但和 STORM 一类工作高度重叠。</li>
+<li><strong>锐评</strong>: 华为苏黎世研究院。『grounded 多模态报告』——STORM 和 WikiAutoGen 已经把这条路走过一遍了，多加个『多模态』和『grounding』的差异化有多大得打问号。方法摘要空着，只能从对标看出是 STORM 换皮 + 图文支持。做报告生成产品的可以看看别人怎么拼 pipeline。💤</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2608.14446v1" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🤖 Agent 框架与应用"><h3>14. TimeSage-EV: A Live Benchmark for Agentic Time Series Analysis in Evolving Environments</h3>
+<ul>
+<li><strong>作者</strong>: Qingren Yao, Yaxuan Kong, Yuqi Nie, Yichen Li, Stefan Zohren, Anna Vettoruzzo, Qingsong Wen, Ming Jin, Joaquin Vanschoren</li>
+<li><strong>机构</strong>: Affiliation: Eindhoven University of Technology, University of Oxford, VulpiVox Intelligence, Affiliation: Squirrel Ai Learning, Griffith Universityq.yao@tue.nl; yaxuan.kong@eng.ox.ac.uk; mingjinedu@gmail.com; j.vanschoren@tue.nl[0.4em], Affiliation: </li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2608.14270v1">arXiv</a> | <a href="https://arxiv.org/pdf/2608.14270v1">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2608.14270v1/figure_1_overview.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2608.14270v1/figure_4_data_pipeline.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2608.14270v1/figure/figure_8_failure_mode_distribution.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: <span class="wikilink">TimeSage-EV</span> 是时间序列 Agent 的『活体 benchmark』，针对演化环境：新观测会改变证据基础和后续结论的有效性。现有时序 QA benchmark 多用固定快照，忽略了时间有效性和 cutoff-aware 的证据使用。</li>
+<li><strong>对比方法/Baselines</strong>: 用 <span class="wikilink">GPT-5</span>、<span class="wikilink">DeepSeek</span> 等评估，关注 failure mode 分布。</li>
+<li><strong>借鉴意义</strong>: 『live/evolving benchmark』的概念对评估任何需要处理时效数据的 Agent 都有意义——静态快照高估了模型能力。</li>
+<li><strong>锐评</strong>: 作者阵容（Qingsong Wen、Ming Jin、Vanschoren 这些时序 + AutoML 老手）靠谱。『活体 benchmark』抓住了静态评估的真实盲点——时间有效性确实被忽视。但 benchmark 论文的命门是维护成本：evolving 环境要持续更新，一旦作者不管了就死。概念好，可持续性存疑。做时序 Agent 评估的值得看。👀</li>
+</ul>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2608.14270v1" target="_blank" rel="noopener">📖 AI 精读</a></div></div>
+<div id="panel-强化学习与策略优化" class="tab-panel"><h2>🎯 强化学习与策略优化</h2><div class="paper-card" data-topic="🎯 强化学习与策略优化"><h3>1. Soft Adaptive Policy Optimization</h3>
+<ul>
+<li><strong>作者</strong>: Gao, Chang, Zheng, Chujie, Chen, Xiong-Hui, Dang, Kai, Liu, Shixuan, Yu, Bowen, Yang, An, Bai, Shuai, Zhou, Jingren, Lin, Junyang</li>
+<li><strong>机构</strong>: Thanks: , Qwen Team, Alibaba Inc, Affiliation: </li>
+<li><strong>链接</strong>: <a href="https://arxiv.org/abs/2511.20347">arXiv</a> | <a href="https://arxiv.org/pdf/2511.20347">PDF</a></li>
+<li>
+<p><strong>来源</strong>: 🔥 HF Trending，⬆️ 43</p>
+</li>
+<li>
+<p><strong>核心方法</strong>: <span class="wikilink">SAPO</span> 针对 RL 训 LLM 时 token 级重要性比 (importance ratio) 高方差的老问题——尤其在 <span class="wikilink">MoE</span> 模型里被放大——提出用『软自适应』的方式裁剪/加权更新，而不是像 <span class="wikilink">GRPO</span>/<span class="wikilink">GSPO</span> 那样硬 clip。核心是把不稳定的 token 更新平滑化，在 <span class="wikilink">AIME</span> 等推理 benchmark 上验证。</p>
+</li>
+<li><strong>对比方法/Baselines</strong>: 直接对标 <span class="wikilink">GRPO</span> 和 <span class="wikilink">GSPO</span>（序列级重要性比那一派），本质是在 clip 策略上做文章。</li>
+<li><strong>借鉴意义</strong>: 你要是在训 RL reasoning 或者碰 MoE 的策略优化，这是继 GRPO/GSPO 之后必须跟的一条线。Qwen 团队亲自下场，工程可信度高。</li>
+<li><strong>锐评</strong>: Qwen 团队对 GRPO 家族的又一次外科手术，问题定位（MoE 放大 token 方差）很准，不是无病呻吟。43 个赞不是白来的。唯一警惕：『soft/adaptive』这类词是 RL 论文重灾区，得看清它的自适应机制到底是原则性的还是又一个调参旋钮。但冲着 Qwen 的落地记录，值得精读。🔥</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2511.20347" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🎯 强化学习与策略优化"><h3>2. Designing Reinforcement Learning for Diffusion Models: A Unified Path-Space View</h3>
+<ul>
+<li><strong>作者</strong>: Yixian Xu, Yuanrui Zhang, Shengjie Luo, Liwei Wang, Di He</li>
+<li><strong>机构</strong>: Affiliation: , Thanks: , Thanks: Correspondence to: Shengjie Luo &lt;shengjieluo@bytedance.com&gt;, Di He&lt;dihe@pku.edu.cn&amp;gt, Affiliation: ByteDance Seedxyx050@stu.pku.edu.cn, yuanruizhang25@stu.pku.edu.cn,shengjieluo@bytedance.com, {wanglw,dihe}@pku.edu.cn, Affiliation: State Key Laboratory of General Artificial Intelligence,School of Intelligence Science and Technology, Peking University</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2608.14430v1">arXiv</a> | <a href="https://arxiv.org/pdf/2608.14430v1">PDF</a></li>
+<li>
+<p><strong>来源</strong>: 📄 arXiv 关键词检索</p>
+</li>
+<li>
+<p><strong>核心方法</strong>: <span class="wikilink">RL-Diffusion</span> 提出用统一的 path-space（路径空间）视角来设计 diffusion 模型的 RL 后训练。它指出当前算法碎片化：reverse-trajectory 方法依赖离散化似然比，forward-matching 方法在带 reward 标注的加噪样本上训练。用路径空间统一两者。</p>
+</li>
+<li><strong>对比方法/Baselines</strong>: 对标 <span class="wikilink">GRPO</span>、<span class="wikilink">DiffusionNFT</span>、<span class="wikilink">TempFlow</span> 等 diffusion RL 方法；在 <span class="wikilink">Qwen-Image</span> 上验证。</li>
+<li><strong>借鉴意义</strong>: 如果你关注多模态生成 + RLHF 对齐，这篇的理论统一框架能帮你理清 diffusion RL 那一堆看似无关的算法背后的共性。</li>
+<li><strong>锐评</strong>: 北大 + 字节 Seed 出品，『统一碎片化领域』这种论文要么是真洞见要么是套壳综述，这篇看起来偏前者——path-space 视角确实能把 reverse/forward 两派放进一个框架。理论党会喜欢。风险：统一框架常常在每个具体任务上都不如专用方法，得看实验是不是只赢在『解释性』上。👀</li>
+</ul>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2608.14430v1" target="_blank" rel="noopener">📖 AI 精读</a></div></div>
+<div id="panel-推荐与广告" class="tab-panel"><h2>📊 推荐与广告</h2><div class="paper-card" data-topic="📊 推荐与广告"><h3>3. EchoRec: Multi-Item Prediction-Empowered Generative Recommendation via Cycle-Consistent Preference Alignment</h3>
+<ul>
+<li><strong>作者</strong>: Haokai Ma, Aoqi Hu, Yueao Xing, Ruobing Xie, Yonghui Yang, Teng Tu, Lei Meng, Tat-Seng Chua</li>
+<li><strong>机构</strong>: Affiliation: Shandong University, Affiliation: , Affiliation: National University of Singapore, email:, Affiliation: Beijing University of Posts and Telecommunications, Affiliation: Tencent</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2608.14011v1">arXiv</a> | <a href="https://arxiv.org/pdf/2608.14011v1">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2608.14011v1/Overall_Structure.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: <span class="wikilink">EchoRec</span> 做生成式推荐（自回归生成目标 item 的 <span class="wikilink">SID</span>）。它指出前人把 <span class="wikilink">MTP</span>（Multi-Token Prediction）引入生成推荐只吃到了『提速』红利，而没挖它作为稠密监督的潜力。核心问 future behavior 是否算有信息量的监督，并用 cycle-consistent 偏好对齐 + 多 item 预测来解决。</li>
+<li><strong>对比方法/Baselines</strong>: 对标 <span class="wikilink">RPG</span>、<span class="wikilink">HPG</span> 等生成推荐路线，以及 VQ-Rec / SeeDRec 这类 SID tokenization 方法。</li>
+<li><strong>借鉴意义</strong>: 生成式推荐 + 语义 ID 是你的核心战场，这篇把 MTP 从工程 trick 上升到监督信号的视角转换，是能改进召回/排序建模的实打实思路。</li>
+<li><strong>锐评</strong>: 这才是我想看的推荐论文：不是又发一个 SID 变体，而是重新审视 MTP 到底该怎么用。『efficiency merit vs dense supervision』这个二分切得漂亮，cycle-consistent 对齐也不是硬凑。腾讯 + 山大 + NUS 的组合，作者阵容（Ruobing Xie、Tat-Seng Chua）够硬。质疑点：cycle-consistency 在推荐里容易变成正则化玄学，得看消融是否撑得住。🔥</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2608.14011v1" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="📊 推荐与广告"><h3>4. AdsWorldEngine: A Self-Evolving Conversational Advertising Agent through Orchestrator and Tool Coevolution</h3>
+<ul>
+<li><strong>作者</strong>: Simiao Zuo, Chenhui Xu, Yimeng Jia, Qiang Lou, Jian Jiao, Denis Charles</li>
+<li><strong>机构</strong>: Affiliation: Microsoft, email:, email: simiaozuo@microsoft.com, Affiliation: </li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2608.13833v1">arXiv</a> | <a href="https://arxiv.org/pdf/2608.13833v1">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2608.13833v1/fig1.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: <span class="wikilink">AdsWorldEngine</span> 把对话式广告建模成一个 gated agentic 决策过程：四个组件——Opportunity Gate（判断要不要插广告）、Orchestrator、Tool Set、Evaluator。关键是把『是否展示广告』和『展示哪个广告』解耦，并让 orchestrator 和 tool 协同进化（coevolution）。用 <span class="wikilink">SFT</span>+<span class="wikilink">GRPO</span> 训练。</li>
+<li><strong>对比方法/Baselines</strong>: 对话式广告 vs 传统 query-based 广告；用 <span class="wikilink">GPT-5</span> 做 backbone，评估 <span class="wikilink">TPR</span>/<span class="wikilink">FPR</span> 等指标。</li>
+<li><strong>借鉴意义</strong>: 做计算广告/广告投放的直接相关。Opportunity Gate 的『何时插广告而不惹人烦』是对话式商业化的核心难题，这个解耦框架有落地参考价值。</li>
+<li><strong>锐评</strong>: 微软出的，问题定义比一堆学术界的对话广告论文靠谱——真正抓住了『latent commercial intent 推断 + 不打扰用户』的张力。gate/select 解耦是对的工程直觉。self-evolving/coevolution 这词有点营销嫌疑，得看 tool 进化到底是自动化的还是人肉迭代包装。做广告的值得看，纯学术的可能觉得工程味过重。👀</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2608.13833v1" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="📊 推荐与广告"><h3>5. MACS: A Hybrid Multi-Agent Framework for Reliable Conversational E-Commerce Recommendation</h3>
+<ul>
+<li><strong>作者</strong>: Juli Huang, Hannah Clay, Thomas Sarda, Sajjad Beygi, Negin Golrezaei, Amin Saberi</li>
+<li><strong>机构</strong>:  Stanford, CA, USA, Note: , email: julih@stanford.edu,  Department of Computer Science, email: hclay116@stanford.edu, Note: Now at Google DeepMind, Affiliation: Stanford University, email: tsarda@stanford.edu,  MIT Sloan School of Management, Affiliation: Amazon, email: saberi@stanford.edu, Affiliation: , Affiliation: Massachusetts Institute of Technology,  Department of Management Science &amp; Engineering, email:, Affiliation: University of Southern California</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2608.14068v1">arXiv</a> | <a href="https://arxiv.org/pdf/2608.14068v1">PDF</a></li>
+<li>
+<p><strong>来源</strong>: 📄 arXiv 关键词检索</p>
+</li>
+<li>
+<p><strong>核心方法</strong>: <span class="wikilink">MACS</span> 是混合式多智能体框架，专攻电商对话推荐在『硬约束』下的可靠性：推荐只能来自商家固定 catalog，不许 web search、不许编造产品声明。结合确定性约束执行 + 会话级偏好状态 + 固定 catalog grounding。</p>
+</li>
+<li><strong>对比方法/Baselines</strong>: 对话推荐系统 + 知识图谱增强检索 + LLM 硬约束可靠性三个方向的交叉。</li>
+<li><strong>借鉴意义</strong>: 工业界电商推荐的真实痛点：LLM 一放飞就推不存在的商品。这篇把『可靠性 under hard constraints』作为一等公民，对做落地对话推荐的团队很实用。</li>
+<li><strong>锐评</strong>: Stanford + Amazon + MIT 的组合，问题选得务实——真实部署里 catalog grounding 就是生死线。把确定性约束和 LLM 生成缝合是对的方向。但『hybrid multi-agent』听着就像把规则引擎和 LLM 各塞一个 agent，创新度可能不如工程完整度。适合抄架构，别指望理论惊喜。👀</li>
+</ul>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2608.14068v1" target="_blank" rel="noopener">📖 AI 精读</a></div></div>
+<div id="panel-多智能体推理与验证" class="tab-panel"><h2>🧠 多智能体推理与验证</h2><div class="paper-card" data-topic="🧠 多智能体推理与验证"><h3>6. Wrong but Useful: Trajectory Value Beyond Answer Correctness in Multi-Agent Messages</h3>
+<ul>
+<li><strong>作者</strong>: Chih-Hsuan Yang\corresponding, Anjir Ahmed Chowdhury, Cheng-Hau Yang, Weijian Zheng, Fernando Llorente, Xiaolong Ma, Xinyang Li, Eliu A. Huerta, Ian T. Foster, Rajeev Thakur</li>
+<li><strong>机构</strong>: Argonne National Laboratory, Lemont, IL, USA, Brookhaven National Laboratory, Upton, NY, USA, University of Chicago, Chicago, IL, USA, University of Houston, Houston, TX, USA</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2608.14375v1">arXiv</a> | <a href="https://arxiv.org/pdf/2608.14375v1">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2608.14375v1/fig_DHD_diagram_corrected.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: <span class="wikilink">Wrong-but-Useful</span> 挑战多智能体系统『用正确性/置信度过滤消息』的默认假设：一个错误答案里可能藏着有用的分解、约束或科学原理。它用 <span class="wikilink">DHD</span>、<span class="wikilink">LOO</span> 等度量，看单条消息是否改变独立 integrator 的最终结果，而非它本身对不对。</li>
+<li><strong>对比方法/Baselines</strong>: 对标过程奖励模型 (process reward models)、self-refinement/critique 系统。在 <span class="wikilink">SciBench</span>、<span class="wikilink">MaScQA</span>、<span class="wikilink">MATH-2</span> 上评估。</li>
+<li><strong>借鉴意义</strong>: 对多智能体系统设计有直接启发：你的消息过滤/聚合策略可能正在扔掉有价值的『错误』推理。这是能改变 orchestration 设计原则的视角。</li>
+<li><strong>锐评</strong>: Argonne 国家实验室出品，视角反直觉但有料——『correctness ≠ usefulness』这个切口比大多数多智能体论文的『我又加了个 agent』深刻得多。用『是否改变 integrator 输出』代替『答案对不对』作为度量是聪明的。质疑：这套度量在多少任务上泛化？会不会只在特定 benchmark 成立？但光是这个 framing 就值得读。👀</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2608.14375v1" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🧠 多智能体推理与验证"><h3>7. CLAIR-Fin: An Adversarial Multi-Agent Framework for Claim-Level Verification and Adaptive Debate in Cross-Modal Financial QA</h3>
+<ul>
+<li><strong>作者</strong>: Fatema Tuj Johora Faria, Mukaffi Bin Moin, Jubayer Al Mahmud, M. F. Mridha, Md. Alam Hossain</li>
+<li><strong>机构</strong>: Affiliation: American International University - Bangladesh, Affiliation: Ahsanullah University of Science and Technology, Bangladesh, Affiliation: Jashore University of Science and Technology, Bangladesh, Affiliation: </li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2608.13706v1">arXiv</a> | <a href="https://arxiv.org/pdf/2608.13706v1">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2608.13706v1/CLAIR-Fin_Workflow.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: <span class="wikilink">CLAIR-Fin</span> 是对抗式多智能体框架，做跨模态金融 QA 的 claim 级验证 + 自适应辩论。针对现有防幻觉方案的三个漏洞：模态不一致时仍信任证据、辩论只验证聚合报告而非单条 claim、验证发生在起草之后。</li>
+<li><strong>对比方法/Baselines</strong>: 对标 RAG + 多智能体 pipeline 的幻觉防御，用 <span class="wikilink">FinQA</span> 评估。</li>
+<li><strong>借鉴意义</strong>: claim 级验证 + 起草前验证的思路，对任何需要事实可靠性的多智能体系统（不止金融）都有借鉴。</li>
+<li><strong>锐评</strong>: 问题拆解（模态不一致、聚合级 vs claim 级、事后 vs 事中验证）是这篇的亮点，三刀切得清楚。但作者团队（孟加拉几所大学）连发了 TeachMateGPT 和这篇，都是『多智能体 + 某垂直 + RAG』的模板化产出，工程堆料味重。方法组件多但缺乏一个尖锐的核心 insight。做金融 QA 可看架构，否则跳过。⚠️</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2608.13706v1" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🧠 多智能体推理与验证"><h3>8. ATLAS: Discovering Agent Strategies through LLM-Guided Abstraction and Automata Learning</h3>
+<ul>
+<li><strong>作者</strong>: Ignacio D. Lopez-Miguel, Andreas Happe, Jürgen Cito, Ezio Bartocci, Bettina Könighofer, Martin Tappler</li>
+<li><strong>机构</strong>: Martin Tappler, Affiliation: </li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2608.14352v1">arXiv</a> | <a href="https://arxiv.org/pdf/2608.14352v1">PDF</a></li>
+<li>
+<p><strong>来源</strong>: 📄 arXiv 关键词检索</p>
+</li>
+<li>
+<p><strong>核心方法</strong>: <span class="wikilink">ATLAS</span> 通过 LLM 引导的抽象 + 自动机学习（Automata Learning）来发现 Agent 策略。针对 LLM Agent 行为难理解的问题，从执行轨迹中学出符号化行为模型，捕捉 Agent 的策略而非仅任务成功率。用渗透测试 Agent（<span class="wikilink">HackingBuddyGPT</span>）做 case。</p>
+</li>
+<li><strong>对比方法/Baselines</strong>: 对比现有只看任务成功率和执行 trace 的评估方法。</li>
+<li><strong>借鉴意义</strong>: Agent 可解释性/可分析性是被严重低估的方向。如果你需要审计或调试 Agent 行为，用自动机学出符号模型是个新颖工具。</li>
+<li><strong>锐评</strong>: TU Wien 一帮做形式化方法的人跨界搞 Agent 可解释性，视角够独特——把 Agent 轨迹蒸馏成自动机，比看一堆 trace 强太多。渗透测试的 case 也接地气。缺点是自动机学习对状态空间敏感，复杂 Agent 会不会学出一团意大利面？小众但有品味的工作，形式化 + Agent 交叉方向值得关注。👀</li>
+</ul>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2608.14352v1" target="_blank" rel="noopener">📖 AI 精读</a></div></div>
+<div id="panel-多模态与文档ai" class="tab-panel"><h2>🖼️ 多模态与文档 AI</h2><div class="paper-card" data-topic="🖼️ 多模态与文档 AI"><h3>9. MonkeyOCRv2: A Visual-Text Foundation Model for Document AI</h3>
+<ul>
+<li><strong>作者</strong>: Yuliang Liu1,
+Zhang Li111footnotemark:</li>
+<li><strong>机构</strong>: Thanks: , 1Huazhong University of Science and Technology, 2Kingsoft Office</li>
+<li><strong>链接</strong>: <a href="https://arxiv.org/abs/2607.11562">arXiv</a> | <a href="https://arxiv.org/pdf/2607.11562">PDF</a></li>
+<li>
+<p><strong>来源</strong>: 🔥 HF Trending，⬆️ 78</p>
+</li>
+<li>
+<p><strong>核心方法</strong>: <span class="wikilink">MonkeyOCRv2</span> 是文档 AI 的视觉-文本预训练基座模型。核心论点：主流视觉编码器在自然图像上预训练，无法直接用于文档图像——密集文字和精细笔画需要字符级视觉感知。因此做了文档导向的预训练适配。</p>
+</li>
+<li><strong>对比方法/Baselines</strong>: 对标 <span class="wikilink">PaddleOCR</span>、<span class="wikilink">UniMERNet</span>、<span class="wikilink">CRNN</span> 等 OCR 方法，用了 <span class="wikilink">MonkeyDoc</span> 数据集。</li>
+<li><strong>借鉴意义</strong>: 如果你的推荐/广告 pipeline 需要处理文档、票据、结构化图文，一个专门的文档基座模型能省不少事。多模态方向的实用基建。</li>
+<li><strong>锐评</strong>: 78 个赞是今天最高的，社区认可度摆在这。『自然图像编码器不适配文档』是个真问题，字符级感知的定位没毛病。华科 + 金山办公，落地场景明确（WPS 背后）。不过 OCR 基座模型是红海，v2 的增量到底有多少、相比 v1 提升几个点，得翻实验表——标题党嫌疑不大，但『foundation model』的帽子扣得有点重。👀</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2607.11562" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🖼️ 多模态与文档 AI"><h3>10. SPARGen: Unifying Spatial Perception and Reasoning through Native Multimodal Generation</h3>
+<ul>
+<li><strong>作者</strong>: Jinsheng Quan, Jianhua Li, Siyi Xie, Xuanke Shi, Kewang Deng, Zukai Chen, Feifei Shao, Lei Yang, Quan Wang\corresponding, Yawei Luo\corresponding</li>
+<li><strong>机构</strong>: Peking University, Zhejiang University</li>
+<li><strong>链接</strong>: <a href="https://arxiv.org/abs/2608.14138">arXiv</a> | <a href="https://arxiv.org/pdf/2608.14138">PDF</a></li>
+<li><strong>来源</strong>: 📰 HF Daily，⬆️ 0</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2608.14138v1/overview.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: <span class="wikilink">SPARGen</span> 通过原生多模态生成来统一空间感知与推理。反对用 task-specific 架构或外部几何模块分别处理，主张在一个生成模型里恢复几何结构、建立对应、理解空间关系。</li>
+<li><strong>对比方法/Baselines</strong>: 对标 <span class="wikilink">VGGT</span>、DUSt3R 等前馈重建模型；在 <span class="wikilink">KITTI</span>、<span class="wikilink">MindCube</span> 等上评估。</li>
+<li><strong>借鉴意义</strong>: 多模态生成 + 空间理解的统一尝试。如果你关注多模态生成模型的能力边界，这是把『感知』塞进生成范式的一个数据点。</li>
+<li><strong>锐评</strong>: 北大 + 浙大。『用生成统一一切几何任务』是当下时髦叙事（受 VGGT 启发），野心可嘉。但空间/几何任务对精度极敏感，生成式方法在 3D 重建上打得过专用 feed-forward 模型（VGGT）吗？HF 0 赞说明社区还在观望。方向前沿，但要提防『统一但样样不精』。🫠</li>
+</ul>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2608.14138" target="_blank" rel="noopener">📖 AI 精读</a></div></div>
+<div id="panel-agent框架与应用" class="tab-panel"><h2>🤖 Agent 框架与应用</h2><div class="paper-card" data-topic="🤖 Agent 框架与应用"><h3>11. SheetCompass: Hierarchical Relation Graphs for Agentic Spreadsheet Reasoning</h3>
+<ul>
+<li><strong>作者</strong>: Panjing He, Mingyue Cheng, Yucong Luo,Li Li, Xiaohan Zhang</li>
+<li><strong>机构</strong>: email: hepanjing,lili0516,zxh25126485，prime666@mail.ustc.edu.cn, Affiliation: , Affiliation: State Key Laboratory of Cognitive Intelligence, University of Science and Technology of China, email:, email: mycheng@ustc.edu.cn</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2608.14452v1">arXiv</a> | <a href="https://arxiv.org/pdf/2608.14452v1">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2608.14452v1/methods.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: <span class="wikilink">SheetCompass</span> 用层次关系图（Hierarchical Relation Graphs）做表格推理 Agent。针对真实工作簿里的隐式跨表关联、细粒度列依赖、复杂空间布局，构建图结构辅助 LLM 推理。</li>
+<li><strong>对比方法/Baselines</strong>: 对标 <span class="wikilink">SheetAgent</span>、<span class="wikilink">SheetCopilot</span> 等表格 Agent，用 <span class="wikilink">SheetRM</span> 评估。</li>
+<li><strong>借鉴意义</strong>: 表格是企业数据的主战场，如果你做数据分析 Agent 或表格理解，这个层次关系图的建模思路值得借鉴。</li>
+<li><strong>锐评</strong>: USTC 认知智能国重出品。把表格的隐式结构显式建成层次图是对的方向——LLM 直接读 flatten 的表格确实丢空间/依赖信息。问题在于：关系图的构建本身要不要人工规则？如果构图靠启发式，那泛化性存疑。相比 SheetCopilot 的增量得看 benchmark。方向扎实，非爆款。👀</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2608.14452v1" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🤖 Agent 框架与应用"><h3>12. Polaris : Multi Agentic System for Conversational Enterprise Analytics</h3>
+<ul>
+<li><strong>作者</strong>: Varuni H K, Soham Sarkar, Jay Kumar, Goutham Krishnan, Tanvi Johari, Avinash Bharadwaj, Santosh Hegde</li>
+<li><strong>机构</strong>: Couchbase Inc, India, Santosh Hegde</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2608.14246v1">arXiv</a> | <a href="https://arxiv.org/pdf/2608.14246v1">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2608.14246v1/LaTeX/Architecture.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: <span class="wikilink">Polaris</span> 是 supervisor-led 多智能体框架，做对话式企业分析。核心是 Dynamic Task Coordination (<span class="wikilink">DTC</span>) 框架，supervisor 求解一个匹配问题，随用户目标/工具延迟/数据可用性演化，维护跨会话持久状态，保证多模态输出（可视化、查询结果、叙述）语义一致。</li>
+<li><strong>对比方法/Baselines</strong>: 用 <span class="wikilink">ReAct</span>、<span class="wikilink">SQL</span> 工具，对比 <span class="wikilink">MAS</span> 基线，用 SemanticSimilarity / ContextPrecision 评估。</li>
+<li><strong>借鉴意义</strong>: 企业分析 Agent 的又一个参考架构，DTC 的动态协调如果做得好对多工具编排有借鉴。</li>
+<li><strong>锐评</strong>: Couchbase 出的产品向论文，supervisor + 专门化 agent 网络是最标准不过的多智能体模板，DTC 换个名字本质还是任务路由。工程完整但学术新意稀薄——这类『我们搭了个企业分析系统』的论文一抓一大把。做类似产品可参考，找 idea 别来。🫠</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2608.14246v1" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🤖 Agent 框架与应用"><h3>13. Wyvern: An Agentic Framework for Generating Grounded Multimodal Reports</h3>
+<ul>
+<li><strong>作者</strong>: Beatrice Alessandra Motetti, Emilien Guandalino, Daniele Jahier Pagliari, Alessio Burrello, Lorenz K. Müller, Konstantin Berestizshevsky, Lukas Cavigelli</li>
+<li><strong>机构</strong>: Computing Systems Lab, Huawei Research, Switzerland, Affiliation: </li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2608.14446v1">arXiv</a> | <a href="https://arxiv.org/pdf/2608.14446v1">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2608.14446v1/Overview.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2608.14446v1/Method.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2608.14446v1/Method_figures.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: <span class="wikilink">Wyvern</span> 是多智能体框架，自动生成 grounded、多模态的技术报告。针对生成模型『内容合成但缺乏信息 grounding』的问题，用多 agent 协作保证报告的信息落地性。</li>
+<li><strong>对比方法/Baselines</strong>: 对标 <span class="wikilink">WebThinker</span>、<span class="wikilink">STORM</span>、<span class="wikilink">WikiAutoGen</span> 等报告/长文生成系统。</li>
+<li><strong>借鉴意义</strong>: 自动报告生成如果 grounding 做得好有实用价值，但和 STORM 一类工作高度重叠。</li>
+<li><strong>锐评</strong>: 华为苏黎世研究院。『grounded 多模态报告』——STORM 和 WikiAutoGen 已经把这条路走过一遍了，多加个『多模态』和『grounding』的差异化有多大得打问号。方法摘要空着，只能从对标看出是 STORM 换皮 + 图文支持。做报告生成产品的可以看看别人怎么拼 pipeline。💤</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2608.14446v1" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🤖 Agent 框架与应用"><h3>14. TimeSage-EV: A Live Benchmark for Agentic Time Series Analysis in Evolving Environments</h3>
+<ul>
+<li><strong>作者</strong>: Qingren Yao, Yaxuan Kong, Yuqi Nie, Yichen Li, Stefan Zohren, Anna Vettoruzzo, Qingsong Wen, Ming Jin, Joaquin Vanschoren</li>
+<li><strong>机构</strong>: Affiliation: Eindhoven University of Technology, University of Oxford, VulpiVox Intelligence, Affiliation: Squirrel Ai Learning, Griffith Universityq.yao@tue.nl; yaxuan.kong@eng.ox.ac.uk; mingjinedu@gmail.com; j.vanschoren@tue.nl[0.4em], Affiliation: </li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2608.14270v1">arXiv</a> | <a href="https://arxiv.org/pdf/2608.14270v1">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2608.14270v1/figure_1_overview.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2608.14270v1/figure_4_data_pipeline.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2608.14270v1/figure/figure_8_failure_mode_distribution.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: <span class="wikilink">TimeSage-EV</span> 是时间序列 Agent 的『活体 benchmark』，针对演化环境：新观测会改变证据基础和后续结论的有效性。现有时序 QA benchmark 多用固定快照，忽略了时间有效性和 cutoff-aware 的证据使用。</li>
+<li><strong>对比方法/Baselines</strong>: 用 <span class="wikilink">GPT-5</span>、<span class="wikilink">DeepSeek</span> 等评估，关注 failure mode 分布。</li>
+<li><strong>借鉴意义</strong>: 『live/evolving benchmark』的概念对评估任何需要处理时效数据的 Agent 都有意义——静态快照高估了模型能力。</li>
+<li><strong>锐评</strong>: 作者阵容（Qingsong Wen、Ming Jin、Vanschoren 这些时序 + AutoML 老手）靠谱。『活体 benchmark』抓住了静态评估的真实盲点——时间有效性确实被忽视。但 benchmark 论文的命门是维护成本：evolving 环境要持续更新，一旦作者不管了就死。概念好，可持续性存疑。做时序 Agent 评估的值得看。👀</li>
+</ul>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2608.14270v1" target="_blank" rel="noopener">📖 AI 精读</a></div></div>
+<hr>
+<h2>被排除的论文</h2>
+<ul>
+<li>VLM- and LLM-Driven Multi-Agent System for PET Image Denoising — 命中 negative_keywords（medical imaging / PET / diagnosis），医学影像去噪，与推荐/广告/LLM 核心无关</li>
+<li>A Temporal Barrier Framework for Collision Avoidance in Multi-Agent Autonomous Aerial Vehicles — UAV 避碰控制，属 embodied/autonomous，命中 negative_keywords</li>
+<li>Removing Temporal Note Redundancy Improves Multimodal RL for Medicine — 机械通气 ICU 医疗决策，命中 negative_keywords（medical / diagnosis）</li>
+<li>AgilePE: Autonomous UAV Pursuit-Evasion via Self-Play RL — UAV 追逃控制，属 embodied/robot，命中 negative_keywords</li>
+<li>Knowledge-Data-Dual-Driven RL for Autonomous Vehicle Control — 自动驾驶决策，命中 negative_keywords（autonomous driving）</li>
+<li>Can Language Models Understand mmWave Data? — mmWave 雷达人体感知，偏传感/感知，与核心关注领域交集弱</li>
+<li>Whose doctor does the AI recommend? — LLM 医生推荐偏见审计，属医疗+社科审计研究，虽含 recommend 但非推荐系统技术</li>
+<li>Grounding Without Corrective Control: Truth-Tracking Profiles for LLMs — LLM 真值哲学讨论，纯思辨无方法，工程价值低</li>
+<li>AutoSchema: Live Schema Grounding for Agentic Text-to-Sparql — 生命科学知识图谱 SPARQL，领域过于垂直小众，跳过</li>
+<li>Deep RL for pickup and delivery routing problems — VRP 路径优化，RL 应用但离核心关注领域较远</li>
+<li>RL-Based Production Scheduling in Coating Scenario — 工业排产 RL 应用，与推荐/广告/LLM 无交集</li>
+<li>Engineering Signals of Human-AI Collaboration in the Agentic Coding Era — PR 数据的纵向实证分析，非方法论工作，工程可复用性低</li>
+<li>What preferences can - and cannot - predict in multi-agent online learning — 博弈论/FTRL 无悔学习理论，理论性过强与应用关注点脱节</li>
+<li>TeachMateGPT: Multi-Agent Framework for Pedagogical Assessment — 教育测评 RAG，与孟加拉团队的 CLAIR-Fin 同模板，垂直堆料，跳过</li>
+<li>CodeSIFT / Detecting Contaminated Code-Generation Prompt Batches — 代码生成安全检测（influence functions），虽沾 code generation 但偏安全防御小众，本轮从略</li>
+<li>Never the Number: Structural Abstention for text-to-SQL — text-to-SQL 弃权机制，LLM 应用但偏窄，本轮从略</li>
+</ul>
+<p>『Multi-Agent + 垂直领域 + RAG/验证』已成 2026 年 Agent 论文的标准灌水模板，真正的信号从『又加一个 agent』转向『重新审视既有组件的用途』——SAPO 之于 clip、EchoRec 之于 MTP、Wrong-but-Useful 之于消息过滤，这三篇的共性是『不加东西，而是重新理解已有东西』。</p>
