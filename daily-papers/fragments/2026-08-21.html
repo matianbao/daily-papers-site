@@ -1,0 +1,334 @@
+<h1>🔪 今日锐评</h1>
+<p>今天是标准的「agentic RL + 框架」大礼包：mid-training、单 rollout 优化、里程碑 credit assignment 一次性全上桌，全是 GRPO 家族的边角补丁。真正有点野心的是 SenseNova-U1 想把理解和生成缝成一体，以及那篇偷偷把「机器原生符号」塞进 LLM token 空间的 Google 短文。剩下一半是把 LLM 硬塞进空管、智能合约、DeFi 各行各业的『我也用了大模型』作业。</p>
+<h2>分流表</h2>
+<table>
+<thead>
+<tr>
+<th>等级</th>
+<th>论文</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>🔥 必读</td>
+<td><span class="wikilink">MidTool</span>（把 agentic tool use 拉到 mid-training 阶段，数据合成流水线值得抄） · <span class="wikilink">SAPO</span>（单 rollout 干掉 group-relative 的显存开销，工程价值直接）</td>
+</tr>
+<tr>
+<td>👀 值得看</td>
+<td><span class="wikilink">MileGPO</span>（长程 agent 的 credit assignment，里程碑推断思路新） · <span class="wikilink">CAMA</span>（multi-agent 记忆不再假设独立，戳中真痛点） · <span class="wikilink">SenseNova-U1</span>（理解+生成统一架构，商汤的野心） · <span class="wikilink">MAI-UI</span>（GUI agent 全尺寸家族 + 端云协同） · <span class="wikilink">When-Machines-Speak</span>（机器原生符号进 LLM，思路刁） · <span class="wikilink">Repo0</span>（从零构建整个 repo 架构，design-driven）</td>
+</tr>
+<tr>
+<td>💤 可跳过</td>
+<td><span class="wikilink">RGA-Topology</span>（multi-agent 拓扑省 token 的又一层 RL 补丁） · <span class="wikilink">LLM-Confidence</span>（黑盒 UQ，增量但扎实）</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<div class="tab-bar"><button class="tab-btn active" data-tab="all" onclick="switchTab('all')">📋 全部<span class="tab-count">10</span></button><button class="tab-btn" data-tab="agentic训练与rl" onclick="switchTab('agentic训练与rl')">🤖 🤖 Agentic 训练与 RL<span class="tab-count">4</span></button><button class="tab-btn" data-tab="multiagent系统与记忆" onclick="switchTab('multiagent系统与记忆')">🧠 🧠 Multi-Agent 系统与记忆<span class="tab-count">2</span></button><button class="tab-btn" data-tab="多模态与gui" onclick="switchTab('多模态与gui')">🎨 🖥️ 多模态与 GUI<span class="tab-count">2</span></button><button class="tab-btn" data-tab="llm方法与评估" onclick="switchTab('llm方法与评估')">📊 🔬 LLM 方法与评估<span class="tab-count">2</span></button></div>
+<div id="panel-all" class="tab-panel active"><h2>🤖 Agentic 训练与 RL</h2><div class="paper-card" data-topic="🤖 Agentic 训练与 RL"><h3>1. MidTool: Mid-training Data Synthesis for Agentic Tool Use</h3>
+<ul>
+<li><strong>作者</strong>: Fengqing Jiang, Yite Wang, Boyi Liu, Zhaoyang Wang, Canwen Xu, Zhewei Yao, Radha Poovendran, Yuxiong He</li>
+<li><strong>机构</strong>: Affiliation:, Affiliation: University of North Carolina at Chapel Hill, Affiliation: University of Washington</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2608.20314v1">arXiv</a> | <a href="https://arxiv.org/pdf/2608.20314v1">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2608.20314v1/midtool-pipeline-v3.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2608.20314v1/sft_loss.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2608.20314v1/training_rl_reward_4b.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: 把 <span class="wikilink">SFT</span>+<span class="wikilink">RL</span> 的 mid-training 从数学/代码推理扩展到通用 <span class="wikilink">tool use</span>（含 <span class="wikilink">MCP</span> 工具调用），核心是一条多阶段数据合成与过滤流水线：借鉴 StarCoder 的启发式做内容过滤，把 Jupyter 转成 Python 文本，构建高价值 tool-use 训练子集。在 <span class="wikilink">BFCL</span> 等 function-calling benchmark 上验证。</li>
+<li><strong>对比方法/Baselines</strong>: 对标 SWE 领域的 mid-training 工作，用 <span class="wikilink">BFCL</span> 做工具调用评测</li>
+<li><strong>借鉴意义</strong>: 对做 agentic / function calling 的人有直接价值——mid-training 是被低估的阶段，数据合成配方比又一个 RL 变体实用得多。</li>
+<li><strong>锐评</strong>: 终于有人认真研究 mid-training 阶段的工具能力而不是又一个 RL loss。数据合成流水线是干货，但『high-value subset』的过滤标准基本照抄 StarCoder，创新度打个折。真正的问题是：mid-training 增益能不能扛过后续 RLHF 的洗刷，摘要没给答案。工程党可抄，理论党别指望惊喜。👀</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2608.20314v1" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🤖 Agentic 训练与 RL"><h3>2. SAPO: Single-Rollout Autoregressive Policy Optimization for Agentic Reinforcement Learning</h3>
+<ul>
+<li><strong>作者</strong>: Dayang Liang, Lang Feng11footnotemark:, Yunlong Liu</li>
+<li><strong>机构</strong>: Affiliation: , Thanks: , Affiliation: Nanyang Technological University, Singaporedyliang@stu.xmu.edu.cn, lang005@e.ntu.edu.sg, ylliu@xmu.edu.cn, Affiliation: Xiamen University, China</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2608.19842v1">arXiv</a> | <a href="https://arxiv.org/pdf/2608.19842v1">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2608.19842v1/sapo_fw.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: <span class="wikilink">SAPO</span> 针对 agentic <span class="wikilink">RL</span> 中 critic-free、group-relative 方法（<span class="wikilink">GRPO</span> 一类）需要多次 rollout 估计优势、显存开销大的问题，提出单 rollout 的自回归策略优化，用自回归方式估计优势替代多 rollout 组内比较。在 <span class="wikilink">WebShop</span> 等长程交互任务上测试。</li>
+<li><strong>对比方法/Baselines</strong>: 对标 <span class="wikilink">PPO</span>（显存重）、<span class="wikilink">GRPO</span>/<span class="wikilink">GiGPO</span> 一类 group-relative 方法</li>
+<li><strong>借鉴意义</strong>: 对训 agent 的人是实打实的省钱——单 rollout 意味着显存和采样成本大幅下降，长程任务尤其受益。</li>
+<li><strong>锐评</strong>: 痛点抓得准：group-relative 方法一个 query 拉一堆 rollout，显存和时间都烧钱。单 rollout 用自回归估优势的思路优雅，但天下没有免费的午餐——去掉多 rollout 的方差抵消，优势估计的偏差怎么控？摘要只吹了 memory 省了多少，对 variance 只字不提。想清楚这个 trade-off 再上生产。👀</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2608.19842v1" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🤖 Agentic 训练与 RL"><h3>3. MileGPO: Milestone Inference with Local Evidence for Graph-Based Policy Optimization of Long-Horizon LLM Agents</h3>
+<ul>
+<li><strong>作者</strong>: Bo Qian, Yuting Wu, Shuang Zeng, Huaiyu Wan, Dalin Zhang, Jiqiang Liu</li>
+<li><strong>机构</strong>: Affiliation: , Thanks: , Affiliation: Beijing Jiaotong University, China, Email: </li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2608.19803v1">arXiv</a> | <a href="https://arxiv.org/pdf/2608.19803v1">PDF</a></li>
+<li>
+<p><strong>来源</strong>: 📄 arXiv 关键词检索</p>
+</li>
+<li>
+<p><strong>核心方法</strong>: <span class="wikilink">MileGPO</span> 解决长程 agent RL 中 credit assignment 难题——监督信号往往只有最终 reward。不同于 step grouping 或图优势估计，它做『里程碑推断』：用局部证据识别有意义的中间里程碑，再据此分配 credit。基于 <span class="wikilink">GiGPO</span> 的图结构优化框架。</p>
+</li>
+<li><strong>对比方法/Baselines</strong>: 对标 <span class="wikilink">GiGPO</span>（图优势估计）及 step-grouping 类 credit 分配方法</li>
+<li><strong>借鉴意义</strong>: 长程 agent 训练的 credit assignment 是核心瓶颈，里程碑这个中间粒度比 step-level 更符合任务语义。</li>
+<li><strong>锐评</strong>: 『里程碑』这个中间粒度确实比逐 step 或纯轨迹级更贴合真实任务结构，直觉对。但『用局部证据识别里程碑』这句话最怕变成又一个需要精调的启发式——里程碑怎么定义、谁来标，摘要含糊。如果里程碑本身要人工先验，那就是把 credit assignment 的难题挪了个位置而已。🫠</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2608.19803v1" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🤖 Agentic 训练与 RL"><h3>4. Repo0: Design-Driven Zero-to-All Code Generation</h3>
+<ul>
+<li><strong>作者</strong>: Chen, Silin, Teng, Haoyi, Gu, Xiaodong, Shi, Yuling, Huang, Jiale, Wang, Yongpan, Zhang, Hongyu, Guan, Haibing</li>
+<li><strong>机构</strong>: Affiliation: , Affiliation: 1Shanghai Jiao Tong University, 2Chongqing University</li>
+<li><strong>链接</strong>: <a href="https://arxiv.org/abs/2608.19854">arXiv</a> | <a href="https://arxiv.org/pdf/2608.19854">PDF</a></li>
+<li><strong>来源</strong>: 📰 HF Daily，⬆️ 5</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2608.19854v1/intro.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2608.19854v1/overview.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2608.19854v1/phase1_example.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: <span class="wikilink">Repo0</span> 针对『zero-to-all』代码生成——从自然语言需求直接构建整个软件项目，而非假设预定义仓库架构。用 design-driven 流程先规划模块化 repo 架构（<span class="wikilink">DAG</span> 组织），再逐步开发并维持架构一致性。用 <span class="wikilink">GPT-5</span>、<span class="wikilink">DeepSeek</span> 等做 backbone，在 <span class="wikilink">RepoCraft</span> 上评测。</li>
+<li><strong>对比方法/Baselines</strong>: 对标假设预定义架构的 <span class="wikilink">SWE</span> agent 系统，用 <span class="wikilink">RepoCraft</span> benchmark</li>
+<li><strong>借鉴意义</strong>: 对做 code agent 的人有意义——大多数系统假设架构已给定，真实『从零起项目』的架构决策一直是空白。</li>
+<li><strong>锐评</strong>: 戳中了 code agent 的真实盲区：现有系统都假设 repo 架构天上掉下来，Repo0 敢碰『从需求到整个架构』这块硬骨头，选题加分。但 design-driven 意味着前期规划一旦跑偏，后面全盘皆错，摘要没说架构规划错了怎么回滚。HF 只有 5 个 upvote，可能是被淹没也可能是社区不买账，自己判断。👀</li>
+</ul>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2608.19854" target="_blank" rel="noopener">📖 AI 精读</a></div><h2>🧠 Multi-Agent 系统与记忆</h2><div class="paper-card" data-topic="🧠 Multi-Agent 系统与记忆"><h3>5. Beyond Memory Majority: Latent-Source Reasoning for Multi-Agent Memory Arbitration</h3>
+<ul>
+<li><strong>作者</strong>: Chenchen Lin, Wenhao Yuan, Xuehe Wang, Edith Cheuk Han Ngai\corresponding</li>
+<li><strong>机构</strong>: Department of Electrical and Computer Engineering, The University of Hong Kong, Key Laboratory of Intelligent Assessment Technology for Sustainable Tourism, Ministry of Culture and Tourism, Sun, School of Artificial Intelligence, Sun Yat-sen University, Southern Marine Science and Engineering Guangdong Laboratory (Zhuhai)</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2608.19701v1">arXiv</a> | <a href="https://arxiv.org/pdf/2608.19701v1">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2608.19701v1/framework.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: <span class="wikilink">CAMA</span> 挑战长程 multi-agent 记忆的『独立性假设』：现有方法把检索到的记忆当独立证据做投票/加权，但不同 agent 写的记忆可能继承同一上游来源或共享 bias。CAMA 做 latent-source reasoning，识别记忆背后的潜在来源做仲裁。在 <span class="wikilink">MemoryAgentBench</span> 上评测，含 <span class="wikilink">RAG</span> 检索组件。</li>
+<li><strong>对比方法/Baselines</strong>: 对标把记忆当独立证据的投票/加权方法，用 <span class="wikilink">MemoryAgentBench</span></li>
+<li><strong>借鉴意义</strong>: 对做 agent memory / 长程 multi-agent 的人是真痛点——记忆同源导致的『假共识』在实际系统里非常常见。</li>
+<li><strong>锐评</strong>: 这个 insight 是今天最扎实的之一：multi-agent 记忆互相抄作业、共享同一 bias，然后投票投出个『假共识』——现有方法确实全都天真地假设独立。latent-source reasoning 方向对。唯一悬念是『潜在来源』怎么无监督地估出来，如果要额外标注来源那实用性大打折扣。但光是把这个假设摆上台面就值得一读。🔥</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2608.19701v1" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🧠 Multi-Agent 系统与记忆"><h3>6. Reward-Guided Autoregressive Graph Generation for Efficient Multi-Agent Communication Topology Design</h3>
+<ul>
+<li><strong>作者</strong>: Poomphob Suwannapichat, Boonyarit Changaival, Caesar Wu, Pascal Bouvry</li>
+<li><strong>机构</strong>: Affiliation: , Affiliation: King Mongkut’s University of Technology Thonburi, Thailand{poomphob.suwannapichat,pascal.bouvry}@uni.lucaesar.wu@ext.uni.luboonyarit.chang@kmutt.ac.th, Affiliation: University of Luxembourg, Luxembourg</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2608.20099v1">arXiv</a> | <a href="https://arxiv.org/pdf/2608.20099v1">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2608.20099v1/figure/overview_method.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: 在 ARG-Designer（把 multi-agent 拓扑设计重构为自回归图生成）基础上，加 reward-guided 机制：用 <span class="wikilink">RLHF</span> 风格训练引导图生成器，<span class="wikilink">GNN</span> 作 reward model backbone，激励生成稀疏高效的通信拓扑以省 token。在 <span class="wikilink">MMLU</span>、<span class="wikilink">HumanEval</span> 等测试。</li>
+<li><strong>对比方法/Baselines</strong>: 直接对标 <span class="wikilink">ARG</span>-Designer（无稀疏激励的自回归图生成）</li>
+<li><strong>借鉴意义</strong>: multi-agent 通信的 token 成本是落地大坑，拓扑稀疏化有实用价值。</li>
+<li><strong>锐评</strong>: 标准的『前作没考虑效率，我加个 reward 逼它稀疏』套路。问题很实（multi-agent 烧 token）但解法很缝合：ARG-Designer + RLHF + GNN reward，三个现成件拼起来。稀疏拓扑省了 token 会不会掉性能？这才是关键 trade-off，而不是又证明一次『加了 reward 就更稀疏』。增量工作，做 MAS 效率的可扫一眼。🫠</li>
+</ul>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2608.20099v1" target="_blank" rel="noopener">📖 AI 精读</a></div><h2>🖥️ 多模态与 GUI</h2><div class="paper-card" data-topic="🖥️ 多模态与 GUI"><h3>7. SenseNova-U1: Unifying Multimodal Understanding and Generation with NEO-unify Architecture</h3>
+<ul>
+<li><strong>作者</strong>: Diao, Haiwen, Wu, Penghao, Deng, Hanming, Wang, Jiahao, Bai, Shihao, Wu, Silei, Fan, Weichen, Ye, Wenjie, Tong, Wenwen, Fan, Xiangyu, Li, Yan, Wang, Yubo, Cao, Zhijie, Lin, Zhiqian, Yang, Zhitao, Cai, Zhongang, Niu, Yuwei, Zhu, Yue, Liu, Bo, Lv, Chengguang, Yu, Haojia, Xie, Haozhe, Wang, Hongli, Fan, Jianan, Li, Jiaqi, Lu, Jiefan, Ni, Jingcheng, Xu, Junxiang, Liang, Kaihuan, Shi, Lianqiang, Dai, Linjun, Wang, Linyan, Qian, Oscar, Gao, Peng, Liu, Pengfei, Sun, Qingping, Shen, Rui, Wang, Ruisi, Ma, Shengnan, Yang, Shuang, Xie, Siyi, Li, Siying, Zhong, Tianbo, Kong, Xiangli, Shi, Xuanke, Gao, Yang, Yao, Yongqiang, Wang, Yves, Bai, Zhengqi, Lin, Zhengyu, Yin, Zixin, Sun, Wenxiu, Gong, Ruihao, Wang, Quan, Lu, Lewei, Yang, Lei, Liu, Ziwei, Lin, Dahua</li>
+<li><strong>链接</strong>: <a href="https://arxiv.org/abs/2605.12500">arXiv</a> | <a href="https://arxiv.org/pdf/2605.12500">PDF</a></li>
+<li><strong>来源</strong>: 🔥 HF Trending，⬆️ 195</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2605.12500v1/teaser_overview.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2605.12500v1/lightllm_x2v.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2605.12500v1/midtrain_pipeline.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: <span class="wikilink">SenseNova-U1</span> 用 NEO-unify 架构统一多模态理解与生成，反对把两者当成割裂问题（导致碎片化架构、级联流水线、表示空间错配）。用 <span class="wikilink">MoT</span>（Mixture-of-Transformers 一类）设计，对标 <span class="wikilink">BAGEL</span>、<span class="wikilink">OmniGen2</span>、<span class="wikilink">FLUX</span> 等统一/生成模型。</li>
+<li><strong>对比方法/Baselines</strong>: 对标 <span class="wikilink">BAGEL</span>、<span class="wikilink">OmniGen2</span>、<span class="wikilink">FLUX</span> 等理解或生成模型</li>
+<li><strong>借鉴意义</strong>: 对做 multimodal generation 的人是方向性工作——理解与生成的表示统一是通往原生多模态智能的核心命题。</li>
+<li><strong>锐评</strong>: HF 195 upvote 不是白给的，商汤把『理解 vs 生成』的割裂上升到结构性限制而非工程瑕疵，格局拉满。但『统一架构』这块地已经被 BAGEL、OmniGen2 反复耕过，真正的问题是 NEO-unify 到底在哪个 benchmark 上同时打赢了专用理解模型和专用生成模型——如果两头都只是打平，那『统一』就只是省了参数不是提了能力。看正文的对比表再下结论。👀</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2605.12500" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🖥️ 多模态与 GUI"><h3>8. MAI-UI Technical Report: Real-World Centric Foundation GUI Agents</h3>
+<ul>
+<li><strong>作者</strong>: Zhou, Hanzhang, Zhang, Xu, Tong, Panrong, Zhang, Jianan, Chen, Liangyu, Kong, Quyu, Cai, Chenglin, Liu, Chen, Wang, Yue, Zhou, Jingren, Hoi, Steven</li>
+<li><strong>机构</strong>: [1em] Tongyi Lab  , Alibaba Group[0.5em]</li>
+<li><strong>链接</strong>: <a href="https://arxiv.org/abs/2512.22047">arXiv</a> | <a href="https://arxiv.org/pdf/2512.22047">PDF</a></li>
+<li><strong>来源</strong>: 🔥 HF Trending，⬆️ 31</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2512.22047v1/grounding_pipelin.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2512.22047v1/data_pipeline.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2512.22047v1/rl_train_schema2.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: <span class="wikilink">MAI-UI</span> 是覆盖 2B/8B/32B/235B-A22B 全尺寸的 GUI agent 家族，整合五件套：GUI grounding 训练范式、自演化轨迹数据流水线、agent-用户交互 + <span class="wikilink">MCP</span> 工具增强训练、在线 <span class="wikilink">RL</span>、原生端云协同系统。在 <span class="wikilink">AndroidWorld</span>、<span class="wikilink">ScreenSpot</span>、<span class="wikilink">MobileWorld</span> 上评测。</li>
+<li><strong>对比方法/Baselines</strong>: 在 <span class="wikilink">AndroidWorld</span>、<span class="wikilink">ScreenSpot</span>、<span class="wikilink">MobileWorld</span> 等 GUI benchmark 上对标</li>
+<li><strong>借鉴意义</strong>: 对做 GUI/tool-use agent 的人是完整技术报告，端云协同和自演化数据流水线的工程细节有参考价值。</li>
+<li><strong>锐评</strong>: 通义的技术报告，工程完整度高：全尺寸家族 + 自演化数据 + 端云协同，一看就是要落地手机的。但技术报告的通病是『我们全都做了』的堆料叙事——五个模块各自的 ablation 有多少？端云协同到底省了多少延迟？摘要全是愿景。做 GUI agent 落地的必读工程细节，纯研究者会觉得单点创新稀薄。👀</li>
+</ul>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2512.22047" target="_blank" rel="noopener">📖 AI 精读</a></div><h2>🔬 LLM 方法与评估</h2><div class="paper-card" data-topic="🔬 LLM 方法与评估"><h3>9. When Machines Speak: A Unified Generative Framework for Integrating Machine-Native Symbols into Pretrained Large Language Models</h3>
+<ul>
+<li><strong>作者</strong>: Yan, Su, Iyer, Rakesh</li>
+<li><strong>机构</strong>: Google Inc</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2608.19529v1">arXiv</a> | <a href="https://arxiv.org/pdf/2608.19529v1">PDF</a></li>
+<li>
+<p><strong>来源</strong>: 📄 arXiv 关键词检索</p>
+</li>
+<li>
+<p><strong>核心方法</strong>: 针对『很多真实 AI 系统用离散机器原生符号（而非自然语言）表示实体/行为/结构化信息』的问题——这些符号落在预训练 LLM 的语言 token 空间之外。提出统一生成框架，把机器原生符号整合进预训练 LLM，弥合语言建模与结构化预测的鸿沟。Google 出品。</p>
+</li>
+<li><strong>对比方法/Baselines</strong>: 对标把结构化预测和语言建模分开处理的方法（摘要未详列）</li>
+<li><strong>借鉴意义</strong>: 对做 LLM + 结构化数据（推荐、广告、日志等机器符号场景）的人有启发——机器 ID/符号如何进 LLM 是推荐系统 LLM 化的核心难题。</li>
+<li><strong>锐评</strong>: 别被朴素标题骗了，这篇戳的是推荐/广告 LLM 化最硬的骨头：item ID、类目编码这些机器符号根本不在 LLM 的 token 空间里。Google 敢碰『统一生成框架』方向对味。但短文 + 摘要极度含糊，figure 都没有，很可能是占坑的 idea paper。方向价值远大于当前完成度，做生成式推荐的盯着这条线。👀</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2608.19529v1" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🔬 LLM 方法与评估"><h3>10. Improved Confidence Estimates for Black-Box Large Language Models</h3>
+<ul>
+<li><strong>作者</strong>: Sokhna Diarra Mbacke, Mouloud Belbahri, Gabriel Loaiza-Ganem</li>
+<li><strong>机构</strong>: Affiliation:</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2608.19323v1">arXiv</a> | <a href="https://arxiv.org/pdf/2608.19323v1">PDF</a></li>
+<li>
+<p><strong>来源</strong>: 📄 arXiv 关键词检索</p>
+</li>
+<li>
+<p><strong>核心方法</strong>: 针对黑盒 <span class="wikilink">LLM</span> 的不确定性量化（<span class="wikilink">UQ</span>）：现有方法（verbalized confidence、多次生成聚合）多为 zero-shot，部署前仍需在目标数据集上评估。本文用少量标注数据改进黑盒 LLM 的置信度估计，在 <span class="wikilink">SciQ</span>、<span class="wikilink">SimpleQA</span>、<span class="wikilink">NQ</span> 上用 <span class="wikilink">AUROC</span>、<span class="wikilink">ECE</span> 评测。</p>
+</li>
+<li><strong>对比方法/Baselines</strong>: 对标 verbalized confidence、sample-and-aggregate 类 zero-shot UQ 方法</li>
+<li><strong>借鉴意义</strong>: UQ 对 LLM 安全部署是刚需，但『需要标注数据』的设定限制了通用性。</li>
+<li><strong>锐评</strong>: 扎实但增量。承认 zero-shot UQ 不够、要用标注数据校准，是诚实的一步，但也直接把卖点从『免费』降级成『要标注』——那和普通 calibration 的边界在哪？摘要没说清楚。AUROC/ECE 提升多少是全部看点。做 LLM 可靠性的可扫一眼方法，别期待范式转变。🫠</li>
+</ul>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2608.19323v1" target="_blank" rel="noopener">📖 AI 精读</a></div></div>
+<div id="panel-agentic训练与rl" class="tab-panel"><h2>🤖 Agentic 训练与 RL</h2><div class="paper-card" data-topic="🤖 Agentic 训练与 RL"><h3>1. MidTool: Mid-training Data Synthesis for Agentic Tool Use</h3>
+<ul>
+<li><strong>作者</strong>: Fengqing Jiang, Yite Wang, Boyi Liu, Zhaoyang Wang, Canwen Xu, Zhewei Yao, Radha Poovendran, Yuxiong He</li>
+<li><strong>机构</strong>: Affiliation:, Affiliation: University of North Carolina at Chapel Hill, Affiliation: University of Washington</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2608.20314v1">arXiv</a> | <a href="https://arxiv.org/pdf/2608.20314v1">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2608.20314v1/midtool-pipeline-v3.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2608.20314v1/sft_loss.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2608.20314v1/training_rl_reward_4b.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: 把 <span class="wikilink">SFT</span>+<span class="wikilink">RL</span> 的 mid-training 从数学/代码推理扩展到通用 <span class="wikilink">tool use</span>（含 <span class="wikilink">MCP</span> 工具调用），核心是一条多阶段数据合成与过滤流水线：借鉴 StarCoder 的启发式做内容过滤，把 Jupyter 转成 Python 文本，构建高价值 tool-use 训练子集。在 <span class="wikilink">BFCL</span> 等 function-calling benchmark 上验证。</li>
+<li><strong>对比方法/Baselines</strong>: 对标 SWE 领域的 mid-training 工作，用 <span class="wikilink">BFCL</span> 做工具调用评测</li>
+<li><strong>借鉴意义</strong>: 对做 agentic / function calling 的人有直接价值——mid-training 是被低估的阶段，数据合成配方比又一个 RL 变体实用得多。</li>
+<li><strong>锐评</strong>: 终于有人认真研究 mid-training 阶段的工具能力而不是又一个 RL loss。数据合成流水线是干货，但『high-value subset』的过滤标准基本照抄 StarCoder，创新度打个折。真正的问题是：mid-training 增益能不能扛过后续 RLHF 的洗刷，摘要没给答案。工程党可抄，理论党别指望惊喜。👀</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2608.20314v1" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🤖 Agentic 训练与 RL"><h3>2. SAPO: Single-Rollout Autoregressive Policy Optimization for Agentic Reinforcement Learning</h3>
+<ul>
+<li><strong>作者</strong>: Dayang Liang, Lang Feng11footnotemark:, Yunlong Liu</li>
+<li><strong>机构</strong>: Affiliation: , Thanks: , Affiliation: Nanyang Technological University, Singaporedyliang@stu.xmu.edu.cn, lang005@e.ntu.edu.sg, ylliu@xmu.edu.cn, Affiliation: Xiamen University, China</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2608.19842v1">arXiv</a> | <a href="https://arxiv.org/pdf/2608.19842v1">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2608.19842v1/sapo_fw.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: <span class="wikilink">SAPO</span> 针对 agentic <span class="wikilink">RL</span> 中 critic-free、group-relative 方法（<span class="wikilink">GRPO</span> 一类）需要多次 rollout 估计优势、显存开销大的问题，提出单 rollout 的自回归策略优化，用自回归方式估计优势替代多 rollout 组内比较。在 <span class="wikilink">WebShop</span> 等长程交互任务上测试。</li>
+<li><strong>对比方法/Baselines</strong>: 对标 <span class="wikilink">PPO</span>（显存重）、<span class="wikilink">GRPO</span>/<span class="wikilink">GiGPO</span> 一类 group-relative 方法</li>
+<li><strong>借鉴意义</strong>: 对训 agent 的人是实打实的省钱——单 rollout 意味着显存和采样成本大幅下降，长程任务尤其受益。</li>
+<li><strong>锐评</strong>: 痛点抓得准：group-relative 方法一个 query 拉一堆 rollout，显存和时间都烧钱。单 rollout 用自回归估优势的思路优雅，但天下没有免费的午餐——去掉多 rollout 的方差抵消，优势估计的偏差怎么控？摘要只吹了 memory 省了多少，对 variance 只字不提。想清楚这个 trade-off 再上生产。👀</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2608.19842v1" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🤖 Agentic 训练与 RL"><h3>3. MileGPO: Milestone Inference with Local Evidence for Graph-Based Policy Optimization of Long-Horizon LLM Agents</h3>
+<ul>
+<li><strong>作者</strong>: Bo Qian, Yuting Wu, Shuang Zeng, Huaiyu Wan, Dalin Zhang, Jiqiang Liu</li>
+<li><strong>机构</strong>: Affiliation: , Thanks: , Affiliation: Beijing Jiaotong University, China, Email: </li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2608.19803v1">arXiv</a> | <a href="https://arxiv.org/pdf/2608.19803v1">PDF</a></li>
+<li>
+<p><strong>来源</strong>: 📄 arXiv 关键词检索</p>
+</li>
+<li>
+<p><strong>核心方法</strong>: <span class="wikilink">MileGPO</span> 解决长程 agent RL 中 credit assignment 难题——监督信号往往只有最终 reward。不同于 step grouping 或图优势估计，它做『里程碑推断』：用局部证据识别有意义的中间里程碑，再据此分配 credit。基于 <span class="wikilink">GiGPO</span> 的图结构优化框架。</p>
+</li>
+<li><strong>对比方法/Baselines</strong>: 对标 <span class="wikilink">GiGPO</span>（图优势估计）及 step-grouping 类 credit 分配方法</li>
+<li><strong>借鉴意义</strong>: 长程 agent 训练的 credit assignment 是核心瓶颈，里程碑这个中间粒度比 step-level 更符合任务语义。</li>
+<li><strong>锐评</strong>: 『里程碑』这个中间粒度确实比逐 step 或纯轨迹级更贴合真实任务结构，直觉对。但『用局部证据识别里程碑』这句话最怕变成又一个需要精调的启发式——里程碑怎么定义、谁来标，摘要含糊。如果里程碑本身要人工先验，那就是把 credit assignment 的难题挪了个位置而已。🫠</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2608.19803v1" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🤖 Agentic 训练与 RL"><h3>4. Repo0: Design-Driven Zero-to-All Code Generation</h3>
+<ul>
+<li><strong>作者</strong>: Chen, Silin, Teng, Haoyi, Gu, Xiaodong, Shi, Yuling, Huang, Jiale, Wang, Yongpan, Zhang, Hongyu, Guan, Haibing</li>
+<li><strong>机构</strong>: Affiliation: , Affiliation: 1Shanghai Jiao Tong University, 2Chongqing University</li>
+<li><strong>链接</strong>: <a href="https://arxiv.org/abs/2608.19854">arXiv</a> | <a href="https://arxiv.org/pdf/2608.19854">PDF</a></li>
+<li><strong>来源</strong>: 📰 HF Daily，⬆️ 5</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2608.19854v1/intro.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2608.19854v1/overview.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2608.19854v1/phase1_example.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: <span class="wikilink">Repo0</span> 针对『zero-to-all』代码生成——从自然语言需求直接构建整个软件项目，而非假设预定义仓库架构。用 design-driven 流程先规划模块化 repo 架构（<span class="wikilink">DAG</span> 组织），再逐步开发并维持架构一致性。用 <span class="wikilink">GPT-5</span>、<span class="wikilink">DeepSeek</span> 等做 backbone，在 <span class="wikilink">RepoCraft</span> 上评测。</li>
+<li><strong>对比方法/Baselines</strong>: 对标假设预定义架构的 <span class="wikilink">SWE</span> agent 系统，用 <span class="wikilink">RepoCraft</span> benchmark</li>
+<li><strong>借鉴意义</strong>: 对做 code agent 的人有意义——大多数系统假设架构已给定，真实『从零起项目』的架构决策一直是空白。</li>
+<li><strong>锐评</strong>: 戳中了 code agent 的真实盲区：现有系统都假设 repo 架构天上掉下来，Repo0 敢碰『从需求到整个架构』这块硬骨头，选题加分。但 design-driven 意味着前期规划一旦跑偏，后面全盘皆错，摘要没说架构规划错了怎么回滚。HF 只有 5 个 upvote，可能是被淹没也可能是社区不买账，自己判断。👀</li>
+</ul>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2608.19854" target="_blank" rel="noopener">📖 AI 精读</a></div></div>
+<div id="panel-multiagent系统与记忆" class="tab-panel"><h2>🧠 Multi-Agent 系统与记忆</h2><div class="paper-card" data-topic="🧠 Multi-Agent 系统与记忆"><h3>5. Beyond Memory Majority: Latent-Source Reasoning for Multi-Agent Memory Arbitration</h3>
+<ul>
+<li><strong>作者</strong>: Chenchen Lin, Wenhao Yuan, Xuehe Wang, Edith Cheuk Han Ngai\corresponding</li>
+<li><strong>机构</strong>: Department of Electrical and Computer Engineering, The University of Hong Kong, Key Laboratory of Intelligent Assessment Technology for Sustainable Tourism, Ministry of Culture and Tourism, Sun, School of Artificial Intelligence, Sun Yat-sen University, Southern Marine Science and Engineering Guangdong Laboratory (Zhuhai)</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2608.19701v1">arXiv</a> | <a href="https://arxiv.org/pdf/2608.19701v1">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2608.19701v1/framework.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: <span class="wikilink">CAMA</span> 挑战长程 multi-agent 记忆的『独立性假设』：现有方法把检索到的记忆当独立证据做投票/加权，但不同 agent 写的记忆可能继承同一上游来源或共享 bias。CAMA 做 latent-source reasoning，识别记忆背后的潜在来源做仲裁。在 <span class="wikilink">MemoryAgentBench</span> 上评测，含 <span class="wikilink">RAG</span> 检索组件。</li>
+<li><strong>对比方法/Baselines</strong>: 对标把记忆当独立证据的投票/加权方法，用 <span class="wikilink">MemoryAgentBench</span></li>
+<li><strong>借鉴意义</strong>: 对做 agent memory / 长程 multi-agent 的人是真痛点——记忆同源导致的『假共识』在实际系统里非常常见。</li>
+<li><strong>锐评</strong>: 这个 insight 是今天最扎实的之一：multi-agent 记忆互相抄作业、共享同一 bias，然后投票投出个『假共识』——现有方法确实全都天真地假设独立。latent-source reasoning 方向对。唯一悬念是『潜在来源』怎么无监督地估出来，如果要额外标注来源那实用性大打折扣。但光是把这个假设摆上台面就值得一读。🔥</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2608.19701v1" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🧠 Multi-Agent 系统与记忆"><h3>6. Reward-Guided Autoregressive Graph Generation for Efficient Multi-Agent Communication Topology Design</h3>
+<ul>
+<li><strong>作者</strong>: Poomphob Suwannapichat, Boonyarit Changaival, Caesar Wu, Pascal Bouvry</li>
+<li><strong>机构</strong>: Affiliation: , Affiliation: King Mongkut’s University of Technology Thonburi, Thailand{poomphob.suwannapichat,pascal.bouvry}@uni.lucaesar.wu@ext.uni.luboonyarit.chang@kmutt.ac.th, Affiliation: University of Luxembourg, Luxembourg</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2608.20099v1">arXiv</a> | <a href="https://arxiv.org/pdf/2608.20099v1">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2608.20099v1/figure/overview_method.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: 在 ARG-Designer（把 multi-agent 拓扑设计重构为自回归图生成）基础上，加 reward-guided 机制：用 <span class="wikilink">RLHF</span> 风格训练引导图生成器，<span class="wikilink">GNN</span> 作 reward model backbone，激励生成稀疏高效的通信拓扑以省 token。在 <span class="wikilink">MMLU</span>、<span class="wikilink">HumanEval</span> 等测试。</li>
+<li><strong>对比方法/Baselines</strong>: 直接对标 <span class="wikilink">ARG</span>-Designer（无稀疏激励的自回归图生成）</li>
+<li><strong>借鉴意义</strong>: multi-agent 通信的 token 成本是落地大坑，拓扑稀疏化有实用价值。</li>
+<li><strong>锐评</strong>: 标准的『前作没考虑效率，我加个 reward 逼它稀疏』套路。问题很实（multi-agent 烧 token）但解法很缝合：ARG-Designer + RLHF + GNN reward，三个现成件拼起来。稀疏拓扑省了 token 会不会掉性能？这才是关键 trade-off，而不是又证明一次『加了 reward 就更稀疏』。增量工作，做 MAS 效率的可扫一眼。🫠</li>
+</ul>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2608.20099v1" target="_blank" rel="noopener">📖 AI 精读</a></div></div>
+<div id="panel-多模态与gui" class="tab-panel"><h2>🖥️ 多模态与 GUI</h2><div class="paper-card" data-topic="🖥️ 多模态与 GUI"><h3>7. SenseNova-U1: Unifying Multimodal Understanding and Generation with NEO-unify Architecture</h3>
+<ul>
+<li><strong>作者</strong>: Diao, Haiwen, Wu, Penghao, Deng, Hanming, Wang, Jiahao, Bai, Shihao, Wu, Silei, Fan, Weichen, Ye, Wenjie, Tong, Wenwen, Fan, Xiangyu, Li, Yan, Wang, Yubo, Cao, Zhijie, Lin, Zhiqian, Yang, Zhitao, Cai, Zhongang, Niu, Yuwei, Zhu, Yue, Liu, Bo, Lv, Chengguang, Yu, Haojia, Xie, Haozhe, Wang, Hongli, Fan, Jianan, Li, Jiaqi, Lu, Jiefan, Ni, Jingcheng, Xu, Junxiang, Liang, Kaihuan, Shi, Lianqiang, Dai, Linjun, Wang, Linyan, Qian, Oscar, Gao, Peng, Liu, Pengfei, Sun, Qingping, Shen, Rui, Wang, Ruisi, Ma, Shengnan, Yang, Shuang, Xie, Siyi, Li, Siying, Zhong, Tianbo, Kong, Xiangli, Shi, Xuanke, Gao, Yang, Yao, Yongqiang, Wang, Yves, Bai, Zhengqi, Lin, Zhengyu, Yin, Zixin, Sun, Wenxiu, Gong, Ruihao, Wang, Quan, Lu, Lewei, Yang, Lei, Liu, Ziwei, Lin, Dahua</li>
+<li><strong>链接</strong>: <a href="https://arxiv.org/abs/2605.12500">arXiv</a> | <a href="https://arxiv.org/pdf/2605.12500">PDF</a></li>
+<li><strong>来源</strong>: 🔥 HF Trending，⬆️ 195</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2605.12500v1/teaser_overview.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2605.12500v1/lightllm_x2v.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2605.12500v1/midtrain_pipeline.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: <span class="wikilink">SenseNova-U1</span> 用 NEO-unify 架构统一多模态理解与生成，反对把两者当成割裂问题（导致碎片化架构、级联流水线、表示空间错配）。用 <span class="wikilink">MoT</span>（Mixture-of-Transformers 一类）设计，对标 <span class="wikilink">BAGEL</span>、<span class="wikilink">OmniGen2</span>、<span class="wikilink">FLUX</span> 等统一/生成模型。</li>
+<li><strong>对比方法/Baselines</strong>: 对标 <span class="wikilink">BAGEL</span>、<span class="wikilink">OmniGen2</span>、<span class="wikilink">FLUX</span> 等理解或生成模型</li>
+<li><strong>借鉴意义</strong>: 对做 multimodal generation 的人是方向性工作——理解与生成的表示统一是通往原生多模态智能的核心命题。</li>
+<li><strong>锐评</strong>: HF 195 upvote 不是白给的，商汤把『理解 vs 生成』的割裂上升到结构性限制而非工程瑕疵，格局拉满。但『统一架构』这块地已经被 BAGEL、OmniGen2 反复耕过，真正的问题是 NEO-unify 到底在哪个 benchmark 上同时打赢了专用理解模型和专用生成模型——如果两头都只是打平，那『统一』就只是省了参数不是提了能力。看正文的对比表再下结论。👀</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2605.12500" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🖥️ 多模态与 GUI"><h3>8. MAI-UI Technical Report: Real-World Centric Foundation GUI Agents</h3>
+<ul>
+<li><strong>作者</strong>: Zhou, Hanzhang, Zhang, Xu, Tong, Panrong, Zhang, Jianan, Chen, Liangyu, Kong, Quyu, Cai, Chenglin, Liu, Chen, Wang, Yue, Zhou, Jingren, Hoi, Steven</li>
+<li><strong>机构</strong>: [1em] Tongyi Lab  , Alibaba Group[0.5em]</li>
+<li><strong>链接</strong>: <a href="https://arxiv.org/abs/2512.22047">arXiv</a> | <a href="https://arxiv.org/pdf/2512.22047">PDF</a></li>
+<li><strong>来源</strong>: 🔥 HF Trending，⬆️ 31</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2512.22047v1/grounding_pipelin.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2512.22047v1/data_pipeline.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2512.22047v1/rl_train_schema2.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: <span class="wikilink">MAI-UI</span> 是覆盖 2B/8B/32B/235B-A22B 全尺寸的 GUI agent 家族，整合五件套：GUI grounding 训练范式、自演化轨迹数据流水线、agent-用户交互 + <span class="wikilink">MCP</span> 工具增强训练、在线 <span class="wikilink">RL</span>、原生端云协同系统。在 <span class="wikilink">AndroidWorld</span>、<span class="wikilink">ScreenSpot</span>、<span class="wikilink">MobileWorld</span> 上评测。</li>
+<li><strong>对比方法/Baselines</strong>: 在 <span class="wikilink">AndroidWorld</span>、<span class="wikilink">ScreenSpot</span>、<span class="wikilink">MobileWorld</span> 等 GUI benchmark 上对标</li>
+<li><strong>借鉴意义</strong>: 对做 GUI/tool-use agent 的人是完整技术报告，端云协同和自演化数据流水线的工程细节有参考价值。</li>
+<li><strong>锐评</strong>: 通义的技术报告，工程完整度高：全尺寸家族 + 自演化数据 + 端云协同，一看就是要落地手机的。但技术报告的通病是『我们全都做了』的堆料叙事——五个模块各自的 ablation 有多少？端云协同到底省了多少延迟？摘要全是愿景。做 GUI agent 落地的必读工程细节，纯研究者会觉得单点创新稀薄。👀</li>
+</ul>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2512.22047" target="_blank" rel="noopener">📖 AI 精读</a></div></div>
+<div id="panel-llm方法与评估" class="tab-panel"><h2>🔬 LLM 方法与评估</h2><div class="paper-card" data-topic="🔬 LLM 方法与评估"><h3>9. When Machines Speak: A Unified Generative Framework for Integrating Machine-Native Symbols into Pretrained Large Language Models</h3>
+<ul>
+<li><strong>作者</strong>: Yan, Su, Iyer, Rakesh</li>
+<li><strong>机构</strong>: Google Inc</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2608.19529v1">arXiv</a> | <a href="https://arxiv.org/pdf/2608.19529v1">PDF</a></li>
+<li>
+<p><strong>来源</strong>: 📄 arXiv 关键词检索</p>
+</li>
+<li>
+<p><strong>核心方法</strong>: 针对『很多真实 AI 系统用离散机器原生符号（而非自然语言）表示实体/行为/结构化信息』的问题——这些符号落在预训练 LLM 的语言 token 空间之外。提出统一生成框架，把机器原生符号整合进预训练 LLM，弥合语言建模与结构化预测的鸿沟。Google 出品。</p>
+</li>
+<li><strong>对比方法/Baselines</strong>: 对标把结构化预测和语言建模分开处理的方法（摘要未详列）</li>
+<li><strong>借鉴意义</strong>: 对做 LLM + 结构化数据（推荐、广告、日志等机器符号场景）的人有启发——机器 ID/符号如何进 LLM 是推荐系统 LLM 化的核心难题。</li>
+<li><strong>锐评</strong>: 别被朴素标题骗了，这篇戳的是推荐/广告 LLM 化最硬的骨头：item ID、类目编码这些机器符号根本不在 LLM 的 token 空间里。Google 敢碰『统一生成框架』方向对味。但短文 + 摘要极度含糊，figure 都没有，很可能是占坑的 idea paper。方向价值远大于当前完成度，做生成式推荐的盯着这条线。👀</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2608.19529v1" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🔬 LLM 方法与评估"><h3>10. Improved Confidence Estimates for Black-Box Large Language Models</h3>
+<ul>
+<li><strong>作者</strong>: Sokhna Diarra Mbacke, Mouloud Belbahri, Gabriel Loaiza-Ganem</li>
+<li><strong>机构</strong>: Affiliation:</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2608.19323v1">arXiv</a> | <a href="https://arxiv.org/pdf/2608.19323v1">PDF</a></li>
+<li>
+<p><strong>来源</strong>: 📄 arXiv 关键词检索</p>
+</li>
+<li>
+<p><strong>核心方法</strong>: 针对黑盒 <span class="wikilink">LLM</span> 的不确定性量化（<span class="wikilink">UQ</span>）：现有方法（verbalized confidence、多次生成聚合）多为 zero-shot，部署前仍需在目标数据集上评估。本文用少量标注数据改进黑盒 LLM 的置信度估计，在 <span class="wikilink">SciQ</span>、<span class="wikilink">SimpleQA</span>、<span class="wikilink">NQ</span> 上用 <span class="wikilink">AUROC</span>、<span class="wikilink">ECE</span> 评测。</p>
+</li>
+<li><strong>对比方法/Baselines</strong>: 对标 verbalized confidence、sample-and-aggregate 类 zero-shot UQ 方法</li>
+<li><strong>借鉴意义</strong>: UQ 对 LLM 安全部署是刚需，但『需要标注数据』的设定限制了通用性。</li>
+<li><strong>锐评</strong>: 扎实但增量。承认 zero-shot UQ 不够、要用标注数据校准，是诚实的一步，但也直接把卖点从『免费』降级成『要标注』——那和普通 calibration 的边界在哪？摘要没说清楚。AUROC/ECE 提升多少是全部看点。做 LLM 可靠性的可扫一眼方法，别期待范式转变。🫠</li>
+</ul>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2608.19323v1" target="_blank" rel="noopener">📖 AI 精读</a></div></div>
+<hr>
+<h2>被排除的论文</h2>
+<ul>
+<li>An Agentic Approach for Active Data Collection, Travel Behavior Modeling, and Weather-Sensitive Demand Prediction — 命中 negative_keyword『weather forecast』，主题是交通行为建模，与推荐/广告/LLM 核心方向无交集</li>
+<li>Rule-Compliant Visual Spatial Planning for Multimodal Large Language Models — 偏视觉空间规划（迷宫任务），与用户关注的推荐/agent/生成方向交集弱</li>
+<li>Bringing analytic rigor to agentic AI for science: The Brain Researcher platform for neuroimaging data analysis — 命中 negative_keyword（neuroimaging/mri 领域，属医学影像）</li>
+<li>Adaptive Probabilistic Shielding by Learning MDPs for Safe Reinforcement Learning — 偏形式化安全 RL / 概率屏蔽理论，与 agentic LLM / 推荐场景无关</li>
+<li>Frequency-Aware Continual Learning for Smart Contract Vulnerability Detection with LLMs — 主题是智能合约漏洞检测（安全领域），与推荐/广告/agent 核心方向无交集</li>
+<li>Automated Summarization of Financial News Using LLMs and RAG (Fall 2023) — 2023 年的早期实证小研究，方法（DistilBART/BART + RAG）陈旧，属应用性作业</li>
+<li>Accelerated Genetic Programming Hyper-Heuristics for Simulation-Based Scheduling via Agentic AI — 偏 HPC/项目调度加速，agentic 只是包装，与核心方向无关</li>
+<li>Concentrated Liquidity Provision: a Reinforcement Learning Perspective — DeFi/AMM 做市的 RL 应用，金融领域专精，与推荐/广告/agent 核心无交集</li>
+<li>Air Traffic Control Using Large Language Models — LLM 在空管对话的领域应用，属垂直行业落地，与用户关注方向弱相关</li>
+</ul>
+<p>Agentic RL 已经卷到给 credit assignment 和 rollout 效率打补丁的阶段，真正的增量红利在 multi-agent 记忆去偏和机器符号进 LLM 这类结构性问题上。</p>
