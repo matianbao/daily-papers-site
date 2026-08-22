@@ -1,0 +1,1074 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>2026-08-22 论文推荐</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.21/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.21/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.21/dist/contrib/auto-render.min.js"
+  onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}]});"></script>
+<link rel="stylesheet" href="style.css">
+<style>body{max-width:960px;}</style>
+
+</head>
+<body>
+<nav class="nav"><a href="index.html">🏠 首页</a><a href="2026-08-21.html">← 前一天</a></nav>
+<div class="detail-page"><h1>🔪 今日锐评</h1>
+<p>今天的 HF trending 一半是老论文回锅（PagedAttention 2023、Mem0、Zep、LightRAG、TradingAgents 都是半年到两年前的），真正新鲜的增量集中在 Agent 记忆 OS、Agent 自学习环境和边缘推理三条线。含金量最高的其实是 AgentScope 1.0 这种工程集大成者和 EnvHarness 这种把静态环境唤醒的思路，而不是那堆刷屉的 OCR 模型。记忆赛道已经卷到互相报菜名（EverMemOS vs MemOS vs Mem0 vs Zep），该有人出来做统一 benchmark 了。</p>
+<h2>分流表</h2>
+<table>
+<thead>
+<tr>
+<th>等级</th>
+<th>论文</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>🔥 必读</td>
+<td><span class="wikilink">AgentScope</span> 1.0（Alibaba 出品的 agent 全家桶，工程细节值得抄） · <span class="wikilink">EnvHarness</span>（把静态环境变成会成长的对手，RL for agent 的正确姿势） · <span class="wikilink">PagedAttention</span>（vLLM 的地基，做推理不读等于没入门）</td>
+</tr>
+<tr>
+<td>👀 值得看</td>
+<td><span class="wikilink">SkillOpt</span>（把 skill 当外部状态来训练，思路新） · <span class="wikilink">EverMemOS</span>（自组织记忆 OS，对标 MemOS） · <span class="wikilink">SenseNova-U1</span>（理解与生成统一架构） · <span class="wikilink">LMCache</span>（企业级 KV cache 卸载层） · <span class="wikilink">MAI-UI</span>（全尺寸 GUI agent，端云协同） · <span class="wikilink">DFlash</span>（block diffusion 做投机解码） · <span class="wikilink">AI-Infra-Guard</span>（agent 红队分层框架）</td>
+</tr>
+<tr>
+<td>💤 可跳过</td>
+<td><span class="wikilink">TradingAgents</span>（多智能体炒股，24 年老论文回锅，故事大于实证） · <span class="wikilink">DataFlow</span>（LLM 数据流水线，工程报告，264 upvote 靠标题） · <span class="wikilink">HarmProfile</span>（安全 benchmark，摘要信息量太少）</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<div class="tab-bar"><button class="tab-btn active" data-tab="all" onclick="switchTab('all')">📋 全部<span class="tab-count">20</span></button><button class="tab-btn" data-tab="agent框架与平台" onclick="switchTab('agent框架与平台')">🏗 🤖 Agent 框架与平台<span class="tab-count">3</span></button><button class="tab-btn" data-tab="自主研究与agent自学习" onclick="switchTab('自主研究与agent自学习')">🤖 🔬 自主研究与 Agent 自学习<span class="tab-count">3</span></button><button class="tab-btn" data-tab="agent记忆" onclick="switchTab('agent记忆')">🧠 🧠 Agent 记忆<span class="tab-count">4</span></button><button class="tab-btn" data-tab="rag与数据" onclick="switchTab('rag与数据')">📄 🔎 RAG 与数据<span class="tab-count">2</span></button><button class="tab-btn" data-tab="llm推理系统" onclick="switchTab('llm推理系统')">🤖 ⚡ LLM 推理系统<span class="tab-count">4</span></button><button class="tab-btn" data-tab="多模态理解与生成" onclick="switchTab('多模态理解与生成')">🎨 🎨 多模态理解与生成<span class="tab-count">1</span></button><button class="tab-btn" data-tab="guiagent" onclick="switchTab('guiagent')">🤖 📱 GUI Agent<span class="tab-count">1</span></button><button class="tab-btn" data-tab="agent安全" onclick="switchTab('agent安全')">🛡 🛡️ Agent 安全<span class="tab-count">2</span></button></div>
+<div id="panel-all" class="tab-panel active"><h2>🤖 Agent 框架与平台</h2><div class="paper-card" data-topic="🤖 Agent 框架与平台"><h3>1. AgentScope 1.0: A Developer-Centric Framework for Building Agentic</h3>
+<p>Applications
+- <strong>作者</strong>: Yaliang Li, Bolin Ding, Jingren Zhou
+Alibaba Group
+- <strong>机构</strong>: Alibaba Group
+- <strong>链接</strong>: <a href="https://arxiv.org/abs/2508.16279">arXiv</a> | <a href="https://arxiv.org/pdf/2508.16279">PDF</a>
+- <strong>来源</strong>: 🔥 HF Trending，⬆️ 68</p>
+<details class="paper-note"><summary>📒 精读笔记: AgentScope</summary><div class="note-body"><h1>AgentScope 1.0</h1>
+<h2>📋 基本信息</h2>
+<ul>
+<li><strong>作者</strong>: Dawei Gao, Zitao Li, Yuexiang Xie 等</li>
+<li><strong>机构</strong>: Alibaba Group</li>
+<li><strong>链接</strong>: <a href="https://arxiv.org/abs/2508.16279">arXiv</a> | <a href="https://arxiv.org/pdf/2508.16279">PDF</a></li>
+</ul>
+<h2>🎯 研究动机与问题</h2>
+<p>现有 multi-agent 框架（如 <span class="wikilink">LangChain</span>, <span class="wikilink">AutoGen</span>）在以下方面存在不足：
+1. <strong>工具集成侵入性强</strong>：需要大量修改已有代码
+2. <strong>可观测性差</strong>：大规模部署时难以监控和调试
+3. <strong>长期记忆缺失</strong>：agent 无法保持跨会话的上下文
+4. <strong>分布式支持弱</strong>：难以扩展到大规模 multi-agent 场景</p>
+<h2>🔧 方法详解</h2>
+<h3>核心架构</h3>
+<p>AgentScope 1.0 的核心抽象：</p>
+<ol>
+<li><strong><span class="wikilink">MsgHub</span>（消息总线）</strong>：agent 间消息传递的统一接口，支持广播和点对点通信</li>
+<li><strong>StateModule（状态管理）</strong>：统一管理 agent 状态，支持序列化和恢复</li>
+<li><strong>Non-Invasive Monitoring</strong>：基于 <span class="wikilink">OpenTelemetry</span> 的无侵入式监控</li>
+</ol>
+<h3>MCP 原生支持</h3>
+<p>原生集成 <span class="wikilink">MCP</span>（Model Context Protocol）协议：
+- Agent 可通过 MCP 协议访问外部工具和数据源
+- 工具集成不需要修改 agent 代码（non-invasive）
+- 支持 MCP server 的自动发现和注册</p>
+<h3>分层记忆系统</h3>
+<ul>
+<li><strong><span class="wikilink">InMemoryMemory</span></strong>：短期工作记忆，存储当前会话上下文</li>
+<li><strong><span class="wikilink">LongTermMemoryBase</span></strong>：长期记忆，支持跨会话信息持久化</li>
+<li>记忆检索支持语义搜索和结构化查询</li>
+</ul>
+<h3>ReAct Agent 内置实现</h3>
+<p>内置 <span class="wikilink">ReAct</span> 范式的 agent 实现：
+- Thought → Action → Observation 循环
+- 支持自定义 tool 注册
+- 内置错误处理和重试机制</p>
+<h3>分布式调度</h3>
+<ul>
+<li>基于 <span class="wikilink">gRPC</span> 的分布式通信</li>
+<li>支持 agent 在多节点间调度</li>
+<li>MsgHub 支持分布式消息广播</li>
+</ul>
+<h2>📊 实验结果</h2>
+<table>
+<thead>
+<tr>
+<th>框架</th>
+<th>MCP支持</th>
+<th>可观测性</th>
+<th>长期记忆</th>
+<th>分布式</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>LangChain</td>
+<td>部分</td>
+<td>弱</td>
+<td>第三方</td>
+<td>弱</td>
+</tr>
+<tr>
+<td>AutoGen</td>
+<td>无</td>
+<td>弱</td>
+<td>无</td>
+<td>部分</td>
+</tr>
+<tr>
+<td>CAMEL</td>
+<td>无</td>
+<td>无</td>
+<td>无</td>
+<td>无</td>
+</tr>
+<tr>
+<td><strong>AgentScope 1.0</strong></td>
+<td><strong>原生</strong></td>
+<td><strong>OpenTelemetry</strong></td>
+<td><strong>内置</strong></td>
+<td><strong>原生</strong></td>
+</tr>
+</tbody>
+</table>
+<p>61 upvotes 说明社区认可度较高。</p>
+<h2>💡 核心贡献</h2>
+<ol>
+<li><strong>MCP 原生集成</strong>：首个原生支持 MCP 协议的 multi-agent 框架</li>
+<li><strong>OpenTelemetry 可观测性</strong>：无侵入式监控，适合生产环境</li>
+<li><strong>分层记忆系统</strong>：短期 + 长期记忆，支持跨会话持久化</li>
+<li><strong>大规模部署经验</strong>：阿里内部大规模 multi-agent 部署验证</li>
+</ol>
+<h2>🤔 局限性与思考</h2>
+<ol>
+<li><strong>框架评估困难</strong>：benchmark 上的数字不代表实际开发体验</li>
+<li><strong>与 LangChain 对比不够 fair</strong>：只挑了对方弱的场景</li>
+<li><strong>学习曲线</strong>：抽象层较多，新手上手成本可能较高</li>
+<li><strong>MCP 生态尚未成熟</strong>：MCP 协议本身还在快速迭代</li>
+</ol>
+<h2>📚 相关工作</h2>
+<ul>
+<li><span class="wikilink">MCP</span>: Model Context Protocol，agent 工具集成标准</li>
+<li><span class="wikilink">OpenTelemetry</span>: 可观测性标准</li>
+<li><span class="wikilink">ReAct</span>: 推理+行动范式</li>
+<li><span class="wikilink">LangChain</span>: 竞品框架</li>
+<li><span class="wikilink">AutoGen</span>: 微软 multi-agent 框架</li>
+</ul></div></details>
+
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2508.16279v1/figures/agentscope_v1_0822.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2508.16279v1/figures/agent.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2508.16279v1/deep_research.png" /></div>
+<ul>
+<li><strong>锐评</strong>: AgentScope 出到 1.0 了，围绕 <span class="wikilink">ReAct</span>+<span class="wikilink">MCP</span> 工具交互重构，接了 <span class="wikilink">OpenTelemetry</span> 做可观测、MsgHub 做多智能体消息路由——这套组合拳明显是冲着生产落地去的，不是 demo 玩具。Alibaba 这波把 agent 基础设施补齐得很整。质疑点：又一个 developer-centric framework，和 LangGraph/AutoGen 的差异化到底在哪，摘要没正面回答，工程质量得看代码不是看 paper。🔥</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2508.16279" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🤖 Agent 框架与平台"><h3>2. Very Large-Scale Multi-Agent Simulation in AgentScope</h3>
+<ul>
+<li><strong>作者</strong>: Xuchen Pan, Dawei Gao, Yuexiang Xie, Yushuo Chen, Zhewei Wei, Yaliang Li, Bolin Ding, Ji-Rong Wen, Jingren Zhou</li>
+<li><strong>机构</strong>: Affiliation:, Affiliation: Alibaba Group, Affiliation: Renmin University of China</li>
+<li><strong>链接</strong>: <a href="https://arxiv.org/abs/2407.17789">arXiv</a> | <a href="https://arxiv.org/pdf/2407.17789">PDF</a></li>
+<li><strong>来源</strong>: 🔥 HF Trending，⬆️ 46</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2407.17789v2/env.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: 在 <span class="wikilink">AgentScope</span> 上做超大规模多智能体仿真，用 Agent-Manager 做分布式调度，主打 scalability 和 agent diversity。</li>
+<li><strong>对比方法/Baselines</strong>: 对标 <span class="wikilink">MetaGPT</span>、AutoGen 等单/多智能体平台（Wu et al. 2023, Hong et al. 2024）。</li>
+<li><strong>借鉴意义</strong>: 对做大规模社会仿真、群体行为研究的有用，也是 AgentScope 生态的一块拼图。</li>
+<li><strong>锐评</strong>: 24 年的老论文（v2）跟着 AgentScope 1.0 一起回锅蹭热度。超大规模仿真的痛点抓得准——现有平台一上万个 agent 就跪，但『百万级 agent 仿真』的实际科学价值一直存疑，跑得动不代表结论可信。工程贡献 &gt; 科学贡献。🫠</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2407.17789" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🤖 Agent 框架与平台"><h3>3. TradingAgents: Multi-Agents LLM Financial Trading Framework</h3>
+<ul>
+<li><strong>作者</strong>: Albert Einstein 1,2, Nikola Tesla 3, Isaac Newton 4, Daniela Rus 1, Yijia Xiao 1,3, Edward Sun 1,3, Di Luo 1,2, Wei Wang 1,3</li>
+<li><strong>机构</strong>: 2Massachusetts Institute of Technology (MIT), 1University of California, Los Angeles (UCLA), 2Princeton University, Note: , 3Graz University of Technology, 4University of Cambridge, 1Massachusetts Institute of Technology (MIT)</li>
+<li><strong>链接</strong>: <a href="https://arxiv.org/abs/2412.20138">arXiv</a> | <a href="https://arxiv.org/pdf/2412.20138">PDF</a></li>
+<li><strong>来源</strong>: 🔥 HF Trending，⬆️ 123</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2412.20138v7/figures/schema.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: 多智能体 LLM 模拟真实交易公司的协作分工（分析师/研究员/交易员/风控），用 <span class="wikilink">MACD</span>/<span class="wikilink">RSI</span>/<span class="wikilink">CCI</span> 等技术指标做信号，agent 间辩论决策。</li>
+<li><strong>对比方法/Baselines</strong>: 对标单智能体交易系统和独立数据采集的多智能体框架。</li>
+<li><strong>借鉴意义</strong>: 对做金融 agent、多智能体协作范式的有参考，但离真能赚钱差十万八千里。</li>
+<li><strong>锐评</strong>: 123 upvote 的顶流，但这是 24 年 12 月的老论文（已经 v7 了）。用 LLM 多智能体模拟交易公司分工，故事讲得漂亮，问题是回测收益这种东西水分极大——数据泄漏、幸存者偏差、选择性汇报，一个都躲不掉。『replicate real trading firms』是营销话术，真实交易的对手盘、滑点、延迟它一个都没有。看个热闹可以，别真拿去炒股。🤡</li>
+</ul>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2412.20138" target="_blank" rel="noopener">📖 AI 精读</a></div><h2>🔬 自主研究与 Agent 自学习</h2><div class="paper-card" data-topic="🔬 自主研究与 Agent 自学习"><h3>4. ARIS: Autonomous Research via Adversarial Multi-Agent Collaboration</h3>
+<ul>
+<li><strong>作者</strong>: Ruofeng Yang, Yongcan Li, Shuai Li, [3pt]
+Project Leader</li>
+<li><strong>机构</strong>: {wanshuiyin, joseph_y, shuaili8}@sjtu.edu.cn, Affiliation: , Affiliation: Shanghai Innovation Institute[2pt], Shanghai Jiao Tong University</li>
+<li><strong>链接</strong>: <a href="https://arxiv.org/abs/2605.03042">arXiv</a> | <a href="https://arxiv.org/pdf/2605.03042">PDF</a></li>
+<li>
+<p><strong>来源</strong>: 🔥 HF Trending，⬆️ 147</p>
+</li>
+<li>
+<p><strong>核心方法</strong>: ARIS 是开源自主科研 harness，核心是三阶段审计流水线：Stage 1 审评估完整性、Stage 2 把结果映射到明确 claim、Stage 3 用独立 reviewer 对照原始证据验证论文声明，专治 executor agent 编造实验结果。</p>
+</li>
+<li><strong>对比方法/Baselines</strong>: 基于 <span class="wikilink">OpenHands</span>、<span class="wikilink">GPT-5</span>，用 <span class="wikilink">MCP</span> 做工具调用。</li>
+<li><strong>借鉴意义</strong>: 对搭自主科研/自动实验 agent 的极有价值——它直面了『agent 会编造实验数据』这个要命的问题。</li>
+<li><strong>锐评</strong>: 147 upvote，今年最实在的 agent harness 之一。别人都在秀 agent 能自动做研究，只有 ARIS 老实承认『executor agent 会产出误导性实验输出、自归一化指标、无文件支撑的 claim』并且专门设计三级审计去抓。这种直面失败模式的工程态度比刷 benchmark 高级多了。质疑点：审计用的 reviewer 本身也是 LLM，谁来审审计者？递归验证问题没解决。🔥</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2605.03042" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🔬 自主研究与 Agent 自学习"><h3>5. EnvHarness: Awakening Static Worlds for Agent Learning</h3>
+<ul>
+<li><strong>作者</strong>: Huang, Chengsong, Wang, Zifeng, Han, Rujun, Yan, Jun, Chen, Yanfei, CuiZhu, Zoey, Jiang, Ke, Xia, Peng, Yu, Han, Zhuang, Yufan, Ming, Yifei, Pan, Jiaqi, Mishra, Bhavana Dalvi, Huang, Jiaxin, Gokturk, Burak, Pfister, Tomas, Lee, Chen-Yu</li>
+<li><strong>机构</strong>: Google Cloud AI Research, University of North Carolina at Chapel Hill, Washington University in St. Louis, github.com/google-research/envharness</li>
+<li><strong>链接</strong>: <a href="https://arxiv.org/abs/2608.19880">arXiv</a> | <a href="https://arxiv.org/pdf/2608.19880">PDF</a></li>
+<li>
+<p><strong>来源</strong>: 🔥 HF Trending，⬆️ 241</p>
+</li>
+<li>
+<p><strong>核心方法</strong>: EnvHarness 把静态环境『唤醒』成能感知 agent 弱点、随 agent 进步而进化的动态环境，不需要 domain-specific pipeline 也不依赖昂贵/不可靠的 verifier。</p>
+</li>
+<li><strong>对比方法/Baselines</strong>: 对标现有环境生成方法（依赖领域流水线 + 昂贵 verifier + 静态输出）。</li>
+<li><strong>借鉴意义</strong>: 对做 agent RL/self-improvement 的是关键拼图——训练环境跟不上 agent 成长是普遍瓶颈。</li>
+<li><strong>锐评</strong>: 241 upvote，Google Cloud AI Research 出品，思路对味。现在 agent RL 最大的隐痛就是环境是手搭的、静态的、盲的——agent 一变强环境就废了。EnvHarness 让环境反过来盯着 agent 的弱点长，这是把课程学习自动化的正确方向。开源了（github.com/google-research/envharness）加分。质疑：动态环境怎么保证不是在制造对抗噪声而是真难度，摘要没给出可信度量。🔥</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2608.19880" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🔬 自主研究与 Agent 自学习"><h3>6. SkillOpt: Executive Strategy for Self-Evolving Agent Skills</h3>
+<ul>
+<li><strong>作者</strong>: Yang, Yifan, Gong, Ziyang, Huang, Weiquan, Yang, Qihao, Zhou, Ziwei, Huang, Zisu, Li, Yan, Gao, Xuemei, Dai, Qi, Liu, Bei, Qiu, Kai, Yang, Yuqing, Chen, Dongdong, Yang, Xue, Luo, Chong</li>
+<li><strong>机构</strong>: Fudan University, Microsoft, Shanghai Jiao Tong University, Tongji University</li>
+<li><strong>链接</strong>: <a href="https://arxiv.org/abs/2605.23904">arXiv</a> | <a href="https://arxiv.org/pdf/2605.23904">PDF</a></li>
+<li>
+<p><strong>来源</strong>: 🔥 HF Trending，⬆️ 264</p>
+</li>
+<li>
+<p><strong>核心方法</strong>: SkillOpt 把 agent 的 skill 当作『冻结 agent 的外部状态』来训练，用类似权重优化的纪律做可复现的 skill 进化，而不是一次性生成或松散自修订。</p>
+</li>
+<li><strong>对比方法/Baselines</strong>: 对标 <span class="wikilink">GEPA</span>（反射式 prompt 进化）、<span class="wikilink">TextGrad</span>、ABSTRAL、EvoTest 等无梯度优化方法。</li>
+<li><strong>借鉴意义</strong>: 对做 self-evolving agent、prompt/skill 自动优化的有直接参考——把炼丹变工程。</li>
+<li><strong>锐评</strong>: 264 upvote 全场最高。核心洞见很锋利：现在的 agent skill 要么手搓、要么一次性生成、要么靠松散的自我修订，没一个像深度学习优化器那样『可靠地在起点之上改进』。把 skill 当外部状态、用优化器的纪律来管，这个类比立得住。质疑点：『像权重优化一样可复现』是很高的承诺，LLM 反射的随机性怎么压住，得看实验章节而不是摘要吹的。👀</li>
+</ul>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2605.23904" target="_blank" rel="noopener">📖 AI 精读</a></div><h2>🧠 Agent 记忆</h2><div class="paper-card" data-topic="🧠 Agent 记忆"><h3>7. EverMemOS: A Self-Organizing Memory Operating System for Structured Long-Horizon Reasoning</h3>
+<ul>
+<li><strong>作者</strong>: Chuanrui Hu, Xingze Gao11footnotemark:, Zuyi Zhou, Dannong Xu, Yi Bai, Xintong Li, Hui Zhang, Tong Li, Chong Zhang, Lidong Bing, Yafeng Deng22footnotemark:</li>
+<li><strong>机构</strong>: Affiliation: , Thanks: </li>
+<li><strong>链接</strong>: <a href="https://arxiv.org/abs/2601.02163">arXiv</a> | <a href="https://arxiv.org/pdf/2601.02163">PDF</a></li>
+<li><strong>来源</strong>: 🔥 HF Trending，⬆️ 15</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2601.02163v2/main.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: EverMemOS 是自组织记忆操作系统，用 MemCells 做记忆单元、MemScenes 组织场景，主打把演化的用户状态『固化 consolidate』并解决冲突，而非存孤立记录再检索碎片。</li>
+<li><strong>对比方法/Baselines</strong>: 在 <span class="wikilink">LoCoMo</span>、<span class="wikilink">LongMemEval</span> 上评测，对标 <span class="wikilink">MemOS</span>。</li>
+<li><strong>借鉴意义</strong>: 对做长程对话 agent、个性化记忆的有用，是记忆赛道的最新一员。</li>
+<li><strong>锐评</strong>: 又一个 MemOS。EverMemOS 抓的痛点没错——现有记忆系统存的是孤立记录、检索的是碎片，没法整合演化的用户状态。MemCell 这套抽象听着比纯向量检索高级。但记忆赛道现在已经卷到互相报菜名：MemOS、Mem0、Zep、EverMemOS，各家都在 LoCoMo/LongMemEval 上刷分互称 SOTA，benchmark 早就过拟合了。真正缺的是一个大家都服的统一评测，不是第 N 个 OS。👀</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2601.02163" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🧠 Agent 记忆"><h3>8. Mem0: Building Production-Ready AI Agents with Scalable Long-Term Memory</h3>
+<ul>
+<li><strong>作者</strong>: Prateek Chhikara, Dev Khant, Saket Aryan, Taranjeet Singh, and</li>
+<li><strong>链接</strong>: <a href="https://arxiv.org/abs/2504.19413">arXiv</a> | <a href="https://arxiv.org/pdf/2504.19413">PDF</a></li>
+<li><strong>来源</strong>: 🔥 HF Trending，⬆️ 71</li>
+</ul>
+<details class="paper-note"><summary>📒 精读笔记: Mem0</summary><div class="note-body"><h1>Mem0</h1>
+<h2>定义</h2>
+<p>一个开源的 AI 记忆层框架，为 LLM 应用提供持久化的用户/会话记忆管理，支持记忆的自动提取、存储、检索和更新。</p>
+<h2>核心要点</h2>
+<ol>
+<li>从对话中自动提取关键信息并存储为结构化记忆</li>
+<li>支持多级记忆：用户级、会话级、Agent 级</li>
+<li>基于向量检索实现相关记忆的上下文注入</li>
+<li>与 Zep 等系统的区别：更轻量，侧重 key-value 式记忆而非图结构</li>
+</ol>
+<h2>相关概念</h2>
+<ul>
+<li><span class="wikilink">RAG</span></li>
+<li><span class="wikilink">Episodic Memory</span></li>
+<li><span class="wikilink">Semantic Memory</span></li>
+<li><span class="wikilink">LLM Agent</span></li>
+</ul></div></details>
+
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2504.19413v1/figures/mem0_pipeline.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2504.19413v1/figures/mem0p_pipeline.png" /></div>
+<ul>
+<li><strong>锐评</strong>: Mem0，25 年 4 月老论文回锅。生产级长期记忆的代表作，动态抽取-固化-检索三段式 + <span class="wikilink">Mem0g</span> 图记忆变体，在 <span class="wikilink">LOCOMO</span> 上打 <span class="wikilink">MemGPT</span>。工程完成度高、有商业化产品背书是它的护城河。放今天看，思路已被 MemOS/EverMemOS 这些后来者『致敬』得差不多了，但作为记忆系统的入门必读依然成立。🫠</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2504.19413" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🧠 Agent 记忆"><h3>9. Zep: A Temporal Knowledge Graph Architecture for Agent Memory</h3>
+<ul>
+<li><strong>作者</strong>: Preston Rasmussen, Pavlo Paliychuk, Travis Beauvais, Jack Ryan, Daniel Chalef</li>
+<li><strong>机构</strong>: Affiliation: , Email: </li>
+<li><strong>链接</strong>: <a href="https://arxiv.org/abs/2501.13956">arXiv</a> | <a href="https://arxiv.org/pdf/2501.13956">PDF</a></li>
+<li><strong>来源</strong>: 🔥 HF Trending，⬆️ 16</li>
+</ul>
+<details class="paper-note"><summary>📒 精读笔记: Zep</summary><div class="note-body"><h1>Zep</h1>
+<h2>定义</h2>
+<p>一个 AI 记忆管理平台，使用知识图谱和时序模型为 LLM Agent 提供长期记忆能力，支持事实提取、关系建模和记忆演化。</p>
+<h2>核心要点</h2>
+<ol>
+<li>基于 <span class="wikilink">Knowledge Graph</span> 存储实体关系，而非单纯的向量检索</li>
+<li>支持 <span class="wikilink">Bi-temporal Model</span>——区分事实发生时间和记录时间</li>
+<li>自动从对话中提取实体、关系和事件，构建动态图谱</li>
+<li>与 <span class="wikilink">Mem0</span> 的区别：更重量级，适合需要复杂关系推理的场景</li>
+</ol>
+<h2>相关概念</h2>
+<ul>
+<li><span class="wikilink">Knowledge Graph</span></li>
+<li><span class="wikilink">Graphiti</span></li>
+<li><span class="wikilink">Episodic Memory</span></li>
+<li><span class="wikilink">Semantic Memory</span></li>
+<li><span class="wikilink">Mem0</span></li>
+</ul></div></details>
+
+<ul>
+<li><strong>锐评</strong>: Zep，25 年 1 月老论文。核心是时序知识图谱（episode/semantic entity/community 三层子图 + 时间感知的关联函数），在 DMR 和 LongMemEval 上超 <span class="wikilink">MemGPT</span>。相比 Mem0 的抽取式记忆，Zep 的图结构对『关系随时间演化』建模更自然，做企业级、需要审计追溯的场景更合适。缺点是图维护成本高，规模大了更新开销是个问号。👀</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2501.13956" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🧠 Agent 记忆"><h3>10. MemOS: A Memory OS for AI System</h3>
+<ul>
+<li><strong>作者</strong>: Zhiyu Li, Chenyang Xi, Chunyu Li, Ding Chen, Boyu Chen, Shichao Song, Simin Niu, Hanyu Wang, Jiawei Yang, Chen Tang, Qingchen Yu, Jihao Zhao, Yezhaohui Wang, Peng Liu, Zehao Lin, Pengyuan Wang, Jiahao Huo, Tianyi Chen, Kai Chen, Kehang Li, Zhen Tao, Huayi Lai, Hao Wu, Bo Tang, Zhengren Wang, Zhaoxin Fan, Ningyu Zhang, Linfeng Zhang, Junchi Yan, Mingchuan Yang, Tong Xu, Wei Xu, Huajun Chen, Haofen Wang, Hongkang Yang, Wentao Zhang, Zhi-Qin John Xu, Siheng Chen, Feiyu Xiong</li>
+<li><strong>机构</strong>: Affiliation:, 10]Shanghai Jiao Tong University, 6]University of Science and Technology of China, 4]Tongji University, 3]Research Institute of China Telecom, 5]Zhejiang University, 9]Beihang University, 7]Peking University, 8]Renmin University of China, 2]Institute for Advanced Algorithms Research, Shanghai</li>
+<li><strong>链接</strong>: <a href="https://arxiv.org/abs/2507.03724">arXiv</a> | <a href="https://arxiv.org/pdf/2507.03724">PDF</a></li>
+<li><strong>来源</strong>: 🔥 HF Trending，⬆️ 170</li>
+</ul>
+<details class="paper-note"><summary>📒 精读笔记: MemOS</summary><div class="note-body"><h1>MemOS: A Memory Operating System for AI</h1>
+<h2>📋 基本信息</h2>
+<ul>
+<li><strong>来源</strong>: HF Trending，⬆️ 166</li>
+</ul>
+<h2>🎯 研究动机与问题</h2>
+<p>AI 系统的记忆管理日益复杂，需要一个操作系统级别的抽象来统一管理不同类型的记忆。</p>
+<h2>🔧 方法详解</h2>
+<h3>核心模块</h3>
+<p>MemOS 包含三个核心模块：</p>
+<ol>
+<li><strong><span class="wikilink">MemScheduler</span></strong>：记忆调度器，决定何时加载/卸载记忆</li>
+<li><strong><span class="wikilink">MemCube</span></strong>：记忆容器，封装不同类型的记忆单元</li>
+<li><strong><span class="wikilink">MemStore</span></strong>：记忆存储层，支持持久化</li>
+</ol>
+<h3>架构</h3>
+<div class="math-block">$$
+\text{MemOS} = \text{MemScheduler} + \text{MemCube} + \text{MemStore}
+$$</div>
+
+<ul>
+<li>MemScheduler 负责记忆生命周期管理</li>
+<li>MemCube 封装 <span class="wikilink">KV cache</span>、向量记忆、结构化记忆等</li>
+<li>MemStore 提供持久化和检索能力</li>
+</ul>
+<h3>对比</h3>
+<table>
+<thead>
+<tr>
+<th>特性</th>
+<th>RAG</th>
+<th>MemGPT</th>
+<th>MemOS</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>记忆类型</td>
+<td>文档</td>
+<td>Context + 外部</td>
+<td>多类型统一</td>
+</tr>
+<tr>
+<td>调度</td>
+<td>无</td>
+<td>简单</td>
+<td>MemScheduler</td>
+</tr>
+<tr>
+<td>生命周期</td>
+<td>无</td>
+<td>部分</td>
+<td>完整</td>
+</tr>
+<tr>
+<td>KV cache</td>
+<td>无</td>
+<td>无</td>
+<td>集成</td>
+</tr>
+</tbody>
+</table>
+<h2>📊 实验结果</h2>
+<p>166 个 upvotes 表明社区对概念框架的高关注度。</p>
+<h2>💡 核心贡献</h2>
+<ol>
+<li><strong>OS 级抽象</strong>：将 agent memory 提升到操作系统层级</li>
+<li><strong>统一管理</strong>：支持 KV cache、向量记忆、结构化记忆等多种类型</li>
+</ol>
+<h2>🤔 局限性与思考</h2>
+<ol>
+<li><strong>概念大于实质</strong>：MemScheduler 说白了就是个优先级队列</li>
+<li>离真正的 "OS" 差了十个抽象层</li>
+<li>166 upvotes 但学术贡献偏弱</li>
+<li>wrapper 性质明显，核心创新不足</li>
+</ol>
+<h2>📚 相关工作</h2>
+<ul>
+<li><span class="wikilink">MemGPT</span>: 早期 agent memory 系统</li>
+<li><span class="wikilink">RAG</span>: 传统检索方案</li>
+<li><span class="wikilink">KV cache</span>: 核心管理对象</li>
+</ul></div></details>
+
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2507.03724v4/img/memory_circuitry_theory_updated.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2507.03724v4/HumanVsLLM.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2507.03724v4/Framework.png" /></div>
+<ul>
+<li><strong>锐评</strong>: MemOS，25 年 7 月，170 upvote 的记忆赛道扛把子。把记忆抽象成 MemCube + MemScheduler + MemGovernance 一整套 OS 隐喻，野心是给 AGI 做记忆管理基础设施。格局拉得最大，也最像在讲故事——OS 类比好听，但真正的调度/治理策略有多硬核得深挖。今天的 EverMemOS 基本就是冲它来的。作为记忆系统『范式级』综述读物值得收藏。👀</li>
+</ul>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2507.03724" target="_blank" rel="noopener">📖 AI 精读</a></div><h2>🔎 RAG 与数据</h2><div class="paper-card" data-topic="🔎 RAG 与数据"><h3>11. LightRAG: Simple and Fast Retrieval-Augmented Generation</h3>
+<ul>
+<li><strong>作者</strong>: Zirui Guo, Lianghao Xia, Yanhua Yu, Tu Ao, Chao Huang, Telecommunications</li>
+<li><strong>机构</strong>: Thanks:, University of Hong Kongzrguo101@hku.hk  aka_xia@foxmail.com  chaohuang75@gmail.com, Beijing University of Posts</li>
+<li><strong>链接</strong>: <a href="https://arxiv.org/abs/2410.05779">arXiv</a> | <a href="https://arxiv.org/pdf/2410.05779">PDF</a></li>
+<li><strong>来源</strong>: 🔥 HF Trending，⬆️ 43</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2410.05779v3/framework.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: LightRAG 在传统 <span class="wikilink">RAG</span> 上加图结构索引，用双层检索（低层实体 + 高层主题）捕捉文档间复杂依赖，解决扁平数据表示导致的碎片化回答。</li>
+<li><strong>对比方法/Baselines</strong>: 对标 <span class="wikilink">NaiveRAG</span>、<span class="wikilink">GraphRAG</span>、<span class="wikilink">HyDE</span>。</li>
+<li><strong>借鉴意义</strong>: 对做知识库问答、检索增强的有直接参考，比 GraphRAG 轻量、增量更新友好。</li>
+<li><strong>锐评</strong>: 24 年 10 月老论文（v3），但 LightRAG 确实是 GraphRAG 之后最实用的轻量化替代——微软 GraphRAG 好是好，构建成本高得离谱，LightRAG 用双层检索把成本压下来还支持增量更新，这才是能上生产的 RAG。回锅一点不亏。质疑：图质量强依赖 LLM 抽取实体关系，脏文档进去照样脏图出来。👀</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2410.05779" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🔎 RAG 与数据"><h3>12. DataFlow: An LLM-Driven Framework for Unified Data Preparation and Workflow Automation in the Era of Data-Centric AI</h3>
+<ul>
+<li><strong>作者</strong>: Hao Liang, Xiaochen Ma, Zhou Liu, Zhen Hao Wong, Zhengyang Zhao, Zimo Meng, Runming He, Chengyu Shen, Qifeng Cai, Zhaoyang Han, Meiyi Qiang, Yalin Feng, Tianyi Bai, Zewei Pan, Ziyi Guo, Yizhen Jiang, Jingwen Deng, Qijie You, Peichao Lai, Tianyu Guo, Chi Hsu Tsai, Hengyi Feng, Rui Hu, Wenkai Yu, Junbo Niu, Bohan Zeng, Ruichuan An, Lu Ma, Jihao Huang, Yaowei Zheng, Conghui He, Linpeng Tang, Bin Cui, Weinan E, Wentao Zhang</li>
+<li><strong>机构</strong>: Affiliation:, Email:, ]1Peking University, 2Institute for Advanced Algorithms Research, Shanghai, 3OriginHub Technology, 4OpenDataLab, Shanghai Artificial Intelligence Laboratory, 5LLaMA-Factory Team</li>
+<li><strong>链接</strong>: <a href="https://arxiv.org/abs/2512.16676">arXiv</a> | <a href="https://arxiv.org/pdf/2512.16676">PDF</a></li>
+<li><strong>来源</strong>: 🔥 HF Trending，⬆️ 226</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2512.16676v1/df_overview.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2512.16676v1/dfa_fig.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2512.16676v1/text2sql_pipeline.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: DataFlow 是 LLM 驱动的统一数据准备框架，提供有原则的抽象替代 ad-hoc 脚本，支持 model-in-the-loop 数据生成，覆盖 Text2SQL、<span class="wikilink">AgenticRAG</span>、<span class="wikilink">CoT</span> 数据合成等。</li>
+<li><strong>对比方法/Baselines</strong>: 对标现有 ad-hoc 脚本 + 松散定义的数据工作流。</li>
+<li><strong>借鉴意义</strong>: 对做数据中心 AI、大规模数据合成/清洗流水线的有工程参考价值。</li>
+<li><strong>锐评</strong>: 226 upvote，作者列表长得像春晚演职员表（30+ 人）。痛点是真痛——数据准备现在全是 ad-hoc 脚本、不可复现。但『统一框架』这四个字是学术界最爱画的饼，每年都有人宣称要统一数据流水线，最后都沦为又一个自己团队用的工具。工程报告性质，价值全看开源生态能不能起来，paper 本身信息密度不高。🫠</li>
+</ul>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2512.16676" target="_blank" rel="noopener">📖 AI 精读</a></div><h2>⚡ LLM 推理系统</h2><div class="paper-card" data-topic="⚡ LLM 推理系统"><h3>13. Efficient Memory Management for Large Language Model Serving with</h3>
+<p>PagedAttention
+- <strong>作者</strong>: Kwon, Woosuk, Li, Zhuohan, Zhuang, Siyuan, Sheng, Ying, Zheng, Lianmin, Yu, Cody Hao, Gonzalez, Joseph E., Zhang, Hao, Stoica, Ion
+- <strong>机构</strong>: Affiliation: , Affiliation: 1{}^{\text{1}}UC Berkeley  2{}^{\text{2}}Stanford University  3{}^{\text{3}}Independent Researcher  4{}^{\text{4}}UC San Diego
+- <strong>链接</strong>: <a href="https://arxiv.org/abs/2309.06180">arXiv</a> | <a href="https://arxiv.org/pdf/2309.06180">PDF</a>
+- <strong>来源</strong>: 🔥 HF Trending，⬆️ 68</p>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2309.06180v1/system-overview.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: PagedAttention 借鉴操作系统虚拟内存分页思想管理 <span class="wikilink">KV</span> cache，把连续 KV 存储切成非连续的 block 按需分配，几乎消除内存碎片和冗余复制，从而大幅提高 batch size 和吞吐。</li>
+<li><strong>对比方法/Baselines</strong>: 对标 <span class="wikilink">FasterTransformer</span>、Orca 等 LLM serving 系统。</li>
+<li><strong>借鉴意义</strong>: vLLM 的理论地基。做任何 LLM 推理优化、部署的都绕不开这篇。</li>
+<li><strong>锐评</strong>: 23 年的经典，vLLM 的立身之本，回锅纯属新人补课。把 OS 分页搬到 KV cache 管理是那种『看完拍大腿为什么我没想到』的好点子，简单、有效、影响了整个推理生态。没什么可黑的——这就是过去三年 LLM 系统领域最重要的工作之一。做推理不读这篇等于没入门。🔥</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2309.06180" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="⚡ LLM 推理系统"><h3>14. LMCache: An Efficient KV Cache Layer for Enterprise-Scale LLM Inference</h3>
+<ul>
+<li><strong>作者</strong>: Liu, Yuhan, Cheng, Yihua, Yao, Jiayi, An, Yuwei, Chen, Xiaokun, Feng, Shaoting, Huang, Yuyang, Shen, Samuel, Zhang, Rui, Du, Kuntai, Jiang, Junchen</li>
+<li><strong>机构</strong>: University of Chicago</li>
+<li><strong>链接</strong>: <a href="https://arxiv.org/abs/2510.09665">arXiv</a> | <a href="https://arxiv.org/pdf/2510.09665">PDF</a></li>
+<li><strong>来源</strong>: 🔥 HF Trending，⬆️ 9</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2510.09665v2/e2e_system_diagram.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2510.09665v2/lmcache_arch.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: LMCache 是企业级 KV cache 层，把 KV cache 从 GPU 移到外部存储实现跨 query、跨推理引擎的 cache 复用，优化 <span class="wikilink">TTFT</span> 和 <span class="wikilink">ITL</span>。</li>
+<li><strong>对比方法/Baselines</strong>: 在真实生产统计上验证 KV cache 增长远超 GPU 容量。</li>
+<li><strong>借鉴意义</strong>: 对做大规模 LLM serving、多轮对话/长文档场景的降本增效很实用。</li>
+<li><strong>锐评</strong>: 25 年 10 月，是 PagedAttention 之后 KV cache 故事的自然延伸——单机不够就往外卸载、跨引擎复用。芝加哥大学这套 real-world usage 统计支撑很扎实，不是拍脑袋。质疑：KV cache 挪出 GPU 必然带来传输延迟，跨引擎复用的命中率在真实多样化流量下有多高，是决定成败的关键，摘要只说增长快没说复用率。👀</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2510.09665" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="⚡ LLM 推理系统"><h3>15. FreeToken: Efficient Edge-Native MoE Serving with Bandwidth-Adaptive Execution</h3>
+<ul>
+<li><strong>作者</strong>: Shuo Yang, Xiaoze Fan, Melissa Pan, Haocheng Xi, Zhe Wang, Shanlin Sun, Kurt Keutzer, Song Han, Matei Zaharia, Chenfeng Xu†\dagger, Ion Stoica†\dagger</li>
+<li><strong>机构</strong>: Affiliation:, \correspondenceShuo Yang at andy_yang@berkeley.edu, Chenfeng Xu at xuchenfeng@utexas.edu</li>
+<li><strong>链接</strong>: <a href="https://arxiv.org/abs/2608.16157">arXiv</a> | <a href="https://arxiv.org/pdf/2608.16157">PDF</a></li>
+<li>
+<p><strong>来源</strong>: 🔥 HF Trending，⬆️ 74</p>
+</li>
+<li>
+<p><strong>核心方法</strong>: FreeToken 是边缘原生 MoE serving 系统，把个人机器当成弹性推理平台，协同设计模型布局/加载、expert 常驻、CPU-GPU 执行，用带宽自适应应对 VRAM 动态变化（桌面/浏览器/游戏抢显存）。</p>
+</li>
+<li><strong>对比方法/Baselines</strong>: 面向 <span class="wikilink">DeepSeek</span>、<span class="wikilink">GLM-5</span> 等前沿开源权重模型的边缘部署。</li>
+<li><strong>借鉴意义</strong>: 对做端侧大模型部署、本地推理的有直接参考——数据中心的假设在个人机器上全崩。</li>
+<li><strong>锐评</strong>: Ion Stoica + Song Han + Matei Zaharia 挂名，Berkeley 系推理天团。切入点很聪明：边缘部署最大的坑不是 GPU 小，而是显存是动态共享的——你在推理，浏览器和游戏随时来抢几个 GB。带宽自适应执行这个设计直击痛点。质疑：MoE 在边缘的 expert 换入换出开销天然大，『弹性』的代价是不是又慢又抖，得看真实交互延迟。👀</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2608.16157" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="⚡ LLM 推理系统"><h3>16. DFlash: Block Diffusion for Flash Speculative Decoding</h3>
+<ul>
+<li><strong>作者</strong>: Jian Chen, Yesheng Liang, Zhijian Liu</li>
+<li><strong>机构</strong>: Affiliation: , Correspondence to:</li>
+<li><strong>链接</strong>: <a href="https://arxiv.org/abs/2602.06036">arXiv</a> | <a href="https://arxiv.org/pdf/2602.06036">PDF</a></li>
+<li>
+<p><strong>来源</strong>: 🔥 HF Trending，⬆️ 95</p>
+</li>
+<li>
+<p><strong>核心方法</strong>: DFlash 用 block diffusion 做投机解码的 draft，摆脱现有方法自回归 draft 的顺序瓶颈，让草稿也能并行生成，再由 target LLM 并行验证。</p>
+</li>
+<li><strong>对比方法/Baselines</strong>: 对标 <span class="wikilink">EAGLE-3</span> 等自回归投机解码方法。</li>
+<li><strong>借鉴意义</strong>: 对做推理加速的有价值——投机解码的 draft 环节一直是自回归的隐性瓶颈。</li>
+<li><strong>锐评</strong>: 抓到了投机解码一个被忽视的痛点：大家都在优化验证，但 draft 本身还是自回归串行的，speedup 天花板就卡在这。用 block diffusion 让 draft 并行化，思路新颖。质疑：diffusion draft 的接受率能不能打得过 EAGLE-3 这种精心训练的自回归 draft？并行生成快但接受率低照样白搭，这是投机解码的老账。👀</li>
+</ul>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2602.06036" target="_blank" rel="noopener">📖 AI 精读</a></div><h2>🎨 多模态理解与生成</h2><div class="paper-card" data-topic="🎨 多模态理解与生成"><h3>17. SenseNova-U1: Unifying Multimodal Understanding and Generation with NEO-unify Architecture</h3>
+<ul>
+<li><strong>作者</strong>: Diao, Haiwen, Wu, Penghao, Deng, Hanming, Wang, Jiahao, Bai, Shihao, Wu, Silei, Fan, Weichen, Ye, Wenjie, Tong, Wenwen, Fan, Xiangyu, Li, Yan, Wang, Yubo, Cao, Zhijie, Lin, Zhiqian, Yang, Zhitao, Cai, Zhongang, Niu, Yuwei, Zhu, Yue, Liu, Bo, Lv, Chengguang, Yu, Haojia, Xie, Haozhe, Wang, Hongli, Fan, Jianan, Li, Jiaqi, Lu, Jiefan, Ni, Jingcheng, Xu, Junxiang, Liang, Kaihuan, Shi, Lianqiang, Dai, Linjun, Wang, Linyan, Qian, Oscar, Gao, Peng, Liu, Pengfei, Sun, Qingping, Shen, Rui, Wang, Ruisi, Ma, Shengnan, Yang, Shuang, Xie, Siyi, Li, Siying, Zhong, Tianbo, Kong, Xiangli, Shi, Xuanke, Gao, Yang, Yao, Yongqiang, Wang, Yves, Bai, Zhengqi, Lin, Zhengyu, Yin, Zixin, Sun, Wenxiu, Gong, Ruihao, Wang, Quan, Lu, Lewei, Yang, Lei, Liu, Ziwei, Lin, Dahua</li>
+<li><strong>链接</strong>: <a href="https://arxiv.org/abs/2605.12500">arXiv</a> | <a href="https://arxiv.org/pdf/2605.12500">PDF</a></li>
+<li><strong>来源</strong>: 🔥 HF Trending，⬆️ 197</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2605.12500v1/teaser_overview.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2605.12500v1/lightllm_x2v.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2605.12500v1/midtrain_pipeline.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: SenseNova-U1 用 NEO-unify 架构统一多模态理解与生成，主张理解/生成的割裂是结构性缺陷而非工程 artifact，用 <span class="wikilink">MoT</span>（Mixture-of-Transformers）打通表示空间。</li>
+<li><strong>对比方法/Baselines</strong>: 对标 <span class="wikilink">BAGEL</span>、<span class="wikilink">OmniGen2</span>、<span class="wikilink">FLUX</span>。</li>
+<li><strong>借鉴意义</strong>: 对做统一多模态大模型、图文互生的是重要参考，理解生成一体化是当前主线。</li>
+<li><strong>锐评</strong>: 197 upvote，作者列表 60+ 人（商汤全员上阵）。『理解与生成的割裂是结构性限制而非工程 artifact』这个立论有态度，是当前多模态的核心命题。用 MoT 统一表示空间是主流路线。质疑点：几乎每家统一多模态模型都宣称打通了理解与生成，但实测往往是理解拖生成后腿或反之，『native multimodal intelligence』这种大词得用硬指标兑现，别又是刷榜。👀</li>
+</ul>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2605.12500" target="_blank" rel="noopener">📖 AI 精读</a></div><h2>📱 GUI Agent</h2><div class="paper-card" data-topic="📱 GUI Agent"><h3>18. MAI-UI Technical Report: Real-World Centric Foundation GUI Agents</h3>
+<ul>
+<li><strong>作者</strong>: Zhou, Hanzhang, Zhang, Xu, Tong, Panrong, Zhang, Jianan, Chen, Liangyu, Kong, Quyu, Cai, Chenglin, Liu, Chen, Wang, Yue, Zhou, Jingren, Hoi, Steven</li>
+<li><strong>机构</strong>: [1em] Tongyi Lab  , Alibaba Group[0.5em]</li>
+<li><strong>链接</strong>: <a href="https://arxiv.org/abs/2512.22047">arXiv</a> | <a href="https://arxiv.org/pdf/2512.22047">PDF</a></li>
+<li><strong>来源</strong>: 🔥 HF Trending，⬆️ 31</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2512.22047v1/grounding_pipelin.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2512.22047v1/data_pipeline.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2512.22047v1/rl_train_schema2.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: MAI-UI 是全尺寸 GUI agent 家族（2B/8B/32B/235B-A22B），整合 GUI grounding 训练、自演化轨迹数据流水线、agent-user 交互 + <span class="wikilink">MCP</span> 工具增强、在线 <span class="wikilink">RL</span>、端云协同系统。</li>
+<li><strong>对比方法/Baselines</strong>: 在 <span class="wikilink">AndroidWorld</span>、<span class="wikilink">ScreenSpot</span>、<span class="wikilink">MobileWorld</span> 上评测。</li>
+<li><strong>借鉴意义</strong>: 对做 GUI/移动端 agent、人机交互自动化的是完整技术栈参考。</li>
+<li><strong>锐评</strong>: 阿里 Tongyi Lab 出品，全尺寸覆盖 2B 到 235B 很有诚意。亮点是识别了四个真实部署痛点：缺 native agent-user 交互、UI-only 操作的局限等——这说明团队真在做落地不是刷 benchmark。自演化轨迹数据流水线是省标注成本的关键。质疑：GUI agent 在 AndroidWorld 上刷分和真机上稳定跑通是两回事，端云协同的延迟和隐私问题技术报告一般不会细说。👀</li>
+</ul>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2512.22047" target="_blank" rel="noopener">📖 AI 精读</a></div><h2>🛡️ Agent 安全</h2><div class="paper-card" data-topic="🛡️ Agent 安全"><h3>19. Securing the AI Agent: A Unified Framework for Multi-Layer Agent Red Teaming</h3>
+<ul>
+<li><strong>作者</strong>: Tencent Zhuque Lab</li>
+<li><strong>机构</strong>: Tencent Zhuque Lab</li>
+<li><strong>链接</strong>: <a href="https://arxiv.org/abs/2606.31227">arXiv</a> | <a href="https://arxiv.org/pdf/2606.31227">PDF</a></li>
+<li><strong>来源</strong>: 🔥 HF Trending，⬆️ 14</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2606.31227v1/imgs/./mcp_scan.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2606.31227v1/imgs/./agent_scan.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2606.31227v1/imgs/./architecture.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: AI-Infra-Guard 把 AI 红队按攻击面分层组织（模型/<span class="wikilink">MCP</span> 生态/agent 平台/基础设施），开源框架，覆盖 <span class="wikilink">OWASP</span>、<span class="wikilink">CVE</span> 视角扫描 MCP 和 agent。</li>
+<li><strong>对比方法/Baselines</strong>: 面向开源 AI 基础设施（serving engine、agent 平台、MCP 生态）的安全工具缺口。</li>
+<li><strong>借鉴意义</strong>: 对做 agent 安全、MCP 部署防护的实用——MCP 生态爆发但安全工具严重滞后。</li>
+<li><strong>锐评</strong>: 腾讯朱雀实验室出品。观察很准：AI 基础设施（尤其 MCP 生态）扩张速度远超安全工具的跟进速度，攻击面是分层的得分层防。开源 + 工业界背景加分。质疑点：分层红队框架听着系统，但 agent 安全的核心难题是 prompt injection 这类语义攻击，传统 CVE/OWASP 那套扫描能覆盖多少？摘要没说清对语义层攻击的检测能力。👀</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2606.31227" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🛡️ Agent 安全"><h3>20. HarmProfile: Characterizing Harmful Distributions in Frontier LLMs</h3>
+<ul>
+<li><strong>作者</strong>: Ma, Zhouyuan, Wu, Yutao, Huang, Hanxun, Zheng, Xiang, Liu, Xiao, Cao, Yixin, Wu, Zuxuan, Ma, Xingjun, Jiang, Yu-Gang</li>
+<li><strong>机构</strong>: City University of Hong Kong, Deakin University, Fudan University, The University of Melbourne</li>
+<li><strong>链接</strong>: <a href="https://arxiv.org/abs/2608.14577">arXiv</a> | <a href="https://arxiv.org/pdf/2608.14577">PDF</a></li>
+<li>
+<p><strong>来源</strong>: 🔥 HF Trending，⬆️ 20</p>
+</li>
+<li>
+<p><strong>核心方法</strong>: HarmProfile 把有害生成当作『分析对象』而非单纯攻击结果来研究，刻画前沿 LLM misbehavior 时产出的有害分布。</p>
+</li>
+<li><strong>对比方法/Baselines</strong>: 摘要未提供具体对比方法（method_names 抽取仅 TeX/CSS，说明正文结构化信息少）。</li>
+<li><strong>借鉴意义</strong>: 对做 LLM 安全评估、对齐研究的有参考，视角（把有害输出当分析对象）较新。</li>
+<li><strong>锐评</strong>: 视角转换有点意思——不把有害生成当成攻击的成功/失败，而是当成一个可分析的分布对象。但摘要信息量实在太少，方法抽取只出了 TeX/CSS 说明正文没什么可结构化的技术细节，20 upvote 也印证了热度一般。想法 &gt; 实现，得看数据集质量和规模到底如何。🫠</li>
+</ul>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2608.14577" target="_blank" rel="noopener">📖 AI 精读</a></div></div>
+<div id="panel-agent框架与平台" class="tab-panel"><h2>🤖 Agent 框架与平台</h2><div class="paper-card" data-topic="🤖 Agent 框架与平台"><h3>1. AgentScope 1.0: A Developer-Centric Framework for Building Agentic</h3>
+<p>Applications
+- <strong>作者</strong>: Yaliang Li, Bolin Ding, Jingren Zhou
+Alibaba Group
+- <strong>机构</strong>: Alibaba Group
+- <strong>链接</strong>: <a href="https://arxiv.org/abs/2508.16279">arXiv</a> | <a href="https://arxiv.org/pdf/2508.16279">PDF</a>
+- <strong>来源</strong>: 🔥 HF Trending，⬆️ 68</p>
+<details class="paper-note"><summary>📒 精读笔记: AgentScope</summary><div class="note-body"><h1>AgentScope 1.0</h1>
+<h2>📋 基本信息</h2>
+<ul>
+<li><strong>作者</strong>: Dawei Gao, Zitao Li, Yuexiang Xie 等</li>
+<li><strong>机构</strong>: Alibaba Group</li>
+<li><strong>链接</strong>: <a href="https://arxiv.org/abs/2508.16279">arXiv</a> | <a href="https://arxiv.org/pdf/2508.16279">PDF</a></li>
+</ul>
+<h2>🎯 研究动机与问题</h2>
+<p>现有 multi-agent 框架（如 <span class="wikilink">LangChain</span>, <span class="wikilink">AutoGen</span>）在以下方面存在不足：
+1. <strong>工具集成侵入性强</strong>：需要大量修改已有代码
+2. <strong>可观测性差</strong>：大规模部署时难以监控和调试
+3. <strong>长期记忆缺失</strong>：agent 无法保持跨会话的上下文
+4. <strong>分布式支持弱</strong>：难以扩展到大规模 multi-agent 场景</p>
+<h2>🔧 方法详解</h2>
+<h3>核心架构</h3>
+<p>AgentScope 1.0 的核心抽象：</p>
+<ol>
+<li><strong><span class="wikilink">MsgHub</span>（消息总线）</strong>：agent 间消息传递的统一接口，支持广播和点对点通信</li>
+<li><strong>StateModule（状态管理）</strong>：统一管理 agent 状态，支持序列化和恢复</li>
+<li><strong>Non-Invasive Monitoring</strong>：基于 <span class="wikilink">OpenTelemetry</span> 的无侵入式监控</li>
+</ol>
+<h3>MCP 原生支持</h3>
+<p>原生集成 <span class="wikilink">MCP</span>（Model Context Protocol）协议：
+- Agent 可通过 MCP 协议访问外部工具和数据源
+- 工具集成不需要修改 agent 代码（non-invasive）
+- 支持 MCP server 的自动发现和注册</p>
+<h3>分层记忆系统</h3>
+<ul>
+<li><strong><span class="wikilink">InMemoryMemory</span></strong>：短期工作记忆，存储当前会话上下文</li>
+<li><strong><span class="wikilink">LongTermMemoryBase</span></strong>：长期记忆，支持跨会话信息持久化</li>
+<li>记忆检索支持语义搜索和结构化查询</li>
+</ul>
+<h3>ReAct Agent 内置实现</h3>
+<p>内置 <span class="wikilink">ReAct</span> 范式的 agent 实现：
+- Thought → Action → Observation 循环
+- 支持自定义 tool 注册
+- 内置错误处理和重试机制</p>
+<h3>分布式调度</h3>
+<ul>
+<li>基于 <span class="wikilink">gRPC</span> 的分布式通信</li>
+<li>支持 agent 在多节点间调度</li>
+<li>MsgHub 支持分布式消息广播</li>
+</ul>
+<h2>📊 实验结果</h2>
+<table>
+<thead>
+<tr>
+<th>框架</th>
+<th>MCP支持</th>
+<th>可观测性</th>
+<th>长期记忆</th>
+<th>分布式</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>LangChain</td>
+<td>部分</td>
+<td>弱</td>
+<td>第三方</td>
+<td>弱</td>
+</tr>
+<tr>
+<td>AutoGen</td>
+<td>无</td>
+<td>弱</td>
+<td>无</td>
+<td>部分</td>
+</tr>
+<tr>
+<td>CAMEL</td>
+<td>无</td>
+<td>无</td>
+<td>无</td>
+<td>无</td>
+</tr>
+<tr>
+<td><strong>AgentScope 1.0</strong></td>
+<td><strong>原生</strong></td>
+<td><strong>OpenTelemetry</strong></td>
+<td><strong>内置</strong></td>
+<td><strong>原生</strong></td>
+</tr>
+</tbody>
+</table>
+<p>61 upvotes 说明社区认可度较高。</p>
+<h2>💡 核心贡献</h2>
+<ol>
+<li><strong>MCP 原生集成</strong>：首个原生支持 MCP 协议的 multi-agent 框架</li>
+<li><strong>OpenTelemetry 可观测性</strong>：无侵入式监控，适合生产环境</li>
+<li><strong>分层记忆系统</strong>：短期 + 长期记忆，支持跨会话持久化</li>
+<li><strong>大规模部署经验</strong>：阿里内部大规模 multi-agent 部署验证</li>
+</ol>
+<h2>🤔 局限性与思考</h2>
+<ol>
+<li><strong>框架评估困难</strong>：benchmark 上的数字不代表实际开发体验</li>
+<li><strong>与 LangChain 对比不够 fair</strong>：只挑了对方弱的场景</li>
+<li><strong>学习曲线</strong>：抽象层较多，新手上手成本可能较高</li>
+<li><strong>MCP 生态尚未成熟</strong>：MCP 协议本身还在快速迭代</li>
+</ol>
+<h2>📚 相关工作</h2>
+<ul>
+<li><span class="wikilink">MCP</span>: Model Context Protocol，agent 工具集成标准</li>
+<li><span class="wikilink">OpenTelemetry</span>: 可观测性标准</li>
+<li><span class="wikilink">ReAct</span>: 推理+行动范式</li>
+<li><span class="wikilink">LangChain</span>: 竞品框架</li>
+<li><span class="wikilink">AutoGen</span>: 微软 multi-agent 框架</li>
+</ul></div></details>
+
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2508.16279v1/figures/agentscope_v1_0822.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2508.16279v1/figures/agent.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2508.16279v1/deep_research.png" /></div>
+<ul>
+<li><strong>锐评</strong>: AgentScope 出到 1.0 了，围绕 <span class="wikilink">ReAct</span>+<span class="wikilink">MCP</span> 工具交互重构，接了 <span class="wikilink">OpenTelemetry</span> 做可观测、MsgHub 做多智能体消息路由——这套组合拳明显是冲着生产落地去的，不是 demo 玩具。Alibaba 这波把 agent 基础设施补齐得很整。质疑点：又一个 developer-centric framework，和 LangGraph/AutoGen 的差异化到底在哪，摘要没正面回答，工程质量得看代码不是看 paper。🔥</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2508.16279" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🤖 Agent 框架与平台"><h3>2. Very Large-Scale Multi-Agent Simulation in AgentScope</h3>
+<ul>
+<li><strong>作者</strong>: Xuchen Pan, Dawei Gao, Yuexiang Xie, Yushuo Chen, Zhewei Wei, Yaliang Li, Bolin Ding, Ji-Rong Wen, Jingren Zhou</li>
+<li><strong>机构</strong>: Affiliation:, Affiliation: Alibaba Group, Affiliation: Renmin University of China</li>
+<li><strong>链接</strong>: <a href="https://arxiv.org/abs/2407.17789">arXiv</a> | <a href="https://arxiv.org/pdf/2407.17789">PDF</a></li>
+<li><strong>来源</strong>: 🔥 HF Trending，⬆️ 46</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2407.17789v2/env.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: 在 <span class="wikilink">AgentScope</span> 上做超大规模多智能体仿真，用 Agent-Manager 做分布式调度，主打 scalability 和 agent diversity。</li>
+<li><strong>对比方法/Baselines</strong>: 对标 <span class="wikilink">MetaGPT</span>、AutoGen 等单/多智能体平台（Wu et al. 2023, Hong et al. 2024）。</li>
+<li><strong>借鉴意义</strong>: 对做大规模社会仿真、群体行为研究的有用，也是 AgentScope 生态的一块拼图。</li>
+<li><strong>锐评</strong>: 24 年的老论文（v2）跟着 AgentScope 1.0 一起回锅蹭热度。超大规模仿真的痛点抓得准——现有平台一上万个 agent 就跪，但『百万级 agent 仿真』的实际科学价值一直存疑，跑得动不代表结论可信。工程贡献 &gt; 科学贡献。🫠</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2407.17789" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🤖 Agent 框架与平台"><h3>3. TradingAgents: Multi-Agents LLM Financial Trading Framework</h3>
+<ul>
+<li><strong>作者</strong>: Albert Einstein 1,2, Nikola Tesla 3, Isaac Newton 4, Daniela Rus 1, Yijia Xiao 1,3, Edward Sun 1,3, Di Luo 1,2, Wei Wang 1,3</li>
+<li><strong>机构</strong>: 2Massachusetts Institute of Technology (MIT), 1University of California, Los Angeles (UCLA), 2Princeton University, Note: , 3Graz University of Technology, 4University of Cambridge, 1Massachusetts Institute of Technology (MIT)</li>
+<li><strong>链接</strong>: <a href="https://arxiv.org/abs/2412.20138">arXiv</a> | <a href="https://arxiv.org/pdf/2412.20138">PDF</a></li>
+<li><strong>来源</strong>: 🔥 HF Trending，⬆️ 123</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2412.20138v7/figures/schema.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: 多智能体 LLM 模拟真实交易公司的协作分工（分析师/研究员/交易员/风控），用 <span class="wikilink">MACD</span>/<span class="wikilink">RSI</span>/<span class="wikilink">CCI</span> 等技术指标做信号，agent 间辩论决策。</li>
+<li><strong>对比方法/Baselines</strong>: 对标单智能体交易系统和独立数据采集的多智能体框架。</li>
+<li><strong>借鉴意义</strong>: 对做金融 agent、多智能体协作范式的有参考，但离真能赚钱差十万八千里。</li>
+<li><strong>锐评</strong>: 123 upvote 的顶流，但这是 24 年 12 月的老论文（已经 v7 了）。用 LLM 多智能体模拟交易公司分工，故事讲得漂亮，问题是回测收益这种东西水分极大——数据泄漏、幸存者偏差、选择性汇报，一个都躲不掉。『replicate real trading firms』是营销话术，真实交易的对手盘、滑点、延迟它一个都没有。看个热闹可以，别真拿去炒股。🤡</li>
+</ul>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2412.20138" target="_blank" rel="noopener">📖 AI 精读</a></div></div>
+<div id="panel-自主研究与agent自学习" class="tab-panel"><h2>🔬 自主研究与 Agent 自学习</h2><div class="paper-card" data-topic="🔬 自主研究与 Agent 自学习"><h3>4. ARIS: Autonomous Research via Adversarial Multi-Agent Collaboration</h3>
+<ul>
+<li><strong>作者</strong>: Ruofeng Yang, Yongcan Li, Shuai Li, [3pt]
+Project Leader</li>
+<li><strong>机构</strong>: {wanshuiyin, joseph_y, shuaili8}@sjtu.edu.cn, Affiliation: , Affiliation: Shanghai Innovation Institute[2pt], Shanghai Jiao Tong University</li>
+<li><strong>链接</strong>: <a href="https://arxiv.org/abs/2605.03042">arXiv</a> | <a href="https://arxiv.org/pdf/2605.03042">PDF</a></li>
+<li>
+<p><strong>来源</strong>: 🔥 HF Trending，⬆️ 147</p>
+</li>
+<li>
+<p><strong>核心方法</strong>: ARIS 是开源自主科研 harness，核心是三阶段审计流水线：Stage 1 审评估完整性、Stage 2 把结果映射到明确 claim、Stage 3 用独立 reviewer 对照原始证据验证论文声明，专治 executor agent 编造实验结果。</p>
+</li>
+<li><strong>对比方法/Baselines</strong>: 基于 <span class="wikilink">OpenHands</span>、<span class="wikilink">GPT-5</span>，用 <span class="wikilink">MCP</span> 做工具调用。</li>
+<li><strong>借鉴意义</strong>: 对搭自主科研/自动实验 agent 的极有价值——它直面了『agent 会编造实验数据』这个要命的问题。</li>
+<li><strong>锐评</strong>: 147 upvote，今年最实在的 agent harness 之一。别人都在秀 agent 能自动做研究，只有 ARIS 老实承认『executor agent 会产出误导性实验输出、自归一化指标、无文件支撑的 claim』并且专门设计三级审计去抓。这种直面失败模式的工程态度比刷 benchmark 高级多了。质疑点：审计用的 reviewer 本身也是 LLM，谁来审审计者？递归验证问题没解决。🔥</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2605.03042" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🔬 自主研究与 Agent 自学习"><h3>5. EnvHarness: Awakening Static Worlds for Agent Learning</h3>
+<ul>
+<li><strong>作者</strong>: Huang, Chengsong, Wang, Zifeng, Han, Rujun, Yan, Jun, Chen, Yanfei, CuiZhu, Zoey, Jiang, Ke, Xia, Peng, Yu, Han, Zhuang, Yufan, Ming, Yifei, Pan, Jiaqi, Mishra, Bhavana Dalvi, Huang, Jiaxin, Gokturk, Burak, Pfister, Tomas, Lee, Chen-Yu</li>
+<li><strong>机构</strong>: Google Cloud AI Research, University of North Carolina at Chapel Hill, Washington University in St. Louis, github.com/google-research/envharness</li>
+<li><strong>链接</strong>: <a href="https://arxiv.org/abs/2608.19880">arXiv</a> | <a href="https://arxiv.org/pdf/2608.19880">PDF</a></li>
+<li>
+<p><strong>来源</strong>: 🔥 HF Trending，⬆️ 241</p>
+</li>
+<li>
+<p><strong>核心方法</strong>: EnvHarness 把静态环境『唤醒』成能感知 agent 弱点、随 agent 进步而进化的动态环境，不需要 domain-specific pipeline 也不依赖昂贵/不可靠的 verifier。</p>
+</li>
+<li><strong>对比方法/Baselines</strong>: 对标现有环境生成方法（依赖领域流水线 + 昂贵 verifier + 静态输出）。</li>
+<li><strong>借鉴意义</strong>: 对做 agent RL/self-improvement 的是关键拼图——训练环境跟不上 agent 成长是普遍瓶颈。</li>
+<li><strong>锐评</strong>: 241 upvote，Google Cloud AI Research 出品，思路对味。现在 agent RL 最大的隐痛就是环境是手搭的、静态的、盲的——agent 一变强环境就废了。EnvHarness 让环境反过来盯着 agent 的弱点长，这是把课程学习自动化的正确方向。开源了（github.com/google-research/envharness）加分。质疑：动态环境怎么保证不是在制造对抗噪声而是真难度，摘要没给出可信度量。🔥</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2608.19880" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🔬 自主研究与 Agent 自学习"><h3>6. SkillOpt: Executive Strategy for Self-Evolving Agent Skills</h3>
+<ul>
+<li><strong>作者</strong>: Yang, Yifan, Gong, Ziyang, Huang, Weiquan, Yang, Qihao, Zhou, Ziwei, Huang, Zisu, Li, Yan, Gao, Xuemei, Dai, Qi, Liu, Bei, Qiu, Kai, Yang, Yuqing, Chen, Dongdong, Yang, Xue, Luo, Chong</li>
+<li><strong>机构</strong>: Fudan University, Microsoft, Shanghai Jiao Tong University, Tongji University</li>
+<li><strong>链接</strong>: <a href="https://arxiv.org/abs/2605.23904">arXiv</a> | <a href="https://arxiv.org/pdf/2605.23904">PDF</a></li>
+<li>
+<p><strong>来源</strong>: 🔥 HF Trending，⬆️ 264</p>
+</li>
+<li>
+<p><strong>核心方法</strong>: SkillOpt 把 agent 的 skill 当作『冻结 agent 的外部状态』来训练，用类似权重优化的纪律做可复现的 skill 进化，而不是一次性生成或松散自修订。</p>
+</li>
+<li><strong>对比方法/Baselines</strong>: 对标 <span class="wikilink">GEPA</span>（反射式 prompt 进化）、<span class="wikilink">TextGrad</span>、ABSTRAL、EvoTest 等无梯度优化方法。</li>
+<li><strong>借鉴意义</strong>: 对做 self-evolving agent、prompt/skill 自动优化的有直接参考——把炼丹变工程。</li>
+<li><strong>锐评</strong>: 264 upvote 全场最高。核心洞见很锋利：现在的 agent skill 要么手搓、要么一次性生成、要么靠松散的自我修订，没一个像深度学习优化器那样『可靠地在起点之上改进』。把 skill 当外部状态、用优化器的纪律来管，这个类比立得住。质疑点：『像权重优化一样可复现』是很高的承诺，LLM 反射的随机性怎么压住，得看实验章节而不是摘要吹的。👀</li>
+</ul>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2605.23904" target="_blank" rel="noopener">📖 AI 精读</a></div></div>
+<div id="panel-agent记忆" class="tab-panel"><h2>🧠 Agent 记忆</h2><div class="paper-card" data-topic="🧠 Agent 记忆"><h3>7. EverMemOS: A Self-Organizing Memory Operating System for Structured Long-Horizon Reasoning</h3>
+<ul>
+<li><strong>作者</strong>: Chuanrui Hu, Xingze Gao11footnotemark:, Zuyi Zhou, Dannong Xu, Yi Bai, Xintong Li, Hui Zhang, Tong Li, Chong Zhang, Lidong Bing, Yafeng Deng22footnotemark:</li>
+<li><strong>机构</strong>: Affiliation: , Thanks: </li>
+<li><strong>链接</strong>: <a href="https://arxiv.org/abs/2601.02163">arXiv</a> | <a href="https://arxiv.org/pdf/2601.02163">PDF</a></li>
+<li><strong>来源</strong>: 🔥 HF Trending，⬆️ 15</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2601.02163v2/main.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: EverMemOS 是自组织记忆操作系统，用 MemCells 做记忆单元、MemScenes 组织场景，主打把演化的用户状态『固化 consolidate』并解决冲突，而非存孤立记录再检索碎片。</li>
+<li><strong>对比方法/Baselines</strong>: 在 <span class="wikilink">LoCoMo</span>、<span class="wikilink">LongMemEval</span> 上评测，对标 <span class="wikilink">MemOS</span>。</li>
+<li><strong>借鉴意义</strong>: 对做长程对话 agent、个性化记忆的有用，是记忆赛道的最新一员。</li>
+<li><strong>锐评</strong>: 又一个 MemOS。EverMemOS 抓的痛点没错——现有记忆系统存的是孤立记录、检索的是碎片，没法整合演化的用户状态。MemCell 这套抽象听着比纯向量检索高级。但记忆赛道现在已经卷到互相报菜名：MemOS、Mem0、Zep、EverMemOS，各家都在 LoCoMo/LongMemEval 上刷分互称 SOTA，benchmark 早就过拟合了。真正缺的是一个大家都服的统一评测，不是第 N 个 OS。👀</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2601.02163" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🧠 Agent 记忆"><h3>8. Mem0: Building Production-Ready AI Agents with Scalable Long-Term Memory</h3>
+<ul>
+<li><strong>作者</strong>: Prateek Chhikara, Dev Khant, Saket Aryan, Taranjeet Singh, and</li>
+<li><strong>链接</strong>: <a href="https://arxiv.org/abs/2504.19413">arXiv</a> | <a href="https://arxiv.org/pdf/2504.19413">PDF</a></li>
+<li><strong>来源</strong>: 🔥 HF Trending，⬆️ 71</li>
+</ul>
+<details class="paper-note"><summary>📒 精读笔记: Mem0</summary><div class="note-body"><h1>Mem0</h1>
+<h2>定义</h2>
+<p>一个开源的 AI 记忆层框架，为 LLM 应用提供持久化的用户/会话记忆管理，支持记忆的自动提取、存储、检索和更新。</p>
+<h2>核心要点</h2>
+<ol>
+<li>从对话中自动提取关键信息并存储为结构化记忆</li>
+<li>支持多级记忆：用户级、会话级、Agent 级</li>
+<li>基于向量检索实现相关记忆的上下文注入</li>
+<li>与 Zep 等系统的区别：更轻量，侧重 key-value 式记忆而非图结构</li>
+</ol>
+<h2>相关概念</h2>
+<ul>
+<li><span class="wikilink">RAG</span></li>
+<li><span class="wikilink">Episodic Memory</span></li>
+<li><span class="wikilink">Semantic Memory</span></li>
+<li><span class="wikilink">LLM Agent</span></li>
+</ul></div></details>
+
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2504.19413v1/figures/mem0_pipeline.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2504.19413v1/figures/mem0p_pipeline.png" /></div>
+<ul>
+<li><strong>锐评</strong>: Mem0，25 年 4 月老论文回锅。生产级长期记忆的代表作，动态抽取-固化-检索三段式 + <span class="wikilink">Mem0g</span> 图记忆变体，在 <span class="wikilink">LOCOMO</span> 上打 <span class="wikilink">MemGPT</span>。工程完成度高、有商业化产品背书是它的护城河。放今天看，思路已被 MemOS/EverMemOS 这些后来者『致敬』得差不多了，但作为记忆系统的入门必读依然成立。🫠</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2504.19413" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🧠 Agent 记忆"><h3>9. Zep: A Temporal Knowledge Graph Architecture for Agent Memory</h3>
+<ul>
+<li><strong>作者</strong>: Preston Rasmussen, Pavlo Paliychuk, Travis Beauvais, Jack Ryan, Daniel Chalef</li>
+<li><strong>机构</strong>: Affiliation: , Email: </li>
+<li><strong>链接</strong>: <a href="https://arxiv.org/abs/2501.13956">arXiv</a> | <a href="https://arxiv.org/pdf/2501.13956">PDF</a></li>
+<li><strong>来源</strong>: 🔥 HF Trending，⬆️ 16</li>
+</ul>
+<details class="paper-note"><summary>📒 精读笔记: Zep</summary><div class="note-body"><h1>Zep</h1>
+<h2>定义</h2>
+<p>一个 AI 记忆管理平台，使用知识图谱和时序模型为 LLM Agent 提供长期记忆能力，支持事实提取、关系建模和记忆演化。</p>
+<h2>核心要点</h2>
+<ol>
+<li>基于 <span class="wikilink">Knowledge Graph</span> 存储实体关系，而非单纯的向量检索</li>
+<li>支持 <span class="wikilink">Bi-temporal Model</span>——区分事实发生时间和记录时间</li>
+<li>自动从对话中提取实体、关系和事件，构建动态图谱</li>
+<li>与 <span class="wikilink">Mem0</span> 的区别：更重量级，适合需要复杂关系推理的场景</li>
+</ol>
+<h2>相关概念</h2>
+<ul>
+<li><span class="wikilink">Knowledge Graph</span></li>
+<li><span class="wikilink">Graphiti</span></li>
+<li><span class="wikilink">Episodic Memory</span></li>
+<li><span class="wikilink">Semantic Memory</span></li>
+<li><span class="wikilink">Mem0</span></li>
+</ul></div></details>
+
+<ul>
+<li><strong>锐评</strong>: Zep，25 年 1 月老论文。核心是时序知识图谱（episode/semantic entity/community 三层子图 + 时间感知的关联函数），在 DMR 和 LongMemEval 上超 <span class="wikilink">MemGPT</span>。相比 Mem0 的抽取式记忆，Zep 的图结构对『关系随时间演化』建模更自然，做企业级、需要审计追溯的场景更合适。缺点是图维护成本高，规模大了更新开销是个问号。👀</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2501.13956" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🧠 Agent 记忆"><h3>10. MemOS: A Memory OS for AI System</h3>
+<ul>
+<li><strong>作者</strong>: Zhiyu Li, Chenyang Xi, Chunyu Li, Ding Chen, Boyu Chen, Shichao Song, Simin Niu, Hanyu Wang, Jiawei Yang, Chen Tang, Qingchen Yu, Jihao Zhao, Yezhaohui Wang, Peng Liu, Zehao Lin, Pengyuan Wang, Jiahao Huo, Tianyi Chen, Kai Chen, Kehang Li, Zhen Tao, Huayi Lai, Hao Wu, Bo Tang, Zhengren Wang, Zhaoxin Fan, Ningyu Zhang, Linfeng Zhang, Junchi Yan, Mingchuan Yang, Tong Xu, Wei Xu, Huajun Chen, Haofen Wang, Hongkang Yang, Wentao Zhang, Zhi-Qin John Xu, Siheng Chen, Feiyu Xiong</li>
+<li><strong>机构</strong>: Affiliation:, 10]Shanghai Jiao Tong University, 6]University of Science and Technology of China, 4]Tongji University, 3]Research Institute of China Telecom, 5]Zhejiang University, 9]Beihang University, 7]Peking University, 8]Renmin University of China, 2]Institute for Advanced Algorithms Research, Shanghai</li>
+<li><strong>链接</strong>: <a href="https://arxiv.org/abs/2507.03724">arXiv</a> | <a href="https://arxiv.org/pdf/2507.03724">PDF</a></li>
+<li><strong>来源</strong>: 🔥 HF Trending，⬆️ 170</li>
+</ul>
+<details class="paper-note"><summary>📒 精读笔记: MemOS</summary><div class="note-body"><h1>MemOS: A Memory Operating System for AI</h1>
+<h2>📋 基本信息</h2>
+<ul>
+<li><strong>来源</strong>: HF Trending，⬆️ 166</li>
+</ul>
+<h2>🎯 研究动机与问题</h2>
+<p>AI 系统的记忆管理日益复杂，需要一个操作系统级别的抽象来统一管理不同类型的记忆。</p>
+<h2>🔧 方法详解</h2>
+<h3>核心模块</h3>
+<p>MemOS 包含三个核心模块：</p>
+<ol>
+<li><strong><span class="wikilink">MemScheduler</span></strong>：记忆调度器，决定何时加载/卸载记忆</li>
+<li><strong><span class="wikilink">MemCube</span></strong>：记忆容器，封装不同类型的记忆单元</li>
+<li><strong><span class="wikilink">MemStore</span></strong>：记忆存储层，支持持久化</li>
+</ol>
+<h3>架构</h3>
+<div class="math-block">$$
+\text{MemOS} = \text{MemScheduler} + \text{MemCube} + \text{MemStore}
+$$</div>
+
+<ul>
+<li>MemScheduler 负责记忆生命周期管理</li>
+<li>MemCube 封装 <span class="wikilink">KV cache</span>、向量记忆、结构化记忆等</li>
+<li>MemStore 提供持久化和检索能力</li>
+</ul>
+<h3>对比</h3>
+<table>
+<thead>
+<tr>
+<th>特性</th>
+<th>RAG</th>
+<th>MemGPT</th>
+<th>MemOS</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>记忆类型</td>
+<td>文档</td>
+<td>Context + 外部</td>
+<td>多类型统一</td>
+</tr>
+<tr>
+<td>调度</td>
+<td>无</td>
+<td>简单</td>
+<td>MemScheduler</td>
+</tr>
+<tr>
+<td>生命周期</td>
+<td>无</td>
+<td>部分</td>
+<td>完整</td>
+</tr>
+<tr>
+<td>KV cache</td>
+<td>无</td>
+<td>无</td>
+<td>集成</td>
+</tr>
+</tbody>
+</table>
+<h2>📊 实验结果</h2>
+<p>166 个 upvotes 表明社区对概念框架的高关注度。</p>
+<h2>💡 核心贡献</h2>
+<ol>
+<li><strong>OS 级抽象</strong>：将 agent memory 提升到操作系统层级</li>
+<li><strong>统一管理</strong>：支持 KV cache、向量记忆、结构化记忆等多种类型</li>
+</ol>
+<h2>🤔 局限性与思考</h2>
+<ol>
+<li><strong>概念大于实质</strong>：MemScheduler 说白了就是个优先级队列</li>
+<li>离真正的 "OS" 差了十个抽象层</li>
+<li>166 upvotes 但学术贡献偏弱</li>
+<li>wrapper 性质明显，核心创新不足</li>
+</ol>
+<h2>📚 相关工作</h2>
+<ul>
+<li><span class="wikilink">MemGPT</span>: 早期 agent memory 系统</li>
+<li><span class="wikilink">RAG</span>: 传统检索方案</li>
+<li><span class="wikilink">KV cache</span>: 核心管理对象</li>
+</ul></div></details>
+
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2507.03724v4/img/memory_circuitry_theory_updated.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2507.03724v4/HumanVsLLM.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2507.03724v4/Framework.png" /></div>
+<ul>
+<li><strong>锐评</strong>: MemOS，25 年 7 月，170 upvote 的记忆赛道扛把子。把记忆抽象成 MemCube + MemScheduler + MemGovernance 一整套 OS 隐喻，野心是给 AGI 做记忆管理基础设施。格局拉得最大，也最像在讲故事——OS 类比好听，但真正的调度/治理策略有多硬核得深挖。今天的 EverMemOS 基本就是冲它来的。作为记忆系统『范式级』综述读物值得收藏。👀</li>
+</ul>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2507.03724" target="_blank" rel="noopener">📖 AI 精读</a></div></div>
+<div id="panel-rag与数据" class="tab-panel"><h2>🔎 RAG 与数据</h2><div class="paper-card" data-topic="🔎 RAG 与数据"><h3>11. LightRAG: Simple and Fast Retrieval-Augmented Generation</h3>
+<ul>
+<li><strong>作者</strong>: Zirui Guo, Lianghao Xia, Yanhua Yu, Tu Ao, Chao Huang, Telecommunications</li>
+<li><strong>机构</strong>: Thanks:, University of Hong Kongzrguo101@hku.hk  aka_xia@foxmail.com  chaohuang75@gmail.com, Beijing University of Posts</li>
+<li><strong>链接</strong>: <a href="https://arxiv.org/abs/2410.05779">arXiv</a> | <a href="https://arxiv.org/pdf/2410.05779">PDF</a></li>
+<li><strong>来源</strong>: 🔥 HF Trending，⬆️ 43</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2410.05779v3/framework.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: LightRAG 在传统 <span class="wikilink">RAG</span> 上加图结构索引，用双层检索（低层实体 + 高层主题）捕捉文档间复杂依赖，解决扁平数据表示导致的碎片化回答。</li>
+<li><strong>对比方法/Baselines</strong>: 对标 <span class="wikilink">NaiveRAG</span>、<span class="wikilink">GraphRAG</span>、<span class="wikilink">HyDE</span>。</li>
+<li><strong>借鉴意义</strong>: 对做知识库问答、检索增强的有直接参考，比 GraphRAG 轻量、增量更新友好。</li>
+<li><strong>锐评</strong>: 24 年 10 月老论文（v3），但 LightRAG 确实是 GraphRAG 之后最实用的轻量化替代——微软 GraphRAG 好是好，构建成本高得离谱，LightRAG 用双层检索把成本压下来还支持增量更新，这才是能上生产的 RAG。回锅一点不亏。质疑：图质量强依赖 LLM 抽取实体关系，脏文档进去照样脏图出来。👀</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2410.05779" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🔎 RAG 与数据"><h3>12. DataFlow: An LLM-Driven Framework for Unified Data Preparation and Workflow Automation in the Era of Data-Centric AI</h3>
+<ul>
+<li><strong>作者</strong>: Hao Liang, Xiaochen Ma, Zhou Liu, Zhen Hao Wong, Zhengyang Zhao, Zimo Meng, Runming He, Chengyu Shen, Qifeng Cai, Zhaoyang Han, Meiyi Qiang, Yalin Feng, Tianyi Bai, Zewei Pan, Ziyi Guo, Yizhen Jiang, Jingwen Deng, Qijie You, Peichao Lai, Tianyu Guo, Chi Hsu Tsai, Hengyi Feng, Rui Hu, Wenkai Yu, Junbo Niu, Bohan Zeng, Ruichuan An, Lu Ma, Jihao Huang, Yaowei Zheng, Conghui He, Linpeng Tang, Bin Cui, Weinan E, Wentao Zhang</li>
+<li><strong>机构</strong>: Affiliation:, Email:, ]1Peking University, 2Institute for Advanced Algorithms Research, Shanghai, 3OriginHub Technology, 4OpenDataLab, Shanghai Artificial Intelligence Laboratory, 5LLaMA-Factory Team</li>
+<li><strong>链接</strong>: <a href="https://arxiv.org/abs/2512.16676">arXiv</a> | <a href="https://arxiv.org/pdf/2512.16676">PDF</a></li>
+<li><strong>来源</strong>: 🔥 HF Trending，⬆️ 226</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2512.16676v1/df_overview.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2512.16676v1/dfa_fig.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2512.16676v1/text2sql_pipeline.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: DataFlow 是 LLM 驱动的统一数据准备框架，提供有原则的抽象替代 ad-hoc 脚本，支持 model-in-the-loop 数据生成，覆盖 Text2SQL、<span class="wikilink">AgenticRAG</span>、<span class="wikilink">CoT</span> 数据合成等。</li>
+<li><strong>对比方法/Baselines</strong>: 对标现有 ad-hoc 脚本 + 松散定义的数据工作流。</li>
+<li><strong>借鉴意义</strong>: 对做数据中心 AI、大规模数据合成/清洗流水线的有工程参考价值。</li>
+<li><strong>锐评</strong>: 226 upvote，作者列表长得像春晚演职员表（30+ 人）。痛点是真痛——数据准备现在全是 ad-hoc 脚本、不可复现。但『统一框架』这四个字是学术界最爱画的饼，每年都有人宣称要统一数据流水线，最后都沦为又一个自己团队用的工具。工程报告性质，价值全看开源生态能不能起来，paper 本身信息密度不高。🫠</li>
+</ul>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2512.16676" target="_blank" rel="noopener">📖 AI 精读</a></div></div>
+<div id="panel-llm推理系统" class="tab-panel"><h2>⚡ LLM 推理系统</h2><div class="paper-card" data-topic="⚡ LLM 推理系统"><h3>13. Efficient Memory Management for Large Language Model Serving with</h3>
+<p>PagedAttention
+- <strong>作者</strong>: Kwon, Woosuk, Li, Zhuohan, Zhuang, Siyuan, Sheng, Ying, Zheng, Lianmin, Yu, Cody Hao, Gonzalez, Joseph E., Zhang, Hao, Stoica, Ion
+- <strong>机构</strong>: Affiliation: , Affiliation: 1{}^{\text{1}}UC Berkeley  2{}^{\text{2}}Stanford University  3{}^{\text{3}}Independent Researcher  4{}^{\text{4}}UC San Diego
+- <strong>链接</strong>: <a href="https://arxiv.org/abs/2309.06180">arXiv</a> | <a href="https://arxiv.org/pdf/2309.06180">PDF</a>
+- <strong>来源</strong>: 🔥 HF Trending，⬆️ 68</p>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2309.06180v1/system-overview.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: PagedAttention 借鉴操作系统虚拟内存分页思想管理 <span class="wikilink">KV</span> cache，把连续 KV 存储切成非连续的 block 按需分配，几乎消除内存碎片和冗余复制，从而大幅提高 batch size 和吞吐。</li>
+<li><strong>对比方法/Baselines</strong>: 对标 <span class="wikilink">FasterTransformer</span>、Orca 等 LLM serving 系统。</li>
+<li><strong>借鉴意义</strong>: vLLM 的理论地基。做任何 LLM 推理优化、部署的都绕不开这篇。</li>
+<li><strong>锐评</strong>: 23 年的经典，vLLM 的立身之本，回锅纯属新人补课。把 OS 分页搬到 KV cache 管理是那种『看完拍大腿为什么我没想到』的好点子，简单、有效、影响了整个推理生态。没什么可黑的——这就是过去三年 LLM 系统领域最重要的工作之一。做推理不读这篇等于没入门。🔥</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2309.06180" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="⚡ LLM 推理系统"><h3>14. LMCache: An Efficient KV Cache Layer for Enterprise-Scale LLM Inference</h3>
+<ul>
+<li><strong>作者</strong>: Liu, Yuhan, Cheng, Yihua, Yao, Jiayi, An, Yuwei, Chen, Xiaokun, Feng, Shaoting, Huang, Yuyang, Shen, Samuel, Zhang, Rui, Du, Kuntai, Jiang, Junchen</li>
+<li><strong>机构</strong>: University of Chicago</li>
+<li><strong>链接</strong>: <a href="https://arxiv.org/abs/2510.09665">arXiv</a> | <a href="https://arxiv.org/pdf/2510.09665">PDF</a></li>
+<li><strong>来源</strong>: 🔥 HF Trending，⬆️ 9</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2510.09665v2/e2e_system_diagram.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2510.09665v2/lmcache_arch.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: LMCache 是企业级 KV cache 层，把 KV cache 从 GPU 移到外部存储实现跨 query、跨推理引擎的 cache 复用，优化 <span class="wikilink">TTFT</span> 和 <span class="wikilink">ITL</span>。</li>
+<li><strong>对比方法/Baselines</strong>: 在真实生产统计上验证 KV cache 增长远超 GPU 容量。</li>
+<li><strong>借鉴意义</strong>: 对做大规模 LLM serving、多轮对话/长文档场景的降本增效很实用。</li>
+<li><strong>锐评</strong>: 25 年 10 月，是 PagedAttention 之后 KV cache 故事的自然延伸——单机不够就往外卸载、跨引擎复用。芝加哥大学这套 real-world usage 统计支撑很扎实，不是拍脑袋。质疑：KV cache 挪出 GPU 必然带来传输延迟，跨引擎复用的命中率在真实多样化流量下有多高，是决定成败的关键，摘要只说增长快没说复用率。👀</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2510.09665" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="⚡ LLM 推理系统"><h3>15. FreeToken: Efficient Edge-Native MoE Serving with Bandwidth-Adaptive Execution</h3>
+<ul>
+<li><strong>作者</strong>: Shuo Yang, Xiaoze Fan, Melissa Pan, Haocheng Xi, Zhe Wang, Shanlin Sun, Kurt Keutzer, Song Han, Matei Zaharia, Chenfeng Xu†\dagger, Ion Stoica†\dagger</li>
+<li><strong>机构</strong>: Affiliation:, \correspondenceShuo Yang at andy_yang@berkeley.edu, Chenfeng Xu at xuchenfeng@utexas.edu</li>
+<li><strong>链接</strong>: <a href="https://arxiv.org/abs/2608.16157">arXiv</a> | <a href="https://arxiv.org/pdf/2608.16157">PDF</a></li>
+<li>
+<p><strong>来源</strong>: 🔥 HF Trending，⬆️ 74</p>
+</li>
+<li>
+<p><strong>核心方法</strong>: FreeToken 是边缘原生 MoE serving 系统，把个人机器当成弹性推理平台，协同设计模型布局/加载、expert 常驻、CPU-GPU 执行，用带宽自适应应对 VRAM 动态变化（桌面/浏览器/游戏抢显存）。</p>
+</li>
+<li><strong>对比方法/Baselines</strong>: 面向 <span class="wikilink">DeepSeek</span>、<span class="wikilink">GLM-5</span> 等前沿开源权重模型的边缘部署。</li>
+<li><strong>借鉴意义</strong>: 对做端侧大模型部署、本地推理的有直接参考——数据中心的假设在个人机器上全崩。</li>
+<li><strong>锐评</strong>: Ion Stoica + Song Han + Matei Zaharia 挂名，Berkeley 系推理天团。切入点很聪明：边缘部署最大的坑不是 GPU 小，而是显存是动态共享的——你在推理，浏览器和游戏随时来抢几个 GB。带宽自适应执行这个设计直击痛点。质疑：MoE 在边缘的 expert 换入换出开销天然大，『弹性』的代价是不是又慢又抖，得看真实交互延迟。👀</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2608.16157" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="⚡ LLM 推理系统"><h3>16. DFlash: Block Diffusion for Flash Speculative Decoding</h3>
+<ul>
+<li><strong>作者</strong>: Jian Chen, Yesheng Liang, Zhijian Liu</li>
+<li><strong>机构</strong>: Affiliation: , Correspondence to:</li>
+<li><strong>链接</strong>: <a href="https://arxiv.org/abs/2602.06036">arXiv</a> | <a href="https://arxiv.org/pdf/2602.06036">PDF</a></li>
+<li>
+<p><strong>来源</strong>: 🔥 HF Trending，⬆️ 95</p>
+</li>
+<li>
+<p><strong>核心方法</strong>: DFlash 用 block diffusion 做投机解码的 draft，摆脱现有方法自回归 draft 的顺序瓶颈，让草稿也能并行生成，再由 target LLM 并行验证。</p>
+</li>
+<li><strong>对比方法/Baselines</strong>: 对标 <span class="wikilink">EAGLE-3</span> 等自回归投机解码方法。</li>
+<li><strong>借鉴意义</strong>: 对做推理加速的有价值——投机解码的 draft 环节一直是自回归的隐性瓶颈。</li>
+<li><strong>锐评</strong>: 抓到了投机解码一个被忽视的痛点：大家都在优化验证，但 draft 本身还是自回归串行的，speedup 天花板就卡在这。用 block diffusion 让 draft 并行化，思路新颖。质疑：diffusion draft 的接受率能不能打得过 EAGLE-3 这种精心训练的自回归 draft？并行生成快但接受率低照样白搭，这是投机解码的老账。👀</li>
+</ul>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2602.06036" target="_blank" rel="noopener">📖 AI 精读</a></div></div>
+<div id="panel-多模态理解与生成" class="tab-panel"><h2>🎨 多模态理解与生成</h2><div class="paper-card" data-topic="🎨 多模态理解与生成"><h3>17. SenseNova-U1: Unifying Multimodal Understanding and Generation with NEO-unify Architecture</h3>
+<ul>
+<li><strong>作者</strong>: Diao, Haiwen, Wu, Penghao, Deng, Hanming, Wang, Jiahao, Bai, Shihao, Wu, Silei, Fan, Weichen, Ye, Wenjie, Tong, Wenwen, Fan, Xiangyu, Li, Yan, Wang, Yubo, Cao, Zhijie, Lin, Zhiqian, Yang, Zhitao, Cai, Zhongang, Niu, Yuwei, Zhu, Yue, Liu, Bo, Lv, Chengguang, Yu, Haojia, Xie, Haozhe, Wang, Hongli, Fan, Jianan, Li, Jiaqi, Lu, Jiefan, Ni, Jingcheng, Xu, Junxiang, Liang, Kaihuan, Shi, Lianqiang, Dai, Linjun, Wang, Linyan, Qian, Oscar, Gao, Peng, Liu, Pengfei, Sun, Qingping, Shen, Rui, Wang, Ruisi, Ma, Shengnan, Yang, Shuang, Xie, Siyi, Li, Siying, Zhong, Tianbo, Kong, Xiangli, Shi, Xuanke, Gao, Yang, Yao, Yongqiang, Wang, Yves, Bai, Zhengqi, Lin, Zhengyu, Yin, Zixin, Sun, Wenxiu, Gong, Ruihao, Wang, Quan, Lu, Lewei, Yang, Lei, Liu, Ziwei, Lin, Dahua</li>
+<li><strong>链接</strong>: <a href="https://arxiv.org/abs/2605.12500">arXiv</a> | <a href="https://arxiv.org/pdf/2605.12500">PDF</a></li>
+<li><strong>来源</strong>: 🔥 HF Trending，⬆️ 197</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2605.12500v1/teaser_overview.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2605.12500v1/lightllm_x2v.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2605.12500v1/midtrain_pipeline.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: SenseNova-U1 用 NEO-unify 架构统一多模态理解与生成，主张理解/生成的割裂是结构性缺陷而非工程 artifact，用 <span class="wikilink">MoT</span>（Mixture-of-Transformers）打通表示空间。</li>
+<li><strong>对比方法/Baselines</strong>: 对标 <span class="wikilink">BAGEL</span>、<span class="wikilink">OmniGen2</span>、<span class="wikilink">FLUX</span>。</li>
+<li><strong>借鉴意义</strong>: 对做统一多模态大模型、图文互生的是重要参考，理解生成一体化是当前主线。</li>
+<li><strong>锐评</strong>: 197 upvote，作者列表 60+ 人（商汤全员上阵）。『理解与生成的割裂是结构性限制而非工程 artifact』这个立论有态度，是当前多模态的核心命题。用 MoT 统一表示空间是主流路线。质疑点：几乎每家统一多模态模型都宣称打通了理解与生成，但实测往往是理解拖生成后腿或反之，『native multimodal intelligence』这种大词得用硬指标兑现，别又是刷榜。👀</li>
+</ul>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2605.12500" target="_blank" rel="noopener">📖 AI 精读</a></div></div>
+<div id="panel-guiagent" class="tab-panel"><h2>📱 GUI Agent</h2><div class="paper-card" data-topic="📱 GUI Agent"><h3>18. MAI-UI Technical Report: Real-World Centric Foundation GUI Agents</h3>
+<ul>
+<li><strong>作者</strong>: Zhou, Hanzhang, Zhang, Xu, Tong, Panrong, Zhang, Jianan, Chen, Liangyu, Kong, Quyu, Cai, Chenglin, Liu, Chen, Wang, Yue, Zhou, Jingren, Hoi, Steven</li>
+<li><strong>机构</strong>: [1em] Tongyi Lab  , Alibaba Group[0.5em]</li>
+<li><strong>链接</strong>: <a href="https://arxiv.org/abs/2512.22047">arXiv</a> | <a href="https://arxiv.org/pdf/2512.22047">PDF</a></li>
+<li><strong>来源</strong>: 🔥 HF Trending，⬆️ 31</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2512.22047v1/grounding_pipelin.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2512.22047v1/data_pipeline.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2512.22047v1/rl_train_schema2.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: MAI-UI 是全尺寸 GUI agent 家族（2B/8B/32B/235B-A22B），整合 GUI grounding 训练、自演化轨迹数据流水线、agent-user 交互 + <span class="wikilink">MCP</span> 工具增强、在线 <span class="wikilink">RL</span>、端云协同系统。</li>
+<li><strong>对比方法/Baselines</strong>: 在 <span class="wikilink">AndroidWorld</span>、<span class="wikilink">ScreenSpot</span>、<span class="wikilink">MobileWorld</span> 上评测。</li>
+<li><strong>借鉴意义</strong>: 对做 GUI/移动端 agent、人机交互自动化的是完整技术栈参考。</li>
+<li><strong>锐评</strong>: 阿里 Tongyi Lab 出品，全尺寸覆盖 2B 到 235B 很有诚意。亮点是识别了四个真实部署痛点：缺 native agent-user 交互、UI-only 操作的局限等——这说明团队真在做落地不是刷 benchmark。自演化轨迹数据流水线是省标注成本的关键。质疑：GUI agent 在 AndroidWorld 上刷分和真机上稳定跑通是两回事，端云协同的延迟和隐私问题技术报告一般不会细说。👀</li>
+</ul>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2512.22047" target="_blank" rel="noopener">📖 AI 精读</a></div></div>
+<div id="panel-agent安全" class="tab-panel"><h2>🛡️ Agent 安全</h2><div class="paper-card" data-topic="🛡️ Agent 安全"><h3>19. Securing the AI Agent: A Unified Framework for Multi-Layer Agent Red Teaming</h3>
+<ul>
+<li><strong>作者</strong>: Tencent Zhuque Lab</li>
+<li><strong>机构</strong>: Tencent Zhuque Lab</li>
+<li><strong>链接</strong>: <a href="https://arxiv.org/abs/2606.31227">arXiv</a> | <a href="https://arxiv.org/pdf/2606.31227">PDF</a></li>
+<li><strong>来源</strong>: 🔥 HF Trending，⬆️ 14</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2606.31227v1/imgs/./mcp_scan.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2606.31227v1/imgs/./agent_scan.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2606.31227v1/imgs/./architecture.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: AI-Infra-Guard 把 AI 红队按攻击面分层组织（模型/<span class="wikilink">MCP</span> 生态/agent 平台/基础设施），开源框架，覆盖 <span class="wikilink">OWASP</span>、<span class="wikilink">CVE</span> 视角扫描 MCP 和 agent。</li>
+<li><strong>对比方法/Baselines</strong>: 面向开源 AI 基础设施（serving engine、agent 平台、MCP 生态）的安全工具缺口。</li>
+<li><strong>借鉴意义</strong>: 对做 agent 安全、MCP 部署防护的实用——MCP 生态爆发但安全工具严重滞后。</li>
+<li><strong>锐评</strong>: 腾讯朱雀实验室出品。观察很准：AI 基础设施（尤其 MCP 生态）扩张速度远超安全工具的跟进速度，攻击面是分层的得分层防。开源 + 工业界背景加分。质疑点：分层红队框架听着系统，但 agent 安全的核心难题是 prompt injection 这类语义攻击，传统 CVE/OWASP 那套扫描能覆盖多少？摘要没说清对语义层攻击的检测能力。👀</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2606.31227" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🛡️ Agent 安全"><h3>20. HarmProfile: Characterizing Harmful Distributions in Frontier LLMs</h3>
+<ul>
+<li><strong>作者</strong>: Ma, Zhouyuan, Wu, Yutao, Huang, Hanxun, Zheng, Xiang, Liu, Xiao, Cao, Yixin, Wu, Zuxuan, Ma, Xingjun, Jiang, Yu-Gang</li>
+<li><strong>机构</strong>: City University of Hong Kong, Deakin University, Fudan University, The University of Melbourne</li>
+<li><strong>链接</strong>: <a href="https://arxiv.org/abs/2608.14577">arXiv</a> | <a href="https://arxiv.org/pdf/2608.14577">PDF</a></li>
+<li>
+<p><strong>来源</strong>: 🔥 HF Trending，⬆️ 20</p>
+</li>
+<li>
+<p><strong>核心方法</strong>: HarmProfile 把有害生成当作『分析对象』而非单纯攻击结果来研究，刻画前沿 LLM misbehavior 时产出的有害分布。</p>
+</li>
+<li><strong>对比方法/Baselines</strong>: 摘要未提供具体对比方法（method_names 抽取仅 TeX/CSS，说明正文结构化信息少）。</li>
+<li><strong>借鉴意义</strong>: 对做 LLM 安全评估、对齐研究的有参考，视角（把有害输出当分析对象）较新。</li>
+<li><strong>锐评</strong>: 视角转换有点意思——不把有害生成当成攻击的成功/失败，而是当成一个可分析的分布对象。但摘要信息量实在太少，方法抽取只出了 TeX/CSS 说明正文没什么可结构化的技术细节，20 upvote 也印证了热度一般。想法 &gt; 实现，得看数据集质量和规模到底如何。🫠</li>
+</ul>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2608.14577" target="_blank" rel="noopener">📖 AI 精读</a></div></div>
+<hr>
+<h2>被排除的论文</h2>
+<ul>
+<li>OmniFlatten: An End-to-end GPT Model for Seamless Voice Conversation — 命中 negative_keywords（speech synthesis/TTS/voice），语音对话不在关注领域</li>
+<li>Ultralytics YOLO26: Unified Real-Time End-to-End Vision Models — 实时目标检测，与推荐/广告/LLM/Agent 关注领域无交集</li>
+<li>A decoder-only foundation model for time-series forecasting (TimesFM) — 时序预测基础模型，虽借鉴 LLM 思路但不属于关注领域</li>
+<li>Unlimited OCR Works — OCR/文档解析，与关注领域无交集（虽涉及 LLM decoder + KV cache 但主题偏离）</li>
+<li>PaddleOCR-VL-1.6 — 文档解析 OCR 模型，不在关注领域</li>
+<li>MonkeyOCRv2: A Visual-Text Foundation Model for Document AI — 文档 OCR 基础模型，不在关注领域</li>
+</ul>
+<p>记忆赛道已从『能不能记』卷到『用什么 OS 隐喻记』的内耗阶段，而真正的前沿正在从『造更强 agent』转向『造会成长的环境』（EnvHarness）和『把 skill 当可训练状态』（SkillOpt）——agent 的自我进化范式正在成型。</p></div>
+<footer style="text-align:center;color:var(--text2);margin:3em 0 1em;font-size:0.85em;">
+  Generated by daily-papers-web &middot; Powered by Claude Code
+</footer>
+<script src="tabs.js"></script>
+
+</body>
+</html>
