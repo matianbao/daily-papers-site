@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>2026-08-24 论文推荐</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.21/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.21/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.21/dist/contrib/auto-render.min.js"
+  onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}]});"></script>
+<link rel="stylesheet" href="style.css">
+<style>body{max-width:960px;}</style>
+
+</head>
+<body>
+<nav class="nav"><a href="index.html">🏠 首页</a><a href="2026-08-22.html">← 前一天</a></nav>
+<div class="detail-page"><h1>🔪 今日锐评</h1>
+<p>今天是 Agent 论文的大水漫灌日——30 篇里一半标题带 agentic，多数是把 LLM 塞进某个垂直流程再起个花名。真正有肉的是快手那篇生成式推荐语义码本重构（工业界数据说话），以及几篇认真做多模态 RL 后训练和 LLM 压缩的。剩下的 agentic 论文大多是「换个场景重跑 ReAct」，能力增量约等于换皮。</p>
+<h2>分流表</h2>
+<table>
+<thead>
+<tr>
+<th>等级</th>
+<th>论文</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>🔥 必读</td>
+<td><span class="wikilink">DynamicCodebook</span>（快手工业级生成式推荐，把多级残差量化码本换成单级大码本，直击自回归解码成本与码本稀疏两个真痛点）</td>
+</tr>
+<tr>
+<td>👀 值得看</td>
+<td><span class="wikilink">OraRL</span>（把标注当 rollout，解决 video MLLM RL 采样效率低的死穴，思路够刁） · <span class="wikilink">OPD-DualNature</span>（罕见地系统研究 on-policy distillation 的跨域泛化，方法论扎实） · <span class="wikilink">COEC</span>（结构化剪枝的正交等价补偿，训练free、有理论，LLM 压缩硬货） · <span class="wikilink">Consilience</span>（用 conformal prediction 做多agent通信门控，隐藏画像任务下有理论保证） · <span class="wikilink">OpenRath</span>（把 agent 运行时状态做成一等公民抽象，工程抽象值得看，但别被 PyTorch 类比忽悠） · <span class="wikilink">TRACE</span>（DoorDash 真实电商目录补全，多源证据 grounding，工业落地） · <span class="wikilink">CAS</span>（用 conformal prediction 治 search agent 的过自信幻觉）</td>
+</tr>
+<tr>
+<td>💤 可跳过</td>
+<td><span class="wikilink">GenericAgent</span>（署名机构和方法名都透着合成味，token-efficient 自进化是老调重弹） · <span class="wikilink">FL-MAESTRO</span>（联邦学习调度硬套多agent LLM，噱头大于必要） · <span class="wikilink">Re3Cap</span>（image captioning 又一篇 GRPO 微调，增量有限） · <span class="wikilink">LLM-SE-Security-Survey</span>（综述，缝合软工与安全两个 eval 阵营，参考价值有限）</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<div class="tab-bar"><button class="tab-btn active" data-tab="all" onclick="switchTab('all')">📋 全部<span class="tab-count">18</span></button><button class="tab-btn" data-tab="生成式推荐" onclick="switchTab('生成式推荐')">🎨 📊 生成式推荐<span class="tab-count">1</span></button><button class="tab-btn" data-tab="多模态理解与生成" onclick="switchTab('多模态理解与生成')">🎨 🎬 多模态理解与生成<span class="tab-count">4</span></button><button class="tab-btn" data-tab="llm训练与效率" onclick="switchTab('llm训练与效率')">🤖 ⚙️ LLM 训练与效率<span class="tab-count">4</span></button><button class="tab-btn" data-tab="multiagent协作与推理" onclick="switchTab('multiagent协作与推理')">🤖 🧠 Multi-Agent 协作与推理<span class="tab-count">3</span></button><button class="tab-btn" data-tab="agentic检索与电商" onclick="switchTab('agentic检索与电商')">🤖 🔍 Agentic 检索与电商<span class="tab-count">2</span></button><button class="tab-btn" data-tab="agent框架与运行时" onclick="switchTab('agent框架与运行时')">🏗 🤖 Agent 框架与运行时<span class="tab-count">4</span></button></div>
+<div id="panel-all" class="tab-panel active"><h2>📊 生成式推荐</h2><div class="paper-card" data-topic="📊 生成式推荐"><h3>1. From a Static Multi-Level Small Semantic Codebook to a Dynamic Single-Level Large Semantic Codebook for Generative Recommendation</h3>
+<ul>
+<li><strong>作者</strong>: Tianlu Xie, Xin Ku, Mingjie Sun, Yunhao Sha, Lixiang Wang, Peng Wang, Yiyu Wang, Wenjin Wu, Zhaojie Liu, Peng Jiang, Wenwu Ou</li>
+<li><strong>机构</strong>: Affiliation: </li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2608.21012v1">arXiv</a> | <a href="https://arxiv.org/pdf/2608.21012v1">PDF</a></li>
+<li>
+<p><strong>来源</strong>: 📄 arXiv 关键词检索</p>
+</li>
+<li>
+<p><strong>核心方法</strong>: 生成式推荐用一串离散 <span class="wikilink">Semantic ID</span>（SID）表示物品并自回归预测下一个物品。本文指出主流的多级 <span class="wikilink">residual quantization</span> 有两宗罪：自回归解码成本随层数上升、庞大的层级空间被稀疏占用；且静态码本会随新物品到来、曝光分布漂移而与线上流量错配。方案是从「静态多级小语义码本」转向「动态单级大语义码本」，在快手 <span class="wikilink">KuaiRec</span> 与工业数据上对比 <span class="wikilink">OneRec</span>、<span class="wikilink">TIGER</span>、<span class="wikilink">RPG</span>、<span class="wikilink">SEATER</span>。</p>
+</li>
+<li><strong>对比方法/Baselines</strong>: <span class="wikilink">OneRec</span>、<span class="wikilink">TIGER</span>、<span class="wikilink">RPG</span>、<span class="wikilink">SEATER</span>，指标看 <span class="wikilink">NDCG</span>/PV</li>
+<li><strong>借鉴意义</strong>: 直接命中你做推荐/排序的核心：SID 码本设计是生成式召回落地的关键瓶颈，单级大码本换掉多级残差量化，对解码延迟和线上时效性都是实打实的收益。</li>
+<li><strong>锐评</strong>: 今天唯一一篇「工业界拿真数据说人话」的推荐论文。多级残差量化的自回归成本和码本稀疏是所有 SID 派系的通病，敢正面把它推倒重来值得尊敬。唯一悬念：单级大码本的表达力和训练稳定性能不能扛住，摘要没给足证据，得看实验里码本利用率和冷启表现。快手系必读。🔥</li>
+</ul>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2608.21012v1" target="_blank" rel="noopener">📖 AI 精读</a></div><h2>🎬 多模态理解与生成</h2><div class="paper-card" data-topic="🎬 多模态理解与生成"><h3>2. Annotations as Rollouts: Efficient and Scalable Reinforcement Learning for Video MLLMs</h3>
+<ul>
+<li><strong>作者</strong>: Yunheng Li, Guohong Mu, Hao Li, Shengsheng Qian, Dingwen Zhang, Qibin Hou†, Ming-Ming Cheng</li>
+<li><strong>机构</strong>: 2]Brain and Artificial Intelligence Lab, Northwestern Polytechnical University, 1]VCIP, School of Computer Science, Nankai University, Affiliation:, 3]State Key Laboratory of Multimodal Artificial Intelligence Systems, Institute of Automation, Chinese Academy of Sciences</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2608.20492v1">arXiv</a> | <a href="https://arxiv.org/pdf/2608.20492v1">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2608.20492v1/figs/teaser/temporal_before.jpg" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2608.20492v1/framework_new.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: 针对 video MLLM 的 RL 后训练：现有方法在 on-policy 组内高质量 rollout 太少，即便花大价钱生成 <span class="wikilink">CoT</span> 也低效。<span class="wikilink">OraRL</span> 把人工标注直接当作 rollout（Annotations as Rollouts），提升 <span class="wikilink">GRPO</span> 类 RL 后训练的样本效率与可扩展性，覆盖 VSI、RefCOCO 等任务。</li>
+<li><strong>对比方法/Baselines</strong>: <span class="wikilink">GRPO</span>、<span class="wikilink">SFT</span>，视频/定位类基准</li>
+<li><strong>借鉴意义</strong>: RL 后训练的采样效率是所有做 RLHF/GRPO 的人共同的钱包痛点，把已有标注废物利用成 rollout 的思路可迁移到推荐/排序的偏好优化。</li>
+<li><strong>锐评</strong>: 「把标注当 rollout」这个 framing 很聪明——本质是承认纯 on-policy 采样在多模态上性价比太低，干脆用监督信号补位。问题是这就模糊了 on-policy 和 off-policy 的边界，能不能保住 RL 相对 SFT 的探索优势要打问号。但方向对，采样效率这刀砍得准。👀</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2608.20492v1" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🎬 多模态理解与生成"><h3>3. COMET: Contrastive Motion-Enhanced Temporal Reasoning for Video Multimodal Large Language Models</h3>
+<ul>
+<li><strong>作者</strong>: Chenghua Zhu, Zhaolu Kang, Qifan Shi, Siyan Wu, Kehan Jiang, Lei Wei, Lianyu Hu, Guangyuan Dong, Mingbo Yang, Rui Lu, Guibo Luo</li>
+<li><strong>机构</strong>: Affiliation: School of Software and Microelectronics, Note: , Affiliation: Nanyang Technological University,  Peking University,  South China University of Technology, Affiliation: Peking University, Affiliation: Aberdeen Institute of Data Science and Artificial Intelligence, Affiliation: National University of Singapore, Affiliation: Guangdong Provincial Key Laboratory of Ultra High Definition Immersive Media Technology, Shenzhen Graduate School, Affiliation: ,  South China Normal University, Affiliation: Sun Yat-Sen University, Affiliation: School of Future Technology</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2608.21030v1">arXiv</a> | <a href="https://arxiv.org/pdf/2608.21030v1">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2608.21030v1/figures/fig3.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: Video MLLM 的细粒度运动-时序理解仍脆弱，瓶颈不只是稀疏帧采样，还缺少显式表示帧间变化、实现表观-运动交互、优化时序方向敏感性的完整时序建模流水线。<span class="wikilink">COMET</span> 用对比式运动增强的时序推理（含 TPD 时序方向、TC 等模块）+ <span class="wikilink">GRPO</span> 强化时序感知。</li>
+<li><strong>对比方法/Baselines</strong>: 稀疏帧采样、时序 adapter、TempFlex 等时序融合方法</li>
+<li><strong>借鉴意义</strong>: 视频理解的时序方向敏感性（正放/倒放能不能分清）是多模态硬骨头，对做视频推荐/内容理解有价值。</li>
+<li><strong>锐评</strong>: 把「时序方向敏感性」单拎出来治，切口不错——很多 video MLLM 连正放倒放都分不清还谈什么运动理解。对比式运动增强 + GRPO 的组合中规中矩。但一口气堆了 TPD/TC/TAB 一串模块，有点「能想到的都加上」的味道，消融不做扎实就是模块堆砌大赛。⚠️👀</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2608.21030v1" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🎬 多模态理解与生成"><h3>4. Identity-Preserving Text-to-Video Generation via Agentic Enhancement and Semantic Repair</h3>
+<ul>
+<li><strong>作者</strong>: Jiayi Gao, Changcheng Hua, Jiaqi Tang, Yuxin Peng, Yang Liu</li>
+<li><strong>机构</strong>: Affiliation: Wangxuan Institute of Computer Technology, Peking University, email:, Note: , Affiliation: </li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2608.20749v1">arXiv</a> | <a href="https://arxiv.org/pdf/2608.20749v1">PDF</a></li>
+<li>
+<p><strong>来源</strong>: 📄 arXiv 关键词检索</p>
+</li>
+<li>
+<p><strong>核心方法</strong>: 身份保持视频生成要在遵循自然语言指令的同时维持给定主体的视觉身份。商用模型仍有身份漂移、指令遵循不全、复杂 prompt 下细节缺失。本文用 agentic enhancement + 语义修复（AESR），配 VLM/MoE 处理 HOI 等复杂场景。</p>
+</li>
+<li><strong>对比方法/Baselines</strong>: MotionBooth、DreamVideo 等 per-ID 微调方法</li>
+<li><strong>借鉴意义</strong>: 身份保持生成是内容生成/数字人的核心难题，摆脱 per-ID 微调走 agentic 增强路线对可扩展部署有意义。</li>
+<li><strong>锐评</strong>: 身份漂移是所有 T2V 的老大难，本文想用「agentic 增强 + 语义修复」绕开逐 ID 微调的可扩展性死结，动机正当。但「agentic」在这里更像给后处理流程贴的时髦标签——本质是多阶段 refine。到底比直接的 IP-Adapter 类方法强多少，得看身份一致性的定量指标，摘要只喊问题没亮硬数。⚠️</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2608.20749v1" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🎬 多模态理解与生成"><h3>5. ReFrame: Evidence-Guided Test-Time Safety Alignment in Multimodal Large Language Models</h3>
+<ul>
+<li><strong>作者</strong>: Wenzheng Jiang, Xuankun Rong, Yuanzhao Zhai, Dawei Feng, Huaimin Wang</li>
+<li><strong>机构</strong>: Affiliation: State Key Laboratory of Complex &amp; Critical Software Environment, Affiliation: School of Computer Science, Wuhan University, Affiliation: College of Computer Science and Technology, National University of Defense Technology, Affiliation: </li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2608.21100v1">arXiv</a> | <a href="https://arxiv.org/pdf/2608.21100v1">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2608.21100v1/Introduction.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2608.21100v1/Framework.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2608.21100v1/latex/pic/GPT.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: MLLM 的安全对齐要应对跨模态越狱、安全意识失败、过度拒绝。现有方法依赖重训或内部状态检查，难用于部署的闭源模型。<span class="wikilink">ReFrame</span> 做证据引导的测试时安全对齐（test-time），无需重训。</li>
+<li><strong>对比方法/Baselines</strong>: <span class="wikilink">ECSO</span>、SIUO 等，<span class="wikilink">GPT-4</span> 系对比</li>
+<li><strong>借鉴意义</strong>: 测试时对齐无需重训，对用闭源多模态 API 又要控安全的场景很实用，过度拒绝问题也和产品体验强相关。</li>
+<li><strong>锐评</strong>: 测试时、免重训、还兼顾「过度拒绝」这个常被忽视的反向问题，工程上很讨喜——毕竟大多数人只能调 API 改不了权重。证据引导的思路合理。但 test-time 方法通常要在推理时多花算力做检查，安全和延迟的 tradeoff 摘要没交代，实际部署得掂量。👀</li>
+</ul>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2608.21100v1" target="_blank" rel="noopener">📖 AI 精读</a></div><h2>⚙️ LLM 训练与效率</h2><div class="paper-card" data-topic="⚙️ LLM 训练与效率"><h3>6. Every Coin Has Two Sides: On the Dual Nature of Generalization in On-Policy Distillation of Large Language Models</h3>
+<ul>
+<li><strong>作者</strong>: Zhaoyi Li1,3,∗, Deyang Kong2,3,∗, Yuan Wei3,∗, Evan Yang3, Ranran Shen1, Mahardika Krisna Ihsani4, Ming Yang3, Wei Zhang3, Chuan Hao3, Jian Yang3, Ran Tao3, Bryan Dai3, Shikun Zhang2, Wei Ye2, Ying Wei5, Defu Lian1</li>
+<li><strong>机构</strong>: 2Peking University, 5Zhejiang University, 1University of Science and Technology of China, lizhaoyi777@mail.ustc.edu.cn</li>
+<li><strong>链接</strong>: <a href="https://arxiv.org/abs/2608.16647">arXiv</a> | <a href="https://arxiv.org/pdf/2608.16647">PDF</a></li>
+<li>
+<p><strong>来源</strong>: 📰 HF Daily，⬆️ 9</p>
+</li>
+<li>
+<p><strong>核心方法</strong>: 系统研究 <span class="wikilink">on-policy distillation</span>（OPD）的泛化行为：以往研究只在单域、且贴近训练数据的基准上评估。本文做受控实验，一次只变一个泛化因子，覆盖域内分布漂移、跨域迁移、多教师（<span class="wikilink">MOPD</span>）设置，揭示 same-origin 与 cross-origin 下泛化表现的显著差异。</p>
+</li>
+<li><strong>对比方法/Baselines</strong>: <span class="wikilink">JustRL</span>、Distill-Qwen 系列，测 <span class="wikilink">GPQA</span> 等</li>
+<li><strong>借鉴意义</strong>: 蒸馏是压小模型的主流路径，跨域泛化边界直接决定你能不能用一个域的数据蒸出通用能力，对多任务推荐/排序模型蒸馏有参考。</li>
+<li><strong>锐评</strong>: 难得有人不急着刷 SOTA，而是做受控消融把 OPD 的泛化机理讲清楚。「一次只变一个因子」是正经科学态度，比一堆 agentic 缝合怪有价值。缺点是这类研究结论往往强依赖所选模型族，Qwen 上成立不代表放之四海。但方法论值得学。👀</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2608.16647" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="⚙️ LLM 训练与效率"><h3>7. COEC: Calibrated Orthogonal-Equivalence Compensation for Structured Pruning of Large Language Models</h3>
+<ul>
+<li><strong>作者</strong>: Peiqi Yu, Nam Ling, Wei Wang, Wei Jiang</li>
+<li><strong>机构</strong>: School of Engineering, Santa Clara University, Santa Clara, CA, USA</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2608.21142v1">arXiv</a> | <a href="https://arxiv.org/pdf/2608.21142v1">PDF</a></li>
+<li>
+<p><strong>来源</strong>: 📄 arXiv 关键词检索</p>
+</li>
+<li>
+<p><strong>核心方法</strong>: 结构化剪枝删掉权重列会引入输出误差。现有 training-free 补偿只在保留权重的输出侧加偏置或单次正交旋转，输入奇异框架不变、限制了列删除后的自适应。<span class="wikilink">COEC</span> 提出校准的正交等价补偿，同时调整输入侧，配合 <span class="wikilink">SVD</span> 分析，训练free。</p>
+</li>
+<li><strong>对比方法/Baselines</strong>: <span class="wikilink">FLAP</span>、<span class="wikilink">SparseGPT</span>、<span class="wikilink">Wanda</span> 一脉的剪枝方法</li>
+<li><strong>借鉴意义</strong>: 推理成本敏感的线上模型都关心剪枝后精度保持，训练free 的补偿意味着不用重训就能压缩，工程友好。</li>
+<li><strong>锐评</strong>: 把「输出侧补偿」升级成「输入-输出双侧正交等价补偿」并给理论，这是剪枝补偿里少见的认真数学工作。训练free 是大加分。质疑点：正交等价约束会不会太强，遇到严重结构性冗余时补偿能力见顶？得看高稀疏率下的曲线。⚙️👀</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2608.21142v1" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="⚙️ LLM 训练与效率"><h3>8. Jacobian-guided Noise Injection for Quantization Robustness in Large Language Models</h3>
+<ul>
+<li><strong>作者</strong>: Deepanshu Pandey, Arnav Chavan, Nahush Lele, Sankalp Dayal, Deepak Gupta</li>
+<li><strong>机构</strong>: Affiliation: Amazon, Correspondence to: deepnsp@amazon.com, Affiliation: , Correspondence to:</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2608.20988v1">arXiv</a> | <a href="https://arxiv.org/pdf/2608.20988v1">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2608.20988v1/assets/head_11_surface.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2608.20988v1/assets/quant_cosine_similarity_attn.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: LLM 量化常被 self-attention 对离散化误差的敏感性拖累。本文定位 <span class="wikilink">softmax</span> 算子为量化稳定性瓶颈（对离群值敏感、状态依赖的 Jacobian），理论上证明抑制该 Jacobian 范数可界定量化性能退化，进而提出 Jacobian 引导的噪声注入微调框架。</li>
+<li><strong>对比方法/Baselines</strong>: <span class="wikilink">PTQ</span> 类方法，测 ARC/HellaSwag/PIQA/PPL</li>
+<li><strong>借鉴意义</strong>: 量化是部署侧刚需，把 attention softmax 精确定位为瓶颈并给出可操作的正则手段，对低比特部署有直接价值。</li>
+<li><strong>锐评</strong>: 把量化不稳定归因到 softmax 的 Jacobian 并做隐式 Hessian 正则，理论链条清晰，来自 Amazon 有落地压力背书。噪声注入这招不新，但配上 Jacobian 引导的理论动机就有说服力。担心的是训练开销和对超参的敏感度，摘要没提。⚙️</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2608.20988v1" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="⚙️ LLM 训练与效率"><h3>9. Decoupling Policy Extraction for Offline Reinforcement Learning</h3>
+<ul>
+<li><strong>作者</strong>: Yixiang ShanSimplexity Roboticsshanyixiang@s-robots.com</li>
+<li><strong>机构</strong>: Yixiang ShanSimplexity Roboticsshanyixiang@s-robots.comJinru DuanSimplexity Robotics, Northeastern Universityduanjinru@s-robots.comTao Yang, Xinyu Zhao, Runyu Lei, Yiming Zhao, Jiaxin Fan, Zongbao Feng   &amp; Peng JiaSimplexity Robotics{yangtao, zhaoxinyu, leirunyu, -, fanjiaxin, fengzongbao, jiapeng}@s-robots.com, Xuyao LinSimplexity Robotics, Rensselaer Polytechnic Institutelinxuyao@s-robots.com, Thanks: </li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2608.20909v1">arXiv</a> | <a href="https://arxiv.org/pdf/2608.20909v1">PDF</a></li>
+<li>
+<p><strong>来源</strong>: 📄 arXiv 关键词检索</p>
+</li>
+<li>
+<p><strong>核心方法</strong>: 离线 RL 通常 actor-critic 联合训练，靠 critic 引导 actor 选高价值动作。但离线数据固定，actor 侧策略提升无法生成新数据来验证/纠正 critic。本文提出解耦策略抽取（Decoupling Policy Extraction），打破这种在线场景才成立的耦合假设。</p>
+</li>
+<li><strong>对比方法/Baselines</strong>: <span class="wikilink">IQL</span>、<span class="wikilink">CQL</span>、<span class="wikilink">CRR</span>、BC</li>
+<li><strong>借鉴意义</strong>: 推荐/排序里大量场景本质是离线 RL（只有日志数据无法交互），actor-critic 耦合导致的 critic 外推误差是老大难，解耦思路有借鉴意义。</li>
+<li><strong>锐评</strong>: 抓到了离线 RL 的一个真矛盾：在线 RL 里 actor 改进能产生新数据反哺 critic，离线场景这个闭环断了却还在沿用同一套耦合训练。指出这点就值一读。不过来自机器人公司，实验多半偏控制任务，能不能迁到推荐的高维稀疏动作空间需要自己验证。👀</li>
+</ul>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2608.20909v1" target="_blank" rel="noopener">📖 AI 精读</a></div><h2>🧠 Multi-Agent 协作与推理</h2><div class="paper-card" data-topic="🧠 Multi-Agent 协作与推理"><h3>10. Consilience: Conformally Calibrated Communication Control for Hidden-Profile Multi-Agent Reasoning</h3>
+<ul>
+<li><strong>作者</strong>: Babu, Abhijith, Kaur, Ramneet, Pramanik, Vishal, Kotevska, Olivera, Bastian, Nathaniel D., Jha, Susmit, Raj, Sunny, Wu, Yanzhao, Jha, Sumit Kumar, Roy, Anirban</li>
+<li><strong>机构</strong>: 2SRI International 3Department of Computer &amp; Information Science &amp; Engineering, University of Florida, 6Department of Computer Science and Engineering, Oakland University, 1Knight Foundation School of Computing and Information Sciences, Florida International University, 4Oak Ridge National Laboratory 5Army Cyber Institute, United States Military Academy, Sumit Kumar Jha3,*, Susmit Jha2</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2608.20564v1">arXiv</a> | <a href="https://arxiv.org/pdf/2608.20564v1">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2608.20564v1/Figures/img5.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: 多 agent LLM 在 hidden-profile（每个 agent 只掌握部分证据）任务里，固定日程、轮询、无结构辩论都无法保证某次对话动作是恰当的。<span class="wikilink">Consilience</span> 用 <span class="wikilink">conformal prediction</span> 做通信控制（SeekEvidence/SeekNewEvidence），在 <span class="wikilink">HiddenBench</span>、<span class="wikilink">GroupTravelBench</span> 上带覆盖率保证地决定何时该说话、说什么。</li>
+<li><strong>对比方法/Baselines</strong>: 固定日程/轮询/无结构辩论，<span class="wikilink">DeepSeek</span> 等底座</li>
+<li><strong>借鉴意义</strong>: 多 agent 协作是你关注的 agentic 方向，用统计保证约束通信而非拍脑袋调度，是把 multi-agent 从玄学拉向工程的正确姿势。</li>
+<li><strong>锐评</strong>: 多 agent 辩论最大的问题就是「什么时候该发言」全靠启发式，本文拿 conformal prediction 给通信动作套上覆盖率保证，理论洁癖看着舒服。隐藏画像这个设定也选得刁钻——正好逼出信息不对称。质疑：CP 的校准集在动态多轮对话里怎么保持有效，摘要没说透。👀</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2608.20564v1" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🧠 Multi-Agent 协作与推理"><h3>11. Structure for Reading, Prose for Writing: Asymmetric Structural Conditioning in Multi-Agent Document Authoring</h3>
+<ul>
+<li><strong>作者</strong>: Cheng Yu, Nikhil Mathew, Zhengjie Wang</li>
+<li><strong>机构</strong>: Affiliation: </li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2608.20786v1">arXiv</a> | <a href="https://arxiv.org/pdf/2608.20786v1">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2608.20786v1/Fig1.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: 多 agent 流水线写正式文书需要「读懂请求方表单」并「据此写作」。本文报告一个部署的投标应答系统：43 个单发 agent 角色 + 1 个多轮起草者组成有向图，跨 6 阶段 3 个人工编辑门，昂贵的语义工作只做一次并持久化为可检查 JSON。核心洞见是「读用结构、写用散文」的非对称结构条件化。</li>
+<li><strong>对比方法/Baselines</strong>: 人类撰写的真实投标书，<span class="wikilink">LLM</span> judge 盲评</li>
+<li><strong>借鉴意义</strong>: 把多 agent 系统真正部署到企业文书生产、且和人类产出盲比，这种落地经验比 benchmark 刷分实在。中间态持久化为可审查 JSON 的工程模式值得抄。</li>
+<li><strong>锐评</strong>: 「Structure for Reading, Prose for Writing」这个非对称 framing 是全篇最有价值的一句——读输入要结构化、写输出要散文化，很多人把两端都硬塞成同一形态。43 个单发角色 + 人工门的架构务实。但用 LLM judge 评自家系统对比人类，既当运动员又当裁判，盲评的可信度得打折。👀</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2608.20786v1" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🧠 Multi-Agent 协作与推理"><h3>12. Towards Traffic Modelling of Multi-Agent Systems: The Role of Coordination Topology</h3>
+<ul>
+<li><strong>作者</strong>: Davide Lamagna, Albert Cabellos, Alberto Rodriguez-Natal, Gábor Rétvári, Berta Serracanta</li>
+<li><strong>机构</strong>: Affiliation: Budapest University of Technology and Economics, email:, Affiliation:</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2608.20494v1">arXiv</a> | <a href="https://arxiv.org/pdf/2608.20494v1">PDF</a></li>
+<li>
+<p><strong>来源</strong>: 📄 arXiv 关键词检索</p>
+</li>
+<li>
+<p><strong>核心方法</strong>: 把多 agent LLM 系统当成一种新型网络负载来研究：单个用户任务会由协调逻辑（而非用户到达率）诱发一串内部模型调用。本文刻画其流量模式（IAT 分布、协调拓扑对流量的塑形），用 <span class="wikilink">AgentVerse</span> 等做实测。</p>
+</li>
+<li><strong>对比方法/Baselines</strong>: 传统请求-响应应用的流量模型，KS 检验等</li>
+<li><strong>借鉴意义</strong>: 如果你要在生产环境跑 multi-agent，容量规划和推理集群调度必须理解这种「内生流量」，视角新颖。</li>
+<li><strong>锐评</strong>: 换了个系统/网络的视角看 multi-agent——别人都在卷推理能力，这篇卷「它到底给基础设施带来什么流量」。这个角度冷门但对真要上线的人很实用：ReAct 的内部控制流决定到达过程，不是用户点得快不快。偏测量分析，方法贡献不重，当作部署参考读。💤👀</li>
+</ul>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2608.20494v1" target="_blank" rel="noopener">📖 AI 精读</a></div><h2>🔍 Agentic 检索与电商</h2><div class="paper-card" data-topic="🔍 Agentic 检索与电商"><h3>13. TRACE: Agentic Catalog Enrichment with Multi-source Evidence Grounding</h3>
+<ul>
+<li><strong>作者</strong>: Rohan Kumar, Steven Xu, Kyle MacDonald, Matthew Long, Bernice Chow, Mac VanRenterghem, Sudeep Das</li>
+<li><strong>机构</strong>: DoorDash, Inc</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2608.20844v1">arXiv</a> | <a href="https://arxiv.org/pdf/2608.20844v1">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2608.20844v1/agent_pipeline.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2608.20844v1/PDP.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: 电商目录属性稀疏——属性要么埋在标题/图片等非结构化内容里，要么根本缺失。<span class="wikilink">TRACE</span> 用 ScoutAgent + JudgeAgent 的多 agent 流程做目录属性补全，基于多源证据 grounding，对每个属性给 PASS/FAIL/UNVERIFIED/UNCERTAIN 判定（DoorDash 部署）。</li>
+<li><strong>对比方法/Baselines</strong>: encoder-decoder 微调、基础模型 zero/few-shot、检索增强的多 agent 迭代</li>
+<li><strong>借鉴意义</strong>: 属性补全直接喂给搜索/发现/推荐，是电商推荐的上游数据质量工程，DoorDash 的落地判定框架有参考价值。</li>
+<li><strong>锐评</strong>: Scout+Judge 双 agent + 四态判定（含 UNVERIFIED/UNCERTAIN）比动辄「一个 agent 搞定一切」的论文诚实——承认了不确定性该被显式标注。DoorDash 真实目录背书加分。但多 agent 补属性成本不低，摘要没给出相对单模型 few-shot 的性价比曲线，落地要算这笔账。👀</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2608.20844v1" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🔍 Agentic 检索与电商"><h3>14. CAS: Conformalized Agentic Search via Adaptive Retrieval and Policy Weighting</h3>
+<ul>
+<li><strong>作者</strong>: Zixi Zhu, Jiayuan Su, Jian Zhang, Yu Lin, Hongwei Wang</li>
+<li><strong>机构</strong>: Affiliation: State Key Laboratory of CAD&amp;CG, Zhejiang University, Affiliation: ZJU-UIUC Institute, Zhejiang University, Affiliation: , Affiliation: Tencent Inc.{zixizhu, 12221038, hongweiwang}@zju.edu.cnyulin@intl.zju.edu.cnmatt.jiayuan.su@gmail.com</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2608.20771v1">arXiv</a> | <a href="https://arxiv.org/pdf/2608.20771v1">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2608.20771v1/figure.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: Search Agent 在 RL 微调时有可靠性危机：Top-K 检索导致证据丢失或噪声混入，渐进式 RL 诱发过自信、产生幻觉答案和冗余检索。<span class="wikilink">CAS</span> 引入 <span class="wikilink">conformal prediction</span>（APS/ACI）做自适应检索与策略加权，在 QA/RAG 上约束 GRPO 训练。</li>
+<li><strong>对比方法/Baselines</strong>: 启发式 Top-K 检索、<span class="wikilink">GRPO</span>、<span class="wikilink">RAG</span></li>
+<li><strong>借鉴意义</strong>: 检索增强 + RL 是 agentic search 主线，用统计保证治过自信幻觉，对做检索类 agent 的可靠性有直接帮助。</li>
+<li><strong>锐评</strong>: 今天第二篇用 conformal prediction 给 agent 上保险的（另一篇是 Consilience），说明社区开始意识到 agentic 系统的可靠性不能光靠 prompt。把 CP 用在自适应检索的 K 值和策略加权上，切口具体。质疑：CP 假设可交换性，在 RL 训练中分布持续漂移，校准还成不成立？这是这类工作共同的软肋。👀</li>
+</ul>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2608.20771v1" target="_blank" rel="noopener">📖 AI 精读</a></div><h2>🤖 Agent 框架与运行时</h2><div class="paper-card" data-topic="🤖 Agent 框架与运行时"><h3>15. OpenRath: Session-Centered Runtime State for Agent Systems</h3>
+<ul>
+<li><strong>作者</strong>: Wen, Fukang, Wang, Zhijie, Xu, Ruilin</li>
+<li><strong>链接</strong>: <a href="https://arxiv.org/abs/2606.19409">arXiv</a> | <a href="https://arxiv.org/pdf/2606.19409">PDF</a></li>
+<li><strong>来源</strong>: 🔥 HF Trending，⬆️ 78</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2606.19409v1/assets/mermaid-diagrams/multi-session-to-agent-workflow-image2.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2606.19409v1/assets/mermaid-diagrams/session-runtime-boundary.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2606.19409v1/assets/mermaid-diagrams/session-lifecycle.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: 现代 agent 系统运行时状态碎片化：transcript、工具副作用、记忆事件、workspace 布局、分支溯源、回放证据各自分散记录，难检查难复现。<span class="wikilink">OpenRath</span> 用类 <span class="wikilink">PyTorch</span> 的编程模型把 Session 做成多 agent/多会话系统的一等运行时状态抽象（类比的是可组合计算的架构接口，不是张量数学）。</li>
+<li><strong>对比方法/Baselines</strong>: 现有把状态分散记录的 agent 框架，涉及 <span class="wikilink">MCP</span>、SWE 场景</li>
+<li><strong>借鉴意义</strong>: 如果你在搭 agent 平台，运行时状态的可复现/可审查是核心工程痛点，Session as first-class state 的抽象值得借鉴。</li>
+<li><strong>锐评</strong>: 78 个 upvote 说明痛点戳中了——agent 系统的状态确实散得像一地鸡毛。把 Session 抽象成一等公民、强调可检查可复现，方向正确。但作者自己都要反复澄清「不是 PyTorch 的张量数学、只是借架构接口」，说明这个类比其实有点勉强、更像营销话术。看它的抽象设计，别被类比带偏。👀</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2606.19409" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🤖 Agent 框架与运行时"><h3>16. Evaluating Skills, Not Just Agents: Agentic Continuous Evaluation of Skills</h3>
+<ul>
+<li><strong>作者</strong>: Kevin, Christopher, Raghavan, Narendran, Puget, Jean-Francois, Malani, Roshni, Puvvadi, Meghana, Abramovitch, Moshe, Gupta, Mohit, Akkiraju, Rama, Prabhu, Subodh, Dangi, Yogesh, Luo, Wei, Lee, Seong Hee</li>
+<li><strong>机构</strong>: Evaluating Skills, Not Just Agents: Agentic Continuous Evaluation of SkillsCCS: Computing methodologies Artificial intelligenceCCS: Software and its engineering Software verification and validationCCS: Computing methodologies Natural language processing, christopherk@nvidia.com, NVIDIA</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2608.20614v1">arXiv</a> | <a href="https://arxiv.org/pdf/2608.20614v1">PDF</a></li>
+<li>
+<p><strong>来源</strong>: 📄 arXiv 关键词检索</p>
+</li>
+<li>
+<p><strong>核心方法</strong>: 企业 agent 程序从原型走向生产，可复用的 skill/tool/workflow 包需要用证据而非文字来审查。现有 gate 只扫结构、风格、安全，回答不了部署问题：这个能力包在同样的模型/沙箱/环境下能否帮活的 agent 完成企业任务。<span class="wikilink">ACES</span>（NVIDIA）提出对 skill 的 agentic 持续评估，在 145-skill 语料上补上可观测性缺口。</p>
+</li>
+<li><strong>对比方法/Baselines</strong>: 四类 scan-only 评估（结构/风格/安全等）</li>
+<li><strong>借鉴意义</strong>: 你自己就在大量用 skill——如何评估一个 skill 到底有没有用、而不是光看它写得规不规范，这套「评能力而非评 agent」的思路很切题。</li>
+<li><strong>锐评</strong>: 「Evaluating Skills, Not Just Agents」这个立意精准戳中当前盲区：大家都在 review agent 本身，没人系统评估它挂载的 skill 到底提不提升任务完成率。145-skill 语料 + NVIDIA 生产背景有分量。但「agentic 持续评估」听着就贵，每次改 skill 都要跑一遍活 agent，成本可持续性存疑。👀</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2608.20614v1" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🤖 Agent 框架与运行时"><h3>17. BC-Bench: Evaluating Agentic Engineering in a Domain-Specific Language for ERP</h3>
+<ul>
+<li><strong>作者</strong>: Haoran Sun, Microsoft, haoransun@microsoft.com, Klaus Marius Hansen, Microsoft, klaus.marius.hansen@microsoft.com</li>
+<li><strong>机构</strong>: Klaus Marius Hansen, Microsoft, klaus.marius.hansen@microsoft.com, Haoran Sun, Microsoft, haoransun@microsoft.com</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2608.20851v1">arXiv</a> | <a href="https://arxiv.org/pdf/2608.20851v1">PDF</a></li>
+<li>
+<p><strong>来源</strong>: 📄 arXiv 关键词检索</p>
+</li>
+<li>
+<p><strong>核心方法</strong>: Agentic 工程系统在通用基准上表现强，但在 ERP 领域特定语言（DSL）上鲜有验证。<span class="wikilink">BC-Bench</span>（Microsoft）针对 Dynamics 365 Business Central 的 AL 语言构建基准，评估 agentic engineering 在真实 ERP 任务上的表现。</p>
+</li>
+<li><strong>对比方法/Baselines</strong>: <span class="wikilink">SWE-Bench</span>、SWE-Bench Multimodal/Live 一脉</li>
+<li><strong>借鉴意义</strong>: code agent 的能力边界评估是 agentic 的重要分支，把评估从 Python 泛化到冷门 DSL，能暴露模型对训练数据稀疏语言的真实短板。</li>
+<li><strong>锐评</strong>: 专挑 AL 这种冷门 ERP DSL 做基准，用意明显：撕开 code agent 在 Python 上刷高分的假象，看它遇到低资源语言还行不行。Microsoft 亲自下场做自家 DSL 有数据优势。缺点是领域太窄，结论对做通用 code agent 的人参考价值有限，更像 Business Central 生态内部报告。🫠👀</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2608.20851v1" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🤖 Agent 框架与运行时"><h3>18. GenericAgent: A Token-Efficient Self-Evolving LLM Agent via Contextual Information Density Maximization (V1.0)</h3>
+<ul>
+<li><strong>作者</strong>: Advantage AI Agent Lab (A3 Lab)</li>
+<li><strong>机构</strong>: Thanks: This is a joint research lab with members from Shenzhen Aquaintelling Technology and Fudan University, Thanks:</li>
+<li><strong>链接</strong>: <a href="https://arxiv.org/abs/2604.17091">arXiv</a> | <a href="https://arxiv.org/pdf/2604.17091">PDF</a></li>
+<li><strong>来源</strong>: 🔥 HF Trending，⬆️ 23</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2604.17091v1/framework.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: 面向长程 LLM agent 的上下文瓶颈：交互变长后工具描述、检索记忆、原始环境反馈不断累积，挤掉决策所需信息，且跨 episode 的有用经验常丢失。<span class="wikilink">GenericAgent</span> 提出通过「上下文信息密度最大化」做 token 高效的自进化 agent。</li>
+<li><strong>对比方法/Baselines</strong>: 摘要未提供明确定量基线（method_names 抽取到 GPT-5 等）</li>
+<li><strong>借鉴意义</strong>: 长程 agent 的上下文管理确实是真问题，但本文的处理方式和署名可信度都需警惕。</li>
+<li><strong>锐评</strong>: 长程 agent 的上下文膨胀是真痛点，但这篇疑点太多：机构写成「Advantage AI Agent Lab (A3 Lab)」、致谢措辞怪异、抽出的方法名里混着 OpenClaw/GPT-5 这类东西，整体透着一股 AI 批量生成论文的合成味。「上下文信息密度最大化」听着高大上，摘要却没给可复现的机制。在有更实的上下文工程工作前，先跳过。💀</li>
+</ul>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2604.17091" target="_blank" rel="noopener">📖 AI 精读</a></div></div>
+<div id="panel-生成式推荐" class="tab-panel"><h2>📊 生成式推荐</h2><div class="paper-card" data-topic="📊 生成式推荐"><h3>1. From a Static Multi-Level Small Semantic Codebook to a Dynamic Single-Level Large Semantic Codebook for Generative Recommendation</h3>
+<ul>
+<li><strong>作者</strong>: Tianlu Xie, Xin Ku, Mingjie Sun, Yunhao Sha, Lixiang Wang, Peng Wang, Yiyu Wang, Wenjin Wu, Zhaojie Liu, Peng Jiang, Wenwu Ou</li>
+<li><strong>机构</strong>: Affiliation: </li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2608.21012v1">arXiv</a> | <a href="https://arxiv.org/pdf/2608.21012v1">PDF</a></li>
+<li>
+<p><strong>来源</strong>: 📄 arXiv 关键词检索</p>
+</li>
+<li>
+<p><strong>核心方法</strong>: 生成式推荐用一串离散 <span class="wikilink">Semantic ID</span>（SID）表示物品并自回归预测下一个物品。本文指出主流的多级 <span class="wikilink">residual quantization</span> 有两宗罪：自回归解码成本随层数上升、庞大的层级空间被稀疏占用；且静态码本会随新物品到来、曝光分布漂移而与线上流量错配。方案是从「静态多级小语义码本」转向「动态单级大语义码本」，在快手 <span class="wikilink">KuaiRec</span> 与工业数据上对比 <span class="wikilink">OneRec</span>、<span class="wikilink">TIGER</span>、<span class="wikilink">RPG</span>、<span class="wikilink">SEATER</span>。</p>
+</li>
+<li><strong>对比方法/Baselines</strong>: <span class="wikilink">OneRec</span>、<span class="wikilink">TIGER</span>、<span class="wikilink">RPG</span>、<span class="wikilink">SEATER</span>，指标看 <span class="wikilink">NDCG</span>/PV</li>
+<li><strong>借鉴意义</strong>: 直接命中你做推荐/排序的核心：SID 码本设计是生成式召回落地的关键瓶颈，单级大码本换掉多级残差量化，对解码延迟和线上时效性都是实打实的收益。</li>
+<li><strong>锐评</strong>: 今天唯一一篇「工业界拿真数据说人话」的推荐论文。多级残差量化的自回归成本和码本稀疏是所有 SID 派系的通病，敢正面把它推倒重来值得尊敬。唯一悬念：单级大码本的表达力和训练稳定性能不能扛住，摘要没给足证据，得看实验里码本利用率和冷启表现。快手系必读。🔥</li>
+</ul>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2608.21012v1" target="_blank" rel="noopener">📖 AI 精读</a></div></div>
+<div id="panel-多模态理解与生成" class="tab-panel"><h2>🎬 多模态理解与生成</h2><div class="paper-card" data-topic="🎬 多模态理解与生成"><h3>2. Annotations as Rollouts: Efficient and Scalable Reinforcement Learning for Video MLLMs</h3>
+<ul>
+<li><strong>作者</strong>: Yunheng Li, Guohong Mu, Hao Li, Shengsheng Qian, Dingwen Zhang, Qibin Hou†, Ming-Ming Cheng</li>
+<li><strong>机构</strong>: 2]Brain and Artificial Intelligence Lab, Northwestern Polytechnical University, 1]VCIP, School of Computer Science, Nankai University, Affiliation:, 3]State Key Laboratory of Multimodal Artificial Intelligence Systems, Institute of Automation, Chinese Academy of Sciences</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2608.20492v1">arXiv</a> | <a href="https://arxiv.org/pdf/2608.20492v1">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2608.20492v1/figs/teaser/temporal_before.jpg" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2608.20492v1/framework_new.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: 针对 video MLLM 的 RL 后训练：现有方法在 on-policy 组内高质量 rollout 太少，即便花大价钱生成 <span class="wikilink">CoT</span> 也低效。<span class="wikilink">OraRL</span> 把人工标注直接当作 rollout（Annotations as Rollouts），提升 <span class="wikilink">GRPO</span> 类 RL 后训练的样本效率与可扩展性，覆盖 VSI、RefCOCO 等任务。</li>
+<li><strong>对比方法/Baselines</strong>: <span class="wikilink">GRPO</span>、<span class="wikilink">SFT</span>，视频/定位类基准</li>
+<li><strong>借鉴意义</strong>: RL 后训练的采样效率是所有做 RLHF/GRPO 的人共同的钱包痛点，把已有标注废物利用成 rollout 的思路可迁移到推荐/排序的偏好优化。</li>
+<li><strong>锐评</strong>: 「把标注当 rollout」这个 framing 很聪明——本质是承认纯 on-policy 采样在多模态上性价比太低，干脆用监督信号补位。问题是这就模糊了 on-policy 和 off-policy 的边界，能不能保住 RL 相对 SFT 的探索优势要打问号。但方向对，采样效率这刀砍得准。👀</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2608.20492v1" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🎬 多模态理解与生成"><h3>3. COMET: Contrastive Motion-Enhanced Temporal Reasoning for Video Multimodal Large Language Models</h3>
+<ul>
+<li><strong>作者</strong>: Chenghua Zhu, Zhaolu Kang, Qifan Shi, Siyan Wu, Kehan Jiang, Lei Wei, Lianyu Hu, Guangyuan Dong, Mingbo Yang, Rui Lu, Guibo Luo</li>
+<li><strong>机构</strong>: Affiliation: School of Software and Microelectronics, Note: , Affiliation: Nanyang Technological University,  Peking University,  South China University of Technology, Affiliation: Peking University, Affiliation: Aberdeen Institute of Data Science and Artificial Intelligence, Affiliation: National University of Singapore, Affiliation: Guangdong Provincial Key Laboratory of Ultra High Definition Immersive Media Technology, Shenzhen Graduate School, Affiliation: ,  South China Normal University, Affiliation: Sun Yat-Sen University, Affiliation: School of Future Technology</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2608.21030v1">arXiv</a> | <a href="https://arxiv.org/pdf/2608.21030v1">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2608.21030v1/figures/fig3.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: Video MLLM 的细粒度运动-时序理解仍脆弱，瓶颈不只是稀疏帧采样，还缺少显式表示帧间变化、实现表观-运动交互、优化时序方向敏感性的完整时序建模流水线。<span class="wikilink">COMET</span> 用对比式运动增强的时序推理（含 TPD 时序方向、TC 等模块）+ <span class="wikilink">GRPO</span> 强化时序感知。</li>
+<li><strong>对比方法/Baselines</strong>: 稀疏帧采样、时序 adapter、TempFlex 等时序融合方法</li>
+<li><strong>借鉴意义</strong>: 视频理解的时序方向敏感性（正放/倒放能不能分清）是多模态硬骨头，对做视频推荐/内容理解有价值。</li>
+<li><strong>锐评</strong>: 把「时序方向敏感性」单拎出来治，切口不错——很多 video MLLM 连正放倒放都分不清还谈什么运动理解。对比式运动增强 + GRPO 的组合中规中矩。但一口气堆了 TPD/TC/TAB 一串模块，有点「能想到的都加上」的味道，消融不做扎实就是模块堆砌大赛。⚠️👀</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2608.21030v1" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🎬 多模态理解与生成"><h3>4. Identity-Preserving Text-to-Video Generation via Agentic Enhancement and Semantic Repair</h3>
+<ul>
+<li><strong>作者</strong>: Jiayi Gao, Changcheng Hua, Jiaqi Tang, Yuxin Peng, Yang Liu</li>
+<li><strong>机构</strong>: Affiliation: Wangxuan Institute of Computer Technology, Peking University, email:, Note: , Affiliation: </li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2608.20749v1">arXiv</a> | <a href="https://arxiv.org/pdf/2608.20749v1">PDF</a></li>
+<li>
+<p><strong>来源</strong>: 📄 arXiv 关键词检索</p>
+</li>
+<li>
+<p><strong>核心方法</strong>: 身份保持视频生成要在遵循自然语言指令的同时维持给定主体的视觉身份。商用模型仍有身份漂移、指令遵循不全、复杂 prompt 下细节缺失。本文用 agentic enhancement + 语义修复（AESR），配 VLM/MoE 处理 HOI 等复杂场景。</p>
+</li>
+<li><strong>对比方法/Baselines</strong>: MotionBooth、DreamVideo 等 per-ID 微调方法</li>
+<li><strong>借鉴意义</strong>: 身份保持生成是内容生成/数字人的核心难题，摆脱 per-ID 微调走 agentic 增强路线对可扩展部署有意义。</li>
+<li><strong>锐评</strong>: 身份漂移是所有 T2V 的老大难，本文想用「agentic 增强 + 语义修复」绕开逐 ID 微调的可扩展性死结，动机正当。但「agentic」在这里更像给后处理流程贴的时髦标签——本质是多阶段 refine。到底比直接的 IP-Adapter 类方法强多少，得看身份一致性的定量指标，摘要只喊问题没亮硬数。⚠️</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2608.20749v1" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🎬 多模态理解与生成"><h3>5. ReFrame: Evidence-Guided Test-Time Safety Alignment in Multimodal Large Language Models</h3>
+<ul>
+<li><strong>作者</strong>: Wenzheng Jiang, Xuankun Rong, Yuanzhao Zhai, Dawei Feng, Huaimin Wang</li>
+<li><strong>机构</strong>: Affiliation: State Key Laboratory of Complex &amp; Critical Software Environment, Affiliation: School of Computer Science, Wuhan University, Affiliation: College of Computer Science and Technology, National University of Defense Technology, Affiliation: </li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2608.21100v1">arXiv</a> | <a href="https://arxiv.org/pdf/2608.21100v1">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2608.21100v1/Introduction.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2608.21100v1/Framework.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2608.21100v1/latex/pic/GPT.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: MLLM 的安全对齐要应对跨模态越狱、安全意识失败、过度拒绝。现有方法依赖重训或内部状态检查，难用于部署的闭源模型。<span class="wikilink">ReFrame</span> 做证据引导的测试时安全对齐（test-time），无需重训。</li>
+<li><strong>对比方法/Baselines</strong>: <span class="wikilink">ECSO</span>、SIUO 等，<span class="wikilink">GPT-4</span> 系对比</li>
+<li><strong>借鉴意义</strong>: 测试时对齐无需重训，对用闭源多模态 API 又要控安全的场景很实用，过度拒绝问题也和产品体验强相关。</li>
+<li><strong>锐评</strong>: 测试时、免重训、还兼顾「过度拒绝」这个常被忽视的反向问题，工程上很讨喜——毕竟大多数人只能调 API 改不了权重。证据引导的思路合理。但 test-time 方法通常要在推理时多花算力做检查，安全和延迟的 tradeoff 摘要没交代，实际部署得掂量。👀</li>
+</ul>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2608.21100v1" target="_blank" rel="noopener">📖 AI 精读</a></div></div>
+<div id="panel-llm训练与效率" class="tab-panel"><h2>⚙️ LLM 训练与效率</h2><div class="paper-card" data-topic="⚙️ LLM 训练与效率"><h3>6. Every Coin Has Two Sides: On the Dual Nature of Generalization in On-Policy Distillation of Large Language Models</h3>
+<ul>
+<li><strong>作者</strong>: Zhaoyi Li1,3,∗, Deyang Kong2,3,∗, Yuan Wei3,∗, Evan Yang3, Ranran Shen1, Mahardika Krisna Ihsani4, Ming Yang3, Wei Zhang3, Chuan Hao3, Jian Yang3, Ran Tao3, Bryan Dai3, Shikun Zhang2, Wei Ye2, Ying Wei5, Defu Lian1</li>
+<li><strong>机构</strong>: 2Peking University, 5Zhejiang University, 1University of Science and Technology of China, lizhaoyi777@mail.ustc.edu.cn</li>
+<li><strong>链接</strong>: <a href="https://arxiv.org/abs/2608.16647">arXiv</a> | <a href="https://arxiv.org/pdf/2608.16647">PDF</a></li>
+<li>
+<p><strong>来源</strong>: 📰 HF Daily，⬆️ 9</p>
+</li>
+<li>
+<p><strong>核心方法</strong>: 系统研究 <span class="wikilink">on-policy distillation</span>（OPD）的泛化行为：以往研究只在单域、且贴近训练数据的基准上评估。本文做受控实验，一次只变一个泛化因子，覆盖域内分布漂移、跨域迁移、多教师（<span class="wikilink">MOPD</span>）设置，揭示 same-origin 与 cross-origin 下泛化表现的显著差异。</p>
+</li>
+<li><strong>对比方法/Baselines</strong>: <span class="wikilink">JustRL</span>、Distill-Qwen 系列，测 <span class="wikilink">GPQA</span> 等</li>
+<li><strong>借鉴意义</strong>: 蒸馏是压小模型的主流路径，跨域泛化边界直接决定你能不能用一个域的数据蒸出通用能力，对多任务推荐/排序模型蒸馏有参考。</li>
+<li><strong>锐评</strong>: 难得有人不急着刷 SOTA，而是做受控消融把 OPD 的泛化机理讲清楚。「一次只变一个因子」是正经科学态度，比一堆 agentic 缝合怪有价值。缺点是这类研究结论往往强依赖所选模型族，Qwen 上成立不代表放之四海。但方法论值得学。👀</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2608.16647" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="⚙️ LLM 训练与效率"><h3>7. COEC: Calibrated Orthogonal-Equivalence Compensation for Structured Pruning of Large Language Models</h3>
+<ul>
+<li><strong>作者</strong>: Peiqi Yu, Nam Ling, Wei Wang, Wei Jiang</li>
+<li><strong>机构</strong>: School of Engineering, Santa Clara University, Santa Clara, CA, USA</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2608.21142v1">arXiv</a> | <a href="https://arxiv.org/pdf/2608.21142v1">PDF</a></li>
+<li>
+<p><strong>来源</strong>: 📄 arXiv 关键词检索</p>
+</li>
+<li>
+<p><strong>核心方法</strong>: 结构化剪枝删掉权重列会引入输出误差。现有 training-free 补偿只在保留权重的输出侧加偏置或单次正交旋转，输入奇异框架不变、限制了列删除后的自适应。<span class="wikilink">COEC</span> 提出校准的正交等价补偿，同时调整输入侧，配合 <span class="wikilink">SVD</span> 分析，训练free。</p>
+</li>
+<li><strong>对比方法/Baselines</strong>: <span class="wikilink">FLAP</span>、<span class="wikilink">SparseGPT</span>、<span class="wikilink">Wanda</span> 一脉的剪枝方法</li>
+<li><strong>借鉴意义</strong>: 推理成本敏感的线上模型都关心剪枝后精度保持，训练free 的补偿意味着不用重训就能压缩，工程友好。</li>
+<li><strong>锐评</strong>: 把「输出侧补偿」升级成「输入-输出双侧正交等价补偿」并给理论，这是剪枝补偿里少见的认真数学工作。训练free 是大加分。质疑点：正交等价约束会不会太强，遇到严重结构性冗余时补偿能力见顶？得看高稀疏率下的曲线。⚙️👀</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2608.21142v1" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="⚙️ LLM 训练与效率"><h3>8. Jacobian-guided Noise Injection for Quantization Robustness in Large Language Models</h3>
+<ul>
+<li><strong>作者</strong>: Deepanshu Pandey, Arnav Chavan, Nahush Lele, Sankalp Dayal, Deepak Gupta</li>
+<li><strong>机构</strong>: Affiliation: Amazon, Correspondence to: deepnsp@amazon.com, Affiliation: , Correspondence to:</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2608.20988v1">arXiv</a> | <a href="https://arxiv.org/pdf/2608.20988v1">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2608.20988v1/assets/head_11_surface.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2608.20988v1/assets/quant_cosine_similarity_attn.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: LLM 量化常被 self-attention 对离散化误差的敏感性拖累。本文定位 <span class="wikilink">softmax</span> 算子为量化稳定性瓶颈（对离群值敏感、状态依赖的 Jacobian），理论上证明抑制该 Jacobian 范数可界定量化性能退化，进而提出 Jacobian 引导的噪声注入微调框架。</li>
+<li><strong>对比方法/Baselines</strong>: <span class="wikilink">PTQ</span> 类方法，测 ARC/HellaSwag/PIQA/PPL</li>
+<li><strong>借鉴意义</strong>: 量化是部署侧刚需，把 attention softmax 精确定位为瓶颈并给出可操作的正则手段，对低比特部署有直接价值。</li>
+<li><strong>锐评</strong>: 把量化不稳定归因到 softmax 的 Jacobian 并做隐式 Hessian 正则，理论链条清晰，来自 Amazon 有落地压力背书。噪声注入这招不新，但配上 Jacobian 引导的理论动机就有说服力。担心的是训练开销和对超参的敏感度，摘要没提。⚙️</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2608.20988v1" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="⚙️ LLM 训练与效率"><h3>9. Decoupling Policy Extraction for Offline Reinforcement Learning</h3>
+<ul>
+<li><strong>作者</strong>: Yixiang ShanSimplexity Roboticsshanyixiang@s-robots.com</li>
+<li><strong>机构</strong>: Yixiang ShanSimplexity Roboticsshanyixiang@s-robots.comJinru DuanSimplexity Robotics, Northeastern Universityduanjinru@s-robots.comTao Yang, Xinyu Zhao, Runyu Lei, Yiming Zhao, Jiaxin Fan, Zongbao Feng   &amp; Peng JiaSimplexity Robotics{yangtao, zhaoxinyu, leirunyu, -, fanjiaxin, fengzongbao, jiapeng}@s-robots.com, Xuyao LinSimplexity Robotics, Rensselaer Polytechnic Institutelinxuyao@s-robots.com, Thanks: </li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2608.20909v1">arXiv</a> | <a href="https://arxiv.org/pdf/2608.20909v1">PDF</a></li>
+<li>
+<p><strong>来源</strong>: 📄 arXiv 关键词检索</p>
+</li>
+<li>
+<p><strong>核心方法</strong>: 离线 RL 通常 actor-critic 联合训练，靠 critic 引导 actor 选高价值动作。但离线数据固定，actor 侧策略提升无法生成新数据来验证/纠正 critic。本文提出解耦策略抽取（Decoupling Policy Extraction），打破这种在线场景才成立的耦合假设。</p>
+</li>
+<li><strong>对比方法/Baselines</strong>: <span class="wikilink">IQL</span>、<span class="wikilink">CQL</span>、<span class="wikilink">CRR</span>、BC</li>
+<li><strong>借鉴意义</strong>: 推荐/排序里大量场景本质是离线 RL（只有日志数据无法交互），actor-critic 耦合导致的 critic 外推误差是老大难，解耦思路有借鉴意义。</li>
+<li><strong>锐评</strong>: 抓到了离线 RL 的一个真矛盾：在线 RL 里 actor 改进能产生新数据反哺 critic，离线场景这个闭环断了却还在沿用同一套耦合训练。指出这点就值一读。不过来自机器人公司，实验多半偏控制任务，能不能迁到推荐的高维稀疏动作空间需要自己验证。👀</li>
+</ul>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2608.20909v1" target="_blank" rel="noopener">📖 AI 精读</a></div></div>
+<div id="panel-multiagent协作与推理" class="tab-panel"><h2>🧠 Multi-Agent 协作与推理</h2><div class="paper-card" data-topic="🧠 Multi-Agent 协作与推理"><h3>10. Consilience: Conformally Calibrated Communication Control for Hidden-Profile Multi-Agent Reasoning</h3>
+<ul>
+<li><strong>作者</strong>: Babu, Abhijith, Kaur, Ramneet, Pramanik, Vishal, Kotevska, Olivera, Bastian, Nathaniel D., Jha, Susmit, Raj, Sunny, Wu, Yanzhao, Jha, Sumit Kumar, Roy, Anirban</li>
+<li><strong>机构</strong>: 2SRI International 3Department of Computer &amp; Information Science &amp; Engineering, University of Florida, 6Department of Computer Science and Engineering, Oakland University, 1Knight Foundation School of Computing and Information Sciences, Florida International University, 4Oak Ridge National Laboratory 5Army Cyber Institute, United States Military Academy, Sumit Kumar Jha3,*, Susmit Jha2</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2608.20564v1">arXiv</a> | <a href="https://arxiv.org/pdf/2608.20564v1">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2608.20564v1/Figures/img5.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: 多 agent LLM 在 hidden-profile（每个 agent 只掌握部分证据）任务里，固定日程、轮询、无结构辩论都无法保证某次对话动作是恰当的。<span class="wikilink">Consilience</span> 用 <span class="wikilink">conformal prediction</span> 做通信控制（SeekEvidence/SeekNewEvidence），在 <span class="wikilink">HiddenBench</span>、<span class="wikilink">GroupTravelBench</span> 上带覆盖率保证地决定何时该说话、说什么。</li>
+<li><strong>对比方法/Baselines</strong>: 固定日程/轮询/无结构辩论，<span class="wikilink">DeepSeek</span> 等底座</li>
+<li><strong>借鉴意义</strong>: 多 agent 协作是你关注的 agentic 方向，用统计保证约束通信而非拍脑袋调度，是把 multi-agent 从玄学拉向工程的正确姿势。</li>
+<li><strong>锐评</strong>: 多 agent 辩论最大的问题就是「什么时候该发言」全靠启发式，本文拿 conformal prediction 给通信动作套上覆盖率保证，理论洁癖看着舒服。隐藏画像这个设定也选得刁钻——正好逼出信息不对称。质疑：CP 的校准集在动态多轮对话里怎么保持有效，摘要没说透。👀</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2608.20564v1" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🧠 Multi-Agent 协作与推理"><h3>11. Structure for Reading, Prose for Writing: Asymmetric Structural Conditioning in Multi-Agent Document Authoring</h3>
+<ul>
+<li><strong>作者</strong>: Cheng Yu, Nikhil Mathew, Zhengjie Wang</li>
+<li><strong>机构</strong>: Affiliation: </li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2608.20786v1">arXiv</a> | <a href="https://arxiv.org/pdf/2608.20786v1">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2608.20786v1/Fig1.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: 多 agent 流水线写正式文书需要「读懂请求方表单」并「据此写作」。本文报告一个部署的投标应答系统：43 个单发 agent 角色 + 1 个多轮起草者组成有向图，跨 6 阶段 3 个人工编辑门，昂贵的语义工作只做一次并持久化为可检查 JSON。核心洞见是「读用结构、写用散文」的非对称结构条件化。</li>
+<li><strong>对比方法/Baselines</strong>: 人类撰写的真实投标书，<span class="wikilink">LLM</span> judge 盲评</li>
+<li><strong>借鉴意义</strong>: 把多 agent 系统真正部署到企业文书生产、且和人类产出盲比，这种落地经验比 benchmark 刷分实在。中间态持久化为可审查 JSON 的工程模式值得抄。</li>
+<li><strong>锐评</strong>: 「Structure for Reading, Prose for Writing」这个非对称 framing 是全篇最有价值的一句——读输入要结构化、写输出要散文化，很多人把两端都硬塞成同一形态。43 个单发角色 + 人工门的架构务实。但用 LLM judge 评自家系统对比人类，既当运动员又当裁判，盲评的可信度得打折。👀</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2608.20786v1" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🧠 Multi-Agent 协作与推理"><h3>12. Towards Traffic Modelling of Multi-Agent Systems: The Role of Coordination Topology</h3>
+<ul>
+<li><strong>作者</strong>: Davide Lamagna, Albert Cabellos, Alberto Rodriguez-Natal, Gábor Rétvári, Berta Serracanta</li>
+<li><strong>机构</strong>: Affiliation: Budapest University of Technology and Economics, email:, Affiliation:</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2608.20494v1">arXiv</a> | <a href="https://arxiv.org/pdf/2608.20494v1">PDF</a></li>
+<li>
+<p><strong>来源</strong>: 📄 arXiv 关键词检索</p>
+</li>
+<li>
+<p><strong>核心方法</strong>: 把多 agent LLM 系统当成一种新型网络负载来研究：单个用户任务会由协调逻辑（而非用户到达率）诱发一串内部模型调用。本文刻画其流量模式（IAT 分布、协调拓扑对流量的塑形），用 <span class="wikilink">AgentVerse</span> 等做实测。</p>
+</li>
+<li><strong>对比方法/Baselines</strong>: 传统请求-响应应用的流量模型，KS 检验等</li>
+<li><strong>借鉴意义</strong>: 如果你要在生产环境跑 multi-agent，容量规划和推理集群调度必须理解这种「内生流量」，视角新颖。</li>
+<li><strong>锐评</strong>: 换了个系统/网络的视角看 multi-agent——别人都在卷推理能力，这篇卷「它到底给基础设施带来什么流量」。这个角度冷门但对真要上线的人很实用：ReAct 的内部控制流决定到达过程，不是用户点得快不快。偏测量分析，方法贡献不重，当作部署参考读。💤👀</li>
+</ul>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2608.20494v1" target="_blank" rel="noopener">📖 AI 精读</a></div></div>
+<div id="panel-agentic检索与电商" class="tab-panel"><h2>🔍 Agentic 检索与电商</h2><div class="paper-card" data-topic="🔍 Agentic 检索与电商"><h3>13. TRACE: Agentic Catalog Enrichment with Multi-source Evidence Grounding</h3>
+<ul>
+<li><strong>作者</strong>: Rohan Kumar, Steven Xu, Kyle MacDonald, Matthew Long, Bernice Chow, Mac VanRenterghem, Sudeep Das</li>
+<li><strong>机构</strong>: DoorDash, Inc</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2608.20844v1">arXiv</a> | <a href="https://arxiv.org/pdf/2608.20844v1">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2608.20844v1/agent_pipeline.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2608.20844v1/PDP.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: 电商目录属性稀疏——属性要么埋在标题/图片等非结构化内容里，要么根本缺失。<span class="wikilink">TRACE</span> 用 ScoutAgent + JudgeAgent 的多 agent 流程做目录属性补全，基于多源证据 grounding，对每个属性给 PASS/FAIL/UNVERIFIED/UNCERTAIN 判定（DoorDash 部署）。</li>
+<li><strong>对比方法/Baselines</strong>: encoder-decoder 微调、基础模型 zero/few-shot、检索增强的多 agent 迭代</li>
+<li><strong>借鉴意义</strong>: 属性补全直接喂给搜索/发现/推荐，是电商推荐的上游数据质量工程，DoorDash 的落地判定框架有参考价值。</li>
+<li><strong>锐评</strong>: Scout+Judge 双 agent + 四态判定（含 UNVERIFIED/UNCERTAIN）比动辄「一个 agent 搞定一切」的论文诚实——承认了不确定性该被显式标注。DoorDash 真实目录背书加分。但多 agent 补属性成本不低，摘要没给出相对单模型 few-shot 的性价比曲线，落地要算这笔账。👀</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2608.20844v1" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🔍 Agentic 检索与电商"><h3>14. CAS: Conformalized Agentic Search via Adaptive Retrieval and Policy Weighting</h3>
+<ul>
+<li><strong>作者</strong>: Zixi Zhu, Jiayuan Su, Jian Zhang, Yu Lin, Hongwei Wang</li>
+<li><strong>机构</strong>: Affiliation: State Key Laboratory of CAD&amp;CG, Zhejiang University, Affiliation: ZJU-UIUC Institute, Zhejiang University, Affiliation: , Affiliation: Tencent Inc.{zixizhu, 12221038, hongweiwang}@zju.edu.cnyulin@intl.zju.edu.cnmatt.jiayuan.su@gmail.com</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2608.20771v1">arXiv</a> | <a href="https://arxiv.org/pdf/2608.20771v1">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2608.20771v1/figure.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: Search Agent 在 RL 微调时有可靠性危机：Top-K 检索导致证据丢失或噪声混入，渐进式 RL 诱发过自信、产生幻觉答案和冗余检索。<span class="wikilink">CAS</span> 引入 <span class="wikilink">conformal prediction</span>（APS/ACI）做自适应检索与策略加权，在 QA/RAG 上约束 GRPO 训练。</li>
+<li><strong>对比方法/Baselines</strong>: 启发式 Top-K 检索、<span class="wikilink">GRPO</span>、<span class="wikilink">RAG</span></li>
+<li><strong>借鉴意义</strong>: 检索增强 + RL 是 agentic search 主线，用统计保证治过自信幻觉，对做检索类 agent 的可靠性有直接帮助。</li>
+<li><strong>锐评</strong>: 今天第二篇用 conformal prediction 给 agent 上保险的（另一篇是 Consilience），说明社区开始意识到 agentic 系统的可靠性不能光靠 prompt。把 CP 用在自适应检索的 K 值和策略加权上，切口具体。质疑：CP 假设可交换性，在 RL 训练中分布持续漂移，校准还成不成立？这是这类工作共同的软肋。👀</li>
+</ul>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2608.20771v1" target="_blank" rel="noopener">📖 AI 精读</a></div></div>
+<div id="panel-agent框架与运行时" class="tab-panel"><h2>🤖 Agent 框架与运行时</h2><div class="paper-card" data-topic="🤖 Agent 框架与运行时"><h3>15. OpenRath: Session-Centered Runtime State for Agent Systems</h3>
+<ul>
+<li><strong>作者</strong>: Wen, Fukang, Wang, Zhijie, Xu, Ruilin</li>
+<li><strong>链接</strong>: <a href="https://arxiv.org/abs/2606.19409">arXiv</a> | <a href="https://arxiv.org/pdf/2606.19409">PDF</a></li>
+<li><strong>来源</strong>: 🔥 HF Trending，⬆️ 78</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2606.19409v1/assets/mermaid-diagrams/multi-session-to-agent-workflow-image2.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2606.19409v1/assets/mermaid-diagrams/session-runtime-boundary.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2606.19409v1/assets/mermaid-diagrams/session-lifecycle.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: 现代 agent 系统运行时状态碎片化：transcript、工具副作用、记忆事件、workspace 布局、分支溯源、回放证据各自分散记录，难检查难复现。<span class="wikilink">OpenRath</span> 用类 <span class="wikilink">PyTorch</span> 的编程模型把 Session 做成多 agent/多会话系统的一等运行时状态抽象（类比的是可组合计算的架构接口，不是张量数学）。</li>
+<li><strong>对比方法/Baselines</strong>: 现有把状态分散记录的 agent 框架，涉及 <span class="wikilink">MCP</span>、SWE 场景</li>
+<li><strong>借鉴意义</strong>: 如果你在搭 agent 平台，运行时状态的可复现/可审查是核心工程痛点，Session as first-class state 的抽象值得借鉴。</li>
+<li><strong>锐评</strong>: 78 个 upvote 说明痛点戳中了——agent 系统的状态确实散得像一地鸡毛。把 Session 抽象成一等公民、强调可检查可复现，方向正确。但作者自己都要反复澄清「不是 PyTorch 的张量数学、只是借架构接口」，说明这个类比其实有点勉强、更像营销话术。看它的抽象设计，别被类比带偏。👀</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2606.19409" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🤖 Agent 框架与运行时"><h3>16. Evaluating Skills, Not Just Agents: Agentic Continuous Evaluation of Skills</h3>
+<ul>
+<li><strong>作者</strong>: Kevin, Christopher, Raghavan, Narendran, Puget, Jean-Francois, Malani, Roshni, Puvvadi, Meghana, Abramovitch, Moshe, Gupta, Mohit, Akkiraju, Rama, Prabhu, Subodh, Dangi, Yogesh, Luo, Wei, Lee, Seong Hee</li>
+<li><strong>机构</strong>: Evaluating Skills, Not Just Agents: Agentic Continuous Evaluation of SkillsCCS: Computing methodologies Artificial intelligenceCCS: Software and its engineering Software verification and validationCCS: Computing methodologies Natural language processing, christopherk@nvidia.com, NVIDIA</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2608.20614v1">arXiv</a> | <a href="https://arxiv.org/pdf/2608.20614v1">PDF</a></li>
+<li>
+<p><strong>来源</strong>: 📄 arXiv 关键词检索</p>
+</li>
+<li>
+<p><strong>核心方法</strong>: 企业 agent 程序从原型走向生产，可复用的 skill/tool/workflow 包需要用证据而非文字来审查。现有 gate 只扫结构、风格、安全，回答不了部署问题：这个能力包在同样的模型/沙箱/环境下能否帮活的 agent 完成企业任务。<span class="wikilink">ACES</span>（NVIDIA）提出对 skill 的 agentic 持续评估，在 145-skill 语料上补上可观测性缺口。</p>
+</li>
+<li><strong>对比方法/Baselines</strong>: 四类 scan-only 评估（结构/风格/安全等）</li>
+<li><strong>借鉴意义</strong>: 你自己就在大量用 skill——如何评估一个 skill 到底有没有用、而不是光看它写得规不规范，这套「评能力而非评 agent」的思路很切题。</li>
+<li><strong>锐评</strong>: 「Evaluating Skills, Not Just Agents」这个立意精准戳中当前盲区：大家都在 review agent 本身，没人系统评估它挂载的 skill 到底提不提升任务完成率。145-skill 语料 + NVIDIA 生产背景有分量。但「agentic 持续评估」听着就贵，每次改 skill 都要跑一遍活 agent，成本可持续性存疑。👀</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2608.20614v1" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🤖 Agent 框架与运行时"><h3>17. BC-Bench: Evaluating Agentic Engineering in a Domain-Specific Language for ERP</h3>
+<ul>
+<li><strong>作者</strong>: Haoran Sun, Microsoft, haoransun@microsoft.com, Klaus Marius Hansen, Microsoft, klaus.marius.hansen@microsoft.com</li>
+<li><strong>机构</strong>: Klaus Marius Hansen, Microsoft, klaus.marius.hansen@microsoft.com, Haoran Sun, Microsoft, haoransun@microsoft.com</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2608.20851v1">arXiv</a> | <a href="https://arxiv.org/pdf/2608.20851v1">PDF</a></li>
+<li>
+<p><strong>来源</strong>: 📄 arXiv 关键词检索</p>
+</li>
+<li>
+<p><strong>核心方法</strong>: Agentic 工程系统在通用基准上表现强，但在 ERP 领域特定语言（DSL）上鲜有验证。<span class="wikilink">BC-Bench</span>（Microsoft）针对 Dynamics 365 Business Central 的 AL 语言构建基准，评估 agentic engineering 在真实 ERP 任务上的表现。</p>
+</li>
+<li><strong>对比方法/Baselines</strong>: <span class="wikilink">SWE-Bench</span>、SWE-Bench Multimodal/Live 一脉</li>
+<li><strong>借鉴意义</strong>: code agent 的能力边界评估是 agentic 的重要分支，把评估从 Python 泛化到冷门 DSL，能暴露模型对训练数据稀疏语言的真实短板。</li>
+<li><strong>锐评</strong>: 专挑 AL 这种冷门 ERP DSL 做基准，用意明显：撕开 code agent 在 Python 上刷高分的假象，看它遇到低资源语言还行不行。Microsoft 亲自下场做自家 DSL 有数据优势。缺点是领域太窄，结论对做通用 code agent 的人参考价值有限，更像 Business Central 生态内部报告。🫠👀</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2608.20851v1" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🤖 Agent 框架与运行时"><h3>18. GenericAgent: A Token-Efficient Self-Evolving LLM Agent via Contextual Information Density Maximization (V1.0)</h3>
+<ul>
+<li><strong>作者</strong>: Advantage AI Agent Lab (A3 Lab)</li>
+<li><strong>机构</strong>: Thanks: This is a joint research lab with members from Shenzhen Aquaintelling Technology and Fudan University, Thanks:</li>
+<li><strong>链接</strong>: <a href="https://arxiv.org/abs/2604.17091">arXiv</a> | <a href="https://arxiv.org/pdf/2604.17091">PDF</a></li>
+<li><strong>来源</strong>: 🔥 HF Trending，⬆️ 23</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2604.17091v1/framework.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: 面向长程 LLM agent 的上下文瓶颈：交互变长后工具描述、检索记忆、原始环境反馈不断累积，挤掉决策所需信息，且跨 episode 的有用经验常丢失。<span class="wikilink">GenericAgent</span> 提出通过「上下文信息密度最大化」做 token 高效的自进化 agent。</li>
+<li><strong>对比方法/Baselines</strong>: 摘要未提供明确定量基线（method_names 抽取到 GPT-5 等）</li>
+<li><strong>借鉴意义</strong>: 长程 agent 的上下文管理确实是真问题，但本文的处理方式和署名可信度都需警惕。</li>
+<li><strong>锐评</strong>: 长程 agent 的上下文膨胀是真痛点，但这篇疑点太多：机构写成「Advantage AI Agent Lab (A3 Lab)」、致谢措辞怪异、抽出的方法名里混着 OpenClaw/GPT-5 这类东西，整体透着一股 AI 批量生成论文的合成味。「上下文信息密度最大化」听着高大上，摘要却没给可复现的机制。在有更实的上下文工程工作前，先跳过。💀</li>
+</ul>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2604.17091" target="_blank" rel="noopener">📖 AI 精读</a></div></div>
+<hr>
+<h2>被排除的论文</h2>
+<ul>
+<li>Volumetric Radiology AI in the Era of Multimodal Large Language Models — 医疗影像（CT/MRI/PET/病理），命中 negative_keywords，与推荐/广告/agent 无关</li>
+<li>Z^2-ACT: End-to-End Verifiable Agentic Intent Control for Open 6G RAN — 6G 无线接入网控制，垂直领域，与用户关注方向无交集</li>
+<li>VortexChat: agentic framework for integrated photonic design — 集成光子器件设计，硬件/物理垂直领域</li>
+<li>Hadith computational science in the age of LLMs — 宗教文本计算研究，与推荐/广告/agent 工程无关</li>
+<li>Evaluating LLM Performance on International Maritime Dangerous Goods Code Compliance — 海事危险品法规合规评测，垂直法规领域</li>
+<li>Sharing Control Authority Between DRL and MPC: Multi-Class Transportation Networks — 交通网络控制，DRL+MPC 偏离用户领域</li>
+<li>Advantage-level Aggregation RL for X-point Target Magnetic Configuration Control — 托卡马克核聚变磁场控制，物理实验领域</li>
+<li>Thermo-FL: Thermal-Aware Robust Federated Fine-Tuning of LLMs for Edge AI — 联邦学习+边缘硬件热约束，偏系统硬件，相关性弱</li>
+<li>FL-MAESTRO / TopologyAgent: Multi-Agent LLM Orchestration for Federated Learning — 联邦学习资源调度，multi-agent 只是包装，核心偏离</li>
+</ul>
+<p>Agent 论文进入「垂直场景缝合期」，真正有增量的信号是社区开始用 conformal prediction 等统计工具给 agentic 系统上可靠性保险，以及 RL 后训练把重心从算法转向采样效率。</p></div>
+<footer style="text-align:center;color:var(--text2);margin:3em 0 1em;font-size:0.85em;">
+  Generated by daily-papers-web &middot; Powered by Claude Code
+</footer>
+<script src="tabs.js"></script>
+
+</body>
+</html>
