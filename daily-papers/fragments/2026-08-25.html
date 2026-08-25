@@ -1,0 +1,1064 @@
+<h1>🔪 今日锐评</h1>
+<p>今日 arXiv 被 429 限流，全靠 HF trending 撑场，结果就是一锅『Agent 框架 + 记忆系统 + 自主科研』的老菜回锅。真正的新鲜货没几个，倒是暴露了一个尴尬趋势：一半的『2026 神作』本质是把 CLI + ReAct + 一点记忆模块换个 logo 再发一遍。推荐系统/广告方向今天颗粒无收，全是 Agent。挑了几篇有骨头的，其余灌水的直接埋了。</p>
+<h2>分流表</h2>
+<table>
+<thead>
+<tr>
+<th>等级</th>
+<th>论文</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>🔥 必读</td>
+<td><span class="wikilink">Agent Lightning</span>（把 RL 训练和 agent 执行彻底解耦，唯一有工程硬货的一篇，已有笔记） · <span class="wikilink">PagedAttention</span>（vLLM 的地基，做 LLM serving 绕不开，虽是老论文但值得回炉）</td>
+</tr>
+<tr>
+<td>👀 值得看</td>
+<td><span class="wikilink">AgentScope</span>（阿里的 agent 框架 1.0，工程扎实，已有笔记） · <span class="wikilink">EnvHarness</span>（把静态环境『唤醒』成可交互训练场，思路对，259 赞不虚） · <span class="wikilink">FreeToken</span>（边缘设备 MoE serving，带宽自适应，Stoica 组出品） · <span class="wikilink">EverMemOS</span>（自组织记忆 OS，MemCell 抽象比一堆 RAG 拼盘强） · <span class="wikilink">SenseNova-U1</span>（多模态理解+生成统一架构，商汤的 flagship）</td>
+</tr>
+<tr>
+<td>💤 可跳过</td>
+<td><span class="wikilink">TradingAgents</span>（作者署名『爱因斯坦/特斯拉/牛顿』的解析事故，多智能体炒股老套路） · <span class="wikilink">AutoResearchClaw</span>（191 赞的 buzzword 拼盘，自主科研第 N 版） · <span class="wikilink">GenericAgent</span>（『信息密度最大化』听着高级，本质是 context 压缩换皮） · <span class="wikilink">DataFlow</span>（LLM 数据准备框架，工程堆料，创新有限） · <span class="wikilink">Apodex</span>（又一个 agentic intelligence report，营销味&gt;技术味）</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<div class="tab-bar"><button class="tab-btn active" data-tab="all" onclick="switchTab('all')">📋 全部<span class="tab-count">13</span></button><button class="tab-btn" data-tab="agent训练与框架" onclick="switchTab('agent训练与框架')">🏗 🤖 Agent 训练与框架<span class="tab-count">3</span></button><button class="tab-btn" data-tab="llm推理与serving" onclick="switchTab('llm推理与serving')">🤖 ⚙️ LLM 推理与 Serving<span class="tab-count">2</span></button><button class="tab-btn" data-tab="agent学习环境" onclick="switchTab('agent学习环境')">🤖 🧠 Agent 学习环境<span class="tab-count">2</span></button><button class="tab-btn" data-tab="记忆系统" onclick="switchTab('记忆系统')">🧠 🧠 记忆系统<span class="tab-count">1</span></button><button class="tab-btn" data-tab="多模态生成" onclick="switchTab('多模态生成')">🎨 🎨 多模态生成<span class="tab-count">1</span></button><button class="tab-btn" data-tab="agent安全" onclick="switchTab('agent安全')">🛡 🛡️ Agent 安全<span class="tab-count">1</span></button><button class="tab-btn" data-tab="自主科研agent" onclick="switchTab('自主科研agent')">🤖 🔬 自主科研 Agent<span class="tab-count">3</span></button></div>
+<div id="panel-all" class="tab-panel active"><h2>🤖 Agent 训练与框架</h2><div class="paper-card" data-topic="🤖 Agent 训练与框架"><h3>1. Agent Lightning: Train ANY AI Agents with Reinforcement Learning</h3>
+<ul>
+<li><strong>作者</strong>: Xufang Luo, Yuge Zhang<em>, Zhiyuan He</em>, Zilong Wang, Siyun Zhao, Dongsheng Li, Luna K. Qiu, Yuqing Yang</li>
+<li><strong>机构</strong>: Affiliation: Microsoft Research, Affiliation: </li>
+<li><strong>链接</strong>: <a href="https://arxiv.org/abs/2508.03680">arXiv</a> | <a href="https://arxiv.org/pdf/2508.03680">PDF</a></li>
+<li><strong>来源</strong>: 🔥 HF Trending，⬆️ 142</li>
+</ul>
+<details class="paper-note"><summary>📒 精读笔记: Agent Lightning - Train AI Agents with RL</summary><div class="note-body"><h1>Agent Lightning: Train ANY AI Agents with Reinforcement Learning</h1>
+<h2>基本信息</h2>
+<ul>
+<li><strong>作者</strong>: Xufang Luo, Yuge Zhang, Zhiyuan He, Zilong Wang, Siyun Zhao, Dongsheng Li, Luna K. Qiu, Yuqing Yang</li>
+<li><strong>机构</strong>: Microsoft Research</li>
+<li><strong>时间</strong>: 2025年8月</li>
+<li><strong>链接</strong>:</li>
+<li>arXiv: <a href="https://arxiv.org/abs/2508.03680">2508.03680</a></li>
+<li>GitHub: <a href="https://github.com/microsoft/agent-lightning">microsoft/agent-lightning</a> (16k+ stars)</li>
+<li>项目主页: <a href="https://www.microsoft.com/en-us/research/project/agent-lightning/">Microsoft Research</a></li>
+</ul>
+<hr />
+<h2>研究动机与问题</h2>
+<h3>背景</h3>
+<p>近年来 <span class="wikilink">LLM</span> 驱动的 AI Agent 在搜索、代码生成、工具调用等复杂任务中表现出色。然而，LLM 在未经专门训练的场景中（如多轮编码工作流、私有领域数据集、不熟悉的工具）仍然容易出错，无法可靠解决复杂的端到端任务。</p>
+<p><span class="wikilink">Reinforcement Learning</span> 已在推理模型（如 <span class="wikilink">DeepSeek-R1</span>、<span class="wikilink">Kimi k1.5</span>）中取得了突破性进展，是优化 Agent 场景中 LLM 的强大范式。相比需要逐步标注的 <span class="wikilink">Supervised Fine-Tuning</span>，RL 仅依赖基于结果的 reward 信号，消除了对任务特定标注数据的需求。</p>
+<h3>核心问题</h3>
+<p>将 RL 扩展到 Agent 训练面临两大挑战：</p>
+<ol>
+<li><strong>算法层面</strong>：现有 RL 方法主要针对静态、单次调用任务（如数学推理）。Agent 的执行涉及<strong>多次 LLM 调用</strong>（不同 prompt 和 response）以及与外部工具/API 的交互，逻辑远比单轮 RL 复杂。</li>
+<li><strong>系统层面</strong>：现有方法将 RL 训练与 Agent 逻辑<strong>紧密耦合</strong>，或依赖序列拼接加 masking 的方式，难以支持多样化的 Agent 框架（LangChain、AutoGen、OpenAI Agents SDK 等）。</li>
+</ol>
+<h3>核心思想</h3>
+<p>Agent Lightning 的核心创新是<strong>完全解耦 Agent 执行与 RL 训练</strong>，让开发者以几乎<strong>零代码修改</strong>的方式，对任意 AI Agent 进行 RL 训练。</p>
+<p><img alt="Overview of Agent Lightning" src="https://arxiv.org/html/2508.03680v1/figures/overview.png" />
+<em>Figure 1: Agent Lightning 框架总览。实现了 Agent 执行与 RL 训练的完全解耦。</em></p>
+<hr />
+<h2>方法详解</h2>
+<h3>3.1 统一数据接口 (Unified Data Interface)</h3>
+<p>Agent Lightning 定义了一个统一的数据接口，将 Agent 执行过程中的数据标准化为 RL 训练可用的格式。</p>
+<p><strong>核心概念</strong>：</p>
+<ul>
+<li><strong>State</strong>: Agent 执行的快照，包括程序计数器、变量值、调用栈等。形式化为：</li>
+</ul>
+<div class="math-block">$$\texttt{state}_{t}(x,k) = \left\{ \texttt{variable}_{i}^{x,k,t} \right\}_{i=1}^{V}$$</div>
+
+<ul>
+<li>
+<p><strong>Semantic Variable</strong>: 被组件使用或修改的关键变量，代表关键语义（如程序意图）。不关注循环计数器等辅助变量，只关注语义层面的变化。</p>
+</li>
+<li>
+<p><strong>Component Invocation (Call)</strong>: 语义变量的变化通过组件调用发生。第 <span class="math-inline">$k$</span> 次执行任务 <span class="math-inline">$x$</span> 的所有调用序列为：</p>
+</li>
+</ul>
+<div class="math-block">$$\texttt{execution}(x,k) = \left\{ \texttt{call}_{i}^{x,k} \right\}_{i=1}^{N}$$</div>
+
+<p>其中每个 call 定义为：</p>
+<div class="math-block">$$\texttt{call}_{i}^{x,k} = (\texttt{meta}_{i}^{x,k}, \texttt{input}_{i}^{x,k}, \texttt{output}_{i}^{x,k}), \quad \text{with} ~ \texttt{output}_{i}^{x,k} = C_{i}(\texttt{input}_{i}^{x,k})$$</div>
+
+<p>这里 <span class="math-inline">$C_{i} \in \mathcal{M} \cup \mathcal{T}$</span>，即组件可以是 LLM (<span class="math-inline">$\mathcal{M}$</span>) 或工具 (<span class="math-inline">$\mathcal{T}$</span>)。</p>
+<ul>
+<li><strong>Reward 标注</strong>: 为每个 call 分配 reward <span class="math-inline">$r_i \in \mathbb{R}$</span>，形成带 reward 的执行序列：</li>
+</ul>
+<div class="math-block">$$\texttt{execution}^{R}(x,k) = \left\{ (\texttt{call}_{i}^{x,k}, r_{i}^{x,k}) \right\}_{i=1}^{N}$$</div>
+
+<p><img alt="Data Interface" src="https://arxiv.org/html/2508.03680v1/figures/data_interface.png" />
+<em>Figure 2: 统一数据接口示意图。左侧展示 Agent 执行流程中语义变量的更新；右侧展示对应的 trajectory 数据收集。</em></p>
+<h3>3.2 Agent 中的 Markov Decision Process</h3>
+<p>Agent Lightning 将 Agent 执行建模为 <span class="wikilink">Partially Observable Markov Decision Process</span> (POMDP)：</p>
+<div class="math-block">$$\mathcal{M} = (\mathcal{S}, \mathcal{O}, \mathcal{A}, \mathcal{P}, \mathcal{R})$$</div>
+
+<p>各元素含义：</p>
+<table>
+<thead>
+<tr>
+<th>符号</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><span class="math-inline">$\mathcal{S}$</span></td>
+<td>状态空间，对应所有可能的 <span class="math-inline">$\texttt{state}_{t}$</span></td>
+</tr>
+<tr>
+<td><span class="math-inline">$\mathcal{O}$</span></td>
+<td>观测空间，对应 policy LLM 的所有可能输入 <span class="math-inline">$\texttt{input}_{t}$</span></td>
+</tr>
+<tr>
+<td><span class="math-inline">$\mathcal{A}$</span></td>
+<td>动作空间，单次 LLM 调用生成的完整 token 序列 <span class="math-inline">$\texttt{output}_{t}$</span></td>
+</tr>
+<tr>
+<td><span class="math-inline">$\mathcal{T}(s&#x27;</td>
+<td>s,a)$</span></td>
+</tr>
+<tr>
+<td><span class="math-inline">$\mathcal{R}(s,a)$</span></td>
+<td>奖励函数</td>
+</tr>
+</tbody>
+</table>
+<p><strong>关键设计</strong>: 将 LLM 的一次完整生成（而非单个 token）作为一个 action，这是与传统 token-level RL 的重要区别。策略模型的目标是最大化累积回报：</p>
+<div class="math-block">$$R = \sum_{t=1}^{T} r_t$$</div>
+
+<h3>3.3 LightningRL: 层次化 RL 算法</h3>
+<p>LightningRL 是论文提出的核心算法，解决了如何将 Agent 的多轮交互数据用于 RL 训练的问题。</p>
+<p><strong>单轮 RL 回顾</strong>：现有方法（如 <span class="wikilink">GRPO</span>、<span class="wikilink">REINFORCE++</span>、<span class="wikilink">PPO</span>）主要处理单次 LLM 调用：给定任务 <span class="math-inline">$x$</span>，LLM 生成 response <span class="math-inline">$\texttt{output} = (y_1, \ldots, y_N)$</span>，获得 reward <span class="math-inline">$r(x, \texttt{output}, \hat{y})$</span>。通用训练目标为：</p>
+<div class="math-block">$$\mathcal{L}(\theta) = -\mathbb{E}_{x \sim \mathcal{X}, \texttt{output} \sim \pi_{\theta}(\cdot|x)} \left[ \sum_{j=1}^{N} \log \pi_{\theta}(y_j | x, y_{&lt;j}) \cdot A_j \right]$$</div>
+
+<p>其中 <span class="math-inline">$A_j$</span> 是 token 级别的 advantage 估计。</p>
+<p><strong>多轮 Agent 的挑战</strong>：</p>
+<p>现有方法将多轮对话拼接为单个长序列并加 mask，存在以下问题：
+- 仅适用于简单的顺序工作流
+- 无法处理多 Agent、动态工作流等复杂场景
+- 序列过长影响训练效率</p>
+<p><strong>LightningRL 的解决方案</strong>：</p>
+<p>LightningRL 采用<strong>层次化</strong>方法，将 trajectory 分解为独立的 transition：</p>
+<div class="math-block">$$\texttt{execution}^{RL}(x,k) = \left\{ (\texttt{input}_{t}^{x,k}, \texttt{output}_{t}^{x,k}, r_{t}^{x,k}) \right\}_{t=1}^{T}$$</div>
+
+<p>包含一个 <strong>Credit Assignment Module</strong>，将 trajectory 级别的 return 分配到每次 LLM 调用的 reward。这使得每个 transition 可以独立用于 RL 优化，与现有的单轮 RL 算法（如 GRPO）无缝集成。</p>
+<p><img alt="Algorithm" src="https://arxiv.org/html/2508.03680v1/figures/algorithm.png" />
+<em>Figure 3: LightningRL 算法示意。(a) 单轮 GRPO；(b) 现有多轮 GRPO（拼接+mask）；(c) LightningRL 将 trajectory 分解为独立 transition 进行训练。</em></p>
+<p><strong>Automatic Intermediate Rewarding (AIR)</strong>：AIR 机制可以基于系统监控信号（如工具调用返回状态）自动为中间步骤分配 reward，缓解 Agent 训练中的 <span class="wikilink">Sparse Reward</span> 问题。</p>
+<h3>3.4 系统设计: Training-Agent Disaggregation 架构</h3>
+<p>Agent Lightning 的系统架构实现了训练与 Agent 执行的完全分离（TA Disaggregation）。</p>
+<p><img alt="Architecture" src="https://arxiv.org/html/2508.03680v1/figures/agent_lightning_architecture_v3.png" />
+<em>Figure 4: Training-Agent Disaggregation 架构。</em></p>
+<p><strong>两大组件</strong>：</p>
+<ol>
+<li>
+<p><strong>Lightning Server</strong>: 集成 RL 框架（如 <span class="wikilink">VeRL</span>），管理训练过程和 LLM 优化，对外暴露 OpenAI-like API。Server 是 <strong>Agent-agnostic</strong> 的，不关心具体的 Agent 逻辑。</p>
+</li>
+<li>
+<p><strong>Lightning Client</strong>: 封装 Agent 运行时（agent runtime），包含两个功能模块：</p>
+</li>
+<li>与 Server 通信，负责数据传输</li>
+<li>运行 Agent 并进行数据收集</li>
+</ol>
+<p><strong>关键优势</strong>：</p>
+<ul>
+<li><strong>Agent-agnostic 训练</strong>: Server 只关心 LLM 优化和硬件资源管理</li>
+<li><strong>Trainer-agnostic 执行</strong>: Client 端 Agent 不依赖训练框架的实现细节</li>
+<li><strong>利用 Observability 框架</strong>: 将 <span class="wikilink">OpenTelemetry</span> 等可观测性框架引入训练流程，实现标准化的 trajectory 收集</li>
+<li><strong>零代码修改</strong>: 支持 LangChain、OpenAI Agents SDK、AutoGen 等主流框架开发的 Agent</li>
+</ul>
+<hr />
+<h2>实验结果</h2>
+<p>实验在三个不同任务上验证了 Agent Lightning 的有效性，每个任务使用不同的 Agent 框架实现：</p>
+<h3>Task 1: Text-to-SQL (LangChain)</h3>
+<ul>
+<li><strong>数据集</strong>: Spider（10,000+ 问题，200 数据库，138 领域）</li>
+<li><strong>基座模型</strong>: Llama-3.2-3B-Instruct</li>
+<li><strong>Agent 设计</strong>: 3 个 Agent 的多 Agent 系统</li>
+<li>SQL Writer Agent: 生成 SQL 查询</li>
+<li>Checking Agent: 评估查询正确性</li>
+<li>Re-writing Agent: 根据反馈修正查询或生成答案</li>
+<li><strong>Reward</strong>: 最终答案是否正确</li>
+</ul>
+<p><img alt="Text-to-SQL Results" src="https://arxiv.org/html/2508.03680v1/figures/train_spider.png" />
+<em>Figure 5: Text-to-SQL 任务的 reward 曲线，展示稳定的训练提升。</em></p>
+<h3>Task 2: Retrieval-Augmented Generation (OpenAI Agents SDK)</h3>
+<ul>
+<li><strong>数据集</strong>: MuSiQue（多跳问答基准，要求真正的组合推理）</li>
+<li><strong>Agent 设计</strong>: 单 LLM 生成查询 -&gt; 检索 -&gt; 决定是否精炼查询或生成答案</li>
+<li><strong>Reward</strong>: 格式分 + 正确性分的加权组合</li>
+</ul>
+<div class="math-block">$$R = 0.9 \times R_{\text{correctness}} + 0.1 \times R_{\text{format}}$$</div>
+
+<p>其中 <span class="math-inline">$R_{\text{correctness}}$</span> 采用 word-level F1 score。</p>
+<p><img alt="RAG Results" src="https://arxiv.org/html/2508.03680v1/figures/train_rag_llama.png" />
+<em>Figure 6: RAG 任务的 reward 曲线。</em></p>
+<h3>Task 3: Math QA with Tool Usage (AutoGen)</h3>
+<ul>
+<li><strong>数据集</strong>: Calc-X（需要推理和精确计算的数学问题）</li>
+<li><strong>基座模型</strong>: Llama-3.2-3B-Instruct</li>
+<li><strong>Agent 设计</strong>: 单 LLM 调用计算器工具解决数学问题</li>
+<li><strong>Reward</strong>: 最终答案是否正确</li>
+</ul>
+<p><img alt="Calculator Results" src="https://arxiv.org/html/2508.03680v1/figures/train_calc.png" />
+<em>Figure 7: Math QA with Tool Usage 任务的 reward 曲线。</em></p>
+<p>三个实验统一表明：Agent Lightning 能够在不同 Agent 场景中实现<strong>稳定且持续的性能提升</strong>。</p>
+<hr />
+<h2>核心贡献</h2>
+<ol>
+<li>
+<p><strong>首个完全解耦的 Agent RL 训练框架</strong>: Agent Lightning 是第一个实现 Agent 执行与 RL 训练完全分离的框架，支持任意 AI Agent 的 RL 训练，几乎零代码修改。</p>
+</li>
+<li>
+<p><strong>统一数据接口与 MDP 建模</strong>: 通过将 Agent 执行建模为 POMDP，定义了通用的数据接口，抽象了不同 Agent 的执行逻辑差异。</p>
+</li>
+<li>
+<p><strong>LightningRL 层次化算法</strong>: 提出了基于 transition 分解的层次化 RL 方法，配合 Credit Assignment Module，支持多 Agent、动态工作流等复杂交互逻辑。</p>
+</li>
+<li>
+<p><strong>Training-Agent Disaggregation 架构</strong>: 通过 Server/Client 分离设计，实现了训练框架与 Agent 框架的双向无关性，并引入可观测性框架提升可扩展性。</p>
+</li>
+<li>
+<p><strong>跨框架验证</strong>: 在 LangChain、OpenAI Agents SDK、AutoGen 三个主流框架上验证了通用性。</p>
+</li>
+</ol>
+<hr />
+<h2>局限性与思考</h2>
+<h3>局限性</h3>
+<ul>
+<li><strong>实验规模有限</strong>: 仅在 3B 模型上验证，更大规模模型的效果尚未探索</li>
+<li><strong>任务类型覆盖</strong>: 虽然涵盖了 text-to-SQL、RAG、math tool-use，但未涉及 GUI 交互、长期规划等更复杂的 Agent 场景</li>
+<li><strong>Credit Assignment</strong>: 论文提出了 credit assignment module，但具体的分配策略如何影响训练效果缺乏深入分析</li>
+<li><strong>与 concatenation 方法的定量对比</strong>: Discussion 中定性分析了 transition-based 相比 concatenation-based 的优势，但缺少直接的定量 ablation</li>
+</ul>
+<h3>个人思考</h3>
+<ul>
+<li>Agent Lightning 的<strong>解耦设计</strong>是其最大亮点。将 Agent 执行视为黑盒、仅通过标准化接口收集数据的思路，极大降低了 RL 训练的工程门槛</li>
+<li><strong>Observability 框架</strong>（OpenTelemetry）的引入很有前瞻性，将生产环境的监控基础设施复用到训练数据收集中</li>
+<li>与 <span class="wikilink">RAGEN</span>、<span class="wikilink">Search-R1</span>、<span class="wikilink">Trinity-RFT</span> 等 concatenation-based 方法的对比是后续工作的重要方向</li>
+<li>在更复杂的 Agent 场景（如 multi-agent debate、code generation pipeline）中的效果值得期待</li>
+</ul>
+<hr />
+<h2>相关工作</h2>
+<ul>
+<li><strong>RL for LLM 推理</strong>: <span class="wikilink">DeepSeek-R1</span>, <span class="wikilink">Kimi k1.5</span>, <span class="wikilink">GRPO</span>, <span class="wikilink">PPO</span>, <span class="wikilink">REINFORCE++</span></li>
+<li><strong>Agent RL 训练</strong>: <span class="wikilink">RAGEN</span>, <span class="wikilink">Trinity-RFT</span>, <span class="wikilink">rLLM</span>, <span class="wikilink">Search-R1</span>, <span class="wikilink">DigiRL</span></li>
+<li><strong>Agent 框架</strong>: <span class="wikilink">LangChain</span>, <span class="wikilink">AutoGen</span>, <span class="wikilink">OpenAI Agents SDK</span></li>
+<li><strong>RL 训练框架</strong>: <span class="wikilink">VeRL</span></li>
+<li><strong>可观测性</strong>: <span class="wikilink">OpenTelemetry</span></li>
+<li><strong>评估基准</strong>: Spider (text-to-SQL), MuSiQue (multi-hop QA), Calc-X (math tool-use)</li>
+</ul></div></details>
+
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2508.03680v1/figures/overview.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2508.03680v1/figures/data_interface.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2508.03680v1/figures/algorithm.png" /></div>
+<ul>
+<li><strong>锐评</strong>: 今天唯一有工程硬骨头的一篇。核心贡献是把 <span class="wikilink">RL</span> 训练和 agent 执行<strong>完全解耦</strong>——不再靠 sequence concatenation + masking 那套脆弱的 hack，而是把任意 agent（<span class="wikilink">LangChain</span>/<span class="wikilink">AutoGen</span>/自研）当黑盒，只在轨迹层面喂 <span class="wikilink">LightningRL</span>。这意味着你不用重写 agent 就能上 RL，工程价值实打实。质疑点：完全解耦的代价是丢失了 token 级的细粒度信用分配，长程任务里稀疏奖励怎么办？摘要没说。142 赞不是白来的。🔥</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2508.03680" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🤖 Agent 训练与框架"><h3>2. AgentScope 1.0: A Developer-Centric Framework for Building Agentic</h3>
+<p>Applications
+- <strong>作者</strong>: Dawei Gao, Zitao Li, Yuexiang Xie, Weirui Kuang, Liuyi Yao
+- <strong>机构</strong>: Alibaba Group, Affiliation:
+- <strong>链接</strong>: <a href="https://arxiv.org/abs/2508.16279">arXiv</a> | <a href="https://arxiv.org/pdf/2508.16279">PDF</a>
+- <strong>来源</strong>: 🔥 HF Trending，⬆️ 68</p>
+<details class="paper-note"><summary>📒 精读笔记: AgentScope</summary><div class="note-body"><h1>AgentScope 1.0</h1>
+<h2>📋 基本信息</h2>
+<ul>
+<li><strong>作者</strong>: Dawei Gao, Zitao Li, Yuexiang Xie 等</li>
+<li><strong>机构</strong>: Alibaba Group</li>
+<li><strong>链接</strong>: <a href="https://arxiv.org/abs/2508.16279">arXiv</a> | <a href="https://arxiv.org/pdf/2508.16279">PDF</a></li>
+</ul>
+<h2>🎯 研究动机与问题</h2>
+<p>现有 multi-agent 框架（如 <span class="wikilink">LangChain</span>, <span class="wikilink">AutoGen</span>）在以下方面存在不足：
+1. <strong>工具集成侵入性强</strong>：需要大量修改已有代码
+2. <strong>可观测性差</strong>：大规模部署时难以监控和调试
+3. <strong>长期记忆缺失</strong>：agent 无法保持跨会话的上下文
+4. <strong>分布式支持弱</strong>：难以扩展到大规模 multi-agent 场景</p>
+<h2>🔧 方法详解</h2>
+<h3>核心架构</h3>
+<p>AgentScope 1.0 的核心抽象：</p>
+<ol>
+<li><strong><span class="wikilink">MsgHub</span>（消息总线）</strong>：agent 间消息传递的统一接口，支持广播和点对点通信</li>
+<li><strong>StateModule（状态管理）</strong>：统一管理 agent 状态，支持序列化和恢复</li>
+<li><strong>Non-Invasive Monitoring</strong>：基于 <span class="wikilink">OpenTelemetry</span> 的无侵入式监控</li>
+</ol>
+<h3>MCP 原生支持</h3>
+<p>原生集成 <span class="wikilink">MCP</span>（Model Context Protocol）协议：
+- Agent 可通过 MCP 协议访问外部工具和数据源
+- 工具集成不需要修改 agent 代码（non-invasive）
+- 支持 MCP server 的自动发现和注册</p>
+<h3>分层记忆系统</h3>
+<ul>
+<li><strong><span class="wikilink">InMemoryMemory</span></strong>：短期工作记忆，存储当前会话上下文</li>
+<li><strong><span class="wikilink">LongTermMemoryBase</span></strong>：长期记忆，支持跨会话信息持久化</li>
+<li>记忆检索支持语义搜索和结构化查询</li>
+</ul>
+<h3>ReAct Agent 内置实现</h3>
+<p>内置 <span class="wikilink">ReAct</span> 范式的 agent 实现：
+- Thought → Action → Observation 循环
+- 支持自定义 tool 注册
+- 内置错误处理和重试机制</p>
+<h3>分布式调度</h3>
+<ul>
+<li>基于 <span class="wikilink">gRPC</span> 的分布式通信</li>
+<li>支持 agent 在多节点间调度</li>
+<li>MsgHub 支持分布式消息广播</li>
+</ul>
+<h2>📊 实验结果</h2>
+<table>
+<thead>
+<tr>
+<th>框架</th>
+<th>MCP支持</th>
+<th>可观测性</th>
+<th>长期记忆</th>
+<th>分布式</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>LangChain</td>
+<td>部分</td>
+<td>弱</td>
+<td>第三方</td>
+<td>弱</td>
+</tr>
+<tr>
+<td>AutoGen</td>
+<td>无</td>
+<td>弱</td>
+<td>无</td>
+<td>部分</td>
+</tr>
+<tr>
+<td>CAMEL</td>
+<td>无</td>
+<td>无</td>
+<td>无</td>
+<td>无</td>
+</tr>
+<tr>
+<td><strong>AgentScope 1.0</strong></td>
+<td><strong>原生</strong></td>
+<td><strong>OpenTelemetry</strong></td>
+<td><strong>内置</strong></td>
+<td><strong>原生</strong></td>
+</tr>
+</tbody>
+</table>
+<p>61 upvotes 说明社区认可度较高。</p>
+<h2>💡 核心贡献</h2>
+<ol>
+<li><strong>MCP 原生集成</strong>：首个原生支持 MCP 协议的 multi-agent 框架</li>
+<li><strong>OpenTelemetry 可观测性</strong>：无侵入式监控，适合生产环境</li>
+<li><strong>分层记忆系统</strong>：短期 + 长期记忆，支持跨会话持久化</li>
+<li><strong>大规模部署经验</strong>：阿里内部大规模 multi-agent 部署验证</li>
+</ol>
+<h2>🤔 局限性与思考</h2>
+<ol>
+<li><strong>框架评估困难</strong>：benchmark 上的数字不代表实际开发体验</li>
+<li><strong>与 LangChain 对比不够 fair</strong>：只挑了对方弱的场景</li>
+<li><strong>学习曲线</strong>：抽象层较多，新手上手成本可能较高</li>
+<li><strong>MCP 生态尚未成熟</strong>：MCP 协议本身还在快速迭代</li>
+</ol>
+<h2>📚 相关工作</h2>
+<ul>
+<li><span class="wikilink">MCP</span>: Model Context Protocol，agent 工具集成标准</li>
+<li><span class="wikilink">OpenTelemetry</span>: 可观测性标准</li>
+<li><span class="wikilink">ReAct</span>: 推理+行动范式</li>
+<li><span class="wikilink">LangChain</span>: 竞品框架</li>
+<li><span class="wikilink">AutoGen</span>: 微软 multi-agent 框架</li>
+</ul></div></details>
+
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2508.16279v1/figures/agentscope_v1_0822.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2508.16279v1/figures/agent.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2508.16279v1/deep_research.png" /></div>
+<ul>
+<li><strong>锐评</strong>: 阿里的 agent 框架大版本更新，主打 <span class="wikilink">ReAct</span> + <span class="wikilink">MCP</span> + 完整的 message/model/memory/tool 四件套，还接了 <span class="wikilink">OpenTelemetry</span> 做可观测性——这点比很多只顾发 demo 的框架强。开发者中心的定位很清楚。但说白了框架内卷到 1.0 这个阶段，护城河已经不是技术而是生态和 API 手感了。已有笔记，回去补 1.0 的 diff 就行。👀</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2508.16279" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🤖 Agent 训练与框架"><h3>3. Very Large-Scale Multi-Agent Simulation in AgentScope</h3>
+<ul>
+<li><strong>作者</strong>: Xuchen Pan, Dawei Gao, Yuexiang Xie, Yushuo Chen, Zhewei Wei, Yaliang Li, Bolin Ding, Ji-Rong Wen, Jingren Zhou</li>
+<li><strong>机构</strong>: Affiliation:, Affiliation: Alibaba Group, Affiliation: Renmin University of China</li>
+<li><strong>链接</strong>: <a href="https://arxiv.org/abs/2407.17789">arXiv</a> | <a href="https://arxiv.org/pdf/2407.17789">PDF</a></li>
+<li><strong>来源</strong>: 🔥 HF Trending，⬆️ 46</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2407.17789v2/env.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: 同一批 AgentScope 作者做的超大规模多智能体仿真，主打 <span class="wikilink">Large-Scale</span> 场景下的可扩展性和效率，用 <span class="wikilink">Agent-Manager</span> 做集中调度，解决现有平台在百万级 agent 仿真时的扩展性瓶颈和管理开销。</li>
+<li><strong>对比方法/Baselines</strong>: 对比 <span class="wikilink">Significant-Gravitas</span>（AutoGPT）等单/多 agent 平台，<span class="wikilink">OpenAI</span> 系工具链。</li>
+<li><strong>借鉴意义</strong>: 如果你要跑社会仿真、市场博弈、多 agent 对抗（比如广告竞价环境模拟），这套基础设施能省不少工程力气。</li>
+<li><strong>锐评</strong>: 和 AgentScope 1.0 同源，属于把仿真规模拉到极致的工程论文。46 赞说明它是刚需但不性感。真正的价值在『很多 agent 同时跑而不崩』这件事上，可惜摘要对 diversity 和 efficiency 的量化只给了口号。适合做多 agent 环境的人当参考实现。👀</li>
+</ul>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2407.17789" target="_blank" rel="noopener">📖 AI 精读</a></div><h2>⚙️ LLM 推理与 Serving</h2><div class="paper-card" data-topic="⚙️ LLM 推理与 Serving"><h3>4. Efficient Memory Management for Large Language Model Serving with</h3>
+<p>PagedAttention
+- <strong>作者</strong>: Kwon, Woosuk, Li, Zhuohan, Zhuang, Siyuan, Sheng, Ying, Zheng, Lianmin, Yu, Cody Hao, Gonzalez, Joseph E., Zhang, Hao, Stoica, Ion
+- <strong>机构</strong>: Affiliation: , Affiliation: 1{}^{\text{1}}UC Berkeley  2{}^{\text{2}}Stanford University  3{}^{\text{3}}Independent Researcher  4{}^{\text{4}}UC San Diego
+- <strong>链接</strong>: <a href="https://arxiv.org/abs/2309.06180">arXiv</a> | <a href="https://arxiv.org/pdf/2309.06180">PDF</a>
+- <strong>来源</strong>: 🔥 HF Trending，⬆️ 68</p>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2309.06180v1/system-overview.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: vLLM 的地基论文。核心是 <span class="wikilink">PagedAttention</span>：借鉴操作系统虚拟内存分页的思想，把 <span class="wikilink">KV</span> cache 切成非连续的 block 管理，消灭内存碎片和冗余拷贝，从而把 batch size 拉满。</li>
+<li><strong>对比方法/Baselines</strong>: 对比 <span class="wikilink">FasterTransformer</span>、<span class="wikilink">OPT</span> 原生 serving，用 <span class="wikilink">ShareGPT</span> 做负载。</li>
+<li><strong>借鉴意义</strong>: 做任何 LLM 推理部署、成本优化、吞吐调优都绕不开这篇。广告/推荐场景要在线跑大模型，这是必修课。</li>
+<li><strong>锐评</strong>: 2023 年的老论文了，今天能上 trending 纯属经典重现。但『经典』二字它配得上——PagedAttention 是过去两年 LLM serving 的事实标准，vLLM 的整个帝国建在这个抽象上。质疑点其实历史已经回答了：分页带来的间接寻址开销在实践中被吞吐收益完全碾压。想搞明白 KV cache 为什么这么设计，从这读起。🔥
+  PagedAttention`</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2309.06180" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="⚙️ LLM 推理与 Serving"><h3>5. FreeToken: Efficient Edge-Native MoE Serving with Bandwidth-Adaptive Execution</h3>
+<ul>
+<li><strong>作者</strong>: Shuo Yang, Xiaoze Fan, Melissa Pan, Haocheng Xi, Zhe Wang, Shanlin Sun, Kurt Keutzer, Song Han, Matei Zaharia, Chenfeng Xu†\dagger, Ion Stoica†\dagger</li>
+<li><strong>机构</strong>: Affiliation:, \correspondenceShuo Yang at andy_yang@berkeley.edu, Chenfeng Xu at xuchenfeng@utexas.edu</li>
+<li><strong>链接</strong>: <a href="https://arxiv.org/abs/2608.16157">arXiv</a> | <a href="https://arxiv.org/pdf/2608.16157">PDF</a></li>
+<li>
+<p><strong>来源</strong>: 🔥 HF Trending，⬆️ 90</p>
+</li>
+<li>
+<p><strong>核心方法</strong>: Stoica 组出品的边缘原生 MoE serving 系统。核心洞察：边缘设备（笔记本）上 <span class="wikilink">VRAM</span> 是被浏览器、游戏、桌面合成器动态抢占的，不像数据中心独占 GPU。FreeToken 做<strong>带宽自适应执行</strong>，动态调整专家驻留（expert residency）和 CPU-GPU 分工，用类 <span class="wikilink">LRU</span> 策略管理专家换入换出。</p>
+</li>
+<li><strong>对比方法/Baselines</strong>: 跑 <span class="wikilink">DeepSeek</span>、<span class="wikilink">GLM-5</span> 这类开源 MoE，对比数据中心假设下的 serving 引擎。</li>
+<li><strong>借鉴意义</strong>: 端侧大模型是趋势，如果你要在用户设备上跑 MoE（隐私推荐、本地 agent），这套弹性调度直接能用。</li>
+<li><strong>锐评</strong>: 选题够刁——所有人都在卷数据中心 serving，它偏去啃『GPU 被 Chrome 抢显存』这种真实到扎心的边缘场景。90 赞说明痛点戳中了。质疑点：带宽自适应的切换本身有延迟抖动，交互式应用的 P99 会不会被专家换入拖垮？摘要没给尾延迟数据。但方向对。👀</li>
+</ul>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2608.16157" target="_blank" rel="noopener">📖 AI 精读</a></div><h2>🧠 Agent 学习环境</h2><div class="paper-card" data-topic="🧠 Agent 学习环境"><h3>6. EnvHarness: Awakening Static Worlds for Agent Learning</h3>
+<ul>
+<li><strong>作者</strong>: Chengsong Huang, Zifeng Wang, Rujun Han, Jun Yan, Yanfei Chen, Zoey CuiZhu, Ke Jiang, Peng Xia, Han Yu, Yufan Zhuang, Yifei Ming, Jiaqi Pan, Bhavana Dalvi Mishra, Jiaxin Huang, Burak Gokturk, Tomas Pfister, Chen-Yu Lee</li>
+<li><strong>机构</strong>: Affiliation:, Affiliation: Washington University in St. Louis, Affiliation: Google Cloud AI Research, Affiliation: University of North Carolina at Chapel Hill, Affiliation: Google Cloud</li>
+<li><strong>链接</strong>: <a href="https://arxiv.org/abs/2608.19880">arXiv</a> | <a href="https://arxiv.org/pdf/2608.19880">PDF</a></li>
+<li><strong>来源</strong>: 🔥 HF Trending，⬆️ 259</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2608.19880v1/figures/Harness.jpg" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2608.19880v1/components.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: 把<strong>静态数据集/世界唤醒成可交互训练环境</strong>。用 <span class="wikilink">EnvRigger</span> 自动把静态语料（如 <span class="wikilink">WebArena</span>、<span class="wikilink">SWE</span> 任务）改造成 agent 能反复交互、暴露自身弱点的动态环境，靠 <span class="wikilink">GenEnv</span>/<span class="wikilink">ActionableEnv</span> 生成机制摆脱对昂贵人工验证器的依赖。</li>
+<li><strong>对比方法/Baselines</strong>: 对比现有环境生成方法（依赖 domain-specific pipeline + 不可靠 verifier），<span class="wikilink">WebArena</span> 等静态 benchmark。</li>
+<li><strong>借鉴意义</strong>: agent 训练最大的瓶颈就是环境。这套自动造环境的思路，对做 RL agent、自演化 agent 的人是稀缺资源。</li>
+<li><strong>锐评</strong>: 259 赞今日最高，方向确实对——静态环境是 agent 进步的天花板，『环境跟不上 agent 成长』是真问题。EnvHarness 想做的是让环境随 agent 变强而变难。质疑点：自动生成环境的<strong>质量和可信度</strong>才是命门，摘要说摆脱了『不可靠 verifier』，但没说新验证机制凭什么更可靠——这里容易变成左脚踩右脚。看正文验证。👀</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2608.19880" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🧠 Agent 学习环境"><h3>7. LongHorizon-Harness: Advancing Long-Horizon Agents for Real-World Tasks</h3>
+<ul>
+<li><strong>作者</strong>: Ziyu Ma, Hailang Huang, Shun Zou, Yong Wang, Shidong Yang, Yiming Hu, Fei Wei, Xiangxiang Chu</li>
+<li><strong>机构</strong>: [ ]DreamX Team, Alibaba Group\affiliationformat</li>
+<li><strong>链接</strong>: <a href="https://arxiv.org/abs/2608.01964">arXiv</a> | <a href="https://arxiv.org/pdf/2608.01964">PDF</a></li>
+<li><strong>来源</strong>: 🔥 HF Trending，⬆️ 181</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2608.01964v1/DSK_en.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2608.01964v1/pic/benchmark_figure.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2608.01964v1/SPA_en.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: 长程 agent harness，把任务执行、任务状态、完成度评估从<strong>不断膨胀的 context 里剥离出来</strong>独立管理，避免错误的自我评估污染后续决策。在 <span class="wikilink">Terminal-Bench</span>、<span class="wikilink">WeaveBench</span> 上测。</li>
+<li><strong>对比方法/Baselines</strong>: 对比现有把状态塞进 context 的 agent harness，<span class="wikilink">OpenClaw</span> 等。</li>
+<li><strong>借鉴意义</strong>: 长程 agent 的『上下文腐烂』是真痛点，这套外置状态管理对做长任务 agent 有直接参考价值。</li>
+<li><strong>锐评</strong>: 181 赞。痛点抓得准——长程任务里 agent 会『自我欺骗』（错误自评估传播到后面），这是所有做长 horizon 的人都撞过的墙。把状态外置是合理解法。但这类『harness 工程』论文的通病是：贡献很实用，新意很有限，本质是工程 best practice 的封装。值得抄作业，不值得当理论突破。👀</li>
+</ul>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2608.01964" target="_blank" rel="noopener">📖 AI 精读</a></div><h2>🧠 记忆系统</h2><div class="paper-card" data-topic="🧠 记忆系统"><h3>8. EverMemOS: A Self-Organizing Memory Operating System for Structured Long-Horizon Reasoning</h3>
+<ul>
+<li><strong>作者</strong>: Chuanrui Hu, Xingze Gao11footnotemark:, Zuyi Zhou, Dannong Xu, Yi Bai, Xintong Li, Hui Zhang, Tong Li, Chong Zhang, Lidong Bing, Yafeng Deng22footnotemark:</li>
+<li><strong>机构</strong>: Email: , Affiliation: </li>
+<li><strong>链接</strong>: <a href="https://arxiv.org/abs/2601.02163">arXiv</a> | <a href="https://arxiv.org/pdf/2601.02163">PDF</a></li>
+<li><strong>来源</strong>: 🔥 HF Trending，⬆️ 15</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2601.02163v2/main.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: 自组织记忆操作系统。用 <span class="wikilink">MemCell</span> 作为记忆最小单元，能自动整合演化中的用户状态、解决记忆冲突，而不是像多数系统那样只存孤立记录再检索碎片。在 <span class="wikilink">LoCoMo</span>、<span class="wikilink">LongMemEval</span> 上测长程一致性。</li>
+<li><strong>对比方法/Baselines</strong>: 对比 <span class="wikilink">MemOS</span>、朴素 RAG 式记忆拼盘。</li>
+<li><strong>借鉴意义</strong>: 长程对话/长期 agent 要保持用户画像一致性，这套自组织+冲突消解比堆检索强。做个性化推荐 agent 可借鉴。</li>
+<li><strong>锐评</strong>: 名字碰瓷 MemOS，但 MemCell 的抽象确实比『存 embedding 再 top-k 检索』那套高级——它承认了记忆是会<strong>冲突和演化</strong>的。只有 15 赞属于被埋没。质疑点：自组织的冲突消解是靠 LLM 判断还是规则？如果靠 LLM，成本和幻觉风险怎么控？摘要没交代。但抽象值得偷师。👀</li>
+</ul>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2601.02163" target="_blank" rel="noopener">📖 AI 精读</a></div><h2>🎨 多模态生成</h2><div class="paper-card" data-topic="🎨 多模态生成"><h3>9. SenseNova-U1: Unifying Multimodal Understanding and Generation with NEO-unify Architecture</h3>
+<ul>
+<li><strong>作者</strong>: Diao, Haiwen, Wu, Penghao, Deng, Hanming, Wang, Jiahao, Bai, Shihao, Wu, Silei, Fan, Weichen, Ye, Wenjie, Tong, Wenwen, Fan, Xiangyu, Li, Yan, Wang, Yubo, Cao, Zhijie, Lin, Zhiqian, Yang, Zhitao, Cai, Zhongang, Niu, Yuwei, Zhu, Yue, Liu, Bo, Lv, Chengguang, Yu, Haojia, Xie, Haozhe, Wang, Hongli, Fan, Jianan, Li, Jiaqi, Lu, Jiefan, Ni, Jingcheng, Xu, Junxiang, Liang, Kaihuan, Shi, Lianqiang, Dai, Linjun, Wang, Linyan, Qian, Oscar, Gao, Peng, Liu, Pengfei, Sun, Qingping, Shen, Rui, Wang, Ruisi, Ma, Shengnan, Yang, Shuang, Xie, Siyi, Li, Siying, Zhong, Tianbo, Kong, Xiangli, Shi, Xuanke, Gao, Yang, Yao, Yongqiang, Wang, Yves, Bai, Zhengqi, Lin, Zhengyu, Yin, Zixin, Sun, Wenxiu, Gong, Ruihao, Wang, Quan, Lu, Lewei, Yang, Lei, Liu, Ziwei, Lin, Dahua</li>
+<li><strong>链接</strong>: <a href="https://arxiv.org/abs/2605.12500">arXiv</a> | <a href="https://arxiv.org/pdf/2605.12500">PDF</a></li>
+<li><strong>来源</strong>: 🔥 HF Trending，⬆️ 198</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2605.12500v1/teaser_overview.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2605.12500v1/lightllm_x2v.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2605.12500v1/midtrain_pipeline.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: 商汤的多模态旗舰，<span class="wikilink">NEO-unify</span> 架构统一理解与生成。核心论点：理解和生成被当成两个问题是<strong>结构性缺陷</strong>而非工程妥协，用 <span class="wikilink">MoT</span>（Mixture-of-Transformers）在一个架构里同时做，避免级联管线和表征空间错位。</li>
+<li><strong>对比方法/Baselines</strong>: 对比 <span class="wikilink">BAGEL</span>、<span class="wikilink">OmniGen2</span>、<span class="wikilink">FLUX</span>、<span class="wikilink">GPT</span> 系。</li>
+<li><strong>借鉴意义</strong>: 统一多模态是大势，如果你做图文生成、多模态创意广告素材，这类原生统一架构值得跟踪。</li>
+<li><strong>锐评</strong>: 198 赞的商汤 flagship，立论够狠——直接说『理解vs生成分家』是原罪。MoT 路线和 BAGEL 撞车但敢正面刚。质疑点：『统一』在论文里永远好看，落地时单一架构往往在两端都不如专用模型顶尖，摘要没给和专用 SOTA 的正面对比数。旗舰味重，先看 benchmark 再信。👀</li>
+</ul>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2605.12500" target="_blank" rel="noopener">📖 AI 精读</a></div><h2>🛡️ Agent 安全</h2><div class="paper-card" data-topic="🛡️ Agent 安全"><h3>10. Securing the AI Agent: A Unified Framework for Multi-Layer Agent Red Teaming</h3>
+<ul>
+<li><strong>作者</strong>: Tencent Zhuque Lab</li>
+<li><strong>机构</strong>: Tencent Zhuque Lab</li>
+<li><strong>链接</strong>: <a href="https://arxiv.org/abs/2606.31227">arXiv</a> | <a href="https://arxiv.org/pdf/2606.31227">PDF</a></li>
+<li><strong>来源</strong>: 🔥 HF Trending，⬆️ 15</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2606.31227v1/imgs/mcp_scan.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2606.31227v1/imgs/agent_scan.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2606.31227v1/imgs/architecture.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: 腾讯朱雀实验室的 AI-Infra-Guard。核心观察：AI agent 的攻击面是<strong>分层的</strong>（模型层、agent 层、<span class="wikilink">MCP</span> 生态层），所以红队也要分层做。开源框架，扫 MCP 漏洞、agent 逻辑漏洞、基础设施漏洞，对齐 <span class="wikilink">OWASP</span>/<span class="wikilink">CVE</span>。</li>
+<li><strong>对比方法/Baselines</strong>: 对比零散的单点安全工具。</li>
+<li><strong>借鉴意义</strong>: MCP 生态爆发式增长但安全工具严重滞后，做 agent 部署上线的团队这是刚需防御工具。</li>
+<li><strong>锐评</strong>: 只有 15 赞但选题极其务实——大家都在疯狂接 MCP，没几个人想过 MCP server 就是新的供应链攻击入口。分层红队的框架清晰。质疑点：安全工具的价值在覆盖率和误报率，摘要一个量化指标都没给，容易沦为『我们发了个 scanner』。作为防御方值得跟进，但要看真实检出能力。👀</li>
+</ul>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2606.31227" target="_blank" rel="noopener">📖 AI 精读</a></div><h2>🔬 自主科研 Agent</h2><div class="paper-card" data-topic="🔬 自主科研 Agent"><h3>11. ARIS: Autonomous Research via Adversarial Multi-Agent Collaboration</h3>
+<ul>
+<li><strong>作者</strong>: Ruofeng Yang, Yongcan Li, Shuai Li</li>
+<li><strong>机构</strong>: Affiliation: Shanghai Innovation Institute, Email: , Email: {wanshuiyin, joseph_y, shuaili8}@sjtu.edu.cn†Project Leader*Corresponding AuthorProject page: https://github.com/wanshuiyin/Auto-claude-code-research-in-sleep, Affiliation: , Affiliation: Shanghai Jiao Tong University</li>
+<li><strong>链接</strong>: <a href="https://arxiv.org/abs/2605.03042">arXiv</a> | <a href="https://arxiv.org/pdf/2605.03042">PDF</a></li>
+<li>
+<p><strong>来源</strong>: 🔥 HF Trending，⬆️ 147</p>
+</li>
+<li>
+<p><strong>核心方法</strong>: 开源自主科研 harness，主打<strong>对抗式多智能体协作</strong>。亮点是三阶段审计管线：Stage1 审评估完整性、Stage2 把结果映射到明确 claim、Stage3 用独立 reviewer 拿原始证据核验论文 claim——专门治 executor agent 编造实验结果、自归一化指标、无中生有的毛病。</p>
+</li>
+<li><strong>对比方法/Baselines</strong>: 对比 <span class="wikilink">OpenHands</span> 等单 agent 科研系统。</li>
+<li><strong>借鉴意义</strong>: 自主科研的核心风险就是 agent 幻觉出假结果，这套审计管线的思路对任何要 agent 产出可信结论的场景都有借鉴。</li>
+<li><strong>锐评</strong>: 147 赞。难得的是它诚实面对了自主科研最脏的问题——<strong>agent 会编造实验结果</strong>，然后设计对抗审计去抓。这比那些只会喊『我们能自动写论文』的强多了。但硬伤也明显：arxiv id 和作者信息解析得一团乱（署名和邮箱对不上），项目名叫 Auto-claude-code-research-in-sleep，工程报告气质&gt;论文气质。思路可取，别当严肃 paper 读。⚠️</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2605.03042" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🔬 自主科研 Agent"><h3>12. TradingAgents: Multi-Agents LLM Financial Trading Framework</h3>
+<ul>
+<li><strong>作者</strong>: Albert Einstein 1,2, Nikola Tesla 3, Isaac Newton 4, Daniela Rus 1, Yijia Xiao 1,3, Edward Sun 1,3, Di Luo 1,2, Wei Wang 1,3</li>
+<li><strong>机构</strong>: 3Graz University of Technology, Note: , 2Princeton University, 4University of Cambridge, 1University of California, Los Angeles (UCLA), 1Massachusetts Institute of Technology (MIT), 2Massachusetts Institute of Technology (MIT)</li>
+<li><strong>链接</strong>: <a href="https://arxiv.org/abs/2412.20138">arXiv</a> | <a href="https://arxiv.org/pdf/2412.20138">PDF</a></li>
+<li><strong>来源</strong>: 🔥 HF Trending，⬆️ 125</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2412.20138v7/figures/schema.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: 多智能体 LLM 金融交易框架，模拟真实交易公司的协作分工（分析师/研究员/交易员/风控），用 <span class="wikilink">MACD</span>/<span class="wikilink">RSI</span>/<span class="wikilink">CCI</span> 等技术指标做决策信号。</li>
+<li><strong>对比方法/Baselines</strong>: 单 agent 交易系统、独立数据采集的多 agent 框架。</li>
+<li><strong>借鉴意义</strong>: 多 agent 分工协作的组织设计对做复杂决策 pipeline 有参考。</li>
+<li><strong>锐评</strong>: 先说最离谱的：作者署名是『Albert Einstein / Nikola Tesla / Isaac Newton』——这是元数据解析事故或占位符，不是真作者，别被吓到。技术上是把交易公司的角色分工搬进多 agent，思路不新，2024 年的老论文靠 125 赞回锅。用技术指标做信号本身就很脆弱，多 agent 只是把脆弱的决策包了层组织外壳。金融 agent 看个热闹。🫠</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2412.20138" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🔬 自主科研 Agent"><h3>13. AutoResearchClaw: Self-Reinforcing Autonomous Research with Human-AI Collaboration</h3>
+<ul>
+<li><strong>作者</strong>: Jiaqi Liu∗, Shi Qiu∗, Mairui Li, Bingzhou Li, Haonian Ji, Siwei Han, Xinyu Ye, Peng Xia, Zihan Dong, Meng Chen, Congyu Zhang, Letian Zhang, Guiming Chen, Haoqin Tu, Xinyu Yang, Lu Feng, Xujiang Zhao, Haifeng Chen, Jiawei Zhou, Xiao Wang, Weitong Zhang, Hongtu Zhu, Yun Li, Jieru Mei, Hongliang Fei, Jiaheng Zhang, Linjie Li, Linjun Zhang, Yuyin Zhou, Sheng Wang, Caiming Xiong, James Zou, Zeyu Zheng, Cihang Xie, Mingyu Ding, Huaxiu Yao</li>
+<li><strong>机构</strong>: Affiliation: Stanford University, Affiliation: UC Berkeley, Affiliation: Carnegie Mellon University, Linjun Zhang, Affiliation: , Affiliation: Google, Affiliation: University of Washington, Affiliation: Rutgers University</li>
+<li><strong>链接</strong>: <a href="https://arxiv.org/abs/2605.20025">arXiv</a> | <a href="https://arxiv.org/pdf/2605.20025">PDF</a></li>
+<li>
+<p><strong>来源</strong>: 🔥 HF Trending，⬆️ 191</p>
+</li>
+<li>
+<p><strong>核心方法</strong>: 自强化的人机协作自主科研系统，强调科研是<strong>迭代</strong>的：假设被多视角挑战、实验失败后反哺下一次、经验跨 cycle 累积。分 <span class="wikilink">CoPilot</span> 和 <span class="wikilink">Full-Auto</span> 两种模式，对比线性 pipeline 式的旧系统。</p>
+</li>
+<li><strong>对比方法/Baselines</strong>: The AI Scientist 系列（单 agent、执行失败即中止、每次从零开始）。</li>
+<li><strong>借鉴意义</strong>: 『跨轮次累积经验』这点对做长期自演化 agent 有价值。</li>
+<li><strong>锐评</strong>: 191 赞，作者列表长到能绕地球一圈（30+ 人，横跨 Stanford/Berkeley/CMU/Google）。立论没错——真实科研是迭代非线性的。但通篇是 buzzword 拼盘：self-reinforcing、human-AI collaboration、carry experience across runs，每个词都对，合起来就是空。和 AutoResearchClaw 一个套路，属于自主科研赛道的军备竞赛注水弹。跳。🫠</li>
+</ul>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2605.20025" target="_blank" rel="noopener">📖 AI 精读</a></div></div>
+<div id="panel-agent训练与框架" class="tab-panel"><h2>🤖 Agent 训练与框架</h2><div class="paper-card" data-topic="🤖 Agent 训练与框架"><h3>1. Agent Lightning: Train ANY AI Agents with Reinforcement Learning</h3>
+<ul>
+<li><strong>作者</strong>: Xufang Luo, Yuge Zhang<em>, Zhiyuan He</em>, Zilong Wang, Siyun Zhao, Dongsheng Li, Luna K. Qiu, Yuqing Yang</li>
+<li><strong>机构</strong>: Affiliation: Microsoft Research, Affiliation: </li>
+<li><strong>链接</strong>: <a href="https://arxiv.org/abs/2508.03680">arXiv</a> | <a href="https://arxiv.org/pdf/2508.03680">PDF</a></li>
+<li><strong>来源</strong>: 🔥 HF Trending，⬆️ 142</li>
+</ul>
+<details class="paper-note"><summary>📒 精读笔记: Agent Lightning - Train AI Agents with RL</summary><div class="note-body"><h1>Agent Lightning: Train ANY AI Agents with Reinforcement Learning</h1>
+<h2>基本信息</h2>
+<ul>
+<li><strong>作者</strong>: Xufang Luo, Yuge Zhang, Zhiyuan He, Zilong Wang, Siyun Zhao, Dongsheng Li, Luna K. Qiu, Yuqing Yang</li>
+<li><strong>机构</strong>: Microsoft Research</li>
+<li><strong>时间</strong>: 2025年8月</li>
+<li><strong>链接</strong>:</li>
+<li>arXiv: <a href="https://arxiv.org/abs/2508.03680">2508.03680</a></li>
+<li>GitHub: <a href="https://github.com/microsoft/agent-lightning">microsoft/agent-lightning</a> (16k+ stars)</li>
+<li>项目主页: <a href="https://www.microsoft.com/en-us/research/project/agent-lightning/">Microsoft Research</a></li>
+</ul>
+<hr />
+<h2>研究动机与问题</h2>
+<h3>背景</h3>
+<p>近年来 <span class="wikilink">LLM</span> 驱动的 AI Agent 在搜索、代码生成、工具调用等复杂任务中表现出色。然而，LLM 在未经专门训练的场景中（如多轮编码工作流、私有领域数据集、不熟悉的工具）仍然容易出错，无法可靠解决复杂的端到端任务。</p>
+<p><span class="wikilink">Reinforcement Learning</span> 已在推理模型（如 <span class="wikilink">DeepSeek-R1</span>、<span class="wikilink">Kimi k1.5</span>）中取得了突破性进展，是优化 Agent 场景中 LLM 的强大范式。相比需要逐步标注的 <span class="wikilink">Supervised Fine-Tuning</span>，RL 仅依赖基于结果的 reward 信号，消除了对任务特定标注数据的需求。</p>
+<h3>核心问题</h3>
+<p>将 RL 扩展到 Agent 训练面临两大挑战：</p>
+<ol>
+<li><strong>算法层面</strong>：现有 RL 方法主要针对静态、单次调用任务（如数学推理）。Agent 的执行涉及<strong>多次 LLM 调用</strong>（不同 prompt 和 response）以及与外部工具/API 的交互，逻辑远比单轮 RL 复杂。</li>
+<li><strong>系统层面</strong>：现有方法将 RL 训练与 Agent 逻辑<strong>紧密耦合</strong>，或依赖序列拼接加 masking 的方式，难以支持多样化的 Agent 框架（LangChain、AutoGen、OpenAI Agents SDK 等）。</li>
+</ol>
+<h3>核心思想</h3>
+<p>Agent Lightning 的核心创新是<strong>完全解耦 Agent 执行与 RL 训练</strong>，让开发者以几乎<strong>零代码修改</strong>的方式，对任意 AI Agent 进行 RL 训练。</p>
+<p><img alt="Overview of Agent Lightning" src="https://arxiv.org/html/2508.03680v1/figures/overview.png" />
+<em>Figure 1: Agent Lightning 框架总览。实现了 Agent 执行与 RL 训练的完全解耦。</em></p>
+<hr />
+<h2>方法详解</h2>
+<h3>3.1 统一数据接口 (Unified Data Interface)</h3>
+<p>Agent Lightning 定义了一个统一的数据接口，将 Agent 执行过程中的数据标准化为 RL 训练可用的格式。</p>
+<p><strong>核心概念</strong>：</p>
+<ul>
+<li><strong>State</strong>: Agent 执行的快照，包括程序计数器、变量值、调用栈等。形式化为：</li>
+</ul>
+<div class="math-block">$$\texttt{state}_{t}(x,k) = \left\{ \texttt{variable}_{i}^{x,k,t} \right\}_{i=1}^{V}$$</div>
+
+<ul>
+<li>
+<p><strong>Semantic Variable</strong>: 被组件使用或修改的关键变量，代表关键语义（如程序意图）。不关注循环计数器等辅助变量，只关注语义层面的变化。</p>
+</li>
+<li>
+<p><strong>Component Invocation (Call)</strong>: 语义变量的变化通过组件调用发生。第 <span class="math-inline">$k$</span> 次执行任务 <span class="math-inline">$x$</span> 的所有调用序列为：</p>
+</li>
+</ul>
+<div class="math-block">$$\texttt{execution}(x,k) = \left\{ \texttt{call}_{i}^{x,k} \right\}_{i=1}^{N}$$</div>
+
+<p>其中每个 call 定义为：</p>
+<div class="math-block">$$\texttt{call}_{i}^{x,k} = (\texttt{meta}_{i}^{x,k}, \texttt{input}_{i}^{x,k}, \texttt{output}_{i}^{x,k}), \quad \text{with} ~ \texttt{output}_{i}^{x,k} = C_{i}(\texttt{input}_{i}^{x,k})$$</div>
+
+<p>这里 <span class="math-inline">$C_{i} \in \mathcal{M} \cup \mathcal{T}$</span>，即组件可以是 LLM (<span class="math-inline">$\mathcal{M}$</span>) 或工具 (<span class="math-inline">$\mathcal{T}$</span>)。</p>
+<ul>
+<li><strong>Reward 标注</strong>: 为每个 call 分配 reward <span class="math-inline">$r_i \in \mathbb{R}$</span>，形成带 reward 的执行序列：</li>
+</ul>
+<div class="math-block">$$\texttt{execution}^{R}(x,k) = \left\{ (\texttt{call}_{i}^{x,k}, r_{i}^{x,k}) \right\}_{i=1}^{N}$$</div>
+
+<p><img alt="Data Interface" src="https://arxiv.org/html/2508.03680v1/figures/data_interface.png" />
+<em>Figure 2: 统一数据接口示意图。左侧展示 Agent 执行流程中语义变量的更新；右侧展示对应的 trajectory 数据收集。</em></p>
+<h3>3.2 Agent 中的 Markov Decision Process</h3>
+<p>Agent Lightning 将 Agent 执行建模为 <span class="wikilink">Partially Observable Markov Decision Process</span> (POMDP)：</p>
+<div class="math-block">$$\mathcal{M} = (\mathcal{S}, \mathcal{O}, \mathcal{A}, \mathcal{P}, \mathcal{R})$$</div>
+
+<p>各元素含义：</p>
+<table>
+<thead>
+<tr>
+<th>符号</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><span class="math-inline">$\mathcal{S}$</span></td>
+<td>状态空间，对应所有可能的 <span class="math-inline">$\texttt{state}_{t}$</span></td>
+</tr>
+<tr>
+<td><span class="math-inline">$\mathcal{O}$</span></td>
+<td>观测空间，对应 policy LLM 的所有可能输入 <span class="math-inline">$\texttt{input}_{t}$</span></td>
+</tr>
+<tr>
+<td><span class="math-inline">$\mathcal{A}$</span></td>
+<td>动作空间，单次 LLM 调用生成的完整 token 序列 <span class="math-inline">$\texttt{output}_{t}$</span></td>
+</tr>
+<tr>
+<td><span class="math-inline">$\mathcal{T}(s&#x27;</td>
+<td>s,a)$</span></td>
+</tr>
+<tr>
+<td><span class="math-inline">$\mathcal{R}(s,a)$</span></td>
+<td>奖励函数</td>
+</tr>
+</tbody>
+</table>
+<p><strong>关键设计</strong>: 将 LLM 的一次完整生成（而非单个 token）作为一个 action，这是与传统 token-level RL 的重要区别。策略模型的目标是最大化累积回报：</p>
+<div class="math-block">$$R = \sum_{t=1}^{T} r_t$$</div>
+
+<h3>3.3 LightningRL: 层次化 RL 算法</h3>
+<p>LightningRL 是论文提出的核心算法，解决了如何将 Agent 的多轮交互数据用于 RL 训练的问题。</p>
+<p><strong>单轮 RL 回顾</strong>：现有方法（如 <span class="wikilink">GRPO</span>、<span class="wikilink">REINFORCE++</span>、<span class="wikilink">PPO</span>）主要处理单次 LLM 调用：给定任务 <span class="math-inline">$x$</span>，LLM 生成 response <span class="math-inline">$\texttt{output} = (y_1, \ldots, y_N)$</span>，获得 reward <span class="math-inline">$r(x, \texttt{output}, \hat{y})$</span>。通用训练目标为：</p>
+<div class="math-block">$$\mathcal{L}(\theta) = -\mathbb{E}_{x \sim \mathcal{X}, \texttt{output} \sim \pi_{\theta}(\cdot|x)} \left[ \sum_{j=1}^{N} \log \pi_{\theta}(y_j | x, y_{&lt;j}) \cdot A_j \right]$$</div>
+
+<p>其中 <span class="math-inline">$A_j$</span> 是 token 级别的 advantage 估计。</p>
+<p><strong>多轮 Agent 的挑战</strong>：</p>
+<p>现有方法将多轮对话拼接为单个长序列并加 mask，存在以下问题：
+- 仅适用于简单的顺序工作流
+- 无法处理多 Agent、动态工作流等复杂场景
+- 序列过长影响训练效率</p>
+<p><strong>LightningRL 的解决方案</strong>：</p>
+<p>LightningRL 采用<strong>层次化</strong>方法，将 trajectory 分解为独立的 transition：</p>
+<div class="math-block">$$\texttt{execution}^{RL}(x,k) = \left\{ (\texttt{input}_{t}^{x,k}, \texttt{output}_{t}^{x,k}, r_{t}^{x,k}) \right\}_{t=1}^{T}$$</div>
+
+<p>包含一个 <strong>Credit Assignment Module</strong>，将 trajectory 级别的 return 分配到每次 LLM 调用的 reward。这使得每个 transition 可以独立用于 RL 优化，与现有的单轮 RL 算法（如 GRPO）无缝集成。</p>
+<p><img alt="Algorithm" src="https://arxiv.org/html/2508.03680v1/figures/algorithm.png" />
+<em>Figure 3: LightningRL 算法示意。(a) 单轮 GRPO；(b) 现有多轮 GRPO（拼接+mask）；(c) LightningRL 将 trajectory 分解为独立 transition 进行训练。</em></p>
+<p><strong>Automatic Intermediate Rewarding (AIR)</strong>：AIR 机制可以基于系统监控信号（如工具调用返回状态）自动为中间步骤分配 reward，缓解 Agent 训练中的 <span class="wikilink">Sparse Reward</span> 问题。</p>
+<h3>3.4 系统设计: Training-Agent Disaggregation 架构</h3>
+<p>Agent Lightning 的系统架构实现了训练与 Agent 执行的完全分离（TA Disaggregation）。</p>
+<p><img alt="Architecture" src="https://arxiv.org/html/2508.03680v1/figures/agent_lightning_architecture_v3.png" />
+<em>Figure 4: Training-Agent Disaggregation 架构。</em></p>
+<p><strong>两大组件</strong>：</p>
+<ol>
+<li>
+<p><strong>Lightning Server</strong>: 集成 RL 框架（如 <span class="wikilink">VeRL</span>），管理训练过程和 LLM 优化，对外暴露 OpenAI-like API。Server 是 <strong>Agent-agnostic</strong> 的，不关心具体的 Agent 逻辑。</p>
+</li>
+<li>
+<p><strong>Lightning Client</strong>: 封装 Agent 运行时（agent runtime），包含两个功能模块：</p>
+</li>
+<li>与 Server 通信，负责数据传输</li>
+<li>运行 Agent 并进行数据收集</li>
+</ol>
+<p><strong>关键优势</strong>：</p>
+<ul>
+<li><strong>Agent-agnostic 训练</strong>: Server 只关心 LLM 优化和硬件资源管理</li>
+<li><strong>Trainer-agnostic 执行</strong>: Client 端 Agent 不依赖训练框架的实现细节</li>
+<li><strong>利用 Observability 框架</strong>: 将 <span class="wikilink">OpenTelemetry</span> 等可观测性框架引入训练流程，实现标准化的 trajectory 收集</li>
+<li><strong>零代码修改</strong>: 支持 LangChain、OpenAI Agents SDK、AutoGen 等主流框架开发的 Agent</li>
+</ul>
+<hr />
+<h2>实验结果</h2>
+<p>实验在三个不同任务上验证了 Agent Lightning 的有效性，每个任务使用不同的 Agent 框架实现：</p>
+<h3>Task 1: Text-to-SQL (LangChain)</h3>
+<ul>
+<li><strong>数据集</strong>: Spider（10,000+ 问题，200 数据库，138 领域）</li>
+<li><strong>基座模型</strong>: Llama-3.2-3B-Instruct</li>
+<li><strong>Agent 设计</strong>: 3 个 Agent 的多 Agent 系统</li>
+<li>SQL Writer Agent: 生成 SQL 查询</li>
+<li>Checking Agent: 评估查询正确性</li>
+<li>Re-writing Agent: 根据反馈修正查询或生成答案</li>
+<li><strong>Reward</strong>: 最终答案是否正确</li>
+</ul>
+<p><img alt="Text-to-SQL Results" src="https://arxiv.org/html/2508.03680v1/figures/train_spider.png" />
+<em>Figure 5: Text-to-SQL 任务的 reward 曲线，展示稳定的训练提升。</em></p>
+<h3>Task 2: Retrieval-Augmented Generation (OpenAI Agents SDK)</h3>
+<ul>
+<li><strong>数据集</strong>: MuSiQue（多跳问答基准，要求真正的组合推理）</li>
+<li><strong>Agent 设计</strong>: 单 LLM 生成查询 -&gt; 检索 -&gt; 决定是否精炼查询或生成答案</li>
+<li><strong>Reward</strong>: 格式分 + 正确性分的加权组合</li>
+</ul>
+<div class="math-block">$$R = 0.9 \times R_{\text{correctness}} + 0.1 \times R_{\text{format}}$$</div>
+
+<p>其中 <span class="math-inline">$R_{\text{correctness}}$</span> 采用 word-level F1 score。</p>
+<p><img alt="RAG Results" src="https://arxiv.org/html/2508.03680v1/figures/train_rag_llama.png" />
+<em>Figure 6: RAG 任务的 reward 曲线。</em></p>
+<h3>Task 3: Math QA with Tool Usage (AutoGen)</h3>
+<ul>
+<li><strong>数据集</strong>: Calc-X（需要推理和精确计算的数学问题）</li>
+<li><strong>基座模型</strong>: Llama-3.2-3B-Instruct</li>
+<li><strong>Agent 设计</strong>: 单 LLM 调用计算器工具解决数学问题</li>
+<li><strong>Reward</strong>: 最终答案是否正确</li>
+</ul>
+<p><img alt="Calculator Results" src="https://arxiv.org/html/2508.03680v1/figures/train_calc.png" />
+<em>Figure 7: Math QA with Tool Usage 任务的 reward 曲线。</em></p>
+<p>三个实验统一表明：Agent Lightning 能够在不同 Agent 场景中实现<strong>稳定且持续的性能提升</strong>。</p>
+<hr />
+<h2>核心贡献</h2>
+<ol>
+<li>
+<p><strong>首个完全解耦的 Agent RL 训练框架</strong>: Agent Lightning 是第一个实现 Agent 执行与 RL 训练完全分离的框架，支持任意 AI Agent 的 RL 训练，几乎零代码修改。</p>
+</li>
+<li>
+<p><strong>统一数据接口与 MDP 建模</strong>: 通过将 Agent 执行建模为 POMDP，定义了通用的数据接口，抽象了不同 Agent 的执行逻辑差异。</p>
+</li>
+<li>
+<p><strong>LightningRL 层次化算法</strong>: 提出了基于 transition 分解的层次化 RL 方法，配合 Credit Assignment Module，支持多 Agent、动态工作流等复杂交互逻辑。</p>
+</li>
+<li>
+<p><strong>Training-Agent Disaggregation 架构</strong>: 通过 Server/Client 分离设计，实现了训练框架与 Agent 框架的双向无关性，并引入可观测性框架提升可扩展性。</p>
+</li>
+<li>
+<p><strong>跨框架验证</strong>: 在 LangChain、OpenAI Agents SDK、AutoGen 三个主流框架上验证了通用性。</p>
+</li>
+</ol>
+<hr />
+<h2>局限性与思考</h2>
+<h3>局限性</h3>
+<ul>
+<li><strong>实验规模有限</strong>: 仅在 3B 模型上验证，更大规模模型的效果尚未探索</li>
+<li><strong>任务类型覆盖</strong>: 虽然涵盖了 text-to-SQL、RAG、math tool-use，但未涉及 GUI 交互、长期规划等更复杂的 Agent 场景</li>
+<li><strong>Credit Assignment</strong>: 论文提出了 credit assignment module，但具体的分配策略如何影响训练效果缺乏深入分析</li>
+<li><strong>与 concatenation 方法的定量对比</strong>: Discussion 中定性分析了 transition-based 相比 concatenation-based 的优势，但缺少直接的定量 ablation</li>
+</ul>
+<h3>个人思考</h3>
+<ul>
+<li>Agent Lightning 的<strong>解耦设计</strong>是其最大亮点。将 Agent 执行视为黑盒、仅通过标准化接口收集数据的思路，极大降低了 RL 训练的工程门槛</li>
+<li><strong>Observability 框架</strong>（OpenTelemetry）的引入很有前瞻性，将生产环境的监控基础设施复用到训练数据收集中</li>
+<li>与 <span class="wikilink">RAGEN</span>、<span class="wikilink">Search-R1</span>、<span class="wikilink">Trinity-RFT</span> 等 concatenation-based 方法的对比是后续工作的重要方向</li>
+<li>在更复杂的 Agent 场景（如 multi-agent debate、code generation pipeline）中的效果值得期待</li>
+</ul>
+<hr />
+<h2>相关工作</h2>
+<ul>
+<li><strong>RL for LLM 推理</strong>: <span class="wikilink">DeepSeek-R1</span>, <span class="wikilink">Kimi k1.5</span>, <span class="wikilink">GRPO</span>, <span class="wikilink">PPO</span>, <span class="wikilink">REINFORCE++</span></li>
+<li><strong>Agent RL 训练</strong>: <span class="wikilink">RAGEN</span>, <span class="wikilink">Trinity-RFT</span>, <span class="wikilink">rLLM</span>, <span class="wikilink">Search-R1</span>, <span class="wikilink">DigiRL</span></li>
+<li><strong>Agent 框架</strong>: <span class="wikilink">LangChain</span>, <span class="wikilink">AutoGen</span>, <span class="wikilink">OpenAI Agents SDK</span></li>
+<li><strong>RL 训练框架</strong>: <span class="wikilink">VeRL</span></li>
+<li><strong>可观测性</strong>: <span class="wikilink">OpenTelemetry</span></li>
+<li><strong>评估基准</strong>: Spider (text-to-SQL), MuSiQue (multi-hop QA), Calc-X (math tool-use)</li>
+</ul></div></details>
+
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2508.03680v1/figures/overview.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2508.03680v1/figures/data_interface.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2508.03680v1/figures/algorithm.png" /></div>
+<ul>
+<li><strong>锐评</strong>: 今天唯一有工程硬骨头的一篇。核心贡献是把 <span class="wikilink">RL</span> 训练和 agent 执行<strong>完全解耦</strong>——不再靠 sequence concatenation + masking 那套脆弱的 hack，而是把任意 agent（<span class="wikilink">LangChain</span>/<span class="wikilink">AutoGen</span>/自研）当黑盒，只在轨迹层面喂 <span class="wikilink">LightningRL</span>。这意味着你不用重写 agent 就能上 RL，工程价值实打实。质疑点：完全解耦的代价是丢失了 token 级的细粒度信用分配，长程任务里稀疏奖励怎么办？摘要没说。142 赞不是白来的。🔥</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2508.03680" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🤖 Agent 训练与框架"><h3>2. AgentScope 1.0: A Developer-Centric Framework for Building Agentic</h3>
+<p>Applications
+- <strong>作者</strong>: Dawei Gao, Zitao Li, Yuexiang Xie, Weirui Kuang, Liuyi Yao
+- <strong>机构</strong>: Alibaba Group, Affiliation:
+- <strong>链接</strong>: <a href="https://arxiv.org/abs/2508.16279">arXiv</a> | <a href="https://arxiv.org/pdf/2508.16279">PDF</a>
+- <strong>来源</strong>: 🔥 HF Trending，⬆️ 68</p>
+<details class="paper-note"><summary>📒 精读笔记: AgentScope</summary><div class="note-body"><h1>AgentScope 1.0</h1>
+<h2>📋 基本信息</h2>
+<ul>
+<li><strong>作者</strong>: Dawei Gao, Zitao Li, Yuexiang Xie 等</li>
+<li><strong>机构</strong>: Alibaba Group</li>
+<li><strong>链接</strong>: <a href="https://arxiv.org/abs/2508.16279">arXiv</a> | <a href="https://arxiv.org/pdf/2508.16279">PDF</a></li>
+</ul>
+<h2>🎯 研究动机与问题</h2>
+<p>现有 multi-agent 框架（如 <span class="wikilink">LangChain</span>, <span class="wikilink">AutoGen</span>）在以下方面存在不足：
+1. <strong>工具集成侵入性强</strong>：需要大量修改已有代码
+2. <strong>可观测性差</strong>：大规模部署时难以监控和调试
+3. <strong>长期记忆缺失</strong>：agent 无法保持跨会话的上下文
+4. <strong>分布式支持弱</strong>：难以扩展到大规模 multi-agent 场景</p>
+<h2>🔧 方法详解</h2>
+<h3>核心架构</h3>
+<p>AgentScope 1.0 的核心抽象：</p>
+<ol>
+<li><strong><span class="wikilink">MsgHub</span>（消息总线）</strong>：agent 间消息传递的统一接口，支持广播和点对点通信</li>
+<li><strong>StateModule（状态管理）</strong>：统一管理 agent 状态，支持序列化和恢复</li>
+<li><strong>Non-Invasive Monitoring</strong>：基于 <span class="wikilink">OpenTelemetry</span> 的无侵入式监控</li>
+</ol>
+<h3>MCP 原生支持</h3>
+<p>原生集成 <span class="wikilink">MCP</span>（Model Context Protocol）协议：
+- Agent 可通过 MCP 协议访问外部工具和数据源
+- 工具集成不需要修改 agent 代码（non-invasive）
+- 支持 MCP server 的自动发现和注册</p>
+<h3>分层记忆系统</h3>
+<ul>
+<li><strong><span class="wikilink">InMemoryMemory</span></strong>：短期工作记忆，存储当前会话上下文</li>
+<li><strong><span class="wikilink">LongTermMemoryBase</span></strong>：长期记忆，支持跨会话信息持久化</li>
+<li>记忆检索支持语义搜索和结构化查询</li>
+</ul>
+<h3>ReAct Agent 内置实现</h3>
+<p>内置 <span class="wikilink">ReAct</span> 范式的 agent 实现：
+- Thought → Action → Observation 循环
+- 支持自定义 tool 注册
+- 内置错误处理和重试机制</p>
+<h3>分布式调度</h3>
+<ul>
+<li>基于 <span class="wikilink">gRPC</span> 的分布式通信</li>
+<li>支持 agent 在多节点间调度</li>
+<li>MsgHub 支持分布式消息广播</li>
+</ul>
+<h2>📊 实验结果</h2>
+<table>
+<thead>
+<tr>
+<th>框架</th>
+<th>MCP支持</th>
+<th>可观测性</th>
+<th>长期记忆</th>
+<th>分布式</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>LangChain</td>
+<td>部分</td>
+<td>弱</td>
+<td>第三方</td>
+<td>弱</td>
+</tr>
+<tr>
+<td>AutoGen</td>
+<td>无</td>
+<td>弱</td>
+<td>无</td>
+<td>部分</td>
+</tr>
+<tr>
+<td>CAMEL</td>
+<td>无</td>
+<td>无</td>
+<td>无</td>
+<td>无</td>
+</tr>
+<tr>
+<td><strong>AgentScope 1.0</strong></td>
+<td><strong>原生</strong></td>
+<td><strong>OpenTelemetry</strong></td>
+<td><strong>内置</strong></td>
+<td><strong>原生</strong></td>
+</tr>
+</tbody>
+</table>
+<p>61 upvotes 说明社区认可度较高。</p>
+<h2>💡 核心贡献</h2>
+<ol>
+<li><strong>MCP 原生集成</strong>：首个原生支持 MCP 协议的 multi-agent 框架</li>
+<li><strong>OpenTelemetry 可观测性</strong>：无侵入式监控，适合生产环境</li>
+<li><strong>分层记忆系统</strong>：短期 + 长期记忆，支持跨会话持久化</li>
+<li><strong>大规模部署经验</strong>：阿里内部大规模 multi-agent 部署验证</li>
+</ol>
+<h2>🤔 局限性与思考</h2>
+<ol>
+<li><strong>框架评估困难</strong>：benchmark 上的数字不代表实际开发体验</li>
+<li><strong>与 LangChain 对比不够 fair</strong>：只挑了对方弱的场景</li>
+<li><strong>学习曲线</strong>：抽象层较多，新手上手成本可能较高</li>
+<li><strong>MCP 生态尚未成熟</strong>：MCP 协议本身还在快速迭代</li>
+</ol>
+<h2>📚 相关工作</h2>
+<ul>
+<li><span class="wikilink">MCP</span>: Model Context Protocol，agent 工具集成标准</li>
+<li><span class="wikilink">OpenTelemetry</span>: 可观测性标准</li>
+<li><span class="wikilink">ReAct</span>: 推理+行动范式</li>
+<li><span class="wikilink">LangChain</span>: 竞品框架</li>
+<li><span class="wikilink">AutoGen</span>: 微软 multi-agent 框架</li>
+</ul></div></details>
+
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2508.16279v1/figures/agentscope_v1_0822.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2508.16279v1/figures/agent.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2508.16279v1/deep_research.png" /></div>
+<ul>
+<li><strong>锐评</strong>: 阿里的 agent 框架大版本更新，主打 <span class="wikilink">ReAct</span> + <span class="wikilink">MCP</span> + 完整的 message/model/memory/tool 四件套，还接了 <span class="wikilink">OpenTelemetry</span> 做可观测性——这点比很多只顾发 demo 的框架强。开发者中心的定位很清楚。但说白了框架内卷到 1.0 这个阶段，护城河已经不是技术而是生态和 API 手感了。已有笔记，回去补 1.0 的 diff 就行。👀</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2508.16279" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🤖 Agent 训练与框架"><h3>3. Very Large-Scale Multi-Agent Simulation in AgentScope</h3>
+<ul>
+<li><strong>作者</strong>: Xuchen Pan, Dawei Gao, Yuexiang Xie, Yushuo Chen, Zhewei Wei, Yaliang Li, Bolin Ding, Ji-Rong Wen, Jingren Zhou</li>
+<li><strong>机构</strong>: Affiliation:, Affiliation: Alibaba Group, Affiliation: Renmin University of China</li>
+<li><strong>链接</strong>: <a href="https://arxiv.org/abs/2407.17789">arXiv</a> | <a href="https://arxiv.org/pdf/2407.17789">PDF</a></li>
+<li><strong>来源</strong>: 🔥 HF Trending，⬆️ 46</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2407.17789v2/env.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: 同一批 AgentScope 作者做的超大规模多智能体仿真，主打 <span class="wikilink">Large-Scale</span> 场景下的可扩展性和效率，用 <span class="wikilink">Agent-Manager</span> 做集中调度，解决现有平台在百万级 agent 仿真时的扩展性瓶颈和管理开销。</li>
+<li><strong>对比方法/Baselines</strong>: 对比 <span class="wikilink">Significant-Gravitas</span>（AutoGPT）等单/多 agent 平台，<span class="wikilink">OpenAI</span> 系工具链。</li>
+<li><strong>借鉴意义</strong>: 如果你要跑社会仿真、市场博弈、多 agent 对抗（比如广告竞价环境模拟），这套基础设施能省不少工程力气。</li>
+<li><strong>锐评</strong>: 和 AgentScope 1.0 同源，属于把仿真规模拉到极致的工程论文。46 赞说明它是刚需但不性感。真正的价值在『很多 agent 同时跑而不崩』这件事上，可惜摘要对 diversity 和 efficiency 的量化只给了口号。适合做多 agent 环境的人当参考实现。👀</li>
+</ul>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2407.17789" target="_blank" rel="noopener">📖 AI 精读</a></div></div>
+<div id="panel-llm推理与serving" class="tab-panel"><h2>⚙️ LLM 推理与 Serving</h2><div class="paper-card" data-topic="⚙️ LLM 推理与 Serving"><h3>4. Efficient Memory Management for Large Language Model Serving with</h3>
+<p>PagedAttention
+- <strong>作者</strong>: Kwon, Woosuk, Li, Zhuohan, Zhuang, Siyuan, Sheng, Ying, Zheng, Lianmin, Yu, Cody Hao, Gonzalez, Joseph E., Zhang, Hao, Stoica, Ion
+- <strong>机构</strong>: Affiliation: , Affiliation: 1{}^{\text{1}}UC Berkeley  2{}^{\text{2}}Stanford University  3{}^{\text{3}}Independent Researcher  4{}^{\text{4}}UC San Diego
+- <strong>链接</strong>: <a href="https://arxiv.org/abs/2309.06180">arXiv</a> | <a href="https://arxiv.org/pdf/2309.06180">PDF</a>
+- <strong>来源</strong>: 🔥 HF Trending，⬆️ 68</p>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2309.06180v1/system-overview.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: vLLM 的地基论文。核心是 <span class="wikilink">PagedAttention</span>：借鉴操作系统虚拟内存分页的思想，把 <span class="wikilink">KV</span> cache 切成非连续的 block 管理，消灭内存碎片和冗余拷贝，从而把 batch size 拉满。</li>
+<li><strong>对比方法/Baselines</strong>: 对比 <span class="wikilink">FasterTransformer</span>、<span class="wikilink">OPT</span> 原生 serving，用 <span class="wikilink">ShareGPT</span> 做负载。</li>
+<li><strong>借鉴意义</strong>: 做任何 LLM 推理部署、成本优化、吞吐调优都绕不开这篇。广告/推荐场景要在线跑大模型，这是必修课。</li>
+<li><strong>锐评</strong>: 2023 年的老论文了，今天能上 trending 纯属经典重现。但『经典』二字它配得上——PagedAttention 是过去两年 LLM serving 的事实标准，vLLM 的整个帝国建在这个抽象上。质疑点其实历史已经回答了：分页带来的间接寻址开销在实践中被吞吐收益完全碾压。想搞明白 KV cache 为什么这么设计，从这读起。🔥
+  PagedAttention`</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2309.06180" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="⚙️ LLM 推理与 Serving"><h3>5. FreeToken: Efficient Edge-Native MoE Serving with Bandwidth-Adaptive Execution</h3>
+<ul>
+<li><strong>作者</strong>: Shuo Yang, Xiaoze Fan, Melissa Pan, Haocheng Xi, Zhe Wang, Shanlin Sun, Kurt Keutzer, Song Han, Matei Zaharia, Chenfeng Xu†\dagger, Ion Stoica†\dagger</li>
+<li><strong>机构</strong>: Affiliation:, \correspondenceShuo Yang at andy_yang@berkeley.edu, Chenfeng Xu at xuchenfeng@utexas.edu</li>
+<li><strong>链接</strong>: <a href="https://arxiv.org/abs/2608.16157">arXiv</a> | <a href="https://arxiv.org/pdf/2608.16157">PDF</a></li>
+<li>
+<p><strong>来源</strong>: 🔥 HF Trending，⬆️ 90</p>
+</li>
+<li>
+<p><strong>核心方法</strong>: Stoica 组出品的边缘原生 MoE serving 系统。核心洞察：边缘设备（笔记本）上 <span class="wikilink">VRAM</span> 是被浏览器、游戏、桌面合成器动态抢占的，不像数据中心独占 GPU。FreeToken 做<strong>带宽自适应执行</strong>，动态调整专家驻留（expert residency）和 CPU-GPU 分工，用类 <span class="wikilink">LRU</span> 策略管理专家换入换出。</p>
+</li>
+<li><strong>对比方法/Baselines</strong>: 跑 <span class="wikilink">DeepSeek</span>、<span class="wikilink">GLM-5</span> 这类开源 MoE，对比数据中心假设下的 serving 引擎。</li>
+<li><strong>借鉴意义</strong>: 端侧大模型是趋势，如果你要在用户设备上跑 MoE（隐私推荐、本地 agent），这套弹性调度直接能用。</li>
+<li><strong>锐评</strong>: 选题够刁——所有人都在卷数据中心 serving，它偏去啃『GPU 被 Chrome 抢显存』这种真实到扎心的边缘场景。90 赞说明痛点戳中了。质疑点：带宽自适应的切换本身有延迟抖动，交互式应用的 P99 会不会被专家换入拖垮？摘要没给尾延迟数据。但方向对。👀</li>
+</ul>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2608.16157" target="_blank" rel="noopener">📖 AI 精读</a></div></div>
+<div id="panel-agent学习环境" class="tab-panel"><h2>🧠 Agent 学习环境</h2><div class="paper-card" data-topic="🧠 Agent 学习环境"><h3>6. EnvHarness: Awakening Static Worlds for Agent Learning</h3>
+<ul>
+<li><strong>作者</strong>: Chengsong Huang, Zifeng Wang, Rujun Han, Jun Yan, Yanfei Chen, Zoey CuiZhu, Ke Jiang, Peng Xia, Han Yu, Yufan Zhuang, Yifei Ming, Jiaqi Pan, Bhavana Dalvi Mishra, Jiaxin Huang, Burak Gokturk, Tomas Pfister, Chen-Yu Lee</li>
+<li><strong>机构</strong>: Affiliation:, Affiliation: Washington University in St. Louis, Affiliation: Google Cloud AI Research, Affiliation: University of North Carolina at Chapel Hill, Affiliation: Google Cloud</li>
+<li><strong>链接</strong>: <a href="https://arxiv.org/abs/2608.19880">arXiv</a> | <a href="https://arxiv.org/pdf/2608.19880">PDF</a></li>
+<li><strong>来源</strong>: 🔥 HF Trending，⬆️ 259</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2608.19880v1/figures/Harness.jpg" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2608.19880v1/components.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: 把<strong>静态数据集/世界唤醒成可交互训练环境</strong>。用 <span class="wikilink">EnvRigger</span> 自动把静态语料（如 <span class="wikilink">WebArena</span>、<span class="wikilink">SWE</span> 任务）改造成 agent 能反复交互、暴露自身弱点的动态环境，靠 <span class="wikilink">GenEnv</span>/<span class="wikilink">ActionableEnv</span> 生成机制摆脱对昂贵人工验证器的依赖。</li>
+<li><strong>对比方法/Baselines</strong>: 对比现有环境生成方法（依赖 domain-specific pipeline + 不可靠 verifier），<span class="wikilink">WebArena</span> 等静态 benchmark。</li>
+<li><strong>借鉴意义</strong>: agent 训练最大的瓶颈就是环境。这套自动造环境的思路，对做 RL agent、自演化 agent 的人是稀缺资源。</li>
+<li><strong>锐评</strong>: 259 赞今日最高，方向确实对——静态环境是 agent 进步的天花板，『环境跟不上 agent 成长』是真问题。EnvHarness 想做的是让环境随 agent 变强而变难。质疑点：自动生成环境的<strong>质量和可信度</strong>才是命门，摘要说摆脱了『不可靠 verifier』，但没说新验证机制凭什么更可靠——这里容易变成左脚踩右脚。看正文验证。👀</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2608.19880" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🧠 Agent 学习环境"><h3>7. LongHorizon-Harness: Advancing Long-Horizon Agents for Real-World Tasks</h3>
+<ul>
+<li><strong>作者</strong>: Ziyu Ma, Hailang Huang, Shun Zou, Yong Wang, Shidong Yang, Yiming Hu, Fei Wei, Xiangxiang Chu</li>
+<li><strong>机构</strong>: [ ]DreamX Team, Alibaba Group\affiliationformat</li>
+<li><strong>链接</strong>: <a href="https://arxiv.org/abs/2608.01964">arXiv</a> | <a href="https://arxiv.org/pdf/2608.01964">PDF</a></li>
+<li><strong>来源</strong>: 🔥 HF Trending，⬆️ 181</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2608.01964v1/DSK_en.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2608.01964v1/pic/benchmark_figure.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2608.01964v1/SPA_en.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: 长程 agent harness，把任务执行、任务状态、完成度评估从<strong>不断膨胀的 context 里剥离出来</strong>独立管理，避免错误的自我评估污染后续决策。在 <span class="wikilink">Terminal-Bench</span>、<span class="wikilink">WeaveBench</span> 上测。</li>
+<li><strong>对比方法/Baselines</strong>: 对比现有把状态塞进 context 的 agent harness，<span class="wikilink">OpenClaw</span> 等。</li>
+<li><strong>借鉴意义</strong>: 长程 agent 的『上下文腐烂』是真痛点，这套外置状态管理对做长任务 agent 有直接参考价值。</li>
+<li><strong>锐评</strong>: 181 赞。痛点抓得准——长程任务里 agent 会『自我欺骗』（错误自评估传播到后面），这是所有做长 horizon 的人都撞过的墙。把状态外置是合理解法。但这类『harness 工程』论文的通病是：贡献很实用，新意很有限，本质是工程 best practice 的封装。值得抄作业，不值得当理论突破。👀</li>
+</ul>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2608.01964" target="_blank" rel="noopener">📖 AI 精读</a></div></div>
+<div id="panel-记忆系统" class="tab-panel"><h2>🧠 记忆系统</h2><div class="paper-card" data-topic="🧠 记忆系统"><h3>8. EverMemOS: A Self-Organizing Memory Operating System for Structured Long-Horizon Reasoning</h3>
+<ul>
+<li><strong>作者</strong>: Chuanrui Hu, Xingze Gao11footnotemark:, Zuyi Zhou, Dannong Xu, Yi Bai, Xintong Li, Hui Zhang, Tong Li, Chong Zhang, Lidong Bing, Yafeng Deng22footnotemark:</li>
+<li><strong>机构</strong>: Email: , Affiliation: </li>
+<li><strong>链接</strong>: <a href="https://arxiv.org/abs/2601.02163">arXiv</a> | <a href="https://arxiv.org/pdf/2601.02163">PDF</a></li>
+<li><strong>来源</strong>: 🔥 HF Trending，⬆️ 15</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2601.02163v2/main.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: 自组织记忆操作系统。用 <span class="wikilink">MemCell</span> 作为记忆最小单元，能自动整合演化中的用户状态、解决记忆冲突，而不是像多数系统那样只存孤立记录再检索碎片。在 <span class="wikilink">LoCoMo</span>、<span class="wikilink">LongMemEval</span> 上测长程一致性。</li>
+<li><strong>对比方法/Baselines</strong>: 对比 <span class="wikilink">MemOS</span>、朴素 RAG 式记忆拼盘。</li>
+<li><strong>借鉴意义</strong>: 长程对话/长期 agent 要保持用户画像一致性，这套自组织+冲突消解比堆检索强。做个性化推荐 agent 可借鉴。</li>
+<li><strong>锐评</strong>: 名字碰瓷 MemOS，但 MemCell 的抽象确实比『存 embedding 再 top-k 检索』那套高级——它承认了记忆是会<strong>冲突和演化</strong>的。只有 15 赞属于被埋没。质疑点：自组织的冲突消解是靠 LLM 判断还是规则？如果靠 LLM，成本和幻觉风险怎么控？摘要没交代。但抽象值得偷师。👀</li>
+</ul>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2601.02163" target="_blank" rel="noopener">📖 AI 精读</a></div></div>
+<div id="panel-多模态生成" class="tab-panel"><h2>🎨 多模态生成</h2><div class="paper-card" data-topic="🎨 多模态生成"><h3>9. SenseNova-U1: Unifying Multimodal Understanding and Generation with NEO-unify Architecture</h3>
+<ul>
+<li><strong>作者</strong>: Diao, Haiwen, Wu, Penghao, Deng, Hanming, Wang, Jiahao, Bai, Shihao, Wu, Silei, Fan, Weichen, Ye, Wenjie, Tong, Wenwen, Fan, Xiangyu, Li, Yan, Wang, Yubo, Cao, Zhijie, Lin, Zhiqian, Yang, Zhitao, Cai, Zhongang, Niu, Yuwei, Zhu, Yue, Liu, Bo, Lv, Chengguang, Yu, Haojia, Xie, Haozhe, Wang, Hongli, Fan, Jianan, Li, Jiaqi, Lu, Jiefan, Ni, Jingcheng, Xu, Junxiang, Liang, Kaihuan, Shi, Lianqiang, Dai, Linjun, Wang, Linyan, Qian, Oscar, Gao, Peng, Liu, Pengfei, Sun, Qingping, Shen, Rui, Wang, Ruisi, Ma, Shengnan, Yang, Shuang, Xie, Siyi, Li, Siying, Zhong, Tianbo, Kong, Xiangli, Shi, Xuanke, Gao, Yang, Yao, Yongqiang, Wang, Yves, Bai, Zhengqi, Lin, Zhengyu, Yin, Zixin, Sun, Wenxiu, Gong, Ruihao, Wang, Quan, Lu, Lewei, Yang, Lei, Liu, Ziwei, Lin, Dahua</li>
+<li><strong>链接</strong>: <a href="https://arxiv.org/abs/2605.12500">arXiv</a> | <a href="https://arxiv.org/pdf/2605.12500">PDF</a></li>
+<li><strong>来源</strong>: 🔥 HF Trending，⬆️ 198</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2605.12500v1/teaser_overview.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2605.12500v1/lightllm_x2v.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2605.12500v1/midtrain_pipeline.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: 商汤的多模态旗舰，<span class="wikilink">NEO-unify</span> 架构统一理解与生成。核心论点：理解和生成被当成两个问题是<strong>结构性缺陷</strong>而非工程妥协，用 <span class="wikilink">MoT</span>（Mixture-of-Transformers）在一个架构里同时做，避免级联管线和表征空间错位。</li>
+<li><strong>对比方法/Baselines</strong>: 对比 <span class="wikilink">BAGEL</span>、<span class="wikilink">OmniGen2</span>、<span class="wikilink">FLUX</span>、<span class="wikilink">GPT</span> 系。</li>
+<li><strong>借鉴意义</strong>: 统一多模态是大势，如果你做图文生成、多模态创意广告素材，这类原生统一架构值得跟踪。</li>
+<li><strong>锐评</strong>: 198 赞的商汤 flagship，立论够狠——直接说『理解vs生成分家』是原罪。MoT 路线和 BAGEL 撞车但敢正面刚。质疑点：『统一』在论文里永远好看，落地时单一架构往往在两端都不如专用模型顶尖，摘要没给和专用 SOTA 的正面对比数。旗舰味重，先看 benchmark 再信。👀</li>
+</ul>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2605.12500" target="_blank" rel="noopener">📖 AI 精读</a></div></div>
+<div id="panel-agent安全" class="tab-panel"><h2>🛡️ Agent 安全</h2><div class="paper-card" data-topic="🛡️ Agent 安全"><h3>10. Securing the AI Agent: A Unified Framework for Multi-Layer Agent Red Teaming</h3>
+<ul>
+<li><strong>作者</strong>: Tencent Zhuque Lab</li>
+<li><strong>机构</strong>: Tencent Zhuque Lab</li>
+<li><strong>链接</strong>: <a href="https://arxiv.org/abs/2606.31227">arXiv</a> | <a href="https://arxiv.org/pdf/2606.31227">PDF</a></li>
+<li><strong>来源</strong>: 🔥 HF Trending，⬆️ 15</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2606.31227v1/imgs/mcp_scan.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2606.31227v1/imgs/agent_scan.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2606.31227v1/imgs/architecture.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: 腾讯朱雀实验室的 AI-Infra-Guard。核心观察：AI agent 的攻击面是<strong>分层的</strong>（模型层、agent 层、<span class="wikilink">MCP</span> 生态层），所以红队也要分层做。开源框架，扫 MCP 漏洞、agent 逻辑漏洞、基础设施漏洞，对齐 <span class="wikilink">OWASP</span>/<span class="wikilink">CVE</span>。</li>
+<li><strong>对比方法/Baselines</strong>: 对比零散的单点安全工具。</li>
+<li><strong>借鉴意义</strong>: MCP 生态爆发式增长但安全工具严重滞后，做 agent 部署上线的团队这是刚需防御工具。</li>
+<li><strong>锐评</strong>: 只有 15 赞但选题极其务实——大家都在疯狂接 MCP，没几个人想过 MCP server 就是新的供应链攻击入口。分层红队的框架清晰。质疑点：安全工具的价值在覆盖率和误报率，摘要一个量化指标都没给，容易沦为『我们发了个 scanner』。作为防御方值得跟进，但要看真实检出能力。👀</li>
+</ul>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2606.31227" target="_blank" rel="noopener">📖 AI 精读</a></div></div>
+<div id="panel-自主科研agent" class="tab-panel"><h2>🔬 自主科研 Agent</h2><div class="paper-card" data-topic="🔬 自主科研 Agent"><h3>11. ARIS: Autonomous Research via Adversarial Multi-Agent Collaboration</h3>
+<ul>
+<li><strong>作者</strong>: Ruofeng Yang, Yongcan Li, Shuai Li</li>
+<li><strong>机构</strong>: Affiliation: Shanghai Innovation Institute, Email: , Email: {wanshuiyin, joseph_y, shuaili8}@sjtu.edu.cn†Project Leader*Corresponding AuthorProject page: https://github.com/wanshuiyin/Auto-claude-code-research-in-sleep, Affiliation: , Affiliation: Shanghai Jiao Tong University</li>
+<li><strong>链接</strong>: <a href="https://arxiv.org/abs/2605.03042">arXiv</a> | <a href="https://arxiv.org/pdf/2605.03042">PDF</a></li>
+<li>
+<p><strong>来源</strong>: 🔥 HF Trending，⬆️ 147</p>
+</li>
+<li>
+<p><strong>核心方法</strong>: 开源自主科研 harness，主打<strong>对抗式多智能体协作</strong>。亮点是三阶段审计管线：Stage1 审评估完整性、Stage2 把结果映射到明确 claim、Stage3 用独立 reviewer 拿原始证据核验论文 claim——专门治 executor agent 编造实验结果、自归一化指标、无中生有的毛病。</p>
+</li>
+<li><strong>对比方法/Baselines</strong>: 对比 <span class="wikilink">OpenHands</span> 等单 agent 科研系统。</li>
+<li><strong>借鉴意义</strong>: 自主科研的核心风险就是 agent 幻觉出假结果，这套审计管线的思路对任何要 agent 产出可信结论的场景都有借鉴。</li>
+<li><strong>锐评</strong>: 147 赞。难得的是它诚实面对了自主科研最脏的问题——<strong>agent 会编造实验结果</strong>，然后设计对抗审计去抓。这比那些只会喊『我们能自动写论文』的强多了。但硬伤也明显：arxiv id 和作者信息解析得一团乱（署名和邮箱对不上），项目名叫 Auto-claude-code-research-in-sleep，工程报告气质&gt;论文气质。思路可取，别当严肃 paper 读。⚠️</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2605.03042" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🔬 自主科研 Agent"><h3>12. TradingAgents: Multi-Agents LLM Financial Trading Framework</h3>
+<ul>
+<li><strong>作者</strong>: Albert Einstein 1,2, Nikola Tesla 3, Isaac Newton 4, Daniela Rus 1, Yijia Xiao 1,3, Edward Sun 1,3, Di Luo 1,2, Wei Wang 1,3</li>
+<li><strong>机构</strong>: 3Graz University of Technology, Note: , 2Princeton University, 4University of Cambridge, 1University of California, Los Angeles (UCLA), 1Massachusetts Institute of Technology (MIT), 2Massachusetts Institute of Technology (MIT)</li>
+<li><strong>链接</strong>: <a href="https://arxiv.org/abs/2412.20138">arXiv</a> | <a href="https://arxiv.org/pdf/2412.20138">PDF</a></li>
+<li><strong>来源</strong>: 🔥 HF Trending，⬆️ 125</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2412.20138v7/figures/schema.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: 多智能体 LLM 金融交易框架，模拟真实交易公司的协作分工（分析师/研究员/交易员/风控），用 <span class="wikilink">MACD</span>/<span class="wikilink">RSI</span>/<span class="wikilink">CCI</span> 等技术指标做决策信号。</li>
+<li><strong>对比方法/Baselines</strong>: 单 agent 交易系统、独立数据采集的多 agent 框架。</li>
+<li><strong>借鉴意义</strong>: 多 agent 分工协作的组织设计对做复杂决策 pipeline 有参考。</li>
+<li><strong>锐评</strong>: 先说最离谱的：作者署名是『Albert Einstein / Nikola Tesla / Isaac Newton』——这是元数据解析事故或占位符，不是真作者，别被吓到。技术上是把交易公司的角色分工搬进多 agent，思路不新，2024 年的老论文靠 125 赞回锅。用技术指标做信号本身就很脆弱，多 agent 只是把脆弱的决策包了层组织外壳。金融 agent 看个热闹。🫠</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2412.20138" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🔬 自主科研 Agent"><h3>13. AutoResearchClaw: Self-Reinforcing Autonomous Research with Human-AI Collaboration</h3>
+<ul>
+<li><strong>作者</strong>: Jiaqi Liu∗, Shi Qiu∗, Mairui Li, Bingzhou Li, Haonian Ji, Siwei Han, Xinyu Ye, Peng Xia, Zihan Dong, Meng Chen, Congyu Zhang, Letian Zhang, Guiming Chen, Haoqin Tu, Xinyu Yang, Lu Feng, Xujiang Zhao, Haifeng Chen, Jiawei Zhou, Xiao Wang, Weitong Zhang, Hongtu Zhu, Yun Li, Jieru Mei, Hongliang Fei, Jiaheng Zhang, Linjie Li, Linjun Zhang, Yuyin Zhou, Sheng Wang, Caiming Xiong, James Zou, Zeyu Zheng, Cihang Xie, Mingyu Ding, Huaxiu Yao</li>
+<li><strong>机构</strong>: Affiliation: Stanford University, Affiliation: UC Berkeley, Affiliation: Carnegie Mellon University, Linjun Zhang, Affiliation: , Affiliation: Google, Affiliation: University of Washington, Affiliation: Rutgers University</li>
+<li><strong>链接</strong>: <a href="https://arxiv.org/abs/2605.20025">arXiv</a> | <a href="https://arxiv.org/pdf/2605.20025">PDF</a></li>
+<li>
+<p><strong>来源</strong>: 🔥 HF Trending，⬆️ 191</p>
+</li>
+<li>
+<p><strong>核心方法</strong>: 自强化的人机协作自主科研系统，强调科研是<strong>迭代</strong>的：假设被多视角挑战、实验失败后反哺下一次、经验跨 cycle 累积。分 <span class="wikilink">CoPilot</span> 和 <span class="wikilink">Full-Auto</span> 两种模式，对比线性 pipeline 式的旧系统。</p>
+</li>
+<li><strong>对比方法/Baselines</strong>: The AI Scientist 系列（单 agent、执行失败即中止、每次从零开始）。</li>
+<li><strong>借鉴意义</strong>: 『跨轮次累积经验』这点对做长期自演化 agent 有价值。</li>
+<li><strong>锐评</strong>: 191 赞，作者列表长到能绕地球一圈（30+ 人，横跨 Stanford/Berkeley/CMU/Google）。立论没错——真实科研是迭代非线性的。但通篇是 buzzword 拼盘：self-reinforcing、human-AI collaboration、carry experience across runs，每个词都对，合起来就是空。和 AutoResearchClaw 一个套路，属于自主科研赛道的军备竞赛注水弹。跳。🫠</li>
+</ul>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2605.20025" target="_blank" rel="noopener">📖 AI 精读</a></div></div>
+<hr>
+<h2>被排除的论文</h2>
+<ul>
+<li>GenericAgent: A Token-Efficient Self-Evolving LLM Agent — 『上下文信息密度最大化』本质是 context 压缩 + 经验复用换皮，23 赞，创新有限，与已推荐的长程 agent 主题重复</li>
+<li>DataFlow: An LLM-Driven Framework for Unified Data Preparation — LLM 数据准备框架，工程堆料型，226 赞更多是实用工具热度而非方法创新，偏离用户 recsys/agent 核心关注</li>
+<li>OmniAssistBench: Assistant-style Interaction Benchmark for Omni-LLMs — omni-LLM 交互 benchmark，纯评测集，与用户 recsys/ads/agent 训练关注度低</li>
+<li>Unlimited OCR Works (Baidu) — OCR 文档解析，不在 keywords 范围，与推荐/广告/agent 无交集</li>
+<li>PaddleOCR-VL-1.6 — OCR 文档解析增量版本，同上，off-topic</li>
+<li>Apodex 1.1: Scaling Agentic Intelligence for Complex Work — agentic intelligence 技术报告，营销味&gt;技术味，score 仅 3，无具体方法突破</li>
+</ul>
+<p>arXiv 一限流就露馅：Agent 赛道已进入『框架+记忆+自主科研』的三件套内卷期，真创新稀薄，改 logo 重发成风；反倒是 LLM serving（PagedAttention/FreeToken）和 agent 训练环境（EnvHarness）这些啃硬骨头的方向还有真东西。</p>
