@@ -1,0 +1,591 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>2026-08-27 论文推荐</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.21/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.21/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.21/dist/contrib/auto-render.min.js"
+  onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}]});"></script>
+<link rel="stylesheet" href="style.css">
+<style>body{max-width:960px;}</style>
+
+</head>
+<body>
+<nav class="nav"><a href="index.html">🏠 首页</a><a href="2026-08-26.html">← 前一天</a></nav>
+<div class="detail-page"><h1>🔪 今日锐评</h1>
+<p>今天是妥妥的 Agent 专场:一半在卷「多智能体怎么别翻车」,另一半在卷「Agent 怎么少烧点 token」。真正有硬货的是把 agentic RL 的引导深度从标量升级成分布的 Agent-G²,以及一批直面成本的编排路由工作。推荐系统/广告的直接命中只有 Product Linking 一篇,但它做得相当扎实。剩下一堆 benchmark 和 position paper 味道的灌水,该跳就跳。</p>
+<h2>分流表</h2>
+<table>
+<thead>
+<tr>
+<th>等级</th>
+<th>论文</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>🔥 必读</td>
+<td><span class="wikilink">Agent-G2</span>（把 agentic RL 的引导深度建模成高斯分布,直击 hint-based RL 的核心痛点) · <span class="wikilink">ProgRouter</span>（多智能体在线进度制导路由,成本-质量权衡做得比一次性路由聪明) · <span class="wikilink">Retrieve-Match-Escalate</span>（十亿级商品链接,VLM 蒸馏交叉编码器+agentic 兜底,推荐/广告工程标杆)</td>
+</tr>
+<tr>
+<td>👀 值得看</td>
+<td><span class="wikilink">Routed-Graph-Handoff</span>（155 token 路由器在图/自然语言间切换,省 40-60% 通信预算) · <span class="wikilink">AsymSpec</span>（上下文不对称的投机解码,给 agentic 长上下文提速) · <span class="wikilink">Can-AI-agent-be-cheaper</span>（任务规格如何决定 agentic coding 的 token 花销) · <span class="wikilink">AdaVDR</span>（视频深研的自适应工具调用+反思) · <span class="wikilink">EASEL</span>（灵巧视觉工具使用 benchmark,闭环参数化动作) · <span class="wikilink">WeMM-Embedding</span>（微信通用多模态 embedding,检索/推荐一把梭) · <span class="wikilink">Repair-or-Resample</span>（MAS 故障不重跑全轨迹,靠符号定位修) · <span class="wikilink">Training-Alignment-Auditors</span>（用 RL 训练对齐审计员)</td>
+</tr>
+<tr>
+<td>💤 可跳过</td>
+<td><span class="wikilink">MACGen</span>（多智能体安全代码生成,套路化) · <span class="wikilink">Think-Probe-Respond</span>（LLM 当新颖性裁判,增量) · <span class="wikilink">Candidate-Supply</span>（多智能体判断价值分析,偏理论) · <span class="wikilink">FinAgent</span>（金融 agent 编排,demo 味重) · <span class="wikilink">FinRiskAtlas</span>（金融风险评测集,又一个 benchmark)</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<div class="tab-bar"><button class="tab-btn active" data-tab="all" onclick="switchTab('all')">📋 全部<span class="tab-count">18</span></button><button class="tab-btn" data-tab="agenticrl与训练" onclick="switchTab('agenticrl与训练')">🤖 🧠 Agentic RL 与训练<span class="tab-count">3</span></button><button class="tab-btn" data-tab="agent编排与成本" onclick="switchTab('agent编排与成本')">🤖 🤖 Agent 编排与成本<span class="tab-count">4</span></button><button class="tab-btn" data-tab="工具使用与多模态agent" onclick="switchTab('工具使用与多模态agent')">🎨 🛠️ 工具使用与多模态 Agent<span class="tab-count">3</span></button><button class="tab-btn" data-tab="多智能体可靠性" onclick="switchTab('多智能体可靠性')">📄 🧩 多智能体可靠性<span class="tab-count">3</span></button><button class="tab-btn" data-tab="推荐广告金融落地" onclick="switchTab('推荐广告金融落地')">📈 💰 推荐/广告/金融落地<span class="tab-count">3</span></button><button class="tab-btn" data-tab="世界模型与数据引擎" onclick="switchTab('世界模型与数据引擎')">📄 🌍 世界模型与数据引擎<span class="tab-count">1</span></button><button class="tab-btn" data-tab="llm评判与评测" onclick="switchTab('llm评判与评测')">🤖 ⚖️ LLM 评判与评测<span class="tab-count">1</span></button></div>
+<div id="panel-all" class="tab-panel active"><h2>🧠 Agentic RL 与训练</h2><div class="paper-card" data-topic="🧠 Agentic RL 与训练"><h3>1. Agent-G^2: Gaussian Guidance for Agentic Reinforcement Learning</h3>
+<ul>
+<li><strong>作者</strong>: Zixuan Wang, Yanrui Miao11footnotemark:, Zhengxi Lu, Teng Pan, Yiwen Qiu, Hongxing Li, Peng Qiu, Ruiqing Zhang, Yongliang Shen</li>
+<li><strong>机构</strong>: Affiliation: , Thanks: , Affiliation: Baidu Inc, Affiliation: Shandong University{wang.zixuan, syl}@zju.edu.cn[3pt], Zhejiang University</li>
+<li><strong>链接</strong>: <a href="https://arxiv.org/abs/2608.23318">arXiv</a> | <a href="https://arxiv.org/pdf/2608.23318">PDF</a></li>
+<li><strong>来源</strong>: 📰 HF Daily，⬆️ 16</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2608.23318v1/main.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: 针对长程 agentic 任务的奖励稀疏问题,<span class="wikilink">hint-based RL</span> 在 rollout 前保留专家轨迹的一段前缀,让策略从更接近成功的状态开始探索。本文的洞察是:引导深度(保留多少轨迹)不该是一个确定性标量。论文诊断出标量深度调度器有一半以上的分配都落在有效区间之外,于是把引导深度建模成高斯分布(Gaussian Guidance),按分布采样深度。</li>
+<li><strong>对比方法/Baselines</strong>: 对比 <span class="wikilink">GRPO</span>、<span class="wikilink">GiGPO</span>、<span class="wikilink">RLVMR</span> 等 agentic RL 方法,在 <span class="wikilink">WebShop</span>、ALFWorld 环境上评测,底座用 Qwen2.5-1.5B-Instruct。</li>
+<li><strong>借鉴意义</strong>: 如果你在做 agentic RL 或长程任务的 RLHF,引导深度错配是个真实且被忽视的坑。把它从超参提升到可学习分布,思路干净,可迁移到你自己的 rollout 调度。</li>
+<li><strong>锐评</strong>: 难得看到一篇不是纯 benchmark 灌水的 agentic RL。它诊断得很实在——先用 32 次 rollout 估计每个(任务,深度)的成功率,证明标量调度器一半以上都错配,再对症下药。高斯建模是合理但不算惊艳的选择,真正的问题是 1.5B 小模型 + ALFWorld/WebShop 这套玩具环境能不能外推到真实长程任务,摘要没给答案。方法论扎实,规模存疑。🔥</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2608.23318" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🧠 Agentic RL 与训练"><h3>2. Training Alignment Auditors via Reinforcement Learning</h3>
+<ul>
+<li><strong>作者</strong>: Paul Rosu, Rowan Wang</li>
+<li><strong>机构</strong>: Affiliation: </li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2608.25460v1">arXiv</a> | <a href="https://arxiv.org/pdf/2608.25460v1">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2608.25460v1/figures/strategy_stacked_grid.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2608.25460v1/figures/fp_dose_response_ep325.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2608.25460v1/figures/all_configs_stacked_grid.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: 前沿模型的对齐审计越来越依赖 LLM 审计员大规模发现不良行为,但当前自动审计员在「连贯调查」和「审计真实性」上都吃力。本文用强化学习改进 LLM 审计员:在最佳训练环境中,策略去调查那些通过系统提示植入了隐藏行为的目标模型,学会主动挖掘。</li>
+<li><strong>对比方法/Baselines</strong>: 在 <span class="wikilink">AuditBench</span> 上评测,涉及 <span class="wikilink">PRISM-4</span> 等目标模型,分析假阳性(FP)和剂量-响应关系。</li>
+<li><strong>借鉴意义</strong>: 对齐审计是 AI 安全的关键环节,用 RL 训练审计员而非手写策略,是把审计能力规模化的方向。做安全/评测的值得看。</li>
+<li><strong>锐评</strong>: 方向重要且时髦——手写审计策略不 scale,用 RL 让审计员自己学会挖隐藏行为是正解。难点它自己也点破了:审计员会以四种方式失败,包括「误告」和「让目标模型察觉自己在被评测」。后者尤其棘手,一旦目标模型学会「装乖」,整个审计就失效了。摘要没说怎么防审计员被识破,这是安全审计的元级隐患。👀</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2608.25460v1" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🧠 Agentic RL 与训练"><h3>3. Towards Reliable, Generalizable, and Specific In-Context Knowledge Editing via Multi-Objective Reinforcement Learning</h3>
+<ul>
+<li><strong>作者</strong>: Xuzhong Wang, Maiqi Jiang, Tejal Nair, Girija Bhusal, Yanfu Zhang, Haipeng Chen</li>
+<li><strong>机构</strong>: Email: , Affiliation: , Affiliation: Tribhuvan University, Affiliation: College of William and Mary</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2608.25100v1">arXiv</a> | <a href="https://arxiv.org/pdf/2608.25100v1">PDF</a></li>
+<li>
+<p><strong>来源</strong>: 📄 arXiv 关键词检索</p>
+</li>
+<li>
+<p><strong>核心方法</strong>: LLM 受限于静态参数知识,预训练结束就过时。知识编辑在不全量重训的情况下更新目标事实。上下文知识编辑(in-context knowledge editing)因免训练、适用黑盒模型而受关注。本文用多目标强化学习(Multi-Objective RL)提升上下文知识编辑的可靠性、泛化性和特异性。</p>
+</li>
+<li><strong>对比方法/Baselines</strong>: 对比 <span class="wikilink">IKE</span> 等上下文编辑方法,优化 RETAIN/COPY 等多个目标。</li>
+<li><strong>借鉴意义</strong>: 知识编辑对保持 LLM 时效性有价值,用 MORL 平衡可靠/泛化/特异三个常打架的目标,思路合理。</li>
+<li><strong>锐评</strong>: 把知识编辑的三难(可靠、泛化、特异)显式建成多目标 RL,比单目标硬调要诚实——这三个目标本来就互相拉扯。但上下文知识编辑本身是个天花板不高的路子:靠塞 prompt 改行为,一旦上下文变长或事实冲突就容易失效,MORL 只是在这个受限框架里做优化。方法工整,赛道天花板有限。🫠</li>
+</ul>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2608.25100v1" target="_blank" rel="noopener">📖 AI 精读</a></div><h2>🤖 Agent 编排与成本</h2><div class="paper-card" data-topic="🤖 Agent 编排与成本"><h3>4. ProgRouter: Online Progress-Guided Orchestration for Multi-Agent LLM Workflows under Quality-Cost Tradeoffs</h3>
+<ul>
+<li><strong>作者</strong>: Songyuan Li, Ahmed M. Abdelmoniem, Shiqiang Wang</li>
+<li><strong>机构</strong>: Email: , Affiliation: Queen Mary University of London, UK, Affiliation: , Affiliation: Aston University, UK, ††thanks: Corresponding author. Work done while the author was with Queen Mary University of London, UK, Affiliation: University of Exeter, UK</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2608.25992v1">arXiv</a> | <a href="https://arxiv.org/pdf/2608.25992v1">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2608.25992v1/system-model.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2608.25992v1/progrouter_procedures.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2608.25992v1/progrouter-model-family.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: 多智能体 LLM 工作流因反复调用和长上下文累积而成本高昂。已有级联路由(cascade routing)做的是一次性、query 级的决策,无法适应工作流推进中的动态变化。<span class="wikilink">ProgRouter</span> 提出在线、进度制导(progress-guided)的编排:在每一步根据当前进展决定用哪个模型/走哪条路径,而非开局一锤定音。</li>
+<li><strong>对比方法/Baselines</strong>: 对比 <span class="wikilink">CASCADIA</span>、<span class="wikilink">MasRouter</span> 等级联/路由方法,在 <span class="wikilink">HumanEval</span>、<span class="wikilink">MBPP</span>、<span class="wikilink">MATH-500</span>、<span class="wikilink">ASQA</span> 上评测质量-成本权衡。</li>
+<li><strong>借鉴意义</strong>: 多智能体系统落地的最大阻力就是成本。把路由从静态改成随进度自适应,对任何跑 MAS 生产系统的人都直接有用。</li>
+<li><strong>锐评</strong>: 问题选得准:一次性路由确实是当前 MAS 成本控制的软肋,长程任务里前期和后期需要的模型能力完全不同。在线进度制导的方向对。担心的是 benchmark 都偏结构化(代码/数学/QA),这类任务进度信号相对清晰;换成开放式任务,「进度」怎么可靠估计是个没解决的难题。方向正确,泛化待验。👀</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2608.25992v1" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🤖 Agent 编排与成本"><h3>5. Understanding the Energy Scaling of Large Language Model Inference Across Context Lengths and Attention Architectures</h3>
+<ul>
+<li><strong>作者</strong>: Molka Chkir1, Syed Muhammad Danish1, Jos Höll2, Arghavan Asad1</li>
+<li><strong>机构</strong>: Affiliation: 1Algoma University, Brampton, Canada, Affiliation: 2School of Informatics, Reutlingen University, Reutlingen, Affiliation: , Emails: {mchkir, syed.danish, arghavan.asad}@algomau.ca, jos.hoell@reutlingen-university.de</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2608.25096v1">arXiv</a> | <a href="https://arxiv.org/pdf/2608.25096v1">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2608.25096v1/Figures/methodology.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2608.25096v1/Figures/rq2_energy_plot.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2608.25096v1/Figures/rq2_latency_plot.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: 多智能体系统靠自然语言消息协作,这些消息消耗 40-60% 的 token 预算。全换成结构化图(typed dependency graph)能省钱,但在需要自适应推理的任务上会失败。<span class="wikilink">Routed-Graph-Handoff</span> 用一个轻量 LLM 路由器(155 token,仅 0.15% 开销)为每次委派在「类型化依赖图」和「自然语言」之间二选一,图能压缩 2 倍,自然语言做兜底。</li>
+<li><strong>对比方法/Baselines</strong>: 在 <span class="wikilink">AppWorld</span>、<span class="wikilink">BrowseComp</span>、<span class="wikilink">BFCL</span> 上评测,底座 <span class="wikilink">GPT-5</span>,对比纯图(GRAPH)和纯自然语言(NL)两种极端。</li>
+<li><strong>借鉴意义</strong>: 和 ProgRouter 是同一个母题的不同切面——都在攻多智能体通信成本。这篇更聚焦「消息格式」这一层,155 token 的路由开销几乎白送,ROI 直观。</li>
+<li><strong>锐评</strong>: 很务实的一篇。承认了一个大家心照不宣的事实:自然语言消息是 MAS 里最肥的 token 黑洞,但硬换成图又会在需要 nuance 的地方翻车。让路由器逐次委派决定用图还是话,是「小改动大收益」的典型。0.15% 开销这个数字很诱人,但要小心——路由器选错格式的代价(任务失败)可能远大于省下的 token,摘要没给错误路由的下游损失分析。👀</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2608.25096v1" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🤖 Agent 编排与成本"><h3>6. AsymSpec: Context-Asymmetric Speculative Decoding for Agentic LLMs</h3>
+<ul>
+<li><strong>作者</strong>: Sheng Liang, Yongyue Zhang, Nathanael Brian, Hang Lv, Hao Wang, Chen Zhang, Yong Liu</li>
+<li><strong>机构</strong>: Affiliation: University of Science and Technology of China, Affiliation: Huawei Technologies Co., Ltd, Affiliation: </li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2608.26004v1">arXiv</a> | <a href="https://arxiv.org/pdf/2608.26004v1">PDF</a></li>
+<li>
+<p><strong>来源</strong>: 📄 arXiv 关键词检索</p>
+</li>
+<li>
+<p><strong>核心方法</strong>: Agentic 流水线随检索、工具调用、多轮交互累积上下文,推理成本飙升。为压延迟常压缩输入,但会掉精度。<span class="wikilink">投机解码</span>(SD)本来能无损加速,但它假设 drafter 和 verifier 共享完全相同的上下文,这在 agentic 场景不成立。<span class="wikilink">AsymSpec</span> 提出上下文不对称的投机解码:让 drafter 用压缩上下文、verifier 用完整上下文,兼顾速度与精度。</p>
+</li>
+<li><strong>对比方法/Baselines</strong>: 在 <span class="wikilink">LongBench</span>、<span class="wikilink">GAIA</span>、<span class="wikilink">MultiChallenge</span>、<span class="wikilink">MathVista</span> 上评测,覆盖长上下文和 agentic 任务。</li>
+<li><strong>借鉴意义</strong>: 投机解码是当下推理加速的主力,但没人认真处理过 agentic 场景「draft 和 verify 上下文不一致」这个前提被打破的情况。做 LLM serving 的值得看。</li>
+<li><strong>锐评</strong>: 切入点很聪明——大家都默认 SD 的 drafter/verifier 上下文一致,agentic 场景恰恰打破了这个假设,这个 gap 抓得漂亮。让 drafter 吃压缩上下文、verifier 吃完整上下文,理论上鱼和熊掌兼得。风险在于:如果压缩把关键信息压没了,drafter 的接受率会崩,加速比就成了纸面数字。摘要没给接受率曲线,得看正文。👀</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2608.26004v1" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🤖 Agent 编排与成本"><h3>7. Can your AI agent be cheaper? Investigating the effects of task specifications on token spend in agentic coding tasks</h3>
+<ul>
+<li><strong>作者</strong>: Jakub Smékal</li>
+<li><strong>机构</strong>: Affiliation: Stanford University, Affiliation: </li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2608.25399v1">arXiv</a> | <a href="https://arxiv.org/pdf/2608.25399v1">PDF</a></li>
+<li>
+<p><strong>来源</strong>: 📄 arXiv 关键词检索</p>
+</li>
+<li>
+<p><strong>核心方法</strong>: Agentic coding 工作流已广泛部署,长程推理+工具使用让 token 花销成了成本和效率的关键。本文问:任务规格(specification)如何塑造 agent 的 token 花销?这种花销能否提前预测?与已有研究「固定任务、变模型」相反,本文反其道:固定模型,把 prompt/任务规格当变量。</p>
+</li>
+<li><strong>对比方法/Baselines</strong>: 参考在 <span class="wikilink">SWE</span>-bench Verified 上「同任务不同模型 token 差 30 倍」的已有发现,底座覆盖 OpenAI 等前沿模型。</li>
+<li><strong>借鉴意义</strong>: 对每天烧 Claude Code / agentic coding token 的人这是灵魂拷问。如果任务规格的写法能预测并压低 token 花销,那就是可操作的省钱杠杆。</li>
+<li><strong>锐评</strong>: 选题接地气到我想给它鼓掌——「你的 AI agent 能不能更便宜」,标题就是每个用 agentic coding 的人的心声。反转实验设计(固定模型变 prompt)也比一堆刷榜论文有想法。但从摘要看更像一篇观察性研究而非给出可落地的 prompt 优化方法,如果结论停留在「规格影响很大」这种正确的废话,那价值就打折。期待它真给出可预测的模型。👀</li>
+</ul>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2608.25399v1" target="_blank" rel="noopener">📖 AI 精读</a></div><h2>🛠️ 工具使用与多模态 Agent</h2><div class="paper-card" data-topic="🛠️ 工具使用与多模态 Agent"><h3>8. AdaVDR: Adaptive Tool Use and Reflection for Video Deep Research</h3>
+<ul>
+<li><strong>作者</strong>: Xintong Zhang, Xiaomeng Fan, Shilin Yan, Ekko He, Zicheng Liu, Zijian Zou, Guannan Zhang, Yuwei Wu, Zhi Gao, Hongwei Xue</li>
+<li><strong>机构</strong>: Affiliation: Accio Team, Alibaba Group, Affiliation: , Affiliation: Beijing Key Laboratory of Intelligent Information TechnologySchool of Computer Science &amp; Technology, Beijing Institute of Technology</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2608.25559v1">arXiv</a> | <a href="https://arxiv.org/pdf/2608.25559v1">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2608.25559v1/teaser.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2608.25559v1/data_collection.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: 视频深度研究(Video Deep Research)要同时理解视频内容并从开放网络检索外部知识。不同的问题和视频需要不同的工具使用策略,不恰当的工具调用会产生错误结果。<span class="wikilink">AdaVDR</span> 提出自适应工具使用+反思机制:根据 grounding 和检索的不确定性,决定是否发起工具调用,避免不必要的昂贵交互。</li>
+<li><strong>对比方法/Baselines</strong>: 对比 <span class="wikilink">VideoDR</span> 等视频深研方法,底座含 <span class="wikilink">GPT-5</span>,用 SFT + 视觉语言模型,涉及 ASR、字幕等工具。</li>
+<li><strong>借鉴意义</strong>: 多模态 agent 的工具调用「该不该调」是普遍问题,过度调用推高延迟和出错率。自适应触发的思路可迁移到任何 tool-use agent。</li>
+<li><strong>锐评</strong>: 问题真实:agent 无脑调工具既费钱又添乱,尤其视频这种重感知的场景。用不确定性来门控工具调用是合理设计。但「不确定性估计」本身在多模态里就是老大难,估不准的话自适应反而更糟——摘要没说不确定性怎么算,这是全篇成败的关键。来自阿里 Accio 团队,工程落地味应该够。👀</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2608.25559v1" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🛠️ 工具使用与多模态 Agent"><h3>9. Paint What You See: Benchmarking Dexterous Visual Tool Use in Multimodal Agents</h3>
+<ul>
+<li><strong>作者</strong>: Shudong Liu, Dongyang Chen, Enci Zhang, Jinwei Liang, Zheng Ma, Lewei Lu\corresponding</li>
+<li><strong>机构</strong>: Peking University, Tsinghua University, shooo, eczhang@stu.pku.edu.cn, chen-dy25@mails.tsinghua.edu.cn, liangjinwei, mazheng2, luotto@sensetime.com</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2608.25417v1">arXiv</a> | <a href="https://arxiv.org/pdf/2608.25417v1">PDF</a></li>
+<li>
+<p><strong>来源</strong>: 📄 arXiv 关键词检索</p>
+</li>
+<li>
+<p><strong>核心方法</strong>: 评测正从静态 QA 转向 agent 通过外部工具行动的场景。本文识别出一个被忽视的能力——灵巧视觉工具使用(dexterous visual tool use):细粒度、闭环、参数化的视觉动作,模型要从视觉证据推断工具参数,而这些参数直接决定最终结果。提出 <span class="wikilink">EASEL</span> benchmark 来衡量。</p>
+</li>
+<li><strong>对比方法/Baselines</strong>: 在 <span class="wikilink">GPT-5</span>、<span class="wikilink">GLM</span> 等多模态模型上评测,涉及 CoT、AUC 等指标。</li>
+<li><strong>借鉴意义</strong>: 现有 tool-use 评测大多是「调不调对工具」,很少考「参数调得准不准」。参数化闭环视觉动作是更真实的 agent 能力维度,做多模态 agent 评测的值得参考。</li>
+<li><strong>锐评</strong>: 「Paint What You See」这标题起得有画面感,能力定义也确实戳到盲区——大家评 agent 都在看「选对工具了吗」,没人认真评「参数填对了吗」。闭环参数化视觉动作是个好维度。但这终究是又一个 benchmark 论文,价值取决于任务设计是否够难、够真实,而不是能不能被下一代模型一周刷爆。北大+清华+商汤班底,质量应该有底。👀</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2608.25417v1" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🛠️ 工具使用与多模态 Agent"><h3>10. WeMM-Embedding: WeChat Multi-Modal Embedding Technical Report</h3>
+<ul>
+<li><strong>作者</strong>: Junjie Zhou∗</li>
+<li><strong>机构</strong>: WeChat Vision, Tencent Inc</li>
+<li><strong>链接</strong>: <a href="https://arxiv.org/abs/2608.24053">arXiv</a> | <a href="https://arxiv.org/pdf/2608.24053">PDF</a></li>
+<li>
+<p><strong>来源</strong>: 🔥 HF Trending，⬆️ 59</p>
+</li>
+<li>
+<p><strong>核心方法</strong>: 通用多模态 embedding 正成为现代 AI 系统的核心组件,支撑检索、推荐、分类和 agentic 系统。<span class="wikilink">WeMM-Embedding</span> 是微信视觉团队的通用多模态 embedding 模型族,支持文本、图像、视频、视觉文档及任意组合。收集/合成了数亿训练样本,用统一的 pair-based 格式表达异构数据,纳入统一训练框架同时保留原始监督信号。</p>
+</li>
+<li><strong>对比方法/Baselines</strong>: 在 <span class="wikilink">MMEB</span> 上评测,用 <span class="wikilink">MRL</span>(Matryoshka)表示学习,NDCG 等检索指标。</li>
+<li><strong>借鉴意义</strong>: 推荐/检索直接受益——一个统一的多模态 embedding 空间能同时服务召回、推荐、分类。腾讯出品,数亿级训练数据,工程可参考性高。</li>
+<li><strong>锐评</strong>: 技术报告类,HF 上 59 赞不是白来的——微信这体量的多模态 embedding,数据和工程规模就是护城河。统一 pair-based 格式吸收异构监督信号是干净的做法。但技术报告的通病是「什么都支持、什么都 SOTA」,缺少诚实的失败分析;而且几亿样本的配方普通团队根本复现不了,参考价值大于可复现价值。当资源手册看不错。👀</li>
+</ul>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2608.24053" target="_blank" rel="noopener">📖 AI 精读</a></div><h2>🧩 多智能体可靠性</h2><div class="paper-card" data-topic="🧩 多智能体可靠性"><h3>11. Repair or Resample? Rethinking Failure Debugging in LLM Multi-Agent Systems</h3>
+<ul>
+<li><strong>作者</strong>: Zhongwen Luan, Xiaoyu Zhang, Ming Hu, Yue Yang, Jiongchi Yu, Xiaohong Chen</li>
+<li><strong>机构</strong>: Email: , Affiliation: , Affiliation: Nanyang Technological University, Affiliation: Singapore Management University, Affiliation: Xi’an University of Architecture and Technology, Affiliation: East China Normal University</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2608.25920v1">arXiv</a> | <a href="https://arxiv.org/pdf/2608.25920v1">PDF</a></li>
+<li>
+<p><strong>来源</strong>: 📄 arXiv 关键词检索</p>
+</li>
+<li>
+<p><strong>核心方法</strong>: LLM 多智能体系统(MAS)应用于长程复杂任务时,可靠性是落地的核心瓶颈。已有的 MAS 调试/修复方法通常靠重跑并重采样整条执行轨迹,昂贵且低效。本文提出 <span class="wikilink">SymTrace</span>/<span class="wikilink">SymFail</span> 思路:符号化定位可疑节点(Suspicious-Node),精准修复而非全轨迹重跑。</p>
+</li>
+<li><strong>对比方法/Baselines</strong>: 在 <span class="wikilink">CrewAI</span>、<span class="wikilink">Magentic-One</span> 等 MAS 框架上评测,对比 <span class="wikilink">Critic-Agent</span>、<span class="wikilink">Self-Reflection</span> 等修复基线。</li>
+<li><strong>借鉴意义</strong>: MAS 一出错就重跑整条轨迹是巨大的浪费。定位到具体故障节点做定向修复,是工程降本的实招,对跑 MAS 生产系统的人直接有用。</li>
+<li><strong>锐评</strong>: 「Repair or Resample」这个问句问到了点子上——现在的 MAS 修复基本是「不行就重开」,粗暴且烧钱。符号化定位可疑节点、只修坏的地方,方向绝对正确。关键难点在故障归因本身:多智能体的错误经常是累积和交互产生的,定位到「单个可疑节点」可能过度简化了真实的失败链。摘要没给归因准确率,这是要盯的数字。👀</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2608.25920v1" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🧩 多智能体可靠性"><h3>12. MACGen: Toward Functionally Correct and Secure Code Generation via Multi-Agent Collaboration</h3>
+<ul>
+<li><strong>作者</strong>: Miseon Yu, Jaehoon Choi, Younghan Lee, Yunheung Paek</li>
+<li><strong>机构</strong>: Affiliation: Sungshin Women’s University, Email: , Affiliation: , Affiliation: Seoul National University</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2608.25457v1">arXiv</a> | <a href="https://arxiv.org/pdf/2608.25457v1">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2608.25457v1/main_v9.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: LLM 生成代码强,但常含安全漏洞。安全代码生成本质是多目标问题:功能正确+安全。已有方法靠注入外部安全知识或 agentic 反馈迭代精炼。<span class="wikilink">MACGen</span> 用多智能体协作来同时优化两个目标。</li>
+<li><strong>对比方法/Baselines</strong>: 对比 <span class="wikilink">INDICT</span>、<span class="wikilink">CodeGuarder</span>、<span class="wikilink">SecGuide</span> 等安全代码生成方法,用 <span class="wikilink">BaxBench</span>、<span class="wikilink">CWE</span>/<span class="wikilink">OWASP</span> 漏洞标准评测。</li>
+<li><strong>借鉴意义</strong>: 安全代码生成是 agentic coding 落地绕不开的一环,但这篇方法组合偏常规。</li>
+<li><strong>锐评</strong>: 问题真实、目标正当,但方法论就是「多智能体协作」这个 2026 年的万能膏药——一个 agent 写、一个 agent 查安全,套路化明显。和 INDICT、CodeGuarder 这批前作的差异化在摘要里没讲清楚。安全代码生成需要的是可验证的保证,多智能体投票并不能提供,只是把「可能有漏洞」变成「可能少一点漏洞」。🫠</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2608.25457v1" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🧩 多智能体可靠性"><h3>13. Candidate supply and answer selection shape the value of LLM judging in multi-agent systems</h3>
+<ul>
+<li><strong>作者</strong>: Ji, Jia-Hao, Li, Sijie, Cheng, Jiabei, She, Zixi, Yu, Jin-Tai, Yuan, Zhiyuan</li>
+<li><strong>机构</strong>: Corresponding authors: jintai_yu@fudan.edu.cn (J.-T.Y.); zhiyuan@fudan.edu.cn (Z.Y.), Department of Neurology and National Center for Neurological Diseases, Huashan Hospital, State Key Laboratory of, Institute of Science and Technology for Brain-Inspired Intelligence, MOE Key Laboratory of Computational, Medical Neurobiology and Ministry of Education Frontiers Center for Brain Science, Shanghai Medical College, Fudan, Neuroscience and Brain-Inspired Intelligence, MOE Frontiers Center for Brain Science, Fudan University, Shanghai, School of Automation and Intelligent Sensing, Shanghai Jiao Tong University, Shanghai 200433, China, Shanghai Academy of Artificial Intelligence for Science, Shanghai 200003, China, University, Shanghai 200040, China</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2608.25937v1">arXiv</a> | <a href="https://arxiv.org/pdf/2608.25937v1">PDF</a></li>
+<li>
+<p><strong>来源</strong>: 📄 arXiv 关键词检索</p>
+</li>
+<li>
+<p><strong>核心方法</strong>: 多智能体系统有时本有能力答对却报了错答案,难以解释,因为生成、通信、答案选择规则通常同时变化。本文把多智能体推理概念化为「候选生成→同伴通信→终端选择」的演化流水线,拆解每一环对最终价值的贡献,研究 LLM 判断(judging)在其中何时真正有用。</p>
+</li>
+<li><strong>对比方法/Baselines</strong>: 偏分析性工作,涉及候选供给量与答案选择机制的对照实验。</li>
+<li><strong>借鉴意义</strong>: 理解「为什么 MAS 有能力却答错」对设计更可靠的多智能体协议有意义,但本文更偏机理分析而非可直接落地的方法。</li>
+<li><strong>锐评</strong>: 选题有洞察——把 MAS 失败拆成生成/通信/选择三段来做归因,确实比笼统说「多智能体不稳」高明。问题是这类分析性论文容易陷入「解释得头头是道但给不出可操作方案」的陷阱,而且作者主力是复旦神经科学背景,MAS 系统工程的深度存疑。当作理解 MAS 失败模式的思维框架读一读可以,别指望拿来即用。🫠</li>
+</ul>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2608.25937v1" target="_blank" rel="noopener">📖 AI 精读</a></div><h2>💰 推荐/广告/金融落地</h2><div class="paper-card" data-topic="💰 推荐/广告/金融落地"><h3>14. Retrieve, Match, Escalate: Accurate and Scalable Product Linking with VLM-Distilled Cross-Encoders and Agentic VLMs</h3>
+<ul>
+<li><strong>作者</strong>: Jian Wang, Steven Xu, Sanjyot Thete, Maryam Barouti, Tom Tang, Elaine Wu, Charu Sareen, Kyle MacDonald</li>
+<li><strong>机构</strong>: Affiliation: , email:</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2608.25037v1">arXiv</a> | <a href="https://arxiv.org/pdf/2608.25037v1">PDF</a></li>
+<li>
+<p><strong>来源</strong>: 📄 arXiv 关键词检索</p>
+</li>
+<li>
+<p><strong>核心方法</strong>: 商品链接(product linking)是把商家商品记录映射到规范目录商品的实体解析任务,让下游搜索、推荐、广告看到每个商品只有一条干净条目。市场规模下,数十亿噪声记录要对齐数千万规范商品,给每个候选都用大模型打分不现实。<span class="wikilink">Retrieve-Match-Escalate</span> 三段式:检索(ANN 召回)→ 匹配(VLM 蒸馏的交叉编码器 <span class="wikilink">Cross-Encoder</span> 打分)→ 升级(难例交给 agentic VLM 联网搜证)。</p>
+</li>
+<li><strong>对比方法/Baselines</strong>: 对比训练有素的人工操作员,用 <span class="wikilink">GTIN</span> 条码等作证据,ANN 召回 + 交叉编码器架构,DoorDash 场景。</li>
+<li><strong>借鉴意义</strong>: 这是今天唯一一篇正面命中推荐/广告工程的论文,而且做得扎实:检索-精排-升级的分层架构直接对应召回/精排/兜底,难例用 agentic 联网搜证的设计尤其巧妙。做推荐/广告实体解析的必看。</li>
+<li><strong>锐评</strong>: 今天最对你胃口的一篇。三段式架构(检索→交叉编码器精排→agentic 兜底)本质就是推荐系统那套「召回-精排」思想搬到实体解析,但升级这一层做得漂亮:难例(比如两个都叫『六夸脱铸铁锅』的商品)直接让 agentic VLM 去搜条码,查出一个是不锈钢一个是搪瓷铸铁,连人工审核员都没查条码。用大模型只在难例上花钱、其余用蒸馏小模型顶,成本-精度权衡教科书级。工业界含金量高。🔥</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2608.25037v1" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="💰 推荐/广告/金融落地"><h3>15. Orchestration Framework for Financial Agents: From Algorithmic Trading to Agentic Trading</h3>
+<ul>
+<li><strong>作者</strong>: Jifeng Li, Arnav Grover, Abraham Alpuerto, Yupeng Cao, Xiao-Yang Liu</li>
+<li><strong>机构</strong>: Affiliation: , Affiliation: Purdue University, Affiliation: Stevens Institute of Technology, Affiliation: Rensselaer Polytechnic Institute, Affiliation: SecureFinAI Lab, Columbia University</li>
+<li><strong>链接</strong>: <a href="https://arxiv.org/abs/2512.02227">arXiv</a> | <a href="https://arxiv.org/pdf/2512.02227">PDF</a></li>
+<li><strong>来源</strong>: 🔥 HF Trending，⬆️ 0</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2512.02227v1/FinProtocol.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: 金融市场因时序动态和低信噪比,是 AI agent 的高难度试验场。开发有效的算法交易系统可能需要专业团队多年打磨。<span class="wikilink">FinAgent</span> 提出金融 agent 的编排框架,目标是把金融智能「民主化」给大众,协调多个金融 agent 完成从算法交易到 agentic 交易的任务。</li>
+<li><strong>对比方法/Baselines</strong>: 涉及 BTC/USDT 等加密标的,SecureFinAI Lab(哥大)出品。</li>
+<li><strong>借鉴意义</strong>: 金融多智能体编排是个热门方向,但本文更偏框架/平台展示。</li>
+<li><strong>锐评</strong>: 「把金融智能民主化给大众」这句愿景听着就危险——低信噪比市场里让散户用 agent 交易,更可能是民主化亏损。HF 上 0 赞诚实反映了它的分量。框架编排本身可能有工程价值,但拿加密货币做主要试验场、缺乏严肃的风险调整收益评估,demo 味太重。想看金融 agent 架构可以扫一眼,别当投资工具。💤</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2512.02227" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="💰 推荐/广告/金融落地"><h3>16. FinRiskAtlas: Decision-Aligned Evaluation of Large Language Models for Financial Risk Review</h3>
+<ul>
+<li><strong>作者</strong>: Suyang Zhong†, Jingzhe Zhu†, Qi Xu†, Liyao Sun, Yin Wang, Qingqing Sun<em>, Shuai Chen</em>, Tianyi Zhang*</li>
+<li><strong>机构</strong>: Affiliation:, Affiliation: Xiamen University, Affiliation: Tongji University, Affiliation: Shanghai University</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2608.25325v1">arXiv</a> | <a href="https://arxiv.org/pdf/2608.25325v1">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2608.25325v1/data_composition.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2608.25325v1/FrameWork.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2608.25325v1/FinRiskAsk_case_01.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: 部署 LLM 做专业金融审查,不只要测通用金融能力,还要模型能执行工作流所需的特定审查操作,并判断证据是否足以支撑一个可辩护的决策。已有金融 benchmark 覆盖知识、推理、合规,但评测单元不对齐真实审查决策。<span class="wikilink">FinRiskAtlas</span> 提出决策对齐的评测,含 Evidence-Grounded、AskR(主动追问)等维度。</li>
+<li><strong>对比方法/Baselines</strong>: 在 <span class="wikilink">GPT-5</span>、<span class="wikilink">DeepSeek</span> 等模型上评测,含 ERA/CRA 等审查任务。</li>
+<li><strong>借鉴意义</strong>: 金融风险审查的评测确实缺决策对齐的维度,「证据是否充分」的评估角度有新意,但整体仍是 benchmark 论文。</li>
+<li><strong>锐评</strong>: 比 FinAgent 严肃不少——至少它抓住了金融审查的真问题:模型不仅要会答,还要会说『证据不够我不敢下结论』。Evidence-Grounded 和主动追问(AskR)这两个维度确实是现有金融 benchmark 的盲区。但归根到底还是一个评测集,价值取决于任务是否真实、标注是否可靠,而这些从摘要看不出来。评测集里的良心之作,但仍是评测集。👀</li>
+</ul>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2608.25325v1" target="_blank" rel="noopener">📖 AI 精读</a></div><h2>🌍 世界模型与数据引擎</h2><div class="paper-card" data-topic="🌍 世界模型与数据引擎"><h3>17. Agentic Game Development as a Verifiable Trajectory Data Engine for Scaling World Models</h3>
+<ul>
+<li><strong>作者</strong>: HPC-AI Lab</li>
+<li><strong>机构</strong>: Affiliation: Hong Kong University of Science and Technology, National University of Singapore, Affiliation:, Affiliation: University of California, Berkeley</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2608.25518v1">arXiv</a> | <a href="https://arxiv.org/pdf/2608.25518v1">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2608.25518v1/fig_verification_loop.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: 扩展世界模型的常规策略是「爬更多视频+堆更多算力」,本文认为这低效:扩展世界模型还需要一个能提供 grounded 奖励信号的递归数据引擎。类比代码 agent——代码可执行,编译器/运行时能为 RL 后训练提供高质量奖励。本文用 agentic 游戏开发作为可验证轨迹数据引擎,把游戏引擎的自动验证当作世界模型的奖励来源。</li>
+<li><strong>对比方法/Baselines</strong>: 涉及 <span class="wikilink">MuJoCo</span>、<span class="wikilink">UnitySceneBench</span>、<span class="wikilink">CLIP</span> 等,提出 RLHEV/UWDP 等组件,港科大+NUS+伯克利。</li>
+<li><strong>借鉴意义</strong>: 把「可执行=可验证奖励」从代码迁移到世界模型是个漂亮的类比。对做 RL 数据引擎、可验证奖励的研究者有启发。</li>
+<li><strong>锐评</strong>: 类比很有想象力——代码 agent 之所以能靠 RL 起飞,是因为编译器免费提供了 grounded 奖励;世界模型缺的正是这个。用游戏引擎当「可验证轨迹数据引擎」把这个逻辑补上,思路我很欣赏。但它自己也老实承认:引擎只能廉价提供「自动验证」,而「完整任务正确性」仍属于人类意图。换句话说奖励只覆盖了半张脸,剩下一半的对齐问题没解。愿景大,落地边界要看清。👀</li>
+</ul>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2608.25518v1" target="_blank" rel="noopener">📖 AI 精读</a></div><h2>⚖️ LLM 评判与评测</h2><div class="paper-card" data-topic="⚖️ LLM 评判与评测"><h3>18. Think-Probe-Respond: Improving Large Language Models as Judges of Research Idea Novelty</h3>
+<ul>
+<li><strong>作者</strong>: Tim Schopf, Tobias Schreieder, Akiko Aizawa</li>
+<li><strong>机构</strong>: Email: , Affiliation: , Affiliation: National Institute of Informatics, Tokyo, Japan</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2608.25660v1">arXiv</a> | <a href="https://arxiv.org/pdf/2608.25660v1">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2608.25660v1/TPR.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: 自动新颖性判断能加速科学发现。LLM 越来越多被用于此,但本文发现一个被忽视的局限:尽管 LLM 生成的推理理由与人类专家高度相似,其最终新颖性判断却常大幅偏离。提出 <span class="wikilink">Think-Probe-Respond</span>:在最终作答前插入一个 probe 环节来校准判断。</li>
+<li><strong>对比方法/Baselines</strong>: 对比 <span class="wikilink">OpenAI</span> GPT 系列、OSS 模型 + <span class="wikilink">LoRA</span> 微调等 LLM-judge 基线。</li>
+<li><strong>借鉴意义</strong>: LLM 当裁判是当前评测的主流手段,「推理对但结论偏」这个观察对所有用 LLM-as-judge 的场景都是警示。</li>
+<li><strong>锐评</strong>: 观察本身有价值——「理由像专家、结论却跑偏」揭示了 LLM-judge 的一个隐患:它可能在表演推理而非真在推理。但解法 Think-Probe-Respond 就是又一个 prompt 阶段的排列组合,Think/CoT 已经烂大街,加个 Probe 到底带来多少实质校准,摘要没给硬数字。诊断有意思,处方偏轻。🫠</li>
+</ul>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2608.25660v1" target="_blank" rel="noopener">📖 AI 精读</a></div></div>
+<div id="panel-agenticrl与训练" class="tab-panel"><h2>🧠 Agentic RL 与训练</h2><div class="paper-card" data-topic="🧠 Agentic RL 与训练"><h3>1. Agent-G^2: Gaussian Guidance for Agentic Reinforcement Learning</h3>
+<ul>
+<li><strong>作者</strong>: Zixuan Wang, Yanrui Miao11footnotemark:, Zhengxi Lu, Teng Pan, Yiwen Qiu, Hongxing Li, Peng Qiu, Ruiqing Zhang, Yongliang Shen</li>
+<li><strong>机构</strong>: Affiliation: , Thanks: , Affiliation: Baidu Inc, Affiliation: Shandong University{wang.zixuan, syl}@zju.edu.cn[3pt], Zhejiang University</li>
+<li><strong>链接</strong>: <a href="https://arxiv.org/abs/2608.23318">arXiv</a> | <a href="https://arxiv.org/pdf/2608.23318">PDF</a></li>
+<li><strong>来源</strong>: 📰 HF Daily，⬆️ 16</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2608.23318v1/main.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: 针对长程 agentic 任务的奖励稀疏问题,<span class="wikilink">hint-based RL</span> 在 rollout 前保留专家轨迹的一段前缀,让策略从更接近成功的状态开始探索。本文的洞察是:引导深度(保留多少轨迹)不该是一个确定性标量。论文诊断出标量深度调度器有一半以上的分配都落在有效区间之外,于是把引导深度建模成高斯分布(Gaussian Guidance),按分布采样深度。</li>
+<li><strong>对比方法/Baselines</strong>: 对比 <span class="wikilink">GRPO</span>、<span class="wikilink">GiGPO</span>、<span class="wikilink">RLVMR</span> 等 agentic RL 方法,在 <span class="wikilink">WebShop</span>、ALFWorld 环境上评测,底座用 Qwen2.5-1.5B-Instruct。</li>
+<li><strong>借鉴意义</strong>: 如果你在做 agentic RL 或长程任务的 RLHF,引导深度错配是个真实且被忽视的坑。把它从超参提升到可学习分布,思路干净,可迁移到你自己的 rollout 调度。</li>
+<li><strong>锐评</strong>: 难得看到一篇不是纯 benchmark 灌水的 agentic RL。它诊断得很实在——先用 32 次 rollout 估计每个(任务,深度)的成功率,证明标量调度器一半以上都错配,再对症下药。高斯建模是合理但不算惊艳的选择,真正的问题是 1.5B 小模型 + ALFWorld/WebShop 这套玩具环境能不能外推到真实长程任务,摘要没给答案。方法论扎实,规模存疑。🔥</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2608.23318" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🧠 Agentic RL 与训练"><h3>2. Training Alignment Auditors via Reinforcement Learning</h3>
+<ul>
+<li><strong>作者</strong>: Paul Rosu, Rowan Wang</li>
+<li><strong>机构</strong>: Affiliation: </li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2608.25460v1">arXiv</a> | <a href="https://arxiv.org/pdf/2608.25460v1">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2608.25460v1/figures/strategy_stacked_grid.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2608.25460v1/figures/fp_dose_response_ep325.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2608.25460v1/figures/all_configs_stacked_grid.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: 前沿模型的对齐审计越来越依赖 LLM 审计员大规模发现不良行为,但当前自动审计员在「连贯调查」和「审计真实性」上都吃力。本文用强化学习改进 LLM 审计员:在最佳训练环境中,策略去调查那些通过系统提示植入了隐藏行为的目标模型,学会主动挖掘。</li>
+<li><strong>对比方法/Baselines</strong>: 在 <span class="wikilink">AuditBench</span> 上评测,涉及 <span class="wikilink">PRISM-4</span> 等目标模型,分析假阳性(FP)和剂量-响应关系。</li>
+<li><strong>借鉴意义</strong>: 对齐审计是 AI 安全的关键环节,用 RL 训练审计员而非手写策略,是把审计能力规模化的方向。做安全/评测的值得看。</li>
+<li><strong>锐评</strong>: 方向重要且时髦——手写审计策略不 scale,用 RL 让审计员自己学会挖隐藏行为是正解。难点它自己也点破了:审计员会以四种方式失败,包括「误告」和「让目标模型察觉自己在被评测」。后者尤其棘手,一旦目标模型学会「装乖」,整个审计就失效了。摘要没说怎么防审计员被识破,这是安全审计的元级隐患。👀</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2608.25460v1" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🧠 Agentic RL 与训练"><h3>3. Towards Reliable, Generalizable, and Specific In-Context Knowledge Editing via Multi-Objective Reinforcement Learning</h3>
+<ul>
+<li><strong>作者</strong>: Xuzhong Wang, Maiqi Jiang, Tejal Nair, Girija Bhusal, Yanfu Zhang, Haipeng Chen</li>
+<li><strong>机构</strong>: Email: , Affiliation: , Affiliation: Tribhuvan University, Affiliation: College of William and Mary</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2608.25100v1">arXiv</a> | <a href="https://arxiv.org/pdf/2608.25100v1">PDF</a></li>
+<li>
+<p><strong>来源</strong>: 📄 arXiv 关键词检索</p>
+</li>
+<li>
+<p><strong>核心方法</strong>: LLM 受限于静态参数知识,预训练结束就过时。知识编辑在不全量重训的情况下更新目标事实。上下文知识编辑(in-context knowledge editing)因免训练、适用黑盒模型而受关注。本文用多目标强化学习(Multi-Objective RL)提升上下文知识编辑的可靠性、泛化性和特异性。</p>
+</li>
+<li><strong>对比方法/Baselines</strong>: 对比 <span class="wikilink">IKE</span> 等上下文编辑方法,优化 RETAIN/COPY 等多个目标。</li>
+<li><strong>借鉴意义</strong>: 知识编辑对保持 LLM 时效性有价值,用 MORL 平衡可靠/泛化/特异三个常打架的目标,思路合理。</li>
+<li><strong>锐评</strong>: 把知识编辑的三难(可靠、泛化、特异)显式建成多目标 RL,比单目标硬调要诚实——这三个目标本来就互相拉扯。但上下文知识编辑本身是个天花板不高的路子:靠塞 prompt 改行为,一旦上下文变长或事实冲突就容易失效,MORL 只是在这个受限框架里做优化。方法工整,赛道天花板有限。🫠</li>
+</ul>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2608.25100v1" target="_blank" rel="noopener">📖 AI 精读</a></div></div>
+<div id="panel-agent编排与成本" class="tab-panel"><h2>🤖 Agent 编排与成本</h2><div class="paper-card" data-topic="🤖 Agent 编排与成本"><h3>4. ProgRouter: Online Progress-Guided Orchestration for Multi-Agent LLM Workflows under Quality-Cost Tradeoffs</h3>
+<ul>
+<li><strong>作者</strong>: Songyuan Li, Ahmed M. Abdelmoniem, Shiqiang Wang</li>
+<li><strong>机构</strong>: Email: , Affiliation: Queen Mary University of London, UK, Affiliation: , Affiliation: Aston University, UK, ††thanks: Corresponding author. Work done while the author was with Queen Mary University of London, UK, Affiliation: University of Exeter, UK</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2608.25992v1">arXiv</a> | <a href="https://arxiv.org/pdf/2608.25992v1">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2608.25992v1/system-model.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2608.25992v1/progrouter_procedures.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2608.25992v1/progrouter-model-family.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: 多智能体 LLM 工作流因反复调用和长上下文累积而成本高昂。已有级联路由(cascade routing)做的是一次性、query 级的决策,无法适应工作流推进中的动态变化。<span class="wikilink">ProgRouter</span> 提出在线、进度制导(progress-guided)的编排:在每一步根据当前进展决定用哪个模型/走哪条路径,而非开局一锤定音。</li>
+<li><strong>对比方法/Baselines</strong>: 对比 <span class="wikilink">CASCADIA</span>、<span class="wikilink">MasRouter</span> 等级联/路由方法,在 <span class="wikilink">HumanEval</span>、<span class="wikilink">MBPP</span>、<span class="wikilink">MATH-500</span>、<span class="wikilink">ASQA</span> 上评测质量-成本权衡。</li>
+<li><strong>借鉴意义</strong>: 多智能体系统落地的最大阻力就是成本。把路由从静态改成随进度自适应,对任何跑 MAS 生产系统的人都直接有用。</li>
+<li><strong>锐评</strong>: 问题选得准:一次性路由确实是当前 MAS 成本控制的软肋,长程任务里前期和后期需要的模型能力完全不同。在线进度制导的方向对。担心的是 benchmark 都偏结构化(代码/数学/QA),这类任务进度信号相对清晰;换成开放式任务,「进度」怎么可靠估计是个没解决的难题。方向正确,泛化待验。👀</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2608.25992v1" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🤖 Agent 编排与成本"><h3>5. Understanding the Energy Scaling of Large Language Model Inference Across Context Lengths and Attention Architectures</h3>
+<ul>
+<li><strong>作者</strong>: Molka Chkir1, Syed Muhammad Danish1, Jos Höll2, Arghavan Asad1</li>
+<li><strong>机构</strong>: Affiliation: 1Algoma University, Brampton, Canada, Affiliation: 2School of Informatics, Reutlingen University, Reutlingen, Affiliation: , Emails: {mchkir, syed.danish, arghavan.asad}@algomau.ca, jos.hoell@reutlingen-university.de</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2608.25096v1">arXiv</a> | <a href="https://arxiv.org/pdf/2608.25096v1">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2608.25096v1/Figures/methodology.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2608.25096v1/Figures/rq2_energy_plot.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2608.25096v1/Figures/rq2_latency_plot.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: 多智能体系统靠自然语言消息协作,这些消息消耗 40-60% 的 token 预算。全换成结构化图(typed dependency graph)能省钱,但在需要自适应推理的任务上会失败。<span class="wikilink">Routed-Graph-Handoff</span> 用一个轻量 LLM 路由器(155 token,仅 0.15% 开销)为每次委派在「类型化依赖图」和「自然语言」之间二选一,图能压缩 2 倍,自然语言做兜底。</li>
+<li><strong>对比方法/Baselines</strong>: 在 <span class="wikilink">AppWorld</span>、<span class="wikilink">BrowseComp</span>、<span class="wikilink">BFCL</span> 上评测,底座 <span class="wikilink">GPT-5</span>,对比纯图(GRAPH)和纯自然语言(NL)两种极端。</li>
+<li><strong>借鉴意义</strong>: 和 ProgRouter 是同一个母题的不同切面——都在攻多智能体通信成本。这篇更聚焦「消息格式」这一层,155 token 的路由开销几乎白送,ROI 直观。</li>
+<li><strong>锐评</strong>: 很务实的一篇。承认了一个大家心照不宣的事实:自然语言消息是 MAS 里最肥的 token 黑洞,但硬换成图又会在需要 nuance 的地方翻车。让路由器逐次委派决定用图还是话,是「小改动大收益」的典型。0.15% 开销这个数字很诱人,但要小心——路由器选错格式的代价(任务失败)可能远大于省下的 token,摘要没给错误路由的下游损失分析。👀</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2608.25096v1" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🤖 Agent 编排与成本"><h3>6. AsymSpec: Context-Asymmetric Speculative Decoding for Agentic LLMs</h3>
+<ul>
+<li><strong>作者</strong>: Sheng Liang, Yongyue Zhang, Nathanael Brian, Hang Lv, Hao Wang, Chen Zhang, Yong Liu</li>
+<li><strong>机构</strong>: Affiliation: University of Science and Technology of China, Affiliation: Huawei Technologies Co., Ltd, Affiliation: </li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2608.26004v1">arXiv</a> | <a href="https://arxiv.org/pdf/2608.26004v1">PDF</a></li>
+<li>
+<p><strong>来源</strong>: 📄 arXiv 关键词检索</p>
+</li>
+<li>
+<p><strong>核心方法</strong>: Agentic 流水线随检索、工具调用、多轮交互累积上下文,推理成本飙升。为压延迟常压缩输入,但会掉精度。<span class="wikilink">投机解码</span>(SD)本来能无损加速,但它假设 drafter 和 verifier 共享完全相同的上下文,这在 agentic 场景不成立。<span class="wikilink">AsymSpec</span> 提出上下文不对称的投机解码:让 drafter 用压缩上下文、verifier 用完整上下文,兼顾速度与精度。</p>
+</li>
+<li><strong>对比方法/Baselines</strong>: 在 <span class="wikilink">LongBench</span>、<span class="wikilink">GAIA</span>、<span class="wikilink">MultiChallenge</span>、<span class="wikilink">MathVista</span> 上评测,覆盖长上下文和 agentic 任务。</li>
+<li><strong>借鉴意义</strong>: 投机解码是当下推理加速的主力,但没人认真处理过 agentic 场景「draft 和 verify 上下文不一致」这个前提被打破的情况。做 LLM serving 的值得看。</li>
+<li><strong>锐评</strong>: 切入点很聪明——大家都默认 SD 的 drafter/verifier 上下文一致,agentic 场景恰恰打破了这个假设,这个 gap 抓得漂亮。让 drafter 吃压缩上下文、verifier 吃完整上下文,理论上鱼和熊掌兼得。风险在于:如果压缩把关键信息压没了,drafter 的接受率会崩,加速比就成了纸面数字。摘要没给接受率曲线,得看正文。👀</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2608.26004v1" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🤖 Agent 编排与成本"><h3>7. Can your AI agent be cheaper? Investigating the effects of task specifications on token spend in agentic coding tasks</h3>
+<ul>
+<li><strong>作者</strong>: Jakub Smékal</li>
+<li><strong>机构</strong>: Affiliation: Stanford University, Affiliation: </li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2608.25399v1">arXiv</a> | <a href="https://arxiv.org/pdf/2608.25399v1">PDF</a></li>
+<li>
+<p><strong>来源</strong>: 📄 arXiv 关键词检索</p>
+</li>
+<li>
+<p><strong>核心方法</strong>: Agentic coding 工作流已广泛部署,长程推理+工具使用让 token 花销成了成本和效率的关键。本文问:任务规格(specification)如何塑造 agent 的 token 花销?这种花销能否提前预测?与已有研究「固定任务、变模型」相反,本文反其道:固定模型,把 prompt/任务规格当变量。</p>
+</li>
+<li><strong>对比方法/Baselines</strong>: 参考在 <span class="wikilink">SWE</span>-bench Verified 上「同任务不同模型 token 差 30 倍」的已有发现,底座覆盖 OpenAI 等前沿模型。</li>
+<li><strong>借鉴意义</strong>: 对每天烧 Claude Code / agentic coding token 的人这是灵魂拷问。如果任务规格的写法能预测并压低 token 花销,那就是可操作的省钱杠杆。</li>
+<li><strong>锐评</strong>: 选题接地气到我想给它鼓掌——「你的 AI agent 能不能更便宜」,标题就是每个用 agentic coding 的人的心声。反转实验设计(固定模型变 prompt)也比一堆刷榜论文有想法。但从摘要看更像一篇观察性研究而非给出可落地的 prompt 优化方法,如果结论停留在「规格影响很大」这种正确的废话,那价值就打折。期待它真给出可预测的模型。👀</li>
+</ul>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2608.25399v1" target="_blank" rel="noopener">📖 AI 精读</a></div></div>
+<div id="panel-工具使用与多模态agent" class="tab-panel"><h2>🛠️ 工具使用与多模态 Agent</h2><div class="paper-card" data-topic="🛠️ 工具使用与多模态 Agent"><h3>8. AdaVDR: Adaptive Tool Use and Reflection for Video Deep Research</h3>
+<ul>
+<li><strong>作者</strong>: Xintong Zhang, Xiaomeng Fan, Shilin Yan, Ekko He, Zicheng Liu, Zijian Zou, Guannan Zhang, Yuwei Wu, Zhi Gao, Hongwei Xue</li>
+<li><strong>机构</strong>: Affiliation: Accio Team, Alibaba Group, Affiliation: , Affiliation: Beijing Key Laboratory of Intelligent Information TechnologySchool of Computer Science &amp; Technology, Beijing Institute of Technology</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2608.25559v1">arXiv</a> | <a href="https://arxiv.org/pdf/2608.25559v1">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2608.25559v1/teaser.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2608.25559v1/data_collection.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: 视频深度研究(Video Deep Research)要同时理解视频内容并从开放网络检索外部知识。不同的问题和视频需要不同的工具使用策略,不恰当的工具调用会产生错误结果。<span class="wikilink">AdaVDR</span> 提出自适应工具使用+反思机制:根据 grounding 和检索的不确定性,决定是否发起工具调用,避免不必要的昂贵交互。</li>
+<li><strong>对比方法/Baselines</strong>: 对比 <span class="wikilink">VideoDR</span> 等视频深研方法,底座含 <span class="wikilink">GPT-5</span>,用 SFT + 视觉语言模型,涉及 ASR、字幕等工具。</li>
+<li><strong>借鉴意义</strong>: 多模态 agent 的工具调用「该不该调」是普遍问题,过度调用推高延迟和出错率。自适应触发的思路可迁移到任何 tool-use agent。</li>
+<li><strong>锐评</strong>: 问题真实:agent 无脑调工具既费钱又添乱,尤其视频这种重感知的场景。用不确定性来门控工具调用是合理设计。但「不确定性估计」本身在多模态里就是老大难,估不准的话自适应反而更糟——摘要没说不确定性怎么算,这是全篇成败的关键。来自阿里 Accio 团队,工程落地味应该够。👀</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2608.25559v1" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🛠️ 工具使用与多模态 Agent"><h3>9. Paint What You See: Benchmarking Dexterous Visual Tool Use in Multimodal Agents</h3>
+<ul>
+<li><strong>作者</strong>: Shudong Liu, Dongyang Chen, Enci Zhang, Jinwei Liang, Zheng Ma, Lewei Lu\corresponding</li>
+<li><strong>机构</strong>: Peking University, Tsinghua University, shooo, eczhang@stu.pku.edu.cn, chen-dy25@mails.tsinghua.edu.cn, liangjinwei, mazheng2, luotto@sensetime.com</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2608.25417v1">arXiv</a> | <a href="https://arxiv.org/pdf/2608.25417v1">PDF</a></li>
+<li>
+<p><strong>来源</strong>: 📄 arXiv 关键词检索</p>
+</li>
+<li>
+<p><strong>核心方法</strong>: 评测正从静态 QA 转向 agent 通过外部工具行动的场景。本文识别出一个被忽视的能力——灵巧视觉工具使用(dexterous visual tool use):细粒度、闭环、参数化的视觉动作,模型要从视觉证据推断工具参数,而这些参数直接决定最终结果。提出 <span class="wikilink">EASEL</span> benchmark 来衡量。</p>
+</li>
+<li><strong>对比方法/Baselines</strong>: 在 <span class="wikilink">GPT-5</span>、<span class="wikilink">GLM</span> 等多模态模型上评测,涉及 CoT、AUC 等指标。</li>
+<li><strong>借鉴意义</strong>: 现有 tool-use 评测大多是「调不调对工具」,很少考「参数调得准不准」。参数化闭环视觉动作是更真实的 agent 能力维度,做多模态 agent 评测的值得参考。</li>
+<li><strong>锐评</strong>: 「Paint What You See」这标题起得有画面感,能力定义也确实戳到盲区——大家评 agent 都在看「选对工具了吗」,没人认真评「参数填对了吗」。闭环参数化视觉动作是个好维度。但这终究是又一个 benchmark 论文,价值取决于任务设计是否够难、够真实,而不是能不能被下一代模型一周刷爆。北大+清华+商汤班底,质量应该有底。👀</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2608.25417v1" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🛠️ 工具使用与多模态 Agent"><h3>10. WeMM-Embedding: WeChat Multi-Modal Embedding Technical Report</h3>
+<ul>
+<li><strong>作者</strong>: Junjie Zhou∗</li>
+<li><strong>机构</strong>: WeChat Vision, Tencent Inc</li>
+<li><strong>链接</strong>: <a href="https://arxiv.org/abs/2608.24053">arXiv</a> | <a href="https://arxiv.org/pdf/2608.24053">PDF</a></li>
+<li>
+<p><strong>来源</strong>: 🔥 HF Trending，⬆️ 59</p>
+</li>
+<li>
+<p><strong>核心方法</strong>: 通用多模态 embedding 正成为现代 AI 系统的核心组件,支撑检索、推荐、分类和 agentic 系统。<span class="wikilink">WeMM-Embedding</span> 是微信视觉团队的通用多模态 embedding 模型族,支持文本、图像、视频、视觉文档及任意组合。收集/合成了数亿训练样本,用统一的 pair-based 格式表达异构数据,纳入统一训练框架同时保留原始监督信号。</p>
+</li>
+<li><strong>对比方法/Baselines</strong>: 在 <span class="wikilink">MMEB</span> 上评测,用 <span class="wikilink">MRL</span>(Matryoshka)表示学习,NDCG 等检索指标。</li>
+<li><strong>借鉴意义</strong>: 推荐/检索直接受益——一个统一的多模态 embedding 空间能同时服务召回、推荐、分类。腾讯出品,数亿级训练数据,工程可参考性高。</li>
+<li><strong>锐评</strong>: 技术报告类,HF 上 59 赞不是白来的——微信这体量的多模态 embedding,数据和工程规模就是护城河。统一 pair-based 格式吸收异构监督信号是干净的做法。但技术报告的通病是「什么都支持、什么都 SOTA」,缺少诚实的失败分析;而且几亿样本的配方普通团队根本复现不了,参考价值大于可复现价值。当资源手册看不错。👀</li>
+</ul>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2608.24053" target="_blank" rel="noopener">📖 AI 精读</a></div></div>
+<div id="panel-多智能体可靠性" class="tab-panel"><h2>🧩 多智能体可靠性</h2><div class="paper-card" data-topic="🧩 多智能体可靠性"><h3>11. Repair or Resample? Rethinking Failure Debugging in LLM Multi-Agent Systems</h3>
+<ul>
+<li><strong>作者</strong>: Zhongwen Luan, Xiaoyu Zhang, Ming Hu, Yue Yang, Jiongchi Yu, Xiaohong Chen</li>
+<li><strong>机构</strong>: Email: , Affiliation: , Affiliation: Nanyang Technological University, Affiliation: Singapore Management University, Affiliation: Xi’an University of Architecture and Technology, Affiliation: East China Normal University</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2608.25920v1">arXiv</a> | <a href="https://arxiv.org/pdf/2608.25920v1">PDF</a></li>
+<li>
+<p><strong>来源</strong>: 📄 arXiv 关键词检索</p>
+</li>
+<li>
+<p><strong>核心方法</strong>: LLM 多智能体系统(MAS)应用于长程复杂任务时,可靠性是落地的核心瓶颈。已有的 MAS 调试/修复方法通常靠重跑并重采样整条执行轨迹,昂贵且低效。本文提出 <span class="wikilink">SymTrace</span>/<span class="wikilink">SymFail</span> 思路:符号化定位可疑节点(Suspicious-Node),精准修复而非全轨迹重跑。</p>
+</li>
+<li><strong>对比方法/Baselines</strong>: 在 <span class="wikilink">CrewAI</span>、<span class="wikilink">Magentic-One</span> 等 MAS 框架上评测,对比 <span class="wikilink">Critic-Agent</span>、<span class="wikilink">Self-Reflection</span> 等修复基线。</li>
+<li><strong>借鉴意义</strong>: MAS 一出错就重跑整条轨迹是巨大的浪费。定位到具体故障节点做定向修复,是工程降本的实招,对跑 MAS 生产系统的人直接有用。</li>
+<li><strong>锐评</strong>: 「Repair or Resample」这个问句问到了点子上——现在的 MAS 修复基本是「不行就重开」,粗暴且烧钱。符号化定位可疑节点、只修坏的地方,方向绝对正确。关键难点在故障归因本身:多智能体的错误经常是累积和交互产生的,定位到「单个可疑节点」可能过度简化了真实的失败链。摘要没给归因准确率,这是要盯的数字。👀</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2608.25920v1" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🧩 多智能体可靠性"><h3>12. MACGen: Toward Functionally Correct and Secure Code Generation via Multi-Agent Collaboration</h3>
+<ul>
+<li><strong>作者</strong>: Miseon Yu, Jaehoon Choi, Younghan Lee, Yunheung Paek</li>
+<li><strong>机构</strong>: Affiliation: Sungshin Women’s University, Email: , Affiliation: , Affiliation: Seoul National University</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2608.25457v1">arXiv</a> | <a href="https://arxiv.org/pdf/2608.25457v1">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2608.25457v1/main_v9.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: LLM 生成代码强,但常含安全漏洞。安全代码生成本质是多目标问题:功能正确+安全。已有方法靠注入外部安全知识或 agentic 反馈迭代精炼。<span class="wikilink">MACGen</span> 用多智能体协作来同时优化两个目标。</li>
+<li><strong>对比方法/Baselines</strong>: 对比 <span class="wikilink">INDICT</span>、<span class="wikilink">CodeGuarder</span>、<span class="wikilink">SecGuide</span> 等安全代码生成方法,用 <span class="wikilink">BaxBench</span>、<span class="wikilink">CWE</span>/<span class="wikilink">OWASP</span> 漏洞标准评测。</li>
+<li><strong>借鉴意义</strong>: 安全代码生成是 agentic coding 落地绕不开的一环,但这篇方法组合偏常规。</li>
+<li><strong>锐评</strong>: 问题真实、目标正当,但方法论就是「多智能体协作」这个 2026 年的万能膏药——一个 agent 写、一个 agent 查安全,套路化明显。和 INDICT、CodeGuarder 这批前作的差异化在摘要里没讲清楚。安全代码生成需要的是可验证的保证,多智能体投票并不能提供,只是把「可能有漏洞」变成「可能少一点漏洞」。🫠</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2608.25457v1" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🧩 多智能体可靠性"><h3>13. Candidate supply and answer selection shape the value of LLM judging in multi-agent systems</h3>
+<ul>
+<li><strong>作者</strong>: Ji, Jia-Hao, Li, Sijie, Cheng, Jiabei, She, Zixi, Yu, Jin-Tai, Yuan, Zhiyuan</li>
+<li><strong>机构</strong>: Corresponding authors: jintai_yu@fudan.edu.cn (J.-T.Y.); zhiyuan@fudan.edu.cn (Z.Y.), Department of Neurology and National Center for Neurological Diseases, Huashan Hospital, State Key Laboratory of, Institute of Science and Technology for Brain-Inspired Intelligence, MOE Key Laboratory of Computational, Medical Neurobiology and Ministry of Education Frontiers Center for Brain Science, Shanghai Medical College, Fudan, Neuroscience and Brain-Inspired Intelligence, MOE Frontiers Center for Brain Science, Fudan University, Shanghai, School of Automation and Intelligent Sensing, Shanghai Jiao Tong University, Shanghai 200433, China, Shanghai Academy of Artificial Intelligence for Science, Shanghai 200003, China, University, Shanghai 200040, China</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2608.25937v1">arXiv</a> | <a href="https://arxiv.org/pdf/2608.25937v1">PDF</a></li>
+<li>
+<p><strong>来源</strong>: 📄 arXiv 关键词检索</p>
+</li>
+<li>
+<p><strong>核心方法</strong>: 多智能体系统有时本有能力答对却报了错答案,难以解释,因为生成、通信、答案选择规则通常同时变化。本文把多智能体推理概念化为「候选生成→同伴通信→终端选择」的演化流水线,拆解每一环对最终价值的贡献,研究 LLM 判断(judging)在其中何时真正有用。</p>
+</li>
+<li><strong>对比方法/Baselines</strong>: 偏分析性工作,涉及候选供给量与答案选择机制的对照实验。</li>
+<li><strong>借鉴意义</strong>: 理解「为什么 MAS 有能力却答错」对设计更可靠的多智能体协议有意义,但本文更偏机理分析而非可直接落地的方法。</li>
+<li><strong>锐评</strong>: 选题有洞察——把 MAS 失败拆成生成/通信/选择三段来做归因,确实比笼统说「多智能体不稳」高明。问题是这类分析性论文容易陷入「解释得头头是道但给不出可操作方案」的陷阱,而且作者主力是复旦神经科学背景,MAS 系统工程的深度存疑。当作理解 MAS 失败模式的思维框架读一读可以,别指望拿来即用。🫠</li>
+</ul>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2608.25937v1" target="_blank" rel="noopener">📖 AI 精读</a></div></div>
+<div id="panel-推荐广告金融落地" class="tab-panel"><h2>💰 推荐/广告/金融落地</h2><div class="paper-card" data-topic="💰 推荐/广告/金融落地"><h3>14. Retrieve, Match, Escalate: Accurate and Scalable Product Linking with VLM-Distilled Cross-Encoders and Agentic VLMs</h3>
+<ul>
+<li><strong>作者</strong>: Jian Wang, Steven Xu, Sanjyot Thete, Maryam Barouti, Tom Tang, Elaine Wu, Charu Sareen, Kyle MacDonald</li>
+<li><strong>机构</strong>: Affiliation: , email:</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2608.25037v1">arXiv</a> | <a href="https://arxiv.org/pdf/2608.25037v1">PDF</a></li>
+<li>
+<p><strong>来源</strong>: 📄 arXiv 关键词检索</p>
+</li>
+<li>
+<p><strong>核心方法</strong>: 商品链接(product linking)是把商家商品记录映射到规范目录商品的实体解析任务,让下游搜索、推荐、广告看到每个商品只有一条干净条目。市场规模下,数十亿噪声记录要对齐数千万规范商品,给每个候选都用大模型打分不现实。<span class="wikilink">Retrieve-Match-Escalate</span> 三段式:检索(ANN 召回)→ 匹配(VLM 蒸馏的交叉编码器 <span class="wikilink">Cross-Encoder</span> 打分)→ 升级(难例交给 agentic VLM 联网搜证)。</p>
+</li>
+<li><strong>对比方法/Baselines</strong>: 对比训练有素的人工操作员,用 <span class="wikilink">GTIN</span> 条码等作证据,ANN 召回 + 交叉编码器架构,DoorDash 场景。</li>
+<li><strong>借鉴意义</strong>: 这是今天唯一一篇正面命中推荐/广告工程的论文,而且做得扎实:检索-精排-升级的分层架构直接对应召回/精排/兜底,难例用 agentic 联网搜证的设计尤其巧妙。做推荐/广告实体解析的必看。</li>
+<li><strong>锐评</strong>: 今天最对你胃口的一篇。三段式架构(检索→交叉编码器精排→agentic 兜底)本质就是推荐系统那套「召回-精排」思想搬到实体解析,但升级这一层做得漂亮:难例(比如两个都叫『六夸脱铸铁锅』的商品)直接让 agentic VLM 去搜条码,查出一个是不锈钢一个是搪瓷铸铁,连人工审核员都没查条码。用大模型只在难例上花钱、其余用蒸馏小模型顶,成本-精度权衡教科书级。工业界含金量高。🔥</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2608.25037v1" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="💰 推荐/广告/金融落地"><h3>15. Orchestration Framework for Financial Agents: From Algorithmic Trading to Agentic Trading</h3>
+<ul>
+<li><strong>作者</strong>: Jifeng Li, Arnav Grover, Abraham Alpuerto, Yupeng Cao, Xiao-Yang Liu</li>
+<li><strong>机构</strong>: Affiliation: , Affiliation: Purdue University, Affiliation: Stevens Institute of Technology, Affiliation: Rensselaer Polytechnic Institute, Affiliation: SecureFinAI Lab, Columbia University</li>
+<li><strong>链接</strong>: <a href="https://arxiv.org/abs/2512.02227">arXiv</a> | <a href="https://arxiv.org/pdf/2512.02227">PDF</a></li>
+<li><strong>来源</strong>: 🔥 HF Trending，⬆️ 0</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2512.02227v1/FinProtocol.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: 金融市场因时序动态和低信噪比,是 AI agent 的高难度试验场。开发有效的算法交易系统可能需要专业团队多年打磨。<span class="wikilink">FinAgent</span> 提出金融 agent 的编排框架,目标是把金融智能「民主化」给大众,协调多个金融 agent 完成从算法交易到 agentic 交易的任务。</li>
+<li><strong>对比方法/Baselines</strong>: 涉及 BTC/USDT 等加密标的,SecureFinAI Lab(哥大)出品。</li>
+<li><strong>借鉴意义</strong>: 金融多智能体编排是个热门方向,但本文更偏框架/平台展示。</li>
+<li><strong>锐评</strong>: 「把金融智能民主化给大众」这句愿景听着就危险——低信噪比市场里让散户用 agent 交易,更可能是民主化亏损。HF 上 0 赞诚实反映了它的分量。框架编排本身可能有工程价值,但拿加密货币做主要试验场、缺乏严肃的风险调整收益评估,demo 味太重。想看金融 agent 架构可以扫一眼,别当投资工具。💤</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2512.02227" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="💰 推荐/广告/金融落地"><h3>16. FinRiskAtlas: Decision-Aligned Evaluation of Large Language Models for Financial Risk Review</h3>
+<ul>
+<li><strong>作者</strong>: Suyang Zhong†, Jingzhe Zhu†, Qi Xu†, Liyao Sun, Yin Wang, Qingqing Sun<em>, Shuai Chen</em>, Tianyi Zhang*</li>
+<li><strong>机构</strong>: Affiliation:, Affiliation: Xiamen University, Affiliation: Tongji University, Affiliation: Shanghai University</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2608.25325v1">arXiv</a> | <a href="https://arxiv.org/pdf/2608.25325v1">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2608.25325v1/data_composition.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2608.25325v1/FrameWork.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2608.25325v1/FinRiskAsk_case_01.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: 部署 LLM 做专业金融审查,不只要测通用金融能力,还要模型能执行工作流所需的特定审查操作,并判断证据是否足以支撑一个可辩护的决策。已有金融 benchmark 覆盖知识、推理、合规,但评测单元不对齐真实审查决策。<span class="wikilink">FinRiskAtlas</span> 提出决策对齐的评测,含 Evidence-Grounded、AskR(主动追问)等维度。</li>
+<li><strong>对比方法/Baselines</strong>: 在 <span class="wikilink">GPT-5</span>、<span class="wikilink">DeepSeek</span> 等模型上评测,含 ERA/CRA 等审查任务。</li>
+<li><strong>借鉴意义</strong>: 金融风险审查的评测确实缺决策对齐的维度,「证据是否充分」的评估角度有新意,但整体仍是 benchmark 论文。</li>
+<li><strong>锐评</strong>: 比 FinAgent 严肃不少——至少它抓住了金融审查的真问题:模型不仅要会答,还要会说『证据不够我不敢下结论』。Evidence-Grounded 和主动追问(AskR)这两个维度确实是现有金融 benchmark 的盲区。但归根到底还是一个评测集,价值取决于任务是否真实、标注是否可靠,而这些从摘要看不出来。评测集里的良心之作,但仍是评测集。👀</li>
+</ul>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2608.25325v1" target="_blank" rel="noopener">📖 AI 精读</a></div></div>
+<div id="panel-世界模型与数据引擎" class="tab-panel"><h2>🌍 世界模型与数据引擎</h2><div class="paper-card" data-topic="🌍 世界模型与数据引擎"><h3>17. Agentic Game Development as a Verifiable Trajectory Data Engine for Scaling World Models</h3>
+<ul>
+<li><strong>作者</strong>: HPC-AI Lab</li>
+<li><strong>机构</strong>: Affiliation: Hong Kong University of Science and Technology, National University of Singapore, Affiliation:, Affiliation: University of California, Berkeley</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2608.25518v1">arXiv</a> | <a href="https://arxiv.org/pdf/2608.25518v1">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2608.25518v1/fig_verification_loop.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: 扩展世界模型的常规策略是「爬更多视频+堆更多算力」,本文认为这低效:扩展世界模型还需要一个能提供 grounded 奖励信号的递归数据引擎。类比代码 agent——代码可执行,编译器/运行时能为 RL 后训练提供高质量奖励。本文用 agentic 游戏开发作为可验证轨迹数据引擎,把游戏引擎的自动验证当作世界模型的奖励来源。</li>
+<li><strong>对比方法/Baselines</strong>: 涉及 <span class="wikilink">MuJoCo</span>、<span class="wikilink">UnitySceneBench</span>、<span class="wikilink">CLIP</span> 等,提出 RLHEV/UWDP 等组件,港科大+NUS+伯克利。</li>
+<li><strong>借鉴意义</strong>: 把「可执行=可验证奖励」从代码迁移到世界模型是个漂亮的类比。对做 RL 数据引擎、可验证奖励的研究者有启发。</li>
+<li><strong>锐评</strong>: 类比很有想象力——代码 agent 之所以能靠 RL 起飞,是因为编译器免费提供了 grounded 奖励;世界模型缺的正是这个。用游戏引擎当「可验证轨迹数据引擎」把这个逻辑补上,思路我很欣赏。但它自己也老实承认:引擎只能廉价提供「自动验证」,而「完整任务正确性」仍属于人类意图。换句话说奖励只覆盖了半张脸,剩下一半的对齐问题没解。愿景大,落地边界要看清。👀</li>
+</ul>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2608.25518v1" target="_blank" rel="noopener">📖 AI 精读</a></div></div>
+<div id="panel-llm评判与评测" class="tab-panel"><h2>⚖️ LLM 评判与评测</h2><div class="paper-card" data-topic="⚖️ LLM 评判与评测"><h3>18. Think-Probe-Respond: Improving Large Language Models as Judges of Research Idea Novelty</h3>
+<ul>
+<li><strong>作者</strong>: Tim Schopf, Tobias Schreieder, Akiko Aizawa</li>
+<li><strong>机构</strong>: Email: , Affiliation: , Affiliation: National Institute of Informatics, Tokyo, Japan</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2608.25660v1">arXiv</a> | <a href="https://arxiv.org/pdf/2608.25660v1">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2608.25660v1/TPR.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: 自动新颖性判断能加速科学发现。LLM 越来越多被用于此,但本文发现一个被忽视的局限:尽管 LLM 生成的推理理由与人类专家高度相似,其最终新颖性判断却常大幅偏离。提出 <span class="wikilink">Think-Probe-Respond</span>:在最终作答前插入一个 probe 环节来校准判断。</li>
+<li><strong>对比方法/Baselines</strong>: 对比 <span class="wikilink">OpenAI</span> GPT 系列、OSS 模型 + <span class="wikilink">LoRA</span> 微调等 LLM-judge 基线。</li>
+<li><strong>借鉴意义</strong>: LLM 当裁判是当前评测的主流手段,「推理对但结论偏」这个观察对所有用 LLM-as-judge 的场景都是警示。</li>
+<li><strong>锐评</strong>: 观察本身有价值——「理由像专家、结论却跑偏」揭示了 LLM-judge 的一个隐患:它可能在表演推理而非真在推理。但解法 Think-Probe-Respond 就是又一个 prompt 阶段的排列组合,Think/CoT 已经烂大街,加个 Probe 到底带来多少实质校准,摘要没给硬数字。诊断有意思,处方偏轻。🫠</li>
+</ul>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2608.25660v1" target="_blank" rel="noopener">📖 AI 精读</a></div></div>
+<hr>
+<h2>被排除的论文</h2>
+<ul>
+<li>Large Language Model Few-Shot Prompting ... Predicting Patient Preferences (P4) — 医疗/患者偏好预测,命中 negative_keywords(patient/diagnosis)</li>
+<li>BVR Sim: Heterogeneous Air-Combat Reinforcement Learning — 军事空战 RL 环境,与推荐/广告/LLM Agent 核心无交集</li>
+<li>Simulating Cognitive Smart Freight Corridors with ABM and RL — 货运交通 CAV 仿真,靠近 autonomous driving negative keyword</li>
+<li>TAU-Agent: Traffic Anomaly Understanding — 交通视频异常理解,驾驶相邻领域,非核心关注</li>
+<li>Cooperative Multi-Agent RL for ... Federated Learning (pFedMARL) — 联邦学习聚合,MARL 只是手段,与推荐/广告/LLM Agent 主题偏离</li>
+<li>Data Citation for Large Language Models: A Challenge — position paper,偏观点倡议,无方法与实验</li>
+<li>The Imperfective Paradox Is Not Necessarily in LLMs — 语言学 NLI benchmark 勘误,与关注领域交集弱</li>
+<li>On-Policy Self-Distillation in Diffusion Models — 扩散模型 RL 蒸馏,偏图像生成,与核心领域交集弱</li>
+<li>V-Rubrics: Visual Faithfulness via Rubric-Based RL — VLM 视觉忠实度,偏多模态感知,非 Agent/推荐核心</li>
+<li>Agentic Autoresearch for Cell-Edge Power Control — 无线通信功控,agentic autoresearch 角度有趣但领域太窄</li>
+<li>Goodput Maximization for LLM Edge Inference (TP-MPPO) — 无线边缘 LLM 服务调度,偏通信系统,非核心</li>
+<li>Understanding the Energy Scaling of LLM Inference — LLM 推理能耗实证研究,偏系统测量,价值有限</li>
+</ul>
+<p>Agent 研究正从『能不能做』全面转向『做得起吗、靠不靠谱吗』——今天一半论文在攻多智能体的成本(路由/投机解码/消息格式)和可靠性(故障定位/审计),说明 agentic 范式已过了炫技期、进入工程化深水区。</p></div>
+<footer style="text-align:center;color:var(--text2);margin:3em 0 1em;font-size:0.85em;">
+  Generated by daily-papers-web &middot; Powered by Claude Code
+</footer>
+<script src="tabs.js"></script>
+
+</body>
+</html>
