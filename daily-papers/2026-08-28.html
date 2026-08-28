@@ -1,0 +1,664 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>2026-08-28 论文推荐</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.21/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.21/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.21/dist/contrib/auto-render.min.js"
+  onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}]});"></script>
+<link rel="stylesheet" href="style.css">
+<style>body{max-width:960px;}</style>
+
+</head>
+<body>
+<nav class="nav"><a href="index.html">🏠 首页</a><a href="2026-08-27.html">← 前一天</a></nav>
+<div class="detail-page"><h1>🔪 今日锐评</h1>
+<p>今天是 Agent 的天下——从数据生成、评测、运行时到安全治理，一条龙全占齐了，说明大家已经从『造 Agent』卷到『管 Agent』。推荐域的亮点是把 Agentic RecSys 的『文本记忆』换成『梯度向量记忆』，方向对味。RL 一堆 actor-critic 的边角料论文扎堆，理论增量居多。</p>
+<h2>分流表</h2>
+<table>
+<thead>
+<tr>
+<th>等级</th>
+<th>论文</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>🔥 必读</td>
+<td><span class="wikilink">CoVeMem</span>（把 Agentic 推荐的文本记忆换成可求梯度的协同向量，直击 recsys 痛点） · <span class="wikilink">ACE</span>（终于有人系统回答『什么才是好的 Agent 训练数据』而不是堆量）</td>
+</tr>
+<tr>
+<td>👀 值得看</td>
+<td><span class="wikilink">LiveSim</span>（字节做的直播场景动态用户模拟，用户建模有料） · <span class="wikilink">Adaptive-Reasoning</span>（在完整 agentic workflow 上做 over/under-thinking 自适应） · <span class="wikilink">MemToC</span>（工具返回 vs 参数记忆冲突的可控 benchmark） · <span class="wikilink">AgentJudgeBench</span>（LLM-as-judge 在工具调用 DAG 上到底靠不靠谱） · <span class="wikilink">VIG-Sampler</span>（扩散 MLLM 并行解码用视觉信息增益选 token） · <span class="wikilink">GRAIN</span>（图推理里用不变性奖励对抗 name/narrative shift）</td>
+</tr>
+<tr>
+<td>💤 可跳过</td>
+<td><span class="wikilink">AICS</span>（控制系统设计 agent，领域太窄） · <span class="wikilink">QTD</span>（分布式 RL 有限样本证明，纯理论） · <span class="wikilink">CAV-Platoon</span>（自动驾驶编队，出域）</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<div class="tab-bar"><button class="tab-btn active" data-tab="all" onclick="switchTab('all')">📋 全部<span class="tab-count">21</span></button><button class="tab-btn" data-tab="推荐系统与用户建模" onclick="switchTab('推荐系统与用户建模')">📈 📊 推荐系统与用户建模<span class="tab-count">2</span></button><button class="tab-btn" data-tab="agent数据评测运行时" onclick="switchTab('agent数据评测运行时')">🤖 🤖 Agent 数据 / 评测 / 运行时<span class="tab-count">5</span></button><button class="tab-btn" data-tab="推理与工具调用" onclick="switchTab('推理与工具调用')">🔧 🧠 推理与工具调用<span class="tab-count">3</span></button><button class="tab-btn" data-tab="多模态生成" onclick="switchTab('多模态生成')">🎨 🎨 多模态生成<span class="tab-count">4</span></button><button class="tab-btn" data-tab="llm训练与压缩" onclick="switchTab('llm训练与压缩')">🤖 🔧 LLM 训练与压缩<span class="tab-count">2</span></button><button class="tab-btn" data-tab="强化学习" onclick="switchTab('强化学习')">📄 🎮 强化学习<span class="tab-count">4</span></button><button class="tab-btn" data-tab="多智能体系统" onclick="switchTab('多智能体系统')">📄 🌍 多智能体系统<span class="tab-count">1</span></button></div>
+<div id="panel-all" class="tab-panel active"><h2>📊 推荐系统与用户建模</h2><div class="paper-card" data-topic="📊 推荐系统与用户建模"><h3>1. When Memory Takes Gradients: Collaborative Vector Memory for Agentic Recommender Systems</h3>
+<ul>
+<li><strong>作者</strong>: Hanchong Chen, Xing Tang, Lingjie Li, Xiongfeng Shan, Xiuqiang He</li>
+<li><strong>机构</strong>: Shenzhen Technology University</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2608.26895v1">arXiv</a> | <a href="https://arxiv.org/pdf/2608.26895v1">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2608.26895v1/figure2.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: 指出现有 Agentic 推荐系统的用户记忆是 <span class="wikilink">LLM</span> 写出来的自然语言叙事，有两个硬伤：一次只能重写一条、更新成本高得离谱；协同信号（评分等）塞不进文本。<span class="wikilink">CoVeMem</span> 把记忆换成可求梯度的协同向量，能一次性吸收整段交互历史，并用 <span class="wikilink">LightGCN</span> 式协同证据补齐文本缺失的信息。</li>
+<li><strong>对比方法/Baselines</strong>: 对比 <span class="wikilink">AgentCF</span>、<span class="wikilink">MemRec</span> 等文本记忆型 agent，以及 <span class="wikilink">LightGCN</span> 传统协同过滤；用 <span class="wikilink">LoRA</span> 微调。</li>
+<li><strong>借鉴意义</strong>: 直接命中你关注的 recsys 主线：把 Agentic RecSys 从『昂贵的 LLM 文本重写』拉回『可梯度优化的向量记忆』，这是让 LLM-agent 推荐真正能上量的关键一步。</li>
+<li><strong>锐评</strong>: 问题诊断非常精准——文本记忆更新成本和协同信号缺失确实是 agentic recsys 落不了地的两座大山。把记忆做成可求梯度的向量是自然但正确的解法。唯一悬念是：向量记忆一旦失去了文本的可解释性，agent 的『决策依据』还能不能审计？摘要没提冷启动和长尾用户表现。方向对，等看实验规模。🔥</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2608.26895v1" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="📊 推荐系统与用户建模"><h3>2. LiveSim: Simulating Environment-Shaped Users in Multi-Agent Live-Stream Ecosystems</h3>
+<ul>
+<li><strong>作者</strong>: Jiaqi Xu, Yiran Qiao 22footnotemark:, Jing Chen, Qiwei Zhong, Xiang Ao, Xueqi Cheng</li>
+<li><strong>机构</strong>: ††thanks: Work was conducted during the internship at ByteDance.††thanks: Jiaqi Xu and Yiran Qiao contributed equally to this work, Affiliation: , Affiliation:  ByteDance China, Email: , Email: yilan.chan@bytedance.com, Email: huafeng.hf@bytedance.com, Affiliation:  University of Chinese Academy of Sciences, Beijing 100049, China</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2608.26849v1">arXiv</a> | <a href="https://arxiv.org/pdf/2608.26849v1">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2608.26849v1/intro_0525.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2608.26849v1/main_0827.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: 针对直播这种交互动态持续重塑用户行为的场景，指出现有模拟器都靠历史推断的静态 profile，在强社交环境里失效。<span class="wikilink">LiveSim</span> 让 <span class="wikilink">LLM</span> 用户在多智能体直播生态里被环境实时塑形，动态更新行为。</li>
+<li><strong>对比方法/Baselines</strong>: 对比静态 profile 模拟器，用 <span class="wikilink">JSD</span>、Conv-Acc 等指标衡量行为分布拟合度。</li>
+<li><strong>借鉴意义</strong>: 用户建模 + 多智能体模拟，对推荐/广告的离线仿真环境构建有直接参考价值——尤其是直播电商这类高频反馈场景。</li>
+<li><strong>锐评</strong>: 字节出品，场景选得很实——直播间用户确实是被弹幕、主播、其他观众实时带节奏的，静态 profile 那套在这儿必然崩。用『环境塑形』做动态用户是对的抽象。担心的是评估：模拟得像不像最终还是要落到下游任务收益，光看分布拟合指标容易自说自话。👀</li>
+</ul>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2608.26849v1" target="_blank" rel="noopener">📖 AI 精读</a></div><h2>🤖 Agent 数据 / 评测 / 运行时</h2><div class="paper-card" data-topic="🤖 Agent 数据 / 评测 / 运行时"><h3>3. What Makes Good Agentic Data? An ACE Lens on Data Generation for LLM Agents</h3>
+<ul>
+<li><strong>作者</strong>: Xingshan Zeng, Zishan Xu, Boju Zhang, Yuzhou Wu, Lingzhi Wang, Jianghao Lin, Liangyou Li, Yasheng Wang, Lifeng Shang, Xin Jiang, Weinan Zhang, Yong Yu, Qun Liu, Weiwen Liu</li>
+<li><strong>机构</strong>: 3]Northwestern University, Chicago, IL, Affiliation:, 1]Huawei Technologies Co., Ltd, 4]Harbin Institute of Technology, Shenzhen, Email: zeng.xingshan@huawei.com, Email:, Email: wwliu@sjtu.edu.cn, 5]Shenzhen Loop Area Institute, 2]Shanghai Jiao Tong University</li>
+<li><strong>链接</strong>: <a href="https://arxiv.org/abs/2608.27260">arXiv</a> | <a href="https://arxiv.org/pdf/2608.27260">PDF</a></li>
+<li><strong>来源</strong>: 📰 HF Daily，⬆️ 30</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2608.27260v1/factor_diversity.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: 提出用 ACE（一致性 lens）审视 Agent 交互数据生成：数据必须在环境、任务、交互、成功信号四者间保持一致，产出的经验要『有用』而非『量大』。用 <span class="wikilink">ToolACE</span> 等生成 pipeline 分析。</li>
+<li><strong>对比方法/Baselines</strong>: 梳理并对比大量现有 agentic 数据生成方法，覆盖 <span class="wikilink">GUI</span>、<span class="wikilink">SWE</span>、<span class="wikilink">MCP</span>、<span class="wikilink">RL</span> 等场景。</li>
+<li><strong>借鉴意义</strong>: Agent 训练现在最大的瓶颈就是数据质量而非模型，这篇给出了『什么是好数据』的判据框架，对任何想自建 agent 训练管线的团队都有用。</li>
+<li><strong>锐评</strong>: 问对了问题。整个领域都在疯狂合成 agent 轨迹，但一致性（环境-任务-成功信号对齐）才是数据能不能真正教会 agent 的关键，堆量只是自我安慰。ACE lens 这个切角有解释力。就怕最后落到一堆定性观察而缺可操作的量化配方——期待它给出能直接指导数据筛选的指标。🔥</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2608.27260" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🤖 Agent 数据 / 评测 / 运行时"><h3>4. AgentJudgeBench: A Multi-Difficulty Benchmark for Evaluating LLM Judges on Agentic Tool-Calling</h3>
+<ul>
+<li><strong>作者</strong>: Abhigya Verma</li>
+<li><strong>机构</strong>: Affiliation: , Affiliation: Amit Kumar Saha</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2608.26623v1">arXiv</a> | <a href="https://arxiv.org/pdf/2608.26623v1">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2608.26623v1/overall_flow.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: <span class="wikilink">AgentJudgeBench</span> 是首个系统研究 LLM-as-judge 在工具调用工作流（<span class="wikilink">DAG</span> 结构、有依赖关系）上可靠性的多难度 benchmark，区别于传统单步问答式评判。</li>
+<li><strong>对比方法/Baselines</strong>: 在 <span class="wikilink">GPT-5</span>、<span class="wikilink">QwQ</span>、<span class="wikilink">SmolLM3</span> 等一众模型上评测 judge 一致性。</li>
+<li><strong>借鉴意义</strong>: 工具调用 agent 评测目前几乎全靠 LLM judge，但没人验证过它在带依赖的 DAG 工作流上靠不靠谱——这直接关系到你评测 agent 系统时的可信度。</li>
+<li><strong>锐评</strong>: 戳中痛点：大家都用 LLM 当裁判评 agent，却没人反问『裁判本身在多步依赖任务上准不准』。做成多难度 DAG 是对的，能暴露 judge 在长链条上的崩溃点。若能进一步给出『何时该信 judge、何时必须上人工』的边界，价值翻倍。👀</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2608.26623v1" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🤖 Agent 数据 / 评测 / 运行时"><h3>5. From Atomic to Agentic: Towards Interpretable Evaluation of LLMs' Agentic Mathematical Capabilities</h3>
+<ul>
+<li><strong>作者</strong>: Jiayi Kuang, Yinghui Li, Yunze Song, Keyu Chen, Zhifeng Shen, Yangning Li, Yidong Wang, Di Yin, Ruizhi Qiao, Xing Sun, Kai Jin, Ying Shen, Liang Lin, Philip S. Yu</li>
+<li><strong>机构</strong>: Affiliation: , Email: lebronyhli@tencent.com, Email: , Affiliation: Sun Yat-sen University, ††thanks: Work done during the internship at Tencent Youtu Lab, Affiliation: Tencent Youtu Lab, Affiliation: University of Illinois Chicago, Affiliation: Pengcheng Laboratory</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2608.26950v1">arXiv</a> | <a href="https://arxiv.org/pdf/2608.26950v1">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2608.26950v1/intro.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2608.26950v1/pipeline.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: 批评现有数学 benchmark 只看最终答案，无法诊断过程级失败。从『原子能力』到『智能体能力』，用 <span class="wikilink">RelationF1</span>、<span class="wikilink">VariableF1</span> 等过程指标做可解释评测。</li>
+<li><strong>对比方法/Baselines</strong>: 在 <span class="wikilink">DeepSeek</span>、<span class="wikilink">GPT-5</span> 上评测 <span class="wikilink">ExpRate</span>、<span class="wikilink">SymRate</span>。</li>
+<li><strong>借鉴意义</strong>: 过程级评测对理解 agent 到底哪一步出错很关键，比只看 pass@1 有诊断价值。</li>
+<li><strong>锐评</strong>: 腾讯优图的活。方向没错——只看最终答案的评测对改进 agent 毫无指导意义，你连它哪步崩的都不知道。设计了一堆过程 F1 指标是加分。但过程标注本身极贵且主观，benchmark 规模和标注一致性会是硬约束。🫠</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2608.26950v1" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🤖 Agent 数据 / 评测 / 运行时"><h3>6. A Contract-Centered Architecture for Scalable and Manageable Agentic Runtimes</h3>
+<ul>
+<li><strong>作者</strong>: Yaxiao Liu, Pengbo Liu, Yiwen Liu, Yihua Guan, Zhenghe Hou, Jiaxing Song</li>
+<li><strong>机构</strong>: Affiliation: , Affiliation: Tsinghua University, Email: , Email: jxsong@tsinghua.edu.cn</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2608.27086v1">arXiv</a> | <a href="https://arxiv.org/pdf/2608.27086v1">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2608.27086v1/1.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2608.27086v1/2.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2608.27086v1/3.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: 把企业 AI 部署看作跨业务/应用/测试/平台/安全/运维/数据治理的协调问题，指出 use-case benchmark 只能测『一个 agent 完成一个任务』。提出以契约（contract）为中心的架构管理可扩展 agentic runtime。</li>
+<li><strong>对比方法/Baselines</strong>: 偏架构与治理论述，引用 <span class="wikilink">AWS</span> 等工业实践。</li>
+<li><strong>借鉴意义</strong>: 从单 agent demo 到企业级 agent 运行时的鸿沟是真实存在的工程问题，契约中心化的思路对平台层设计有参考。</li>
+<li><strong>锐评</strong>: 清华的活，视角务实——学术界只关心单任务 benchmark，但企业里 agent 死在协调、治理、跨团队边界上。契约中心是合理的抽象（类比微服务契约）。风险是这类架构论文容易停在 PPT 层，缺可复现的落地证据。想法好，就看有没有肉。🫠</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2608.27086v1" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🤖 Agent 数据 / 评测 / 运行时"><h3>7. Risks and Controls for Multi-Agent Systems: an analytical framework for deployment of AI agents across organisational boundaries</h3>
+<ul>
+<li><strong>作者</strong>: Reid, Alistair, O&#39;Callaghan, Simon, Venini, Dustin, Carroll, Liam, Caetano, Tiberio</li>
+<li><strong>机构</strong>: Department of Industry, of Gradient Institute for the</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2608.26626v1">arXiv</a> | <a href="https://arxiv.org/pdf/2608.26626v1">PDF</a></li>
+<li>
+<p><strong>来源</strong>: 📄 arXiv 关键词检索</p>
+</li>
+<li>
+<p><strong>核心方法</strong>: 为组织/政策制定者/研究者提供分析框架，推理当 AI agent 相互交互、且交互跨越组织边界时涌现的风险，以及可用的控制手段。</p>
+</li>
+<li><strong>对比方法/Baselines</strong>: 政策分析框架，无实验基线。</li>
+<li><strong>借鉴意义</strong>: 多智能体系统的跨组织风险是被低估的话题，对做 agent 安全治理有参考。</li>
+<li><strong>锐评</strong>: 偏政策/治理报告，不是技术论文。价值在于把『跨组织 agent 交互』这个即将爆发的风险面系统化了——当你的 agent 开始和别家 agent 谈判/交易时，责任和失控边界在哪没人说清。适合做 agent 安全的人当 checklist，但别指望有可跑的方法。💤</li>
+</ul>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2608.26626v1" target="_blank" rel="noopener">📖 AI 精读</a></div><h2>🧠 推理与工具调用</h2><div class="paper-card" data-topic="🧠 推理与工具调用"><h3>8. Don't Overthink, Don't Underthink: Toward Adaptive Reasoning in Agentic AI</h3>
+<ul>
+<li><strong>作者</strong>: Md Jueal Mia and M. Hadi Amini</li>
+<li><strong>机构</strong>: Affiliation: , Florida International University, Miami, Florida, USA, email:, Security, Optimization, and Learning for InterDependent Networks Laboratory (solid lab), Affiliation: Knight Foundation School of Computing and Information Sciences</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2608.26442v1">arXiv</a> | <a href="https://arxiv.org/pdf/2608.26442v1">PDF</a></li>
+<li>
+<p><strong>来源</strong>: 📄 arXiv 关键词检索</p>
+</li>
+<li>
+<p><strong>核心方法</strong>: 批评现有推理控制都是固定/预分配的（固定 token 预算、预估难度、激活空间干预），且只在孤立推理 benchmark 上测。<span class="wikilink">Adaptive-Reasoning</span> 在完整 agentic workflow 上做自适应，缓解 <span class="wikilink">Over-Reasoning</span> 和 <span class="wikilink">Under-Reasoning</span>。</p>
+</li>
+<li><strong>对比方法/Baselines</strong>: 在 <span class="wikilink">MATH-500</span>、<span class="wikilink">GAIA</span> 上评测，基于 <span class="wikilink">LangGraph</span> 构建 workflow。</li>
+<li><strong>借鉴意义</strong>: 推理成本控制是 agent 落地的核心经济学问题，把它放到真实 workflow 而非孤立题目上评估，更贴近生产。</li>
+<li><strong>锐评</strong>: 标题很诚实——不要想太多也不要想太少。切中当下 test-time scaling 的浪费问题：很多任务根本不需要长思考，硬堆 token 就是烧钱。放到 GAIA 这种真 agent 任务上评是加分项。但『自适应』的触发信号是什么、会不会在难题上误判为简单，是成败关键，摘要没说清。👀</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2608.26442v1" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🧠 推理与工具调用"><h3>9. MemToC: Benchmarking Memory-Tool Conflict Resolution in Large Language Models</h3>
+<ul>
+<li><strong>作者</strong>: Varlamov, Arseniy, Zinnatullin, Rishat, Rykov, Elisei, Panchenko, Alexander, Alimova, Ilseyar</li>
+<li><strong>机构</strong>: Central University, Moscow, Skolkovo Institute of Science and Technology, Moscow, Ural Federal University, Yekaterinburg</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2608.26295v1">arXiv</a> | <a href="https://arxiv.org/pdf/2608.26295v1">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2608.26295v1/benchmark.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: 工具增强 LLM 在工具返回与参数记忆冲突时必须仲裁，但现有评测只测『偏好哪个来源』却不管『哪个来源是对的』。<span class="wikilink">MemToC</span> 是带可执行工具的可控 benchmark，专测 post-tool-return 的仲裁能力。</li>
+<li><strong>对比方法/Baselines</strong>: 用 <span class="wikilink">DPO</span>、<span class="wikilink">SFT</span> 微调，对比 <span class="wikilink">ToolHop</span>、<span class="wikilink">FaithEval</span> 等。</li>
+<li><strong>借鉴意义</strong>: 工具调用是 agent 核心能力，而工具返回未必对——这篇把『来源正确性』纳入评测，对构建可靠 tool-use agent 很有价值。</li>
+<li><strong>锐评</strong>: 问题定义比结论更值钱：现有工作只问『你更信工具还是更信记忆』，却默认工具永远对，这在真实世界纯属幻想（API 会返回过期/错误数据）。把来源正确性做成可控变量是正解。就是数据构造的『可执行工具』覆盖面有多真实，决定了结论能不能外推。👀</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2608.26295v1" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🧠 推理与工具调用"><h3>10. GRAIN: Bridging Name and Narrative Shifts in Real-World Graph Reasoning through Invariance-Rewarded Agentic RL</h3>
+<ul>
+<li><strong>作者</strong>: Zike Yuan, Han Zhang, Jianzhi Yan, Le Liu, Cai Ke, Huozhi Zhou, Jian Xie, Jiran Yin, Yukun Cao, Yue Yu, Hui Wang, Ming Liu, Bing Qin</li>
+<li><strong>机构</strong>: Affiliation: , Email: , Affiliation: Xidian University, Xi’an, China, Affiliation: Harbin Institute of Technology, Shenzhen, China, Affiliation: Peng Cheng Laboratory, Shenzhen, China</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2608.27142v1">arXiv</a> | <a href="https://arxiv.org/pdf/2608.27142v1">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2608.27142v1/fig1.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2608.27142v1/framework_fig3.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: 指出 LLM 做图推理时对节点标识符改名、任务表述变化极度脆弱（<span class="wikilink">OOD</span> 时崩），而确定性图工具天然不变。<span class="wikilink">GRAIN</span> 用不变性奖励的 agentic <span class="wikilink">RL</span>（<span class="wikilink">ARPO</span>）训练模型对 name/narrative shift 保持鲁棒，避免多智能体方案的高延迟。</li>
+<li><strong>对比方法/Baselines</strong>: 对比 <span class="wikilink">SFT</span>、<span class="wikilink">CoT</span> 及多智能体（<span class="wikilink">MA</span>）方案。</li>
+<li><strong>借鉴意义</strong>: 揭示了 LLM 推理『过拟合表面模式』的通病，不变性奖励的思路可迁移到其他需要鲁棒结构抽取的 agent 任务。</li>
+<li><strong>锐评</strong>: score 最高的一篇。诊断很到位——LLM 就是在背表面 pattern，改个变量名就露馅，这跟确定性算法的鲁棒性天差地别。用不变性奖励逼它学结构而非记名字是聪明的。质疑点：不变性奖励设计得不好容易奖励 hacking，模型可能学到『无视输入』这种退化解。得看它怎么防。👀</li>
+</ul>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2608.27142v1" target="_blank" rel="noopener">📖 AI 精读</a></div><h2>🎨 多模态生成</h2><div class="paper-card" data-topic="🎨 多模态生成"><h3>11. Visual Information-Guided Parallel Decoding for Diffusion Multimodal Large Language Models</h3>
+<ul>
+<li><strong>作者</strong>: Insu Lee, Wooje Park, Wonseok Shin, Jinwoo Son, Byonghyo Shim</li>
+<li><strong>机构</strong>: Seoul National University</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2608.26580v1">arXiv</a> | <a href="https://arxiv.org/pdf/2608.26580v1">PDF</a></li>
+<li>
+<p><strong>来源</strong>: 📄 arXiv 关键词检索</p>
+</li>
+<li>
+<p><strong>核心方法</strong>: 扩散多模态 LLM（dMLLM）从全 mask 序列逐步 unmask 解码，选哪些 token 解码至关重要。<span class="wikilink">VIG-Sampler</span> 用视觉信息增益（<span class="wikilink">Info-Gain</span>）指导并行解码的 token 选择，观察到图像注意力与视觉 grounding 的关系。</p>
+</li>
+<li><strong>对比方法/Baselines</strong>: 在 <span class="wikilink">COCO</span>、<span class="wikilink">VQA</span> 上对比 <span class="wikilink">LaViDa</span> 等 dMLLM。</li>
+<li><strong>借鉴意义</strong>: 扩散式多模态生成是新兴解码范式，并行解码的 token 选择策略对生成质量和速度都有直接影响。</li>
+<li><strong>锐评</strong>: 扎实的机理性工作——先观察到图像注意力质量和视觉 grounding、信息增益的相关性，再据此设计采样器，逻辑闭环。dMLLM 并行解码这个方向本身够新。质疑点：信息增益估计本身有额外开销，能不能把并行解码省下的时间赚回来，需要看端到端 latency。👀</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2608.26580v1" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🎨 多模态生成"><h3>12. Thinking on Shots: Consistent Multi-Shot Video Editing with Agentic Reasoning</h3>
+<ul>
+<li><strong>作者</strong>: Chenyang Wu, Fuchen Long, Binyuan Huang, Xinlong Sun, Xi Chen, Chun-Le Guo, Chongyi Li</li>
+<li><strong>机构</strong>: Smart Creation Platform Department, Online Video BU, Tencent, VCIP, CS, Nankai University, Work done during the Tencent Qingyun Program internship, erwinlong, shayanhuang, xinlongsun, jasonxchen@tencent.com, guochunle, lichongyi@nankai.edu.cn</li>
+<li><strong>链接</strong>: <a href="https://arxiv.org/abs/2608.26809">arXiv</a> | <a href="https://arxiv.org/pdf/2608.26809">PDF</a></li>
+<li><strong>来源</strong>: 📰 HF Daily，⬆️ 2</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2608.26809v1/method_comp.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2608.26809v1/method_comp_2.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2608.26809v1/small_teaser.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: 长视频多指令编辑的难题：固定时长切分会导致实体碎片化、编辑幻觉、时序断裂。<span class="wikilink">MMLVE</span>-Agent 用异构多智能体架构解耦复杂编辑指令，做到跨镜头一致的编辑。</li>
+<li><strong>对比方法/Baselines</strong>: 对比 <span class="wikilink">VLM</span>-based agent（如 UniVA），用 <span class="wikilink">ZDSS</span>、<span class="wikilink">CSEC</span> 等指标。</li>
+<li><strong>借鉴意义</strong>: 多智能体 + 多模态生成的结合，agentic reasoning 用在长视频编辑上是有意思的应用落点。</li>
+<li><strong>锐评</strong>: 腾讯的活。痛点真实——长视频多指令编辑用 naive 切块必然实体飘、时序断。用异构多 agent 解耦指令是合理工程方案。但多 agent 架构的老毛病是延迟和协调开销，视频编辑本就慢，堆 agent 会不会慢到不可用？摘要没提效率。属于场景驱动的工程论文。🫠</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2608.26809" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🎨 多模态生成"><h3>13. Procedura: Agentic 3D Modeling with Procedural Control</h3>
+<ul>
+<li><strong>作者</strong>: Youtian Lin, Yikang Yang, Zhanpeng Hu, Mengqi Zhou, Feihu Zhang, Xun Cao, Jiaheng Liu, Yao Yao</li>
+<li><strong>机构</strong>: Nanjing University</li>
+<li><strong>链接</strong>: <a href="https://arxiv.org/abs/2608.26238">arXiv</a> | <a href="https://arxiv.org/pdf/2608.26238">PDF</a></li>
+<li><strong>来源</strong>: 📰 HF Daily，⬆️ 2</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2608.26238v1/figures/teaser_explode_buggy_darkfloor_gallery_neat.jpg" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2608.26238v1/pipeline-Overview-v7.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2608.26238v1/pipeline-Build-v5.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: 原生 3D 生成器能从单图恢复网格，但网格该锐利的地方软塌、无部件分解、无可编辑参数。<span class="wikilink">Procedura</span> 探索『3D 形状即代码』范式，用 <span class="wikilink">LLM</span> 生成程序化（<span class="wikilink">CSG</span> 等）控制，可编辑。</li>
+<li><strong>对比方法/Baselines</strong>: 在 <span class="wikilink">MechBench</span> 上评测，用 <span class="wikilink">GPT-5</span>、<span class="wikilink">TRELLIS</span>、<span class="wikilink">CLIP</span>。</li>
+<li><strong>借鉴意义</strong>: 把 3D 生成从『死网格』变成『可编辑代码』，agentic 3D 建模对 CAD/工业设计有想象空间。</li>
+<li><strong>锐评</strong>: 『3D 形状即代码』这个 framing 很戳人——机加工零件就该是锐利、可参数化的，dense mesh 那套对工程根本不能用。用 LLM 生成程序化建模指令是正确的抽象层次。风险是 procedural 表达能力有上限，复杂有机形状怕是 hold 不住。当 CAD 场景的探索看很好。👀</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2608.26238" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🎨 多模态生成"><h3>14. Video-OPSD: Exploiting Privileged Visual Evidence for On-Policy Self-Distillation in Video Large Language Models</h3>
+<ul>
+<li><strong>作者</strong>: Ziyue Wang, Shiqi Huang, Weiwen Xu, Bihan Wen, Xudong Jiang\corresponding</li>
+<li><strong>机构</strong>: School of Electrical and Electronic Engineering, Nanyang Technological University, The Chinese University of Hong Kong</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2608.27065v1">arXiv</a> | <a href="https://arxiv.org/pdf/2608.27065v1">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2608.27065v1/teaser.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: on-policy 自蒸馏（<span class="wikilink">On-Policy</span> <span class="wikilink">Self-Distillation</span>）用特权自教师提供 token 级密集监督做后训练。本文把 OPSD 拓展到视频 LLM，用特权视觉证据（<span class="wikilink">Evidence-Guided</span>）引导。</li>
+<li><strong>对比方法/Baselines</strong>: 对比 <span class="wikilink">GRPO</span>、<span class="wikilink">SFT</span>，用 <span class="wikilink">Self-Teacher</span> 机制。</li>
+<li><strong>借鉴意义</strong>: 视频 LLM 的后训练范式，token 级密集监督对提升视频理解质量有帮助。</li>
+<li><strong>锐评</strong>: 把 OPSD 补到 Video-LLM 这个空白上，动机成立。用特权视觉证据当教师信号是 domain-specific 的合理设计。属于把已有后训练范式迁到新模态的增量工作——不惊艳但扎实，能涨点就有用。🫠</li>
+</ul>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2608.27065v1" target="_blank" rel="noopener">📖 AI 精读</a></div><h2>🔧 LLM 训练与压缩</h2><div class="paper-card" data-topic="🔧 LLM 训练与压缩"><h3>15. FOCUS &amp; RePAIR: Mitigating Text Degeneration via Token-Level Guidance for Pruned Large Language Models</h3>
+<ul>
+<li><strong>作者</strong>: Junyoung Lee, Sehyeon Park, Shinhyoung Jang, Seonha Ryu, Hojeong Kim, Hyunsei Lee, Il hong Suh, Yeseong Kim</li>
+<li><strong>机构</strong>: Affiliation: , Correspondence to:, Affiliation: Department of Electrical Engineering and Computer Science, POSTECH, Pohang, Republic of Korea, Affiliation: Hanyang University, Seoul, Republic of Korea, Affiliation: Department of Electrical Engineering and Computer Science, Daegu Gyeongbuk Institute of Science and Technology (DGIST), Daegu, Republic of Korea</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2608.26676v1">arXiv</a> | <a href="https://arxiv.org/pdf/2608.26676v1">PDF</a></li>
+<li>
+<p><strong>来源</strong>: 📄 arXiv 关键词检索</p>
+</li>
+<li>
+<p><strong>核心方法</strong>: 剪枝会放大文本退化（尤其重复循环），即便困惑度和准确率没变。把解码看作动力系统，<span class="wikilink">FOCUS</span> &amp; <span class="wikilink">RePAIR</span> 用 token 级引导缓解剪枝 LLM 的退化。</p>
+</li>
+<li><strong>对比方法/Baselines</strong>: 在 <span class="wikilink">WikiText</span> 上用 <span class="wikilink">MAUVE</span> 评测，对比 <span class="wikilink">DPO</span>、知识蒸馏（<span class="wikilink">KD</span>）。</li>
+<li><strong>借鉴意义</strong>: 模型压缩后的生成质量退化是部署真问题，token 级诊断和修复对边缘部署 LLM 有价值。</li>
+<li><strong>锐评</strong>: 抓到一个被忽视的现象——剪枝后 PPL 和准确率没崩，但生成会陷入重复循环，这种『指标不动但体验崩』的坑最阴险。用动力系统视角看解码退化有新意。修复方案是否引入额外推理开销、会不会牺牲压缩收益，是关键。👀</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2608.26676v1" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🔧 LLM 训练与压缩"><h3>16. SpeechGym: An Audio-Native Gym for Training Voice Agents via Reinforcement Learning</h3>
+<ul>
+<li><strong>作者</strong>: Jiajun Fan, Jingyuan Li, Prashanth Gurunath Shivakumar, Jia-Hong Huang, Qi Luo, M. Maruf, Ivan Bulyko, Ge Liu, Roger Ren</li>
+<li><strong>机构</strong>: 2]Amazon AGI Foundations, Affiliation:, 1]University of Illinois Urbana-Champaign</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2608.26432v1">arXiv</a> | <a href="https://arxiv.org/pdf/2608.26432v1">PDF</a></li>
+<li>
+<p><strong>来源</strong>: 📄 arXiv 关键词检索</p>
+</li>
+<li>
+<p><strong>核心方法</strong>: 语音 agent 要全程用语音调工具和多轮对话，但主流都在文本里训。现有方案要么 cascade <span class="wikilink">TTS</span>/<span class="wikilink">ASR</span> 包住闭源语音 API（梯度传不动、on-policy <span class="wikilink">RL</span> 成本爆炸），要么停在文本。<span class="wikilink">SpeechGym</span> 是音频原生的 RL 训练环境，用 <span class="wikilink">GRPO</span> 训练。</p>
+</li>
+<li><strong>对比方法/Baselines</strong>: 对比 cascade TTS+ASR 方案，用 <span class="wikilink">LoRA</span> 微调。</li>
+<li><strong>借鉴意义</strong>: voice agent 的 RL 训练基础设施，tool use + 多轮对话 + RL 三者结合。</li>
+<li><strong>锐评</strong>: 问题诊断精准：语音 agent 在文本里训，评得了却改不动，因为梯度过不了 TTS/ASR 那层。做音频原生 gym 让 RL 能真正 on-policy 优化是对的基建。Amazon+UIUC 出品，工程量不小。虽沾了点语音合成的边，但内核是 RL agent 训练框架，对 tool-use agent 有借鉴。👀</li>
+</ul>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2608.26432v1" target="_blank" rel="noopener">📖 AI 精读</a></div><h2>🎮 强化学习</h2><div class="paper-card" data-topic="🎮 强化学习"><h3>17. Simple Actors and Deep Critics for Scalable Reinforcement Learning</h3>
+<ul>
+<li><strong>作者</strong>: Guhyeon Kang, Jaehwi Lee, Minhae Kwon</li>
+<li><strong>机构</strong>: Affiliation: , Note: , email:, Affiliation: Sungkyunkwan University, Republic of Korea, Affiliation: Soongsil University, Republic of Korea, Note: Corresponding author. G. Kang and M. Kwon are with the Department of Electrical and Computer Engineering, Sungkyunkwan University, Republic of Korea. J. Lee is with Soongsil University, Republic of Korea</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2608.26659v1">arXiv</a> | <a href="https://arxiv.org/pdf/2608.26659v1">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2608.26659v1/Figure/Sup/benchmark.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2608.26659v1/nstep_depth_heatmap.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: 离线 RL 靠 diffusion/flow 生成式 actor 捕捉多模态行为，但每步动作要多次去噪、开销大。<span class="wikilink">LAC</span> 主张用简单 actor + 深 critic，避免昂贵的生成式 actor。</li>
+<li><strong>对比方法/Baselines</strong>: 对比 <span class="wikilink">FQL</span>、<span class="wikilink">IDQL</span>、<span class="wikilink">IFQL</span> 等生成式策略。</li>
+<li><strong>借鉴意义</strong>: RL 训练效率话题，简化 actor 降低推理开销对可扩展 RL 有意义。</li>
+<li><strong>锐评</strong>: 反潮流但合理的主张——大家都往 actor 里塞 diffusion/flow，本文反问：把表达力堆到 critic 上、actor 保持简单行不行？如果成立，推理时省掉多步去噪是实打实的收益。就怕简单 actor 在真多模态数据上表达力不够,得看它拿什么证明『简单够用』。👀</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2608.26659v1" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🎮 强化学习"><h3>18. Shared Actors Need Not Share Critics: Effects of Value Mismatch in Parallel Reinforcement Learning</h3>
+<ul>
+<li><strong>作者</strong>: Zhenya Liu, Yang Meng, Zhuokai Zhao, Xuefeng Liu &amp; Yuxin Chen</li>
+<li><strong>机构</strong>: Affiliation: , Affiliation: University of Florida, Affiliation: University of Chicago</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2608.26481v1">arXiv</a> | <a href="https://arxiv.org/pdf/2608.26481v1">PDF</a></li>
+<li>
+<p><strong>来源</strong>: 📄 arXiv 关键词检索</p>
+</li>
+<li>
+<p><strong>核心方法</strong>: 单策略在多环境并行训练时，实现上常共享一个 critic。本文指出不同环境对同一输入可能有不同期望回报，共享 critic 会引入 value mismatch，主张 actor 可共享但 critic 未必该共享。</p>
+</li>
+<li><strong>对比方法/Baselines</strong>: 在 <span class="wikilink">CartPole</span>、<span class="wikilink">BipedalWalker</span>、<span class="wikilink">MuJoCo</span> 上用 <span class="wikilink">PPO</span>、<span class="wikilink">GAE</span>、<span class="wikilink">PopArt</span>。</li>
+<li><strong>借鉴意义</strong>: 并行 RL 的实现细节陷阱，对做大规模并行训练的人是个提醒。</li>
+<li><strong>锐评</strong>: 挑了个大家习以为常却没细想的实现细节——并行环境共享 critic 的 value mismatch。这种『魔鬼在细节』的工作有价值，能纠正社区默认做法。但结论可能高度依赖任务，是不是普适、mismatch 到底多大程度伤害性能，需要看跨任务证据。🫠</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2608.26481v1" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🎮 强化学习"><h3>19. Active Curriculum Refinement for Reinforcement Learning</h3>
+<ul>
+<li><strong>作者</strong>: Zhenya Liu, Yuxin Chen</li>
+<li><strong>机构</strong>: Affiliation: , Correspondence to:, Affiliation: The University of Chicago, Chicago IL, USA</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2608.26469v1">arXiv</a> | <a href="https://arxiv.org/pdf/2608.26469v1">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2608.26469v1/figures/overview.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: 许多 RL 域的环境由前置关系连接（难度递增/参数递增），构成有向无环课程图（<span class="wikilink">DAG</span>）。<span class="wikilink">PATH</span> 显式建模这个结构做主动课程精炼，改进训练。</li>
+<li><strong>对比方法/Baselines</strong>: 对比 <span class="wikilink">ACCEL</span>、<span class="wikilink">PLR</span>、<span class="wikilink">DR</span>，在 <span class="wikilink">MiniGrid</span>、<span class="wikilink">BipedalWalker</span> 上用 <span class="wikilink">PPO</span>。</li>
+<li><strong>借鉴意义</strong>: 课程学习结构化，对样本效率和泛化有帮助。</li>
+<li><strong>锐评</strong>: 把课程学习里隐含的 DAG 前置关系显式建模，思路清晰。相比 ACCEL/PLR 这类隐式利用结构的方法，显式建模理论上更可控。增量式创新——DAG 结构从哪来、错了怎么办（现实中前置关系未必已知）是软肋。🫠</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2608.26469v1" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🎮 强化学习"><h3>20. SIGMA: Structured Noise-Effect-Aware Grouped Multi-Agent Aggregation</h3>
+<ul>
+<li><strong>作者</strong>: Mingqian Li</li>
+<li><strong>机构</strong>: School of Computer Science and technology, Tongji University</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2608.26683v1">arXiv</a> | <a href="https://arxiv.org/pdf/2608.26683v1">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2608.26683v1/Framework.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: 合作 MARL 在噪声观测下难以维持鲁棒协调。观察扰动虽独立注入，但经底层合作结构会变成结构化影响。<span class="wikilink">HYGMA</span> 用超图卷积（<span class="wikilink">HGCN</span>）做噪声效应感知的分组多智能体聚合。</li>
+<li><strong>对比方法/Baselines</strong>: 在 <span class="wikilink">SMAC</span>/<span class="wikilink">StarCraft</span> 上对比 <span class="wikilink">QMIX</span>。</li>
+<li><strong>借鉴意义</strong>: 多智能体协调鲁棒性，噪声效应结构化建模有新意。</li>
+<li><strong>锐评</strong>: 观察角度不错——独立噪声经合作结构会变成结构化干扰，这个二阶效应确实被忽视。用超图建模结构合理。但 MARL 论文的老问题是几乎只在 SMAC 上刷，泛化性存疑；QMIX 这种老 baseline 也该换更强的对比了。🫠</li>
+</ul>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2608.26683v1" target="_blank" rel="noopener">📖 AI 精读</a></div><h2>🌍 多智能体系统</h2><div class="paper-card" data-topic="🌍 多智能体系统"><h3>21. TransMeme: A Multi-Agent Framework for Cross-Cultural Meme Transcreation</h3>
+<ul>
+<li><strong>作者</strong>: Jingyi Zheng, Yule Liu, Zifan Peng, Tianyi Hu, Yuemeng Zhao, Xinhu Zheng, Xinlei He</li>
+<li><strong>机构</strong>: Affiliation: Hong Kong University of Science and Technology (Guangzhou), Guangzhou, China, Affiliation: , email: zpengao@connect.hkust-gz.edu.cn, email:, email: jzheng029@connect.hkust-gz.edu.cn, email: yliu514@connect.hkust-gz.edu.cn, email: xinhuzheng@hkust-gz.edu.cn, Affiliation: Aarhus University, Aarhus, Denmark, Affiliation: Wuhan University, Wuhan, China, email: yzhao472@connect.hkust-gz.edu.cn</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2608.27127v1">arXiv</a> | <a href="https://arxiv.org/pdf/2608.27127v1">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2608.27127v1/meme_fig1.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: 网络 meme 是普遍的多模态跨文化传播形式。<span class="wikilink">TransMeme</span> 用多智能体框架做跨文化 meme 转创作（transcreation），处理中英（<span class="wikilink">ZH</span>/<span class="wikilink">EN</span>）跨语言文化适配。</li>
+<li><strong>对比方法/Baselines</strong>: 用 <span class="wikilink">DPO</span>，在 <span class="wikilink">SemEval</span> 数据上评测。</li>
+<li><strong>借鉴意义</strong>: 多智能体 + 跨文化多模态生成的应用，meme 转创作是有趣的落点。</li>
+<li><strong>锐评</strong>: 选题很潮——meme 跨文化转创作确实是机器翻译搞不定的硬骨头（梗、双关、文化预设全丢）。多 agent 分工处理不同维度是合理设计。但『转创作质量』极度主观，评测怎么做可信、SemEval 数据够不够代表真实 meme 生态，是最大问号。属于有趣但难证的方向。🫠</li>
+</ul>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2608.27127v1" target="_blank" rel="noopener">📖 AI 精读</a></div></div>
+<div id="panel-推荐系统与用户建模" class="tab-panel"><h2>📊 推荐系统与用户建模</h2><div class="paper-card" data-topic="📊 推荐系统与用户建模"><h3>1. When Memory Takes Gradients: Collaborative Vector Memory for Agentic Recommender Systems</h3>
+<ul>
+<li><strong>作者</strong>: Hanchong Chen, Xing Tang, Lingjie Li, Xiongfeng Shan, Xiuqiang He</li>
+<li><strong>机构</strong>: Shenzhen Technology University</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2608.26895v1">arXiv</a> | <a href="https://arxiv.org/pdf/2608.26895v1">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2608.26895v1/figure2.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: 指出现有 Agentic 推荐系统的用户记忆是 <span class="wikilink">LLM</span> 写出来的自然语言叙事，有两个硬伤：一次只能重写一条、更新成本高得离谱；协同信号（评分等）塞不进文本。<span class="wikilink">CoVeMem</span> 把记忆换成可求梯度的协同向量，能一次性吸收整段交互历史，并用 <span class="wikilink">LightGCN</span> 式协同证据补齐文本缺失的信息。</li>
+<li><strong>对比方法/Baselines</strong>: 对比 <span class="wikilink">AgentCF</span>、<span class="wikilink">MemRec</span> 等文本记忆型 agent，以及 <span class="wikilink">LightGCN</span> 传统协同过滤；用 <span class="wikilink">LoRA</span> 微调。</li>
+<li><strong>借鉴意义</strong>: 直接命中你关注的 recsys 主线：把 Agentic RecSys 从『昂贵的 LLM 文本重写』拉回『可梯度优化的向量记忆』，这是让 LLM-agent 推荐真正能上量的关键一步。</li>
+<li><strong>锐评</strong>: 问题诊断非常精准——文本记忆更新成本和协同信号缺失确实是 agentic recsys 落不了地的两座大山。把记忆做成可求梯度的向量是自然但正确的解法。唯一悬念是：向量记忆一旦失去了文本的可解释性，agent 的『决策依据』还能不能审计？摘要没提冷启动和长尾用户表现。方向对，等看实验规模。🔥</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2608.26895v1" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="📊 推荐系统与用户建模"><h3>2. LiveSim: Simulating Environment-Shaped Users in Multi-Agent Live-Stream Ecosystems</h3>
+<ul>
+<li><strong>作者</strong>: Jiaqi Xu, Yiran Qiao 22footnotemark:, Jing Chen, Qiwei Zhong, Xiang Ao, Xueqi Cheng</li>
+<li><strong>机构</strong>: ††thanks: Work was conducted during the internship at ByteDance.††thanks: Jiaqi Xu and Yiran Qiao contributed equally to this work, Affiliation: , Affiliation:  ByteDance China, Email: , Email: yilan.chan@bytedance.com, Email: huafeng.hf@bytedance.com, Affiliation:  University of Chinese Academy of Sciences, Beijing 100049, China</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2608.26849v1">arXiv</a> | <a href="https://arxiv.org/pdf/2608.26849v1">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2608.26849v1/intro_0525.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2608.26849v1/main_0827.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: 针对直播这种交互动态持续重塑用户行为的场景，指出现有模拟器都靠历史推断的静态 profile，在强社交环境里失效。<span class="wikilink">LiveSim</span> 让 <span class="wikilink">LLM</span> 用户在多智能体直播生态里被环境实时塑形，动态更新行为。</li>
+<li><strong>对比方法/Baselines</strong>: 对比静态 profile 模拟器，用 <span class="wikilink">JSD</span>、Conv-Acc 等指标衡量行为分布拟合度。</li>
+<li><strong>借鉴意义</strong>: 用户建模 + 多智能体模拟，对推荐/广告的离线仿真环境构建有直接参考价值——尤其是直播电商这类高频反馈场景。</li>
+<li><strong>锐评</strong>: 字节出品，场景选得很实——直播间用户确实是被弹幕、主播、其他观众实时带节奏的，静态 profile 那套在这儿必然崩。用『环境塑形』做动态用户是对的抽象。担心的是评估：模拟得像不像最终还是要落到下游任务收益，光看分布拟合指标容易自说自话。👀</li>
+</ul>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2608.26849v1" target="_blank" rel="noopener">📖 AI 精读</a></div></div>
+<div id="panel-agent数据评测运行时" class="tab-panel"><h2>🤖 Agent 数据 / 评测 / 运行时</h2><div class="paper-card" data-topic="🤖 Agent 数据 / 评测 / 运行时"><h3>3. What Makes Good Agentic Data? An ACE Lens on Data Generation for LLM Agents</h3>
+<ul>
+<li><strong>作者</strong>: Xingshan Zeng, Zishan Xu, Boju Zhang, Yuzhou Wu, Lingzhi Wang, Jianghao Lin, Liangyou Li, Yasheng Wang, Lifeng Shang, Xin Jiang, Weinan Zhang, Yong Yu, Qun Liu, Weiwen Liu</li>
+<li><strong>机构</strong>: 3]Northwestern University, Chicago, IL, Affiliation:, 1]Huawei Technologies Co., Ltd, 4]Harbin Institute of Technology, Shenzhen, Email: zeng.xingshan@huawei.com, Email:, Email: wwliu@sjtu.edu.cn, 5]Shenzhen Loop Area Institute, 2]Shanghai Jiao Tong University</li>
+<li><strong>链接</strong>: <a href="https://arxiv.org/abs/2608.27260">arXiv</a> | <a href="https://arxiv.org/pdf/2608.27260">PDF</a></li>
+<li><strong>来源</strong>: 📰 HF Daily，⬆️ 30</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2608.27260v1/factor_diversity.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: 提出用 ACE（一致性 lens）审视 Agent 交互数据生成：数据必须在环境、任务、交互、成功信号四者间保持一致，产出的经验要『有用』而非『量大』。用 <span class="wikilink">ToolACE</span> 等生成 pipeline 分析。</li>
+<li><strong>对比方法/Baselines</strong>: 梳理并对比大量现有 agentic 数据生成方法，覆盖 <span class="wikilink">GUI</span>、<span class="wikilink">SWE</span>、<span class="wikilink">MCP</span>、<span class="wikilink">RL</span> 等场景。</li>
+<li><strong>借鉴意义</strong>: Agent 训练现在最大的瓶颈就是数据质量而非模型，这篇给出了『什么是好数据』的判据框架，对任何想自建 agent 训练管线的团队都有用。</li>
+<li><strong>锐评</strong>: 问对了问题。整个领域都在疯狂合成 agent 轨迹，但一致性（环境-任务-成功信号对齐）才是数据能不能真正教会 agent 的关键，堆量只是自我安慰。ACE lens 这个切角有解释力。就怕最后落到一堆定性观察而缺可操作的量化配方——期待它给出能直接指导数据筛选的指标。🔥</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2608.27260" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🤖 Agent 数据 / 评测 / 运行时"><h3>4. AgentJudgeBench: A Multi-Difficulty Benchmark for Evaluating LLM Judges on Agentic Tool-Calling</h3>
+<ul>
+<li><strong>作者</strong>: Abhigya Verma</li>
+<li><strong>机构</strong>: Affiliation: , Affiliation: Amit Kumar Saha</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2608.26623v1">arXiv</a> | <a href="https://arxiv.org/pdf/2608.26623v1">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2608.26623v1/overall_flow.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: <span class="wikilink">AgentJudgeBench</span> 是首个系统研究 LLM-as-judge 在工具调用工作流（<span class="wikilink">DAG</span> 结构、有依赖关系）上可靠性的多难度 benchmark，区别于传统单步问答式评判。</li>
+<li><strong>对比方法/Baselines</strong>: 在 <span class="wikilink">GPT-5</span>、<span class="wikilink">QwQ</span>、<span class="wikilink">SmolLM3</span> 等一众模型上评测 judge 一致性。</li>
+<li><strong>借鉴意义</strong>: 工具调用 agent 评测目前几乎全靠 LLM judge，但没人验证过它在带依赖的 DAG 工作流上靠不靠谱——这直接关系到你评测 agent 系统时的可信度。</li>
+<li><strong>锐评</strong>: 戳中痛点：大家都用 LLM 当裁判评 agent，却没人反问『裁判本身在多步依赖任务上准不准』。做成多难度 DAG 是对的，能暴露 judge 在长链条上的崩溃点。若能进一步给出『何时该信 judge、何时必须上人工』的边界，价值翻倍。👀</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2608.26623v1" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🤖 Agent 数据 / 评测 / 运行时"><h3>5. From Atomic to Agentic: Towards Interpretable Evaluation of LLMs' Agentic Mathematical Capabilities</h3>
+<ul>
+<li><strong>作者</strong>: Jiayi Kuang, Yinghui Li, Yunze Song, Keyu Chen, Zhifeng Shen, Yangning Li, Yidong Wang, Di Yin, Ruizhi Qiao, Xing Sun, Kai Jin, Ying Shen, Liang Lin, Philip S. Yu</li>
+<li><strong>机构</strong>: Affiliation: , Email: lebronyhli@tencent.com, Email: , Affiliation: Sun Yat-sen University, ††thanks: Work done during the internship at Tencent Youtu Lab, Affiliation: Tencent Youtu Lab, Affiliation: University of Illinois Chicago, Affiliation: Pengcheng Laboratory</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2608.26950v1">arXiv</a> | <a href="https://arxiv.org/pdf/2608.26950v1">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2608.26950v1/intro.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2608.26950v1/pipeline.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: 批评现有数学 benchmark 只看最终答案，无法诊断过程级失败。从『原子能力』到『智能体能力』，用 <span class="wikilink">RelationF1</span>、<span class="wikilink">VariableF1</span> 等过程指标做可解释评测。</li>
+<li><strong>对比方法/Baselines</strong>: 在 <span class="wikilink">DeepSeek</span>、<span class="wikilink">GPT-5</span> 上评测 <span class="wikilink">ExpRate</span>、<span class="wikilink">SymRate</span>。</li>
+<li><strong>借鉴意义</strong>: 过程级评测对理解 agent 到底哪一步出错很关键，比只看 pass@1 有诊断价值。</li>
+<li><strong>锐评</strong>: 腾讯优图的活。方向没错——只看最终答案的评测对改进 agent 毫无指导意义，你连它哪步崩的都不知道。设计了一堆过程 F1 指标是加分。但过程标注本身极贵且主观，benchmark 规模和标注一致性会是硬约束。🫠</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2608.26950v1" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🤖 Agent 数据 / 评测 / 运行时"><h3>6. A Contract-Centered Architecture for Scalable and Manageable Agentic Runtimes</h3>
+<ul>
+<li><strong>作者</strong>: Yaxiao Liu, Pengbo Liu, Yiwen Liu, Yihua Guan, Zhenghe Hou, Jiaxing Song</li>
+<li><strong>机构</strong>: Affiliation: , Affiliation: Tsinghua University, Email: , Email: jxsong@tsinghua.edu.cn</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2608.27086v1">arXiv</a> | <a href="https://arxiv.org/pdf/2608.27086v1">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2608.27086v1/1.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2608.27086v1/2.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2608.27086v1/3.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: 把企业 AI 部署看作跨业务/应用/测试/平台/安全/运维/数据治理的协调问题，指出 use-case benchmark 只能测『一个 agent 完成一个任务』。提出以契约（contract）为中心的架构管理可扩展 agentic runtime。</li>
+<li><strong>对比方法/Baselines</strong>: 偏架构与治理论述，引用 <span class="wikilink">AWS</span> 等工业实践。</li>
+<li><strong>借鉴意义</strong>: 从单 agent demo 到企业级 agent 运行时的鸿沟是真实存在的工程问题，契约中心化的思路对平台层设计有参考。</li>
+<li><strong>锐评</strong>: 清华的活，视角务实——学术界只关心单任务 benchmark，但企业里 agent 死在协调、治理、跨团队边界上。契约中心是合理的抽象（类比微服务契约）。风险是这类架构论文容易停在 PPT 层，缺可复现的落地证据。想法好，就看有没有肉。🫠</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2608.27086v1" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🤖 Agent 数据 / 评测 / 运行时"><h3>7. Risks and Controls for Multi-Agent Systems: an analytical framework for deployment of AI agents across organisational boundaries</h3>
+<ul>
+<li><strong>作者</strong>: Reid, Alistair, O&#39;Callaghan, Simon, Venini, Dustin, Carroll, Liam, Caetano, Tiberio</li>
+<li><strong>机构</strong>: Department of Industry, of Gradient Institute for the</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2608.26626v1">arXiv</a> | <a href="https://arxiv.org/pdf/2608.26626v1">PDF</a></li>
+<li>
+<p><strong>来源</strong>: 📄 arXiv 关键词检索</p>
+</li>
+<li>
+<p><strong>核心方法</strong>: 为组织/政策制定者/研究者提供分析框架，推理当 AI agent 相互交互、且交互跨越组织边界时涌现的风险，以及可用的控制手段。</p>
+</li>
+<li><strong>对比方法/Baselines</strong>: 政策分析框架，无实验基线。</li>
+<li><strong>借鉴意义</strong>: 多智能体系统的跨组织风险是被低估的话题，对做 agent 安全治理有参考。</li>
+<li><strong>锐评</strong>: 偏政策/治理报告，不是技术论文。价值在于把『跨组织 agent 交互』这个即将爆发的风险面系统化了——当你的 agent 开始和别家 agent 谈判/交易时，责任和失控边界在哪没人说清。适合做 agent 安全的人当 checklist，但别指望有可跑的方法。💤</li>
+</ul>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2608.26626v1" target="_blank" rel="noopener">📖 AI 精读</a></div></div>
+<div id="panel-推理与工具调用" class="tab-panel"><h2>🧠 推理与工具调用</h2><div class="paper-card" data-topic="🧠 推理与工具调用"><h3>8. Don't Overthink, Don't Underthink: Toward Adaptive Reasoning in Agentic AI</h3>
+<ul>
+<li><strong>作者</strong>: Md Jueal Mia and M. Hadi Amini</li>
+<li><strong>机构</strong>: Affiliation: , Florida International University, Miami, Florida, USA, email:, Security, Optimization, and Learning for InterDependent Networks Laboratory (solid lab), Affiliation: Knight Foundation School of Computing and Information Sciences</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2608.26442v1">arXiv</a> | <a href="https://arxiv.org/pdf/2608.26442v1">PDF</a></li>
+<li>
+<p><strong>来源</strong>: 📄 arXiv 关键词检索</p>
+</li>
+<li>
+<p><strong>核心方法</strong>: 批评现有推理控制都是固定/预分配的（固定 token 预算、预估难度、激活空间干预），且只在孤立推理 benchmark 上测。<span class="wikilink">Adaptive-Reasoning</span> 在完整 agentic workflow 上做自适应，缓解 <span class="wikilink">Over-Reasoning</span> 和 <span class="wikilink">Under-Reasoning</span>。</p>
+</li>
+<li><strong>对比方法/Baselines</strong>: 在 <span class="wikilink">MATH-500</span>、<span class="wikilink">GAIA</span> 上评测，基于 <span class="wikilink">LangGraph</span> 构建 workflow。</li>
+<li><strong>借鉴意义</strong>: 推理成本控制是 agent 落地的核心经济学问题，把它放到真实 workflow 而非孤立题目上评估，更贴近生产。</li>
+<li><strong>锐评</strong>: 标题很诚实——不要想太多也不要想太少。切中当下 test-time scaling 的浪费问题：很多任务根本不需要长思考，硬堆 token 就是烧钱。放到 GAIA 这种真 agent 任务上评是加分项。但『自适应』的触发信号是什么、会不会在难题上误判为简单，是成败关键，摘要没说清。👀</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2608.26442v1" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🧠 推理与工具调用"><h3>9. MemToC: Benchmarking Memory-Tool Conflict Resolution in Large Language Models</h3>
+<ul>
+<li><strong>作者</strong>: Varlamov, Arseniy, Zinnatullin, Rishat, Rykov, Elisei, Panchenko, Alexander, Alimova, Ilseyar</li>
+<li><strong>机构</strong>: Central University, Moscow, Skolkovo Institute of Science and Technology, Moscow, Ural Federal University, Yekaterinburg</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2608.26295v1">arXiv</a> | <a href="https://arxiv.org/pdf/2608.26295v1">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2608.26295v1/benchmark.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: 工具增强 LLM 在工具返回与参数记忆冲突时必须仲裁，但现有评测只测『偏好哪个来源』却不管『哪个来源是对的』。<span class="wikilink">MemToC</span> 是带可执行工具的可控 benchmark，专测 post-tool-return 的仲裁能力。</li>
+<li><strong>对比方法/Baselines</strong>: 用 <span class="wikilink">DPO</span>、<span class="wikilink">SFT</span> 微调，对比 <span class="wikilink">ToolHop</span>、<span class="wikilink">FaithEval</span> 等。</li>
+<li><strong>借鉴意义</strong>: 工具调用是 agent 核心能力，而工具返回未必对——这篇把『来源正确性』纳入评测，对构建可靠 tool-use agent 很有价值。</li>
+<li><strong>锐评</strong>: 问题定义比结论更值钱：现有工作只问『你更信工具还是更信记忆』，却默认工具永远对，这在真实世界纯属幻想（API 会返回过期/错误数据）。把来源正确性做成可控变量是正解。就是数据构造的『可执行工具』覆盖面有多真实，决定了结论能不能外推。👀</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2608.26295v1" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🧠 推理与工具调用"><h3>10. GRAIN: Bridging Name and Narrative Shifts in Real-World Graph Reasoning through Invariance-Rewarded Agentic RL</h3>
+<ul>
+<li><strong>作者</strong>: Zike Yuan, Han Zhang, Jianzhi Yan, Le Liu, Cai Ke, Huozhi Zhou, Jian Xie, Jiran Yin, Yukun Cao, Yue Yu, Hui Wang, Ming Liu, Bing Qin</li>
+<li><strong>机构</strong>: Affiliation: , Email: , Affiliation: Xidian University, Xi’an, China, Affiliation: Harbin Institute of Technology, Shenzhen, China, Affiliation: Peng Cheng Laboratory, Shenzhen, China</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2608.27142v1">arXiv</a> | <a href="https://arxiv.org/pdf/2608.27142v1">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2608.27142v1/fig1.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2608.27142v1/framework_fig3.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: 指出 LLM 做图推理时对节点标识符改名、任务表述变化极度脆弱（<span class="wikilink">OOD</span> 时崩），而确定性图工具天然不变。<span class="wikilink">GRAIN</span> 用不变性奖励的 agentic <span class="wikilink">RL</span>（<span class="wikilink">ARPO</span>）训练模型对 name/narrative shift 保持鲁棒，避免多智能体方案的高延迟。</li>
+<li><strong>对比方法/Baselines</strong>: 对比 <span class="wikilink">SFT</span>、<span class="wikilink">CoT</span> 及多智能体（<span class="wikilink">MA</span>）方案。</li>
+<li><strong>借鉴意义</strong>: 揭示了 LLM 推理『过拟合表面模式』的通病，不变性奖励的思路可迁移到其他需要鲁棒结构抽取的 agent 任务。</li>
+<li><strong>锐评</strong>: score 最高的一篇。诊断很到位——LLM 就是在背表面 pattern，改个变量名就露馅，这跟确定性算法的鲁棒性天差地别。用不变性奖励逼它学结构而非记名字是聪明的。质疑点：不变性奖励设计得不好容易奖励 hacking，模型可能学到『无视输入』这种退化解。得看它怎么防。👀</li>
+</ul>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2608.27142v1" target="_blank" rel="noopener">📖 AI 精读</a></div></div>
+<div id="panel-多模态生成" class="tab-panel"><h2>🎨 多模态生成</h2><div class="paper-card" data-topic="🎨 多模态生成"><h3>11. Visual Information-Guided Parallel Decoding for Diffusion Multimodal Large Language Models</h3>
+<ul>
+<li><strong>作者</strong>: Insu Lee, Wooje Park, Wonseok Shin, Jinwoo Son, Byonghyo Shim</li>
+<li><strong>机构</strong>: Seoul National University</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2608.26580v1">arXiv</a> | <a href="https://arxiv.org/pdf/2608.26580v1">PDF</a></li>
+<li>
+<p><strong>来源</strong>: 📄 arXiv 关键词检索</p>
+</li>
+<li>
+<p><strong>核心方法</strong>: 扩散多模态 LLM（dMLLM）从全 mask 序列逐步 unmask 解码，选哪些 token 解码至关重要。<span class="wikilink">VIG-Sampler</span> 用视觉信息增益（<span class="wikilink">Info-Gain</span>）指导并行解码的 token 选择，观察到图像注意力与视觉 grounding 的关系。</p>
+</li>
+<li><strong>对比方法/Baselines</strong>: 在 <span class="wikilink">COCO</span>、<span class="wikilink">VQA</span> 上对比 <span class="wikilink">LaViDa</span> 等 dMLLM。</li>
+<li><strong>借鉴意义</strong>: 扩散式多模态生成是新兴解码范式，并行解码的 token 选择策略对生成质量和速度都有直接影响。</li>
+<li><strong>锐评</strong>: 扎实的机理性工作——先观察到图像注意力质量和视觉 grounding、信息增益的相关性，再据此设计采样器，逻辑闭环。dMLLM 并行解码这个方向本身够新。质疑点：信息增益估计本身有额外开销，能不能把并行解码省下的时间赚回来，需要看端到端 latency。👀</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2608.26580v1" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🎨 多模态生成"><h3>12. Thinking on Shots: Consistent Multi-Shot Video Editing with Agentic Reasoning</h3>
+<ul>
+<li><strong>作者</strong>: Chenyang Wu, Fuchen Long, Binyuan Huang, Xinlong Sun, Xi Chen, Chun-Le Guo, Chongyi Li</li>
+<li><strong>机构</strong>: Smart Creation Platform Department, Online Video BU, Tencent, VCIP, CS, Nankai University, Work done during the Tencent Qingyun Program internship, erwinlong, shayanhuang, xinlongsun, jasonxchen@tencent.com, guochunle, lichongyi@nankai.edu.cn</li>
+<li><strong>链接</strong>: <a href="https://arxiv.org/abs/2608.26809">arXiv</a> | <a href="https://arxiv.org/pdf/2608.26809">PDF</a></li>
+<li><strong>来源</strong>: 📰 HF Daily，⬆️ 2</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2608.26809v1/method_comp.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2608.26809v1/method_comp_2.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2608.26809v1/small_teaser.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: 长视频多指令编辑的难题：固定时长切分会导致实体碎片化、编辑幻觉、时序断裂。<span class="wikilink">MMLVE</span>-Agent 用异构多智能体架构解耦复杂编辑指令，做到跨镜头一致的编辑。</li>
+<li><strong>对比方法/Baselines</strong>: 对比 <span class="wikilink">VLM</span>-based agent（如 UniVA），用 <span class="wikilink">ZDSS</span>、<span class="wikilink">CSEC</span> 等指标。</li>
+<li><strong>借鉴意义</strong>: 多智能体 + 多模态生成的结合，agentic reasoning 用在长视频编辑上是有意思的应用落点。</li>
+<li><strong>锐评</strong>: 腾讯的活。痛点真实——长视频多指令编辑用 naive 切块必然实体飘、时序断。用异构多 agent 解耦指令是合理工程方案。但多 agent 架构的老毛病是延迟和协调开销，视频编辑本就慢，堆 agent 会不会慢到不可用？摘要没提效率。属于场景驱动的工程论文。🫠</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2608.26809" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🎨 多模态生成"><h3>13. Procedura: Agentic 3D Modeling with Procedural Control</h3>
+<ul>
+<li><strong>作者</strong>: Youtian Lin, Yikang Yang, Zhanpeng Hu, Mengqi Zhou, Feihu Zhang, Xun Cao, Jiaheng Liu, Yao Yao</li>
+<li><strong>机构</strong>: Nanjing University</li>
+<li><strong>链接</strong>: <a href="https://arxiv.org/abs/2608.26238">arXiv</a> | <a href="https://arxiv.org/pdf/2608.26238">PDF</a></li>
+<li><strong>来源</strong>: 📰 HF Daily，⬆️ 2</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2608.26238v1/figures/teaser_explode_buggy_darkfloor_gallery_neat.jpg" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2608.26238v1/pipeline-Overview-v7.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2608.26238v1/pipeline-Build-v5.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: 原生 3D 生成器能从单图恢复网格，但网格该锐利的地方软塌、无部件分解、无可编辑参数。<span class="wikilink">Procedura</span> 探索『3D 形状即代码』范式，用 <span class="wikilink">LLM</span> 生成程序化（<span class="wikilink">CSG</span> 等）控制，可编辑。</li>
+<li><strong>对比方法/Baselines</strong>: 在 <span class="wikilink">MechBench</span> 上评测，用 <span class="wikilink">GPT-5</span>、<span class="wikilink">TRELLIS</span>、<span class="wikilink">CLIP</span>。</li>
+<li><strong>借鉴意义</strong>: 把 3D 生成从『死网格』变成『可编辑代码』，agentic 3D 建模对 CAD/工业设计有想象空间。</li>
+<li><strong>锐评</strong>: 『3D 形状即代码』这个 framing 很戳人——机加工零件就该是锐利、可参数化的，dense mesh 那套对工程根本不能用。用 LLM 生成程序化建模指令是正确的抽象层次。风险是 procedural 表达能力有上限，复杂有机形状怕是 hold 不住。当 CAD 场景的探索看很好。👀</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2608.26238" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🎨 多模态生成"><h3>14. Video-OPSD: Exploiting Privileged Visual Evidence for On-Policy Self-Distillation in Video Large Language Models</h3>
+<ul>
+<li><strong>作者</strong>: Ziyue Wang, Shiqi Huang, Weiwen Xu, Bihan Wen, Xudong Jiang\corresponding</li>
+<li><strong>机构</strong>: School of Electrical and Electronic Engineering, Nanyang Technological University, The Chinese University of Hong Kong</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2608.27065v1">arXiv</a> | <a href="https://arxiv.org/pdf/2608.27065v1">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2608.27065v1/teaser.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: on-policy 自蒸馏（<span class="wikilink">On-Policy</span> <span class="wikilink">Self-Distillation</span>）用特权自教师提供 token 级密集监督做后训练。本文把 OPSD 拓展到视频 LLM，用特权视觉证据（<span class="wikilink">Evidence-Guided</span>）引导。</li>
+<li><strong>对比方法/Baselines</strong>: 对比 <span class="wikilink">GRPO</span>、<span class="wikilink">SFT</span>，用 <span class="wikilink">Self-Teacher</span> 机制。</li>
+<li><strong>借鉴意义</strong>: 视频 LLM 的后训练范式，token 级密集监督对提升视频理解质量有帮助。</li>
+<li><strong>锐评</strong>: 把 OPSD 补到 Video-LLM 这个空白上，动机成立。用特权视觉证据当教师信号是 domain-specific 的合理设计。属于把已有后训练范式迁到新模态的增量工作——不惊艳但扎实，能涨点就有用。🫠</li>
+</ul>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2608.27065v1" target="_blank" rel="noopener">📖 AI 精读</a></div></div>
+<div id="panel-llm训练与压缩" class="tab-panel"><h2>🔧 LLM 训练与压缩</h2><div class="paper-card" data-topic="🔧 LLM 训练与压缩"><h3>15. FOCUS &amp; RePAIR: Mitigating Text Degeneration via Token-Level Guidance for Pruned Large Language Models</h3>
+<ul>
+<li><strong>作者</strong>: Junyoung Lee, Sehyeon Park, Shinhyoung Jang, Seonha Ryu, Hojeong Kim, Hyunsei Lee, Il hong Suh, Yeseong Kim</li>
+<li><strong>机构</strong>: Affiliation: , Correspondence to:, Affiliation: Department of Electrical Engineering and Computer Science, POSTECH, Pohang, Republic of Korea, Affiliation: Hanyang University, Seoul, Republic of Korea, Affiliation: Department of Electrical Engineering and Computer Science, Daegu Gyeongbuk Institute of Science and Technology (DGIST), Daegu, Republic of Korea</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2608.26676v1">arXiv</a> | <a href="https://arxiv.org/pdf/2608.26676v1">PDF</a></li>
+<li>
+<p><strong>来源</strong>: 📄 arXiv 关键词检索</p>
+</li>
+<li>
+<p><strong>核心方法</strong>: 剪枝会放大文本退化（尤其重复循环），即便困惑度和准确率没变。把解码看作动力系统，<span class="wikilink">FOCUS</span> &amp; <span class="wikilink">RePAIR</span> 用 token 级引导缓解剪枝 LLM 的退化。</p>
+</li>
+<li><strong>对比方法/Baselines</strong>: 在 <span class="wikilink">WikiText</span> 上用 <span class="wikilink">MAUVE</span> 评测，对比 <span class="wikilink">DPO</span>、知识蒸馏（<span class="wikilink">KD</span>）。</li>
+<li><strong>借鉴意义</strong>: 模型压缩后的生成质量退化是部署真问题，token 级诊断和修复对边缘部署 LLM 有价值。</li>
+<li><strong>锐评</strong>: 抓到一个被忽视的现象——剪枝后 PPL 和准确率没崩，但生成会陷入重复循环，这种『指标不动但体验崩』的坑最阴险。用动力系统视角看解码退化有新意。修复方案是否引入额外推理开销、会不会牺牲压缩收益，是关键。👀</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2608.26676v1" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🔧 LLM 训练与压缩"><h3>16. SpeechGym: An Audio-Native Gym for Training Voice Agents via Reinforcement Learning</h3>
+<ul>
+<li><strong>作者</strong>: Jiajun Fan, Jingyuan Li, Prashanth Gurunath Shivakumar, Jia-Hong Huang, Qi Luo, M. Maruf, Ivan Bulyko, Ge Liu, Roger Ren</li>
+<li><strong>机构</strong>: 2]Amazon AGI Foundations, Affiliation:, 1]University of Illinois Urbana-Champaign</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2608.26432v1">arXiv</a> | <a href="https://arxiv.org/pdf/2608.26432v1">PDF</a></li>
+<li>
+<p><strong>来源</strong>: 📄 arXiv 关键词检索</p>
+</li>
+<li>
+<p><strong>核心方法</strong>: 语音 agent 要全程用语音调工具和多轮对话，但主流都在文本里训。现有方案要么 cascade <span class="wikilink">TTS</span>/<span class="wikilink">ASR</span> 包住闭源语音 API（梯度传不动、on-policy <span class="wikilink">RL</span> 成本爆炸），要么停在文本。<span class="wikilink">SpeechGym</span> 是音频原生的 RL 训练环境，用 <span class="wikilink">GRPO</span> 训练。</p>
+</li>
+<li><strong>对比方法/Baselines</strong>: 对比 cascade TTS+ASR 方案，用 <span class="wikilink">LoRA</span> 微调。</li>
+<li><strong>借鉴意义</strong>: voice agent 的 RL 训练基础设施，tool use + 多轮对话 + RL 三者结合。</li>
+<li><strong>锐评</strong>: 问题诊断精准：语音 agent 在文本里训，评得了却改不动，因为梯度过不了 TTS/ASR 那层。做音频原生 gym 让 RL 能真正 on-policy 优化是对的基建。Amazon+UIUC 出品，工程量不小。虽沾了点语音合成的边，但内核是 RL agent 训练框架，对 tool-use agent 有借鉴。👀</li>
+</ul>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2608.26432v1" target="_blank" rel="noopener">📖 AI 精读</a></div></div>
+<div id="panel-强化学习" class="tab-panel"><h2>🎮 强化学习</h2><div class="paper-card" data-topic="🎮 强化学习"><h3>17. Simple Actors and Deep Critics for Scalable Reinforcement Learning</h3>
+<ul>
+<li><strong>作者</strong>: Guhyeon Kang, Jaehwi Lee, Minhae Kwon</li>
+<li><strong>机构</strong>: Affiliation: , Note: , email:, Affiliation: Sungkyunkwan University, Republic of Korea, Affiliation: Soongsil University, Republic of Korea, Note: Corresponding author. G. Kang and M. Kwon are with the Department of Electrical and Computer Engineering, Sungkyunkwan University, Republic of Korea. J. Lee is with Soongsil University, Republic of Korea</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2608.26659v1">arXiv</a> | <a href="https://arxiv.org/pdf/2608.26659v1">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2608.26659v1/Figure/Sup/benchmark.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2608.26659v1/nstep_depth_heatmap.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: 离线 RL 靠 diffusion/flow 生成式 actor 捕捉多模态行为，但每步动作要多次去噪、开销大。<span class="wikilink">LAC</span> 主张用简单 actor + 深 critic，避免昂贵的生成式 actor。</li>
+<li><strong>对比方法/Baselines</strong>: 对比 <span class="wikilink">FQL</span>、<span class="wikilink">IDQL</span>、<span class="wikilink">IFQL</span> 等生成式策略。</li>
+<li><strong>借鉴意义</strong>: RL 训练效率话题，简化 actor 降低推理开销对可扩展 RL 有意义。</li>
+<li><strong>锐评</strong>: 反潮流但合理的主张——大家都往 actor 里塞 diffusion/flow，本文反问：把表达力堆到 critic 上、actor 保持简单行不行？如果成立，推理时省掉多步去噪是实打实的收益。就怕简单 actor 在真多模态数据上表达力不够,得看它拿什么证明『简单够用』。👀</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2608.26659v1" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🎮 强化学习"><h3>18. Shared Actors Need Not Share Critics: Effects of Value Mismatch in Parallel Reinforcement Learning</h3>
+<ul>
+<li><strong>作者</strong>: Zhenya Liu, Yang Meng, Zhuokai Zhao, Xuefeng Liu &amp; Yuxin Chen</li>
+<li><strong>机构</strong>: Affiliation: , Affiliation: University of Florida, Affiliation: University of Chicago</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2608.26481v1">arXiv</a> | <a href="https://arxiv.org/pdf/2608.26481v1">PDF</a></li>
+<li>
+<p><strong>来源</strong>: 📄 arXiv 关键词检索</p>
+</li>
+<li>
+<p><strong>核心方法</strong>: 单策略在多环境并行训练时，实现上常共享一个 critic。本文指出不同环境对同一输入可能有不同期望回报，共享 critic 会引入 value mismatch，主张 actor 可共享但 critic 未必该共享。</p>
+</li>
+<li><strong>对比方法/Baselines</strong>: 在 <span class="wikilink">CartPole</span>、<span class="wikilink">BipedalWalker</span>、<span class="wikilink">MuJoCo</span> 上用 <span class="wikilink">PPO</span>、<span class="wikilink">GAE</span>、<span class="wikilink">PopArt</span>。</li>
+<li><strong>借鉴意义</strong>: 并行 RL 的实现细节陷阱，对做大规模并行训练的人是个提醒。</li>
+<li><strong>锐评</strong>: 挑了个大家习以为常却没细想的实现细节——并行环境共享 critic 的 value mismatch。这种『魔鬼在细节』的工作有价值，能纠正社区默认做法。但结论可能高度依赖任务，是不是普适、mismatch 到底多大程度伤害性能，需要看跨任务证据。🫠</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2608.26481v1" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🎮 强化学习"><h3>19. Active Curriculum Refinement for Reinforcement Learning</h3>
+<ul>
+<li><strong>作者</strong>: Zhenya Liu, Yuxin Chen</li>
+<li><strong>机构</strong>: Affiliation: , Correspondence to:, Affiliation: The University of Chicago, Chicago IL, USA</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2608.26469v1">arXiv</a> | <a href="https://arxiv.org/pdf/2608.26469v1">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2608.26469v1/figures/overview.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: 许多 RL 域的环境由前置关系连接（难度递增/参数递增），构成有向无环课程图（<span class="wikilink">DAG</span>）。<span class="wikilink">PATH</span> 显式建模这个结构做主动课程精炼，改进训练。</li>
+<li><strong>对比方法/Baselines</strong>: 对比 <span class="wikilink">ACCEL</span>、<span class="wikilink">PLR</span>、<span class="wikilink">DR</span>，在 <span class="wikilink">MiniGrid</span>、<span class="wikilink">BipedalWalker</span> 上用 <span class="wikilink">PPO</span>。</li>
+<li><strong>借鉴意义</strong>: 课程学习结构化，对样本效率和泛化有帮助。</li>
+<li><strong>锐评</strong>: 把课程学习里隐含的 DAG 前置关系显式建模，思路清晰。相比 ACCEL/PLR 这类隐式利用结构的方法，显式建模理论上更可控。增量式创新——DAG 结构从哪来、错了怎么办（现实中前置关系未必已知）是软肋。🫠</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2608.26469v1" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🎮 强化学习"><h3>20. SIGMA: Structured Noise-Effect-Aware Grouped Multi-Agent Aggregation</h3>
+<ul>
+<li><strong>作者</strong>: Mingqian Li</li>
+<li><strong>机构</strong>: School of Computer Science and technology, Tongji University</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2608.26683v1">arXiv</a> | <a href="https://arxiv.org/pdf/2608.26683v1">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2608.26683v1/Framework.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: 合作 MARL 在噪声观测下难以维持鲁棒协调。观察扰动虽独立注入，但经底层合作结构会变成结构化影响。<span class="wikilink">HYGMA</span> 用超图卷积（<span class="wikilink">HGCN</span>）做噪声效应感知的分组多智能体聚合。</li>
+<li><strong>对比方法/Baselines</strong>: 在 <span class="wikilink">SMAC</span>/<span class="wikilink">StarCraft</span> 上对比 <span class="wikilink">QMIX</span>。</li>
+<li><strong>借鉴意义</strong>: 多智能体协调鲁棒性，噪声效应结构化建模有新意。</li>
+<li><strong>锐评</strong>: 观察角度不错——独立噪声经合作结构会变成结构化干扰，这个二阶效应确实被忽视。用超图建模结构合理。但 MARL 论文的老问题是几乎只在 SMAC 上刷，泛化性存疑；QMIX 这种老 baseline 也该换更强的对比了。🫠</li>
+</ul>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2608.26683v1" target="_blank" rel="noopener">📖 AI 精读</a></div></div>
+<div id="panel-多智能体系统" class="tab-panel"><h2>🌍 多智能体系统</h2><div class="paper-card" data-topic="🌍 多智能体系统"><h3>21. TransMeme: A Multi-Agent Framework for Cross-Cultural Meme Transcreation</h3>
+<ul>
+<li><strong>作者</strong>: Jingyi Zheng, Yule Liu, Zifan Peng, Tianyi Hu, Yuemeng Zhao, Xinhu Zheng, Xinlei He</li>
+<li><strong>机构</strong>: Affiliation: Hong Kong University of Science and Technology (Guangzhou), Guangzhou, China, Affiliation: , email: zpengao@connect.hkust-gz.edu.cn, email:, email: jzheng029@connect.hkust-gz.edu.cn, email: yliu514@connect.hkust-gz.edu.cn, email: xinhuzheng@hkust-gz.edu.cn, Affiliation: Aarhus University, Aarhus, Denmark, Affiliation: Wuhan University, Wuhan, China, email: yzhao472@connect.hkust-gz.edu.cn</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2608.27127v1">arXiv</a> | <a href="https://arxiv.org/pdf/2608.27127v1">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2608.27127v1/meme_fig1.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: 网络 meme 是普遍的多模态跨文化传播形式。<span class="wikilink">TransMeme</span> 用多智能体框架做跨文化 meme 转创作（transcreation），处理中英（<span class="wikilink">ZH</span>/<span class="wikilink">EN</span>）跨语言文化适配。</li>
+<li><strong>对比方法/Baselines</strong>: 用 <span class="wikilink">DPO</span>，在 <span class="wikilink">SemEval</span> 数据上评测。</li>
+<li><strong>借鉴意义</strong>: 多智能体 + 跨文化多模态生成的应用，meme 转创作是有趣的落点。</li>
+<li><strong>锐评</strong>: 选题很潮——meme 跨文化转创作确实是机器翻译搞不定的硬骨头（梗、双关、文化预设全丢）。多 agent 分工处理不同维度是合理设计。但『转创作质量』极度主观，评测怎么做可信、SemEval 数据够不够代表真实 meme 生态，是最大问号。属于有趣但难证的方向。🫠</li>
+</ul>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2608.27127v1" target="_blank" rel="noopener">📖 AI 精读</a></div></div>
+<hr>
+<h2>被排除的论文</h2>
+<ul>
+<li>AI Control Scientist: LLM-driven Agentic System for Automated Control Design — 控制系统设计（化工/航发）领域太窄，与推荐/广告/通用 agent 主线无交集</li>
+<li>A Finite Sample Analysis for Quantile Temporal Difference Learning — 分布式 RL 有限样本理论证明，纯数学，无工程落点</li>
+<li>BrailleBench: Multi-Criteria Braille Comprehension in LLMs — 盲文无障碍评测，与关注领域无关</li>
+<li>CGS-SLAM: Collaborative Gaussian Splatting based SLAM — 3DGS SLAM 重建，偏具身/建图方向，出域</li>
+<li>Reinforcement Learning-Based Control of CAV Platoon Joining — 命中 negative keyword『autonomous driving』，自动驾驶编队控制</li>
+<li>Fixed-Haven Reservation for Online Multi-Agent Pickup and Delivery — 仓储物流机器人调度，偏具身/robot，与 LLM-agent 主线无关</li>
+<li>Discovering Relationships in Data Lakes Using LLMs — 数据湖列关系发现的工业案例，垂直数据工程，价值有限</li>
+<li>UniGeo: MLLM for Text-Guided Cross-View Geo-Localization — 无人机地理定位，多模态匹配但场景无关</li>
+<li>Towards a universal meta-optics solver via LLMs — 超表面光学器件设计，物理仿真领域，出域</li>
+</ul>
+<p>Agent 研究重心正从『能力构建』转向『数据质量、评测可信度、运行时治理、跨组织风险』——工程化和规范化信号明显，说明 agent 快要进入规模化部署的深水区了。</p></div>
+<footer style="text-align:center;color:var(--text2);margin:3em 0 1em;font-size:0.85em;">
+  Generated by daily-papers-web &middot; Powered by Claude Code
+</footer>
+<script src="tabs.js"></script>
+
+</body>
+</html>
