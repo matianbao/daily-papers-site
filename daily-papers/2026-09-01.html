@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>2026-09-01 论文推荐</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.21/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.21/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.21/dist/contrib/auto-render.min.js"
+  onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}]});"></script>
+<link rel="stylesheet" href="style.css">
+<style>body{max-width:960px;}</style>
+
+</head>
+<body>
+<nav class="nav"><a href="index.html">🏠 首页</a><a href="2026-08-31.html">← 前一天</a></nav>
+<div class="detail-page"><h1>🔪 今日锐评</h1>
+<p>今天池子里医疗和机器人论文占了快一半，全被我扔了。真正硬核的就三条线：生成式检索/推荐（阿里两连发）、Agent 上下文与策略优化、以及 RLVR 往「超越人类监督」冲的路线图。灌水味最重的是各种「多智能体+X领域」的套壳，含金量最高的反而是那篇质疑 tree search 的单智能体 RL。</p>
+<h2>分流表</h2>
+<table>
+<thead>
+<tr>
+<th>等级</th>
+<th>论文</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>🔥 必读</td>
+<td><span class="wikilink">ContextPilot</span>（教 Agent 自己剪上下文，细粒度 RL，腾讯优图，25 赞不是白来的） · <span class="wikilink">电商生成式检索</span>（embedding+codebook 联合训练，直击两阶段割裂的老毛病） · <span class="wikilink">CHAP</span>（个性化生成式检索，把用户偏好塞进 SID，思路正）</td>
+</tr>
+<tr>
+<td>👀 值得看</td>
+<td><span class="wikilink">TASPO</span>（进程监督 vs 结果信用，长程 agent 的 credit assignment） · <span class="wikilink">Scaling-RLM</span>（RLVR 超越人类监督的 survey，想看大图谱的看这篇） · <span class="wikilink">CheMatAgent</span>（单智能体 RL 吊打 MCTS，标题就是暴论） · <span class="wikilink">FaVOR</span>（因子挖掘要过经济假设校验，量化的看） · <span class="wikilink">LCoT-GV</span>（用 GAT 验长推理链，图结构挺对味） · <span class="wikilink">PAC</span>（多任务 RL 的进度增强课程，阿里）</td>
+</tr>
+<tr>
+<td>💤 可跳过</td>
+<td><span class="wikilink">Zep</span>（已有笔记，温故可看） · <span class="wikilink">HiRS-Agent</span>（遥感层级多智能体，领域太窄） · <span class="wikilink">BundleWeaver</span>（图像 bundle 检索，新任务但离你远） · <span class="wikilink">TrainSDC</span>（LLM 训练静默数据损坏，infra 向） · <span class="wikilink">SHAPE</span>（CoT 数学技能分析，偏解释性）</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<div class="tab-bar"><button class="tab-btn active" data-tab="all" onclick="switchTab('all')">📋 全部<span class="tab-count">14</span></button><button class="tab-btn" data-tab="agent框架与策略优化" onclick="switchTab('agent框架与策略优化')">🏗 🤖 Agent 框架与策略优化<span class="tab-count">4</span></button><button class="tab-btn" data-tab="生成式检索与推荐" onclick="switchTab('生成式检索与推荐')">🎨 📊 生成式检索与推荐<span class="tab-count">3</span></button><button class="tab-btn" data-tab="推理验证与rl" onclick="switchTab('推理验证与rl')">📄 🧠 推理验证与 RL<span class="tab-count">4</span></button><button class="tab-btn" data-tab="金融量化agent" onclick="switchTab('金融量化agent')">🤖 💰 金融/量化 Agent<span class="tab-count">1</span></button><button class="tab-btn" data-tab="agent记忆" onclick="switchTab('agent记忆')">🧠 🧩 Agent 记忆<span class="tab-count">1</span></button><button class="tab-btn" data-tab="llm训练基础设施" onclick="switchTab('llm训练基础设施')">🏗 ⚙️ LLM 训练基础设施<span class="tab-count">1</span></button></div>
+<div id="panel-all" class="tab-panel active"><h2>🤖 Agent 框架与策略优化</h2><div class="paper-card" data-topic="🤖 Agent 框架与策略优化"><h3>1. ContextPilot: Teaching Agents for Proactive Context Management via Fine-grained RL</h3>
+<ul>
+<li><strong>作者</strong>: Zhuoshi Pan1,2 ♣\clubsuit, Qizhi Pei3 ♣\clubsuit, Junru Lu2, Honglin Lin3, H. Vicky Zhao1♡~\heartsuit, Di Yin2, Xing Sun2♡~\heartsuit</li>
+<li><strong>机构</strong>: \sourcecodehttps://github.com/Tencent/ContextPilot, https://tencent.github.io/ContextPilot, Affiliation: 1Tsinghua University 2Tencent Youtu Lab 3Shanghai AI Lab, Affiliation: </li>
+<li><strong>链接</strong>: <a href="https://arxiv.org/abs/2608.28476">arXiv</a> | <a href="https://arxiv.org/pdf/2608.28476">PDF</a></li>
+<li><strong>来源</strong>: 🔥 HF Trending，⬆️ 25</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2608.28476v1/main_figure.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: 针对长程 agent 任务中工作上下文无限膨胀的问题，<span class="wikilink">ContextPilot</span> 用细粒度 <span class="wikilink">RL</span> 教模型主动编辑自己的上下文——决定什么该留、什么该压缩、什么该丢。相比之前那些「给个工具让模型自己管上下文」的被动方案，它把上下文管理本身当成可优化的策略来训。</li>
+<li><strong>对比方法/Baselines</strong>: 对比现有 proactive context management 方案与全历史保留基线，在 <span class="wikilink">BrowseComp</span> 类长程检索任务上评测。</li>
+<li><strong>借鉴意义</strong>: 长程 agent 和多轮工具调用里，上下文爆炸是真实痛点。把「记什么」变成 RL 策略而非启发式规则，对做 agentic 系统的人直接可用。</li>
+<li><strong>锐评</strong>: 腾讯优图出手，代码 github 直接开（ContextPilot），25 赞里有真东西。方向踩得准：现在大家都在被动地「加个 memory 工具」，它敢用 RL 去学主动裁剪，这才是把问题当问题解。唯一要盯的是——细粒度 RL 的 reward 怎么设？摘要没细说，如果 reward 里偷偷塞了任务成功信号，那「上下文管理」和「任务能力」就纠缠了。等看正文的 credit assignment。🔥</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2608.28476" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🤖 Agent 框架与策略优化"><h3>2. Reconciling Process Supervision with Outcome-Based Credit in Agentic Policy Optimization</h3>
+<ul>
+<li><strong>作者</strong>: Jingxiao Yang, Wangjie Gan11footnotemark:, Yingxuan Zhuang11footnotemark:, Wenqi Zhang, Jintao Chen, Xuhong Zhang</li>
+<li><strong>机构</strong>: Affiliation:  Zhejiang University, Affiliation: </li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2608.31077v1">arXiv</a> | <a href="https://arxiv.org/pdf/2608.31077v1">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2608.31077v1/overview.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: 结果型 RL 给整条轨迹统一分配 advantage，长程交互里 credit 太粗。<span class="wikilink">TASPO</span> 用在线自蒸馏（<span class="wikilink">OPSD</span>）引入训练期才有的特权信息（<span class="wikilink">PI</span>）重评采样行为，把粗粒度的结果信用细化到步级，在 <span class="wikilink">GRPO</span> 框架上做。</li>
+<li><strong>对比方法/Baselines</strong>: 对比 <span class="wikilink">GRPO</span>、结果型 RL 基线，在 <span class="wikilink">WebShop</span>、QA 类长程任务评测。</li>
+<li><strong>借鉴意义</strong>: 长程 agent 的 credit assignment 是训练稳定性的核心难题。用特权信息做步级监督是当下热门路线，对做 agent RL 训练的人有直接借鉴。</li>
+<li><strong>锐评</strong>: 浙大出品，问题选得准——结果 RL 的「一条轨迹一个分」确实是长程任务的痛。用特权信息做在线蒸馏来细化 credit 是聪明的路子。但「特权信息只在训练时有」这个设定本身就危险：如果 PI 太强，学生策略学的其实是「有上帝视角时该怎么做」，部署时没了 PI 会不会崩？这是所有 PI 方法的通病，就看它有没有认真处理 train-test gap。⚠️</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2608.31077v1" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🤖 Agent 框架与策略优化"><h3>3. One Policy Is Enough: Single-Agent Reinforcement Learning Outperforms Tree Search for Chemistry Tool Learning</h3>
+<ul>
+<li><strong>作者</strong>: Armin Dariani, Sifan Wu, Bang Liu, Entao Yang</li>
+<li><strong>机构</strong>: Affiliation: Mila - Quebec Artificial Intelligence Institute, Affiliation: </li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2608.30952v1">arXiv</a> | <a href="https://arxiv.org/pdf/2608.30952v1">PDF</a></li>
+<li>
+<p><strong>来源</strong>: 📄 arXiv 关键词检索</p>
+</li>
+<li>
+<p><strong>核心方法</strong>: 化学问答需要选工具、填对参数、串联调用三件套。<span class="wikilink">CheMatAgent</span> 的暴论是：单智能体 <span class="wikilink">RL</span> 就够了，不需要 <span class="wikilink">MCTS</span> 那套树搜索。用 SFT+RL 训一个策略直接超过树搜索方案。</p>
+</li>
+<li><strong>对比方法/Baselines</strong>: 对比 <span class="wikilink">MCTS</span> tree search、<span class="wikilink">Toolformer</span>/<span class="wikilink">ToolLLM</span> 风格的工具学习方案。</li>
+<li><strong>借鉴意义</strong>: 「工具选择+参数填充+链式调用」是 function calling 的通用三难题，结论（RL 策略 &gt; 树搜索）对所有做 tool use 的人都有方法论意义，不限化学。</li>
+<li><strong>锐评</strong>: Mila 出品，标题「One Policy Is Enough」直接开怼树搜索，我喜欢这种有态度的。如果结论站得住，那对整个 tool-use 社区是个好消息——省掉 MCTS 的推理开销。但要小心：化学工具池是不是够大够复杂？如果工具就那么几十个，单策略当然够，树搜索的优势要在超大工具空间才显。「化学场景赢了」不等于「通用场景赢了」，别被标题带节奏。👀</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2608.30952v1" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🤖 Agent 框架与策略优化"><h3>4. HiRS-Agent: A Hierarchical Multi-Agent System for Reliable Long-Horizon Remote Sensing Task Solving</h3>
+<ul>
+<li><strong>作者</strong>: Boyang Mu, Zhiwei Wei, Mugen Peng, Wenjia Xu</li>
+<li><strong>机构</strong>: Affiliation: , email:, Affiliation: Hunan Normal University, School of Geographic Sciences, Changsha, Hunan, China, Affiliation: Beijing University of Posts and Telecommunications, State Key Laboratory of Networking and Switching Technology, Beijing, China, Note: </li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2608.30672v1">arXiv</a> | <a href="https://arxiv.org/pdf/2608.30672v1">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2608.30672v1/fig2.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2608.30672v1/stage2.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: <span class="wikilink">HiRS-Agent</span> 是遥感任务的层级多智能体系统。针对现有系统用单体决策框架、无法适配遥感任务多阶段相互依赖特性的问题，用层级强化学习（<span class="wikilink">HRL</span>）组织 orchestrator + 专家 agent。</li>
+<li><strong>对比方法/Baselines</strong>: 对比单体 agent 框架、<span class="wikilink">ThinkGeo</span> 等遥感 agent 基线。</li>
+<li><strong>借鉴意义</strong>: 层级多智能体 + HRL 编排的架构模式本身可迁移，对做复杂长程任务分解的 agent 系统设计有参考，虽然遥感领域较窄。</li>
+<li><strong>锐评</strong>: 北邮+湖南师大，score 拉到 6 主要靠关键词密集命中。架构没毛病——多阶段依赖任务用层级分解是标准答案。但「层级多智能体」现在快成万金油套壳了，遥感只是又一个被套的领域。真正要问的是：层级带来的收益是来自任务分解本身，还是来自更多的算力/调用次数？没有算力对齐的消融，很难说层级不是在用更多 token 换性能。💤</li>
+</ul>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2608.30672v1" target="_blank" rel="noopener">📖 AI 精读</a></div><h2>📊 生成式检索与推荐</h2><div class="paper-card" data-topic="📊 生成式检索与推荐"><h3>5. Generative Retrieval for E-commerce: Jointly Learning Embedding and Codebook with Same Product Cluster</h3>
+<ul>
+<li><strong>作者</strong>: Songtao Fang, Zihao Xu, Shaowei Wei, Jin Zhang, Zhuojun Wang</li>
+<li><strong>机构</strong>: Note: , email:, Affiliation: Alibaba Group, HangZhou, CHINA, Affiliation: </li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2608.30606v1">arXiv</a> | <a href="https://arxiv.org/pdf/2608.30606v1">PDF</a></li>
+<li>
+<p><strong>来源</strong>: 📄 arXiv 关键词检索</p>
+</li>
+<li>
+<p><strong>核心方法</strong>: 电商生成式检索的主流两阶段做法——先训商品 embedding，再单独学 codebook 把 embedding 映射成商品 ID——存在割裂。这篇让 embedding 和 codebook 在「同一商品簇」约束下联合学习，用 <span class="wikilink">InfoNCE</span> 对齐，缓解语义 ID 与商品表示脱节。</p>
+</li>
+<li><strong>对比方法/Baselines</strong>: 对比传统两阶段生成式检索、<span class="wikilink">RQ</span>-based 的 <span class="wikilink">DocIDs</span> 生成方案。</li>
+<li><strong>借鉴意义</strong>: 生成式检索/生成式推荐是你的核心关注。两阶段割裂导致的 ID 语义漂移是公认痛点，阿里在真实电商场景验证，落地参考价值高。</li>
+<li><strong>锐评</strong>: 阿里 HangZhou 团队，问题抓得实在：两阶段各训各的，codebook 根本不知道下游要干嘛。联合训练+同簇约束是顺理成章的解法，不惊艳但对。质疑点：「same product cluster」这个约束怎么定义簇？如果簇是靠预训练 embedding 聚出来的，那不还是回到 embedding 质量的老问题上？摘要没给消融，得看 codebook 塌缩率。👀</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2608.30606v1" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="📊 生成式检索与推荐"><h3>6. Preference Shapes Relevance: Cross-component Hierarchical Semantic Alignment for Personalized Generative Retrieval</h3>
+<ul>
+<li><strong>作者</strong>: Gaoming Zhang, Angqing Jiang, Jianchun Song, Kena Qi, Dayao Chen, Wei Lin, Defu Lian</li>
+<li><strong>机构</strong>: Email: , Affiliation: , Email: zzzgm@mail.ustc.edu.cn, Email: liandefu@ustc.edu.cn, Email: philipgaq@mail.ustc.edu.cn, Affiliation: University of Science and Technology of China</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2608.30553v1">arXiv</a> | <a href="https://arxiv.org/pdf/2608.30553v1">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2608.30553v1/hsa+model_color.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: <span class="wikilink">CHAP</span> 针对个性化生成式检索：仅从商品内容导出的语义 ID（<span class="wikilink">SID</span>）存在语义鸿沟，无法对齐动态的用户查询意图。它做跨组件的层级语义对齐（<span class="wikilink">HSA</span>），把用户偏好信号注入 SID 生成，让相关性随偏好变化。</li>
+<li><strong>对比方法/Baselines</strong>: 对比稀疏检索 <span class="wikilink">BM25</span>、稠密检索 <span class="wikilink">DPR</span>/ANCE，以及纯内容导出 SID 的生成式检索。</li>
+<li><strong>借鉴意义</strong>: 「偏好塑造相关性」这个 framing 直接命中推荐系统的个性化核心。用于 Local-Life（本地生活）场景，和广告/推荐的意图匹配高度相关。</li>
+<li><strong>锐评</strong>: 中科大+USTC，思路正：静态 SID 配动态意图本就是错配，把偏好塞进语义 ID 生成是对的方向。「Preference Shapes Relevance」这标题起得比内容更响亮。真正的难点在于层级对齐会不会引入偏好过拟合——热门商品的偏好信号强，长尾直接被淹没。摘要没提冷启动和长尾，这才是个性化生成式检索的生死线。👀</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2608.30553v1" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="📊 生成式检索与推荐"><h3>7. Weaving Visual Narratives: Agentic Image Bundle Composition Beyond Atomic Visual Matching</h3>
+<ul>
+<li><strong>作者</strong>: Rong Shan, Tianyi Xu, Congmin Zheng, Wenteng Chen, Jiachen Zhu, Junjie Wu, Dun Zeng, Teng Wang, Weiwen Liu, Changwang Zhang, Weinan Zhang, Jun Wang, Jianghao Lin
+††footnotemark:</li>
+<li><strong>机构</strong>: Email: , Affiliation: , Affiliation:  Shanghai Innovation Institute, Email: shanrong@sjtu.edu.cn, linjianghao@sjtu.edu.cn, Affiliation:  Shanghai Jiao Tong University</li>
+<li><strong>链接</strong>: <a href="https://arxiv.org/abs/2608.28695">arXiv</a> | <a href="https://arxiv.org/pdf/2608.28695">PDF</a></li>
+<li><strong>来源</strong>: 📰 HF Daily，⬆️ 3</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2608.28695v1/main_figure.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2608.28695v1/dataset-construction.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: 传统图像检索是点对点匹配，逐张打分。<span class="wikilink">BundleWeaver</span> 提出 Image Bundle Composition（<span class="wikilink">IBC</span>）新任务：从个人相册里检索一组有结构关系的图像组成「视觉故事」，而非孤立单图，用 <span class="wikilink">VLM</span> 做 agentic 组合。</li>
+<li><strong>对比方法/Baselines</strong>: 对比点对点图像检索、<span class="wikilink">RzenEmbed</span> 等 embedding 检索方案。</li>
+<li><strong>借鉴意义</strong>: 「bundle 检索」把推荐里的 bundle/组合推荐思想搬到视觉检索，对做多样性/组合优化的检索有一点跨界启发，但整体离核心广告/推荐较远。</li>
+<li><strong>锐评</strong>: 上交+上海创新研究院，new task 定义得挺工整（IBC 的数学形式化都给了）。问题是——这真是刚需还是造出来的任务？「用户想要一组有结构关系的照片」这个需求有多普遍存疑。而且引入 Claude/GPT 做 agentic 组合，成本和延迟对相册检索这种高频场景不友好。学术上自洽，落地画问号。🫠</li>
+</ul>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2608.28695" target="_blank" rel="noopener">📖 AI 精读</a></div><h2>🧠 推理验证与 RL</h2><div class="paper-card" data-topic="🧠 推理验证与 RL"><h3>8. Scaling Large Reasoning Models beyond Human Supervision: A Path toward Superintelligence</h3>
+<ul>
+<li><strong>作者</strong>: Yang, Zhiqin, Fu, Jingwen, Liu, Yuhan, Liu, Hengyu, Zhang, Yonggang, Cao, Kainan, Zhang, Zizhuo, Li, Chenxin, Yuan, Ruibin, Pan, Jiahao, Sun, Jiankai, Zhang, Zhenyuan, Li, Yibo, Lin, Yunlong, Xiong, Jing, Lin, Sida, Han, Bo, Xue, Wei, Guo, Yike</li>
+<li><strong>机构</strong>: Hong Kong Baptist University, Hunyuan Tencent, National University of Singapore, The Chinese University of Hong Kong, The Hong Kong University of Science and Technology, The University of Hong Kong, Xiamen University, Xi’an Jiaotong University, Zhongguancun Academy</li>
+<li><strong>链接</strong>: <a href="https://arxiv.org/abs/2608.31075">arXiv</a> | <a href="https://arxiv.org/pdf/2608.31075">PDF</a></li>
+<li><strong>来源</strong>: 📰 HF Daily，⬆️ 16</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2608.31075v1/landscope.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: 综述性论文，梳理 <span class="wikilink">RLVR</span> 如何从数学/代码这类可自动验证的领域，扩展到开放式与 agentic 任务。核心是当人类监督跟不上时，reward 如何从人类信号转向模型/参考/环境导出的信号，并系统梳理 model-derived reward 需要的不确定性度量。</li>
+<li><strong>对比方法/Baselines</strong>: 覆盖 <span class="wikilink">GRPO</span>、<span class="wikilink">RewardBench</span>、<span class="wikilink">SWE</span> 类基准的方法谱系梳理，非单一方法对比。</li>
+<li><strong>借鉴意义</strong>: 「超越人类监督」是 post-training 的下一个战场。想搭建自己的 RLVR/reward 体系、看清楚整个技术图谱的，这篇当地图用。</li>
+<li><strong>锐评</strong>: 作者列表长得像半个华南 AI 圈联名（腾讯混元+港科+港中文+厦大…），16 赞，survey 该有的野心都有。好处是把「reward 从哪来」这条主线捋清楚了；坏处是 survey 的通病——什么都提一句，什么都不深。标题喊「toward Superintelligence」属实标题党加成，但作为入门 RLVR 全景图是称职的。想动手的别指望它给配方。🫠</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2608.31075" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🧠 推理验证与 RL"><h3>9. LCoT-GV: Graph Attention Networks for Verifying Long Reasoning Chains in Large Language Models</h3>
+<ul>
+<li><strong>作者</strong>: Bérénice Jaulmes, Mehwish Alam</li>
+<li><strong>机构</strong>: Affiliation: </li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2608.30679v1">arXiv</a> | <a href="https://arxiv.org/pdf/2608.30679v1">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2608.30679v1/overview.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: 大推理模型的长思维链（LCoT）常含矛盾、无支撑推断、无关步骤，即便最终答案对。<span class="wikilink">LCoT-GV</span> 把 LCoT 表示成推理图，用图注意力网络（<span class="wikilink">GAT</span>）验证推理链质量，区别于之前只做 CoT（非长链）的 Graph-of-Verification 等方案。</li>
+<li><strong>对比方法/Baselines</strong>: 对比 Graph-of-Verification、ReasoningFlow、Thinking Reward Model、LCoT2Tree 等推理验证方法。</li>
+<li><strong>借鉴意义</strong>: 推理链的过程正确性验证（而非只看答案对错）是 process reward / verifier 的核心，对做推理模型评估和 reward model 的人有用。</li>
+<li><strong>锐评</strong>: 把长推理链建成图再用 GAT 验，方向合理——线性 CoT 确实丢了步骤间的依赖结构。相关工作梳理得比较扎实，能说清自己和一堆 graph-based verifier 的区别。担心的是标注成本：要训 GAT 得有步级质量标签，这些标签哪来的？如果是 LLM 自动标，那验证器的天花板就是标注 LLM 的水平。摘要没交代标注来源，这是关键。👀</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2608.30679v1" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🧠 推理验证与 RL"><h3>10. PAC: Progress-Augmented Advantage Curriculum for Multi-Task Reinforcement Learning of LLMs</h3>
+<ul>
+<li><strong>作者</strong>: Yuanqiang Yu, Yanzhao Zheng, Zhentao Zhang, Tianze Xu, Chao Ma, Jihuai Zhu</li>
+<li><strong>机构</strong>: Email: {zhangzhentao.zzt,xutianze.xtz,mc524716}@alibaba-inc.com, Email: {zhujihuai.zjh,baohua.dbh}@alibaba-inc.com, Email: , Affiliation: , Affiliation: Alibaba Group, Hangzhou, China, Email: {yuyuanqiang.yyq,zhengyanzhao.zyz}@alibaba-inc.com, Email: {linran.lr09,wentong}@alibaba-inc.com</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2608.30528v1">arXiv</a> | <a href="https://arxiv.org/pdf/2608.30528v1">PDF</a></li>
+<li>
+<p><strong>来源</strong>: 📄 arXiv 关键词检索</p>
+</li>
+<li>
+<p><strong>核心方法</strong>: 多任务 RL 后训练常用固定或手工设计的任务混合比例，但任务有用性随训练进程变化。<span class="wikilink">PAC</span>（Progress-Augmented Advantage Curriculum）用「更新是否真的转化为 reward 进步」而非单纯更新幅度来定义可学习性，动态调整任务课程，基于 <span class="wikilink">GRPO</span>。</p>
+</li>
+<li><strong>对比方法/Baselines</strong>: 对比固定任务混合、<span class="wikilink">DUMP</span> 等按更新幅度定义可学习性的在线课程方法，在 <span class="wikilink">ARC</span>、<span class="wikilink">BigCodeBench</span> 评测。</li>
+<li><strong>借鉴意义</strong>: 多任务 RL 的数据配比是 LLM post-training 的实操痛点。用「进度」而非「更新幅度」定义可学习性，对调 RL 训练配方的人有直接价值。</li>
+<li><strong>锐评</strong>: 阿里团队，切口很实用：任务配比该动态调，这点没人反对。批评现有方法「用更新幅度定义可学习性」并改成「reward 进步」，逻辑通顺。但「进步」怎么测量本身就有噪声——单个任务的 reward 抖动很大，短窗口内的「进步」可能就是方差。如果没有足够平滑，容易在任务间反复横跳。想看它的进度信号平滑机制。🫠</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2608.30528v1" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🧠 推理验证与 RL"><h3>11. SHAPE of Chain-of-Thought in Math Reasoning</h3>
+<ul>
+<li><strong>作者</strong>: Jonghyun Song, Sangjun Song, Minjae Oh, Haesung Pyun, Sungsik Lee, Yohan Jo</li>
+<li><strong>链接</strong>: <a href="https://arxiv.org/abs/2608.28600">arXiv</a> | <a href="https://arxiv.org/pdf/2608.28600">PDF</a></li>
+<li><strong>来源</strong>: 📰 HF Daily，⬆️ 13</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2608.28600v1/x2.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2608.28600v1/x3.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: <span class="wikilink">SHAPE</span> 框架从数学教育的两个视角分析 <span class="wikilink">CoT</span> 轨迹：（1）语义空间——模型对问题不断演化的数学解释；（2）用 <span class="wikilink">RLVR</span>/<span class="wikilink">GRPO</span> 训练后的推理技能结构。目的是揭示 LLM 数学推理背后真正有意义的数学技能。</li>
+<li><strong>对比方法/Baselines</strong>: 分析 <span class="wikilink">GRPO</span> 训练的模型在 <span class="wikilink">MATH</span> 上的 CoT，非方法对比。</li>
+<li><strong>借鉴意义</strong>: 对理解 RL 到底改了模型哪些推理能力有解释性价值，对设计更好的 reward 或诊断推理缺陷有间接帮助。</li>
+<li><strong>锐评</strong>: 首尔大，从数学教育借视角来剖 CoT，角度新颖，13 赞说明有人吃这套。解释性工作的老问题：分析得很漂亮，然后呢？能不能反过来指导训练？如果只停在「我们发现模型的语义空间是这样演化的」而给不出可操作的改进，那就是又一篇「好看的观察」。期待它 actionable 的部分，但摘要没露出。🫠</li>
+</ul>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2608.28600" target="_blank" rel="noopener">📖 AI 精读</a></div><h2>💰 金融/量化 Agent</h2><div class="paper-card" data-topic="💰 金融/量化 Agent"><h3>12. FaVOR: LLM-Based Agentic Framework for Factor Mining via Empirical Validation</h3>
+<ul>
+<li><strong>作者</strong>: Hyeonjin Kim, Minseok Kim11footnotemark:, Seunghyeon Jung11footnotemark:, Sujin Pyo, Huisu Jang, Woojin Lee</li>
+<li><strong>机构</strong>: Affiliation: School of Finance, Soongsil University, Email: , Affiliation: , Affiliation: Department of Industrial Engineering, Seoul National University, Affiliation: Department of Computer Science and Artificial Intelligence, Dongguk University-Seoul</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2608.30192v1">arXiv</a> | <a href="https://arxiv.org/pdf/2608.30192v1">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2608.30192v1/fig3.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: <span class="wikilink">FaVOR</span> 是 LLM 多智能体因子挖掘框架。针对现有自动因子挖掘只优化收益、不管因子是否还表达原始经济假设的问题，它加了一道经验验证（empirical validation）环节，检验生成的因子是否与其经济动机一致。</li>
+<li><strong>对比方法/Baselines</strong>: 对比直接优化收益的 LLM 多智能体因子挖掘方案，在 <span class="wikilink">CSI</span> 上用 <span class="wikilink">IR</span>/<span class="wikilink">AR</span>/<span class="wikilink">MDD</span> 评测。</li>
+<li><strong>借鉴意义</strong>: 对做量化/因子工程的直接相关。「因子要过经济假设校验」这个约束是防止过拟合和数据挖掘的关键，比单纯刷 IR 的方案更可信。</li>
+<li><strong>锐评</strong>: 韩国几所大学联手，problem statement 是全文最值钱的部分：自动因子挖掘沦为收益数字游戏、丢掉经济含义，这批评一针见血。加验证环节的思路对。但魔鬼在于——「是否表达经济假设」这个判断本身谁来做？如果是 LLM 自己判，那就是左手验右手，很容易自我确认。真正的检验应该是样本外+多市场，摘要只提 CSI 一个市场，说服力打折。⚠️</li>
+</ul>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2608.30192v1" target="_blank" rel="noopener">📖 AI 精读</a></div><h2>🧩 Agent 记忆</h2><div class="paper-card" data-topic="🧩 Agent 记忆"><h3>13. Zep: A Temporal Knowledge Graph Architecture for Agent Memory</h3>
+<ul>
+<li><strong>作者</strong>: Preston Rasmussen, Pavlo Paliychuk, Travis Beauvais, Jack Ryan, Daniel Chalef</li>
+<li><strong>机构</strong>: Email: , Affiliation: </li>
+<li><strong>链接</strong>: <a href="https://arxiv.org/abs/2501.13956">arXiv</a> | <a href="https://arxiv.org/pdf/2501.13956">PDF</a></li>
+<li><strong>来源</strong>: 🔥 HF Trending，⬆️ 16</li>
+</ul>
+<details class="paper-note"><summary>📒 精读笔记: Zep</summary><div class="note-body"><h1>Zep</h1>
+<h2>定义</h2>
+<p>一个 AI 记忆管理平台，使用知识图谱和时序模型为 LLM Agent 提供长期记忆能力，支持事实提取、关系建模和记忆演化。</p>
+<h2>核心要点</h2>
+<ol>
+<li>基于 <span class="wikilink">Knowledge Graph</span> 存储实体关系，而非单纯的向量检索</li>
+<li>支持 <span class="wikilink">Bi-temporal Model</span>——区分事实发生时间和记录时间</li>
+<li>自动从对话中提取实体、关系和事件，构建动态图谱</li>
+<li>与 <span class="wikilink">Mem0</span> 的区别：更重量级，适合需要复杂关系推理的场景</li>
+</ol>
+<h2>相关概念</h2>
+<ul>
+<li><span class="wikilink">Knowledge Graph</span></li>
+<li><span class="wikilink">Graphiti</span></li>
+<li><span class="wikilink">Episodic Memory</span></li>
+<li><span class="wikilink">Semantic Memory</span></li>
+<li><span class="wikilink">Mem0</span></li>
+</ul></div></details>
+
+<ul>
+<li><strong>锐评</strong>: 老熟人了，你库里已有笔记。时序知识图谱做 agent memory，在 DMR 上压过 MemGPT。放今天是因为它作为 trending 又冒出来——记忆层这块最近热度回升，配合今天的 ContextPilot（主动裁上下文）一起看，正好是「记忆」的两条路线：Zep 建外部结构化图谱 vs ContextPilot 在上下文内做 RL 裁剪。对比着读有意思。👀</li>
+</ul>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2501.13956" target="_blank" rel="noopener">📖 AI 精读</a></div><h2>⚙️ LLM 训练基础设施</h2><div class="paper-card" data-topic="⚙️ LLM 训练基础设施"><h3>14. TrainSDC: Characterizing and Mitigating Silent Data Corruption in Large Language Model Training</h3>
+<ul>
+<li><strong>作者</strong>: Zhipeng Xia, Haotian Xu, Siyu Yun, Liqi Lin, Hu Liu, Yu Li, Cheng Zhuo</li>
+<li><strong>机构</strong>: Affiliation: Zhejiang University, Affiliation: Huawei*Corresponding author: yu.li.sallylee@gmail.com, Affiliation: </li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2608.30769v1">arXiv</a> | <a href="https://arxiv.org/pdf/2608.30769v1">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2608.30769v1/Figures/appendix_forward_robustness.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: <span class="wikilink">TrainSDC</span> 首次系统刻画 Transformer 训练中静默数据损坏（<span class="wikilink">SDC</span>）的脆弱性——现有防护把所有计算一视同仁，因为对哪里最脆弱不清楚。它在前向和反向的主要计算接口上做系统性表征，提出 <span class="wikilink">DeltaPPL</span> 等指标定位高脆弱点。</li>
+<li><strong>对比方法/Baselines</strong>: 对比均匀防护基线，用 <span class="wikilink">SmolLM2</span>、<span class="wikilink">NanoChat</span> 做故障注入实验。</li>
+<li><strong>借鉴意义</strong>: 大规模训练的硬件静默错误是真实工程问题。对做训练 infra、稳定性、大集群的人有价值，但对建模/算法方向的人偏远。</li>
+<li><strong>锐评</strong>: 浙大+华为，选题冷门但扎实——SDC 在万卡集群是真会烧钱烧命的事，之前都是当黑盒防。做「哪些计算最脆弱」的系统刻画是有意义的第一步。DeltaPPL 这个指标听着靠谱。就是受众窄，且故障注入实验用的是 SmolLM2/NanoChat 这种小模型，能不能外推到真正的大模型训练规模，是个悬而未决的问题。👀</li>
+</ul>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2608.30769v1" target="_blank" rel="noopener">📖 AI 精读</a></div></div>
+<div id="panel-agent框架与策略优化" class="tab-panel"><h2>🤖 Agent 框架与策略优化</h2><div class="paper-card" data-topic="🤖 Agent 框架与策略优化"><h3>1. ContextPilot: Teaching Agents for Proactive Context Management via Fine-grained RL</h3>
+<ul>
+<li><strong>作者</strong>: Zhuoshi Pan1,2 ♣\clubsuit, Qizhi Pei3 ♣\clubsuit, Junru Lu2, Honglin Lin3, H. Vicky Zhao1♡~\heartsuit, Di Yin2, Xing Sun2♡~\heartsuit</li>
+<li><strong>机构</strong>: \sourcecodehttps://github.com/Tencent/ContextPilot, https://tencent.github.io/ContextPilot, Affiliation: 1Tsinghua University 2Tencent Youtu Lab 3Shanghai AI Lab, Affiliation: </li>
+<li><strong>链接</strong>: <a href="https://arxiv.org/abs/2608.28476">arXiv</a> | <a href="https://arxiv.org/pdf/2608.28476">PDF</a></li>
+<li><strong>来源</strong>: 🔥 HF Trending，⬆️ 25</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2608.28476v1/main_figure.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: 针对长程 agent 任务中工作上下文无限膨胀的问题，<span class="wikilink">ContextPilot</span> 用细粒度 <span class="wikilink">RL</span> 教模型主动编辑自己的上下文——决定什么该留、什么该压缩、什么该丢。相比之前那些「给个工具让模型自己管上下文」的被动方案，它把上下文管理本身当成可优化的策略来训。</li>
+<li><strong>对比方法/Baselines</strong>: 对比现有 proactive context management 方案与全历史保留基线，在 <span class="wikilink">BrowseComp</span> 类长程检索任务上评测。</li>
+<li><strong>借鉴意义</strong>: 长程 agent 和多轮工具调用里，上下文爆炸是真实痛点。把「记什么」变成 RL 策略而非启发式规则，对做 agentic 系统的人直接可用。</li>
+<li><strong>锐评</strong>: 腾讯优图出手，代码 github 直接开（ContextPilot），25 赞里有真东西。方向踩得准：现在大家都在被动地「加个 memory 工具」，它敢用 RL 去学主动裁剪，这才是把问题当问题解。唯一要盯的是——细粒度 RL 的 reward 怎么设？摘要没细说，如果 reward 里偷偷塞了任务成功信号，那「上下文管理」和「任务能力」就纠缠了。等看正文的 credit assignment。🔥</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2608.28476" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🤖 Agent 框架与策略优化"><h3>2. Reconciling Process Supervision with Outcome-Based Credit in Agentic Policy Optimization</h3>
+<ul>
+<li><strong>作者</strong>: Jingxiao Yang, Wangjie Gan11footnotemark:, Yingxuan Zhuang11footnotemark:, Wenqi Zhang, Jintao Chen, Xuhong Zhang</li>
+<li><strong>机构</strong>: Affiliation:  Zhejiang University, Affiliation: </li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2608.31077v1">arXiv</a> | <a href="https://arxiv.org/pdf/2608.31077v1">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2608.31077v1/overview.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: 结果型 RL 给整条轨迹统一分配 advantage，长程交互里 credit 太粗。<span class="wikilink">TASPO</span> 用在线自蒸馏（<span class="wikilink">OPSD</span>）引入训练期才有的特权信息（<span class="wikilink">PI</span>）重评采样行为，把粗粒度的结果信用细化到步级，在 <span class="wikilink">GRPO</span> 框架上做。</li>
+<li><strong>对比方法/Baselines</strong>: 对比 <span class="wikilink">GRPO</span>、结果型 RL 基线，在 <span class="wikilink">WebShop</span>、QA 类长程任务评测。</li>
+<li><strong>借鉴意义</strong>: 长程 agent 的 credit assignment 是训练稳定性的核心难题。用特权信息做步级监督是当下热门路线，对做 agent RL 训练的人有直接借鉴。</li>
+<li><strong>锐评</strong>: 浙大出品，问题选得准——结果 RL 的「一条轨迹一个分」确实是长程任务的痛。用特权信息做在线蒸馏来细化 credit 是聪明的路子。但「特权信息只在训练时有」这个设定本身就危险：如果 PI 太强，学生策略学的其实是「有上帝视角时该怎么做」，部署时没了 PI 会不会崩？这是所有 PI 方法的通病，就看它有没有认真处理 train-test gap。⚠️</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2608.31077v1" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🤖 Agent 框架与策略优化"><h3>3. One Policy Is Enough: Single-Agent Reinforcement Learning Outperforms Tree Search for Chemistry Tool Learning</h3>
+<ul>
+<li><strong>作者</strong>: Armin Dariani, Sifan Wu, Bang Liu, Entao Yang</li>
+<li><strong>机构</strong>: Affiliation: Mila - Quebec Artificial Intelligence Institute, Affiliation: </li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2608.30952v1">arXiv</a> | <a href="https://arxiv.org/pdf/2608.30952v1">PDF</a></li>
+<li>
+<p><strong>来源</strong>: 📄 arXiv 关键词检索</p>
+</li>
+<li>
+<p><strong>核心方法</strong>: 化学问答需要选工具、填对参数、串联调用三件套。<span class="wikilink">CheMatAgent</span> 的暴论是：单智能体 <span class="wikilink">RL</span> 就够了，不需要 <span class="wikilink">MCTS</span> 那套树搜索。用 SFT+RL 训一个策略直接超过树搜索方案。</p>
+</li>
+<li><strong>对比方法/Baselines</strong>: 对比 <span class="wikilink">MCTS</span> tree search、<span class="wikilink">Toolformer</span>/<span class="wikilink">ToolLLM</span> 风格的工具学习方案。</li>
+<li><strong>借鉴意义</strong>: 「工具选择+参数填充+链式调用」是 function calling 的通用三难题，结论（RL 策略 &gt; 树搜索）对所有做 tool use 的人都有方法论意义，不限化学。</li>
+<li><strong>锐评</strong>: Mila 出品，标题「One Policy Is Enough」直接开怼树搜索，我喜欢这种有态度的。如果结论站得住，那对整个 tool-use 社区是个好消息——省掉 MCTS 的推理开销。但要小心：化学工具池是不是够大够复杂？如果工具就那么几十个，单策略当然够，树搜索的优势要在超大工具空间才显。「化学场景赢了」不等于「通用场景赢了」，别被标题带节奏。👀</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2608.30952v1" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🤖 Agent 框架与策略优化"><h3>4. HiRS-Agent: A Hierarchical Multi-Agent System for Reliable Long-Horizon Remote Sensing Task Solving</h3>
+<ul>
+<li><strong>作者</strong>: Boyang Mu, Zhiwei Wei, Mugen Peng, Wenjia Xu</li>
+<li><strong>机构</strong>: Affiliation: , email:, Affiliation: Hunan Normal University, School of Geographic Sciences, Changsha, Hunan, China, Affiliation: Beijing University of Posts and Telecommunications, State Key Laboratory of Networking and Switching Technology, Beijing, China, Note: </li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2608.30672v1">arXiv</a> | <a href="https://arxiv.org/pdf/2608.30672v1">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2608.30672v1/fig2.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2608.30672v1/stage2.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: <span class="wikilink">HiRS-Agent</span> 是遥感任务的层级多智能体系统。针对现有系统用单体决策框架、无法适配遥感任务多阶段相互依赖特性的问题，用层级强化学习（<span class="wikilink">HRL</span>）组织 orchestrator + 专家 agent。</li>
+<li><strong>对比方法/Baselines</strong>: 对比单体 agent 框架、<span class="wikilink">ThinkGeo</span> 等遥感 agent 基线。</li>
+<li><strong>借鉴意义</strong>: 层级多智能体 + HRL 编排的架构模式本身可迁移，对做复杂长程任务分解的 agent 系统设计有参考，虽然遥感领域较窄。</li>
+<li><strong>锐评</strong>: 北邮+湖南师大，score 拉到 6 主要靠关键词密集命中。架构没毛病——多阶段依赖任务用层级分解是标准答案。但「层级多智能体」现在快成万金油套壳了，遥感只是又一个被套的领域。真正要问的是：层级带来的收益是来自任务分解本身，还是来自更多的算力/调用次数？没有算力对齐的消融，很难说层级不是在用更多 token 换性能。💤</li>
+</ul>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2608.30672v1" target="_blank" rel="noopener">📖 AI 精读</a></div></div>
+<div id="panel-生成式检索与推荐" class="tab-panel"><h2>📊 生成式检索与推荐</h2><div class="paper-card" data-topic="📊 生成式检索与推荐"><h3>5. Generative Retrieval for E-commerce: Jointly Learning Embedding and Codebook with Same Product Cluster</h3>
+<ul>
+<li><strong>作者</strong>: Songtao Fang, Zihao Xu, Shaowei Wei, Jin Zhang, Zhuojun Wang</li>
+<li><strong>机构</strong>: Note: , email:, Affiliation: Alibaba Group, HangZhou, CHINA, Affiliation: </li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2608.30606v1">arXiv</a> | <a href="https://arxiv.org/pdf/2608.30606v1">PDF</a></li>
+<li>
+<p><strong>来源</strong>: 📄 arXiv 关键词检索</p>
+</li>
+<li>
+<p><strong>核心方法</strong>: 电商生成式检索的主流两阶段做法——先训商品 embedding，再单独学 codebook 把 embedding 映射成商品 ID——存在割裂。这篇让 embedding 和 codebook 在「同一商品簇」约束下联合学习，用 <span class="wikilink">InfoNCE</span> 对齐，缓解语义 ID 与商品表示脱节。</p>
+</li>
+<li><strong>对比方法/Baselines</strong>: 对比传统两阶段生成式检索、<span class="wikilink">RQ</span>-based 的 <span class="wikilink">DocIDs</span> 生成方案。</li>
+<li><strong>借鉴意义</strong>: 生成式检索/生成式推荐是你的核心关注。两阶段割裂导致的 ID 语义漂移是公认痛点，阿里在真实电商场景验证，落地参考价值高。</li>
+<li><strong>锐评</strong>: 阿里 HangZhou 团队，问题抓得实在：两阶段各训各的，codebook 根本不知道下游要干嘛。联合训练+同簇约束是顺理成章的解法，不惊艳但对。质疑点：「same product cluster」这个约束怎么定义簇？如果簇是靠预训练 embedding 聚出来的，那不还是回到 embedding 质量的老问题上？摘要没给消融，得看 codebook 塌缩率。👀</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2608.30606v1" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="📊 生成式检索与推荐"><h3>6. Preference Shapes Relevance: Cross-component Hierarchical Semantic Alignment for Personalized Generative Retrieval</h3>
+<ul>
+<li><strong>作者</strong>: Gaoming Zhang, Angqing Jiang, Jianchun Song, Kena Qi, Dayao Chen, Wei Lin, Defu Lian</li>
+<li><strong>机构</strong>: Email: , Affiliation: , Email: zzzgm@mail.ustc.edu.cn, Email: liandefu@ustc.edu.cn, Email: philipgaq@mail.ustc.edu.cn, Affiliation: University of Science and Technology of China</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2608.30553v1">arXiv</a> | <a href="https://arxiv.org/pdf/2608.30553v1">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2608.30553v1/hsa+model_color.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: <span class="wikilink">CHAP</span> 针对个性化生成式检索：仅从商品内容导出的语义 ID（<span class="wikilink">SID</span>）存在语义鸿沟，无法对齐动态的用户查询意图。它做跨组件的层级语义对齐（<span class="wikilink">HSA</span>），把用户偏好信号注入 SID 生成，让相关性随偏好变化。</li>
+<li><strong>对比方法/Baselines</strong>: 对比稀疏检索 <span class="wikilink">BM25</span>、稠密检索 <span class="wikilink">DPR</span>/ANCE，以及纯内容导出 SID 的生成式检索。</li>
+<li><strong>借鉴意义</strong>: 「偏好塑造相关性」这个 framing 直接命中推荐系统的个性化核心。用于 Local-Life（本地生活）场景，和广告/推荐的意图匹配高度相关。</li>
+<li><strong>锐评</strong>: 中科大+USTC，思路正：静态 SID 配动态意图本就是错配，把偏好塞进语义 ID 生成是对的方向。「Preference Shapes Relevance」这标题起得比内容更响亮。真正的难点在于层级对齐会不会引入偏好过拟合——热门商品的偏好信号强，长尾直接被淹没。摘要没提冷启动和长尾，这才是个性化生成式检索的生死线。👀</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2608.30553v1" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="📊 生成式检索与推荐"><h3>7. Weaving Visual Narratives: Agentic Image Bundle Composition Beyond Atomic Visual Matching</h3>
+<ul>
+<li><strong>作者</strong>: Rong Shan, Tianyi Xu, Congmin Zheng, Wenteng Chen, Jiachen Zhu, Junjie Wu, Dun Zeng, Teng Wang, Weiwen Liu, Changwang Zhang, Weinan Zhang, Jun Wang, Jianghao Lin
+††footnotemark:</li>
+<li><strong>机构</strong>: Email: , Affiliation: , Affiliation:  Shanghai Innovation Institute, Email: shanrong@sjtu.edu.cn, linjianghao@sjtu.edu.cn, Affiliation:  Shanghai Jiao Tong University</li>
+<li><strong>链接</strong>: <a href="https://arxiv.org/abs/2608.28695">arXiv</a> | <a href="https://arxiv.org/pdf/2608.28695">PDF</a></li>
+<li><strong>来源</strong>: 📰 HF Daily，⬆️ 3</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2608.28695v1/main_figure.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2608.28695v1/dataset-construction.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: 传统图像检索是点对点匹配，逐张打分。<span class="wikilink">BundleWeaver</span> 提出 Image Bundle Composition（<span class="wikilink">IBC</span>）新任务：从个人相册里检索一组有结构关系的图像组成「视觉故事」，而非孤立单图，用 <span class="wikilink">VLM</span> 做 agentic 组合。</li>
+<li><strong>对比方法/Baselines</strong>: 对比点对点图像检索、<span class="wikilink">RzenEmbed</span> 等 embedding 检索方案。</li>
+<li><strong>借鉴意义</strong>: 「bundle 检索」把推荐里的 bundle/组合推荐思想搬到视觉检索，对做多样性/组合优化的检索有一点跨界启发，但整体离核心广告/推荐较远。</li>
+<li><strong>锐评</strong>: 上交+上海创新研究院，new task 定义得挺工整（IBC 的数学形式化都给了）。问题是——这真是刚需还是造出来的任务？「用户想要一组有结构关系的照片」这个需求有多普遍存疑。而且引入 Claude/GPT 做 agentic 组合，成本和延迟对相册检索这种高频场景不友好。学术上自洽，落地画问号。🫠</li>
+</ul>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2608.28695" target="_blank" rel="noopener">📖 AI 精读</a></div></div>
+<div id="panel-推理验证与rl" class="tab-panel"><h2>🧠 推理验证与 RL</h2><div class="paper-card" data-topic="🧠 推理验证与 RL"><h3>8. Scaling Large Reasoning Models beyond Human Supervision: A Path toward Superintelligence</h3>
+<ul>
+<li><strong>作者</strong>: Yang, Zhiqin, Fu, Jingwen, Liu, Yuhan, Liu, Hengyu, Zhang, Yonggang, Cao, Kainan, Zhang, Zizhuo, Li, Chenxin, Yuan, Ruibin, Pan, Jiahao, Sun, Jiankai, Zhang, Zhenyuan, Li, Yibo, Lin, Yunlong, Xiong, Jing, Lin, Sida, Han, Bo, Xue, Wei, Guo, Yike</li>
+<li><strong>机构</strong>: Hong Kong Baptist University, Hunyuan Tencent, National University of Singapore, The Chinese University of Hong Kong, The Hong Kong University of Science and Technology, The University of Hong Kong, Xiamen University, Xi’an Jiaotong University, Zhongguancun Academy</li>
+<li><strong>链接</strong>: <a href="https://arxiv.org/abs/2608.31075">arXiv</a> | <a href="https://arxiv.org/pdf/2608.31075">PDF</a></li>
+<li><strong>来源</strong>: 📰 HF Daily，⬆️ 16</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2608.31075v1/landscope.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: 综述性论文，梳理 <span class="wikilink">RLVR</span> 如何从数学/代码这类可自动验证的领域，扩展到开放式与 agentic 任务。核心是当人类监督跟不上时，reward 如何从人类信号转向模型/参考/环境导出的信号，并系统梳理 model-derived reward 需要的不确定性度量。</li>
+<li><strong>对比方法/Baselines</strong>: 覆盖 <span class="wikilink">GRPO</span>、<span class="wikilink">RewardBench</span>、<span class="wikilink">SWE</span> 类基准的方法谱系梳理，非单一方法对比。</li>
+<li><strong>借鉴意义</strong>: 「超越人类监督」是 post-training 的下一个战场。想搭建自己的 RLVR/reward 体系、看清楚整个技术图谱的，这篇当地图用。</li>
+<li><strong>锐评</strong>: 作者列表长得像半个华南 AI 圈联名（腾讯混元+港科+港中文+厦大…），16 赞，survey 该有的野心都有。好处是把「reward 从哪来」这条主线捋清楚了；坏处是 survey 的通病——什么都提一句，什么都不深。标题喊「toward Superintelligence」属实标题党加成，但作为入门 RLVR 全景图是称职的。想动手的别指望它给配方。🫠</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2608.31075" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🧠 推理验证与 RL"><h3>9. LCoT-GV: Graph Attention Networks for Verifying Long Reasoning Chains in Large Language Models</h3>
+<ul>
+<li><strong>作者</strong>: Bérénice Jaulmes, Mehwish Alam</li>
+<li><strong>机构</strong>: Affiliation: </li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2608.30679v1">arXiv</a> | <a href="https://arxiv.org/pdf/2608.30679v1">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2608.30679v1/overview.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: 大推理模型的长思维链（LCoT）常含矛盾、无支撑推断、无关步骤，即便最终答案对。<span class="wikilink">LCoT-GV</span> 把 LCoT 表示成推理图，用图注意力网络（<span class="wikilink">GAT</span>）验证推理链质量，区别于之前只做 CoT（非长链）的 Graph-of-Verification 等方案。</li>
+<li><strong>对比方法/Baselines</strong>: 对比 Graph-of-Verification、ReasoningFlow、Thinking Reward Model、LCoT2Tree 等推理验证方法。</li>
+<li><strong>借鉴意义</strong>: 推理链的过程正确性验证（而非只看答案对错）是 process reward / verifier 的核心，对做推理模型评估和 reward model 的人有用。</li>
+<li><strong>锐评</strong>: 把长推理链建成图再用 GAT 验，方向合理——线性 CoT 确实丢了步骤间的依赖结构。相关工作梳理得比较扎实，能说清自己和一堆 graph-based verifier 的区别。担心的是标注成本：要训 GAT 得有步级质量标签，这些标签哪来的？如果是 LLM 自动标，那验证器的天花板就是标注 LLM 的水平。摘要没交代标注来源，这是关键。👀</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2608.30679v1" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🧠 推理验证与 RL"><h3>10. PAC: Progress-Augmented Advantage Curriculum for Multi-Task Reinforcement Learning of LLMs</h3>
+<ul>
+<li><strong>作者</strong>: Yuanqiang Yu, Yanzhao Zheng, Zhentao Zhang, Tianze Xu, Chao Ma, Jihuai Zhu</li>
+<li><strong>机构</strong>: Email: {zhangzhentao.zzt,xutianze.xtz,mc524716}@alibaba-inc.com, Email: {zhujihuai.zjh,baohua.dbh}@alibaba-inc.com, Email: , Affiliation: , Affiliation: Alibaba Group, Hangzhou, China, Email: {yuyuanqiang.yyq,zhengyanzhao.zyz}@alibaba-inc.com, Email: {linran.lr09,wentong}@alibaba-inc.com</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2608.30528v1">arXiv</a> | <a href="https://arxiv.org/pdf/2608.30528v1">PDF</a></li>
+<li>
+<p><strong>来源</strong>: 📄 arXiv 关键词检索</p>
+</li>
+<li>
+<p><strong>核心方法</strong>: 多任务 RL 后训练常用固定或手工设计的任务混合比例，但任务有用性随训练进程变化。<span class="wikilink">PAC</span>（Progress-Augmented Advantage Curriculum）用「更新是否真的转化为 reward 进步」而非单纯更新幅度来定义可学习性，动态调整任务课程，基于 <span class="wikilink">GRPO</span>。</p>
+</li>
+<li><strong>对比方法/Baselines</strong>: 对比固定任务混合、<span class="wikilink">DUMP</span> 等按更新幅度定义可学习性的在线课程方法，在 <span class="wikilink">ARC</span>、<span class="wikilink">BigCodeBench</span> 评测。</li>
+<li><strong>借鉴意义</strong>: 多任务 RL 的数据配比是 LLM post-training 的实操痛点。用「进度」而非「更新幅度」定义可学习性，对调 RL 训练配方的人有直接价值。</li>
+<li><strong>锐评</strong>: 阿里团队，切口很实用：任务配比该动态调，这点没人反对。批评现有方法「用更新幅度定义可学习性」并改成「reward 进步」，逻辑通顺。但「进步」怎么测量本身就有噪声——单个任务的 reward 抖动很大，短窗口内的「进步」可能就是方差。如果没有足够平滑，容易在任务间反复横跳。想看它的进度信号平滑机制。🫠</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2608.30528v1" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🧠 推理验证与 RL"><h3>11. SHAPE of Chain-of-Thought in Math Reasoning</h3>
+<ul>
+<li><strong>作者</strong>: Jonghyun Song, Sangjun Song, Minjae Oh, Haesung Pyun, Sungsik Lee, Yohan Jo</li>
+<li><strong>链接</strong>: <a href="https://arxiv.org/abs/2608.28600">arXiv</a> | <a href="https://arxiv.org/pdf/2608.28600">PDF</a></li>
+<li><strong>来源</strong>: 📰 HF Daily，⬆️ 13</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2608.28600v1/x2.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2608.28600v1/x3.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: <span class="wikilink">SHAPE</span> 框架从数学教育的两个视角分析 <span class="wikilink">CoT</span> 轨迹：（1）语义空间——模型对问题不断演化的数学解释；（2）用 <span class="wikilink">RLVR</span>/<span class="wikilink">GRPO</span> 训练后的推理技能结构。目的是揭示 LLM 数学推理背后真正有意义的数学技能。</li>
+<li><strong>对比方法/Baselines</strong>: 分析 <span class="wikilink">GRPO</span> 训练的模型在 <span class="wikilink">MATH</span> 上的 CoT，非方法对比。</li>
+<li><strong>借鉴意义</strong>: 对理解 RL 到底改了模型哪些推理能力有解释性价值，对设计更好的 reward 或诊断推理缺陷有间接帮助。</li>
+<li><strong>锐评</strong>: 首尔大，从数学教育借视角来剖 CoT，角度新颖，13 赞说明有人吃这套。解释性工作的老问题：分析得很漂亮，然后呢？能不能反过来指导训练？如果只停在「我们发现模型的语义空间是这样演化的」而给不出可操作的改进，那就是又一篇「好看的观察」。期待它 actionable 的部分，但摘要没露出。🫠</li>
+</ul>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2608.28600" target="_blank" rel="noopener">📖 AI 精读</a></div></div>
+<div id="panel-金融量化agent" class="tab-panel"><h2>💰 金融/量化 Agent</h2><div class="paper-card" data-topic="💰 金融/量化 Agent"><h3>12. FaVOR: LLM-Based Agentic Framework for Factor Mining via Empirical Validation</h3>
+<ul>
+<li><strong>作者</strong>: Hyeonjin Kim, Minseok Kim11footnotemark:, Seunghyeon Jung11footnotemark:, Sujin Pyo, Huisu Jang, Woojin Lee</li>
+<li><strong>机构</strong>: Affiliation: School of Finance, Soongsil University, Email: , Affiliation: , Affiliation: Department of Industrial Engineering, Seoul National University, Affiliation: Department of Computer Science and Artificial Intelligence, Dongguk University-Seoul</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2608.30192v1">arXiv</a> | <a href="https://arxiv.org/pdf/2608.30192v1">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2608.30192v1/fig3.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: <span class="wikilink">FaVOR</span> 是 LLM 多智能体因子挖掘框架。针对现有自动因子挖掘只优化收益、不管因子是否还表达原始经济假设的问题，它加了一道经验验证（empirical validation）环节，检验生成的因子是否与其经济动机一致。</li>
+<li><strong>对比方法/Baselines</strong>: 对比直接优化收益的 LLM 多智能体因子挖掘方案，在 <span class="wikilink">CSI</span> 上用 <span class="wikilink">IR</span>/<span class="wikilink">AR</span>/<span class="wikilink">MDD</span> 评测。</li>
+<li><strong>借鉴意义</strong>: 对做量化/因子工程的直接相关。「因子要过经济假设校验」这个约束是防止过拟合和数据挖掘的关键，比单纯刷 IR 的方案更可信。</li>
+<li><strong>锐评</strong>: 韩国几所大学联手，problem statement 是全文最值钱的部分：自动因子挖掘沦为收益数字游戏、丢掉经济含义，这批评一针见血。加验证环节的思路对。但魔鬼在于——「是否表达经济假设」这个判断本身谁来做？如果是 LLM 自己判，那就是左手验右手，很容易自我确认。真正的检验应该是样本外+多市场，摘要只提 CSI 一个市场，说服力打折。⚠️</li>
+</ul>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2608.30192v1" target="_blank" rel="noopener">📖 AI 精读</a></div></div>
+<div id="panel-agent记忆" class="tab-panel"><h2>🧩 Agent 记忆</h2><div class="paper-card" data-topic="🧩 Agent 记忆"><h3>13. Zep: A Temporal Knowledge Graph Architecture for Agent Memory</h3>
+<ul>
+<li><strong>作者</strong>: Preston Rasmussen, Pavlo Paliychuk, Travis Beauvais, Jack Ryan, Daniel Chalef</li>
+<li><strong>机构</strong>: Email: , Affiliation: </li>
+<li><strong>链接</strong>: <a href="https://arxiv.org/abs/2501.13956">arXiv</a> | <a href="https://arxiv.org/pdf/2501.13956">PDF</a></li>
+<li><strong>来源</strong>: 🔥 HF Trending，⬆️ 16</li>
+</ul>
+<details class="paper-note"><summary>📒 精读笔记: Zep</summary><div class="note-body"><h1>Zep</h1>
+<h2>定义</h2>
+<p>一个 AI 记忆管理平台，使用知识图谱和时序模型为 LLM Agent 提供长期记忆能力，支持事实提取、关系建模和记忆演化。</p>
+<h2>核心要点</h2>
+<ol>
+<li>基于 <span class="wikilink">Knowledge Graph</span> 存储实体关系，而非单纯的向量检索</li>
+<li>支持 <span class="wikilink">Bi-temporal Model</span>——区分事实发生时间和记录时间</li>
+<li>自动从对话中提取实体、关系和事件，构建动态图谱</li>
+<li>与 <span class="wikilink">Mem0</span> 的区别：更重量级，适合需要复杂关系推理的场景</li>
+</ol>
+<h2>相关概念</h2>
+<ul>
+<li><span class="wikilink">Knowledge Graph</span></li>
+<li><span class="wikilink">Graphiti</span></li>
+<li><span class="wikilink">Episodic Memory</span></li>
+<li><span class="wikilink">Semantic Memory</span></li>
+<li><span class="wikilink">Mem0</span></li>
+</ul></div></details>
+
+<ul>
+<li><strong>锐评</strong>: 老熟人了，你库里已有笔记。时序知识图谱做 agent memory，在 DMR 上压过 MemGPT。放今天是因为它作为 trending 又冒出来——记忆层这块最近热度回升，配合今天的 ContextPilot（主动裁上下文）一起看，正好是「记忆」的两条路线：Zep 建外部结构化图谱 vs ContextPilot 在上下文内做 RL 裁剪。对比着读有意思。👀</li>
+</ul>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2501.13956" target="_blank" rel="noopener">📖 AI 精读</a></div></div>
+<div id="panel-llm训练基础设施" class="tab-panel"><h2>⚙️ LLM 训练基础设施</h2><div class="paper-card" data-topic="⚙️ LLM 训练基础设施"><h3>14. TrainSDC: Characterizing and Mitigating Silent Data Corruption in Large Language Model Training</h3>
+<ul>
+<li><strong>作者</strong>: Zhipeng Xia, Haotian Xu, Siyu Yun, Liqi Lin, Hu Liu, Yu Li, Cheng Zhuo</li>
+<li><strong>机构</strong>: Affiliation: Zhejiang University, Affiliation: Huawei*Corresponding author: yu.li.sallylee@gmail.com, Affiliation: </li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2608.30769v1">arXiv</a> | <a href="https://arxiv.org/pdf/2608.30769v1">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2608.30769v1/Figures/appendix_forward_robustness.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: <span class="wikilink">TrainSDC</span> 首次系统刻画 Transformer 训练中静默数据损坏（<span class="wikilink">SDC</span>）的脆弱性——现有防护把所有计算一视同仁，因为对哪里最脆弱不清楚。它在前向和反向的主要计算接口上做系统性表征，提出 <span class="wikilink">DeltaPPL</span> 等指标定位高脆弱点。</li>
+<li><strong>对比方法/Baselines</strong>: 对比均匀防护基线，用 <span class="wikilink">SmolLM2</span>、<span class="wikilink">NanoChat</span> 做故障注入实验。</li>
+<li><strong>借鉴意义</strong>: 大规模训练的硬件静默错误是真实工程问题。对做训练 infra、稳定性、大集群的人有价值，但对建模/算法方向的人偏远。</li>
+<li><strong>锐评</strong>: 浙大+华为，选题冷门但扎实——SDC 在万卡集群是真会烧钱烧命的事，之前都是当黑盒防。做「哪些计算最脆弱」的系统刻画是有意义的第一步。DeltaPPL 这个指标听着靠谱。就是受众窄，且故障注入实验用的是 SmolLM2/NanoChat 这种小模型，能不能外推到真正的大模型训练规模，是个悬而未决的问题。👀</li>
+</ul>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2608.30769v1" target="_blank" rel="noopener">📖 AI 精读</a></div></div>
+<hr>
+<h2>被排除的论文</h2>
+<ul>
+<li>An Agentic Retrobiosynthesis Framework with Learned Frontier Selection — 命中 negative: molecular/drug discovery，生物合成路线搜索，与关注领域无交集</li>
+<li>MedAgent-R1: Faithfulness-Aware RL for Evidence-Grounded Medical Reasoning — 医疗诊断推理，命中 negative: diagnosis</li>
+<li>Provably Safe Decentralized Contingency MPC ... Multi-agent Systems — 控制论的「多智能体」，非 LLM agent，属关键词误命中；且涉及 embodied/locomotion 控制</li>
+<li>CIG-RL: Curiosity-Driven ... Source Term Estimation — 移动传感器气体溯源，偏 embodied/robot 感知，与 LLM/推荐无关</li>
+<li>Confounding Masquerading as Improvement: Offline RL for Stroke Treatment — 临床治疗决策，命中 negative: diagnosis/medical</li>
+<li>Dense Clinical Contrasts Enhance Medical Knowledge Updating (SEER-Bench) — 肿瘤分期医疗知识更新，医疗领域</li>
+<li>Online Estimation of Dynamic OD Matrices Using RL (LFPG) — 交通 OD 矩阵估计，领域无交集</li>
+<li>Automatic Conversion of NICE Guidelines to Executable Model — 临床指南，医疗领域；且正文抽取失败（仅 TeX/CSS），质量不可评</li>
+<li>Error Detection for PET/CT Radiology Reports — 命中 negative: ct scan/medical imaging</li>
+<li>CM2: Multimodal Cultural Reasoning via Multi-Agent Framework — 文化推理多智能体，领域过窄，与推荐/广告/agent 工程无实质关联</li>
+<li>BCPPO: Bachelier-Inspired Constrained PPO for Tail-Risk-Aware Safe RL — 安全 RL 尾部风险，偏通用 RL 理论，与关注领域交集弱</li>
+<li>Reinforcement Learning for Symbolic Equation Solving — 符号方程求解 RL，纯数学玩具环境，落地相关性低</li>
+<li>Cross-lingual Functional Vectors for Emotion Detection — 情感检测 function vector，NLP 细分方向，与关注领域交集弱</li>
+<li>Where Identity Lives: Retain-Free Identity Unlearning in MLLMs — 多模态隐私 unlearning，与推荐/广告/agent 无关</li>
+<li>Reading the News: Adapting LLMs to Swedish Journalism (CPT) — 瑞典新闻领域持续预训练，垂类语料适配，通用性低</li>
+<li>Beyond Fluency: Rubric-Based Benchmark for Saudi Dialect — 阿拉伯方言评测基准，语言学垂类，与关注领域无关</li>
+</ul>
+<p>今天的信号很清晰：Agent 研究正从「加个记忆/工具」的被动增强，转向「用 RL 学怎么管上下文、怎么分配长程信用」的主动策略化；而推荐检索侧则集中火力打「语义 ID 与动态意图/用户偏好对齐」这道生成式检索的核心裂缝。</p></div>
+<footer style="text-align:center;color:var(--text2);margin:3em 0 1em;font-size:0.85em;">
+  Generated by daily-papers-web &middot; Powered by Claude Code
+</footer>
+<script src="tabs.js"></script>
+
+</body>
+</html>
