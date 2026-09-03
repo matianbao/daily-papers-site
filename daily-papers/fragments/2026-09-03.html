@@ -1,0 +1,482 @@
+<h1>🔪 今日锐评</h1>
+<p>今天是不折不扣的「Agent 大杂烩日」——30 篇里一大半在讲多智能体协调、agent 记忆/技能进化、agentic RL 信用分配，同质化到我快要审吐了。真正对推荐/广告/检索有硬价值的只有两篇（Apple 的生成式检索 CoGR、快手系的广告推荐 DMRL），其余大多是「换个 benchmark 讲同一个 self-evolving memory 故事」。安全/越狱/医疗那一坨照例请出门左转。</p>
+<h2>分流表</h2>
+<table>
+<thead>
+<tr>
+<th>等级</th>
+<th>论文</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>🔥 必读</td>
+<td><span class="wikilink">CoGR</span>（生成式检索与检索器协同进化 + RL，Apple 出品，直接对口搜索/广告召回） · <span class="wikilink">DMRL</span>（把广告推荐的「技能文档」编辑做成可归因的 RL，工业味十足）</td>
+</tr>
+<tr>
+<td>👀 值得看</td>
+<td><span class="wikilink">HEART</span>（工具原语工程化，大工具目录下的鲁棒性，score 5） · <span class="wikilink">PGPO</span>（多轮 agentic 任务的势函数信用分配，改进 GiGPO） · <span class="wikilink">Cliff</span>（从第一个错误学过程奖励，RLVR 细粒度信号） · <span class="wikilink">CHIME</span>（信用感知的分层记忆进化，长程规划） · <span class="wikilink">Codebook-Agent</span>（把多智能体拓扑设计从图生成变成码本检索） · <span class="wikilink">APEx</span>（deep research agent 的分层经验蒸馏 + TTRL） · <span class="wikilink">Belief-Calibrated</span>（把 agent 优化里的隐式信念显式化成世界模型）</td>
+</tr>
+<tr>
+<td>💤 可跳过</td>
+<td><span class="wikilink">MASkills</span>（又一个 Voyager 式技能库，increer） · <span class="wikilink">Bilevel-Reflection</span>（多智能体反思的博弈论包装，理论多于实证） · <span class="wikilink">SCX-Router</span>（模型路由/选择，工程 trick 为主） · <span class="wikilink">Post-Training-IOI</span>（SFT+RL 刷竞赛金牌，pipeline 缝合） · <span class="wikilink">Learn-from-Whoever</span>（多教师蒸馏，answer-verified 路由） · <span class="wikilink">NE-R1</span>（NER + RL，赛道太窄）</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<div class="tab-bar"><button class="tab-btn active" data-tab="all" onclick="switchTab('all')">📋 全部<span class="tab-count">15</span></button><button class="tab-btn" data-tab="生成式检索与推荐广告" onclick="switchTab('生成式检索与推荐广告')">🎨 🔍 生成式检索与推荐/广告<span class="tab-count">2</span></button><button class="tab-btn" data-tab="工具使用与agent框架" onclick="switchTab('工具使用与agent框架')">🏗 🛠️ 工具使用与 Agent 框架<span class="tab-count">3</span></button><button class="tab-btn" data-tab="rl与后训练" onclick="switchTab('rl与后训练')">📄 🎯 RL 与后训练<span class="tab-count">5</span></button><button class="tab-btn" data-tab="agent记忆与规划" onclick="switchTab('agent记忆与规划')">🧠 🧠 Agent 记忆与规划<span class="tab-count">1</span></button><button class="tab-btn" data-tab="多智能体系统" onclick="switchTab('多智能体系统')">📄 🤝 多智能体系统<span class="tab-count">3</span></button><button class="tab-btn" data-tab="模型路由与服务" onclick="switchTab('模型路由与服务')">📄 ⚙️ 模型路由与服务<span class="tab-count">1</span></button></div>
+<div id="panel-all" class="tab-panel active"><h2>🔍 生成式检索与推荐/广告</h2><div class="paper-card" data-topic="🔍 生成式检索与推荐/广告"><h3>1. It Takes Two to Match: Co-Evolving Generative Retriever with Reinforcement Learning</h3>
+<ul>
+<li><strong>作者</strong>: Runpeng Dai, Kaili Huang, Changsung Kang, Ciya Liao</li>
+<li><strong>机构</strong>: Ciya Liao: ciya.liao@apple.com, Affiliation: 1University of North Carolina at Chapel Hill  2Apple, Affiliation:</li>
+<li><strong>链接</strong>: <a href="https://arxiv.org/abs/2609.00638">arXiv</a> | <a href="https://arxiv.org/pdf/2609.00638">PDF</a></li>
+<li>
+<p><strong>来源</strong>: 📰 HF Daily，⬆️ 54</p>
+</li>
+<li>
+<p><strong>核心方法</strong>: <span class="wikilink">CoGR</span>（Co-Evolving Generative Retriever）针对搜索/广告召回的第一阶段，指出现有工作只把 <span class="wikilink">LLM</span> 用在 query 侧扩展/数据合成，最终匹配还是甩给下游 retriever。CoGR 让生成器和检索器通过 <span class="wikilink">RL</span>（<span class="wikilink">GRPO</span>）协同进化——生成侧不只是改写 query，而是直接参与匹配闭环，用检索反馈训练生成。对比 <span class="wikilink">SFT</span> 单向蒸馏，形成双向 co-evolution。</p>
+</li>
+<li><strong>对比方法/Baselines</strong>: <span class="wikilink">ANCE</span>、<span class="wikilink">DSI</span>（可微搜索索引）、纯 <span class="wikilink">SFT</span> 基线，数据集用 <span class="wikilink">WANDS</span>（商品检索）。</li>
+<li><strong>借鉴意义</strong>: 直接命中你最关心的「generative retrieval + 广告/搜索召回」。生成器参与最终匹配而非只做 query 侧增强，这个思路对召回粗排链路的重构有实打实的借鉴价值，而且是 Apple 工业团队做的，54 个 upvote 不是白来的。</li>
+<li><strong>锐评</strong>: 标题「It Takes Two to Match」有点营销腔，但内核是硬的：把生成式检索从「query 侧花活」拉回到「参与匹配的一等公民」，用 RL 闭环把生成器和检索器绑一起训。真正的问题是——co-evolution 的训练稳定性和线上召回延迟摘要里没细说，工业落地这两点才是生死线。但方向对，值得精读。🔥</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2609.00638" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🔍 生成式检索与推荐/广告"><h3>2. DMRL: Document-Mediated Reinforcement Learning for Skill Optimization in Advertising Recommendation</h3>
+<ul>
+<li><strong>作者</strong>: Wei Zhang, Hongji Li, Song Sun, Peng Yu, Xue Yang, Lei Zhao, Peng Jiang</li>
+<li><strong>机构</strong>: 1]Shanghai Jiao Tong University, \setsjtublue\settitlerulethickness3pt \abstractboxon\setabstractframecolorgray \setabstractbgcolorgray!10 \setlogotolineshift5mm \settoprulethickness2.5pt, Affiliation:</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2609.02170v1">arXiv</a> | <a href="https://arxiv.org/pdf/2609.02170v1">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2609.02170v1/figure3.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: <span class="wikilink">DMRL</span>（Document-Mediated RL）解决广告推荐里「用 LLM + 技能文档调参」的归因难题：现有做法是 prompt-driven 地改技能文档，但没法把奖励归因到具体的文档编辑。DMRL 用 <span class="wikilink">GRPO</span> 类方法（提出 <span class="wikilink">DRPO</span>）把每次文档 edit 当作可归因的动作，联合优化 <span class="wikilink">LTV</span>/商业回报与用户体验（<span class="wikilink">ST</span>/<span class="wikilink">LT</span> 短长期指标）。</li>
+<li><strong>对比方法/Baselines</strong>: <span class="wikilink">PES</span>、<span class="wikilink">AUD</span> 等广告系统调参方法，对比纯 prompt 优化。</li>
+<li><strong>借鉴意义</strong>: 作者含 Peng Jiang（快手广告系常见署名），这是把 LLM-as-optimizer 落到真实广告调参链路的工作，「文档编辑归因」这个抽象对你做广告投放/竞价参数优化极有参考价值。</li>
+<li><strong>锐评</strong>: 这篇是今天对广告工业最对口的一篇。把「改 prompt/技能文档」从玄学变成可归因的 RL 动作，思路干净。但我要泼冷水：广告系统里长短期指标（ST/LT）本身就充满 confounder，用离线归因去分配 reward 到单条文档编辑，很容易学到「相关不等于因果」的假信号——摘要没给因果隔离的实验设计，这是我最想拷问的点。方向强推，结论保留。👀</li>
+</ul>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2609.02170v1" target="_blank" rel="noopener">📖 AI 精读</a></div><h2>🛠️ 工具使用与 Agent 框架</h2><div class="paper-card" data-topic="🛠️ 工具使用与 Agent 框架"><h3>3. Harness Engineering in LLM Tool Use via Agent-Native Reusable Tool Primitives</h3>
+<ul>
+<li><strong>作者</strong>: Haibo Jin, Suijin Wang, Xucheng Yu, Haojing Luo, Haohan Wang</li>
+<li><strong>机构</strong>: Affiliation: Starc Institute, Email: , Affiliation: , Affiliation: School of Information Sciences, Affiliation: University of Illinois at Urbana-Champaign, Affiliation: University of Illinois Urbana-Champaign</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2609.01736v1">arXiv</a> | <a href="https://arxiv.org/pdf/2609.01736v1">PDF</a></li>
+<li>
+<p><strong>来源</strong>: 📄 arXiv 关键词检索</p>
+</li>
+<li>
+<p><strong>核心方法</strong>: <span class="wikilink">HEART</span>（Harness Engineering via Agent-native Reusable Tool primitives）针对工具调用两大痛点：多步/多轮推理因工具输出类型和 API schema 不兼容而脆断，以及大工具目录下的性能退化。做法是设计「agent 原生的可复用工具原语」，统一输出类型和 schema 契约。</p>
+</li>
+<li><strong>对比方法/Baselines</strong>: <span class="wikilink">ToolBench</span>、<span class="wikilink">NESTFUL</span>、<span class="wikilink">DFSDT</span>、<span class="wikilink">ReACT</span>，底座用 <span class="wikilink">GPT-5</span>/<span class="wikilink">GPT-4</span>。</li>
+<li><strong>借鉴意义</strong>: 如果你在搭 function-calling / tool-use 的 agent，「工具原语标准化」直接关系到大工具目录下的鲁棒性和可扩展性，这是 tool use 落地的工程核心。</li>
+<li><strong>锐评</strong>: score 5 是今天最高分，但我先说难听的：「harness engineering」「agent-native primitive」这类词堆一起有种 buzzword 焦虑感。不过它戳的痛点是真的——工具 schema 不兼容导致多轮脆断，谁做过 tool-use agent 谁头疼。关键看它的原语抽象是不是真通用，还是只在 ToolBench 那套上过拟合。「Starc Institute」这个机构我没听过，署名里 UIUC 撑场。值得看，但别被 GPT-5 的光环晃眼。👀</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2609.01736v1" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🛠️ 工具使用与 Agent 框架"><h3>4. APEx: Distillation of Agent Procedural Experience for Adaptive Deep Research Question Answering</h3>
+<ul>
+<li><strong>作者</strong>: Jie Ding, Rui Sun11footnotemark:, Xinyuan Zhang, Zeyu Zhang, Xin Liu</li>
+<li><strong>机构</strong>: Affiliation: Chinese Academy of Sciences, Affiliation: ByteDance Inc.{jieding25,rrsun}@mail.ustc.edu.cn, xliu@gia.cas.cn, Affiliation: University of Science and Technology of China, Affiliation: </li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2609.02253v1">arXiv</a> | <a href="https://arxiv.org/pdf/2609.02253v1">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2609.02253v1/frame.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2609.02253v1/train.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: <span class="wikilink">APEx</span>（Agent Procedural Experience distillation）针对 deep research agent：现有经验学习要么检索冗长的 task-specific 轨迹拖累决策，要么蒸馏的技能与下游策略脱节。APEx 分两级——instance-level 保留具体执行轨迹，category-level 蒸馏跨任务可复用技能，并用 <span class="wikilink">TTRL</span>（test-time RL）+ <span class="wikilink">GRPO</span> 把技能与策略适配耦合起来。</li>
+<li><strong>对比方法/Baselines</strong>: <span class="wikilink">ReAct</span>、检索式经验方法；测于 <span class="wikilink">HotpotQA</span>、<span class="wikilink">FVQA</span>、<span class="wikilink">SimpleVQA</span>。</li>
+<li><strong>借鉴意义</strong>: deep research / 多轮工具推理是 agent 的重要落地形态，「实例记忆 + 类别技能 + TTRL 耦合」比单纯记忆检索更接近可用的持续学习框架。字节系（ByteDance）参与。</li>
+<li><strong>锐评</strong>: 又一个「分层经验」框架，但 APEx 至少诚实地指出了同行的病灶：检索冗长轨迹拖累决策 vs 蒸馏技能与策略脱节。它想用 TTRL 把两者缝上——test-time 还在学，这点比纯离线蒸馏进取。质疑点：TTRL 在线上 deep research 场景的延迟和稳定性代价，摘要一如既往地避而不谈。ByteDance 挂名，值得看工程细节。👀</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2609.02253v1" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🛠️ 工具使用与 Agent 框架"><h3>5. Belief-Calibrated Optimization: An Explicit World Model for Agentic Optimization</h3>
+<ul>
+<li><strong>作者</strong>: Yuhan Chen, Zhihua Tian, Mahavir Dabas, Charith Peris, Rahul Gupta, Ming Jin, Feiyang Kang, Siyuan Zhang, Nan Wang, Ruoxi Jia</li>
+<li><strong>机构</strong>: Amazon</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2609.01861v1">arXiv</a> | <a href="https://arxiv.org/pdf/2609.01861v1">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2609.01861v1/figures/teaser.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: <span class="wikilink">Belief-Calibrated</span> Optimization 观察到：用 coding agent 当 optimizer 迭代改进 scaffold 时，每次编辑背后都有个「关于环境会如何响应」的信念，但这个信念通常是隐式的。本文把它显式化成一个 world model，区分 execution beliefs（编辑如何影响 agent 行为）和 evaluation beliefs，用它校准优化方向。</li>
+<li><strong>对比方法/Baselines</strong>: coding-agent-as-optimizer 基线；测于 <span class="wikilink">GAIA</span>、<span class="wikilink">Terminal-Bench</span>、<span class="wikilink">AppWorld</span>、<span class="wikilink">LongMemEval</span>、<span class="wikilink">LoCoMo</span>。</li>
+<li><strong>借鉴意义</strong>: 把 agent 自我优化里的隐式假设显式建模，是「让优化可解释、可纠偏」的正确方向，对做 agent scaffold 自动迭代（类似 auto-train 场景）有方法论价值。</li>
+<li><strong>锐评</strong>: 这篇有点意思：它没有再造一个新 agent，而是去追问「优化器每次改代码时脑子里那个隐式假设是什么」，然后把它拎出来做成显式世界模型。这是元层面的清醒——大多数 agent-as-optimizer 工作都在盲改。Amazon 出品，benchmark 铺得很全（GAIA/Terminal-Bench/AppWorld 都是硬骨头）。风险是显式信念建模本身引入的复杂度，会不会得不偿失。方向新颖，👀。</li>
+</ul>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2609.01861v1" target="_blank" rel="noopener">📖 AI 精读</a></div><h2>🎯 RL 与后训练</h2><div class="paper-card" data-topic="🎯 RL 与后训练"><h3>6. PGPO: Potential-Guided Policy Optimization for Multi-Turn Agentic Tasks</h3>
+<ul>
+<li><strong>作者</strong>: Zheng, Yuyao, Sun, Haipeng, Bao, Junwei, Liu, Lemao, Jiang, Hongfei, Song, Yang, Dou, Dejing</li>
+<li><strong>机构</strong>: Fudan University</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2609.02236v1">arXiv</a> | <a href="https://arxiv.org/pdf/2609.02236v1">PDF</a></li>
+<li>
+<p><strong>来源</strong>: 📄 arXiv 关键词检索</p>
+</li>
+<li>
+<p><strong>核心方法</strong>: <span class="wikilink">PGPO</span>（Potential-Guided Policy Optimization）解决 group-based RL 在多轮 agentic 任务里「稀疏终局奖励导致中间动作信用粗糙」的问题。指出 <span class="wikilink">GiGPO</span> 虽引入 step-level advantage，但仍依赖单条轨迹的最终结果。PGPO 引入势函数（potential）来做更细粒度、跨轨迹的信用分配。</p>
+</li>
+<li><strong>对比方法/Baselines</strong>: <span class="wikilink">GiGPO</span> 及 group-based RL（GRPO 系）多轮基线。</li>
+<li><strong>借鉴意义</strong>: agentic RL 的信用分配是所有多步 agent 训练的通用瓶颈，势函数塑形是经典 RL 理论（potential-based reward shaping 有理论保证），用到 LLM agent 上是对的方向。</li>
+<li><strong>锐评</strong>: 把经典的 potential-based reward shaping 搬到 LLM 多轮 agent 的信用分配，理论根基比一堆拍脑袋的 heuristic step-reward 靠谱多了——势函数塑形不改变最优策略这个性质是有保证的。可惜 filtered 数据里 method_names 只剩 TeX/CSS（抽取翻车了），得看正文确认它是否真沿用了势函数的不变性保证。方向扎实，👀。</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2609.02236v1" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🎯 RL 与后训练"><h3>7. Cliff: Learning Process Rewards from the First Mistake</h3>
+<ul>
+<li><strong>作者</strong>: Peixuan Han, Runhui Wang, Ketan Ramaneti, Jie Hao, Gerald Friedland, Chris Kong</li>
+<li><strong>机构</strong>: Affiliation: University of Illinois Urbana-Champaign, Affiliation: Amazon Web Services, Affiliation: </li>
+<li><strong>链接</strong>: <a href="https://arxiv.org/abs/2609.02817">arXiv</a> | <a href="https://arxiv.org/pdf/2609.02817">PDF</a></li>
+<li><strong>来源</strong>: 📰 HF Daily，⬆️ 15</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2609.02817v1/main_fig.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: <span class="wikilink">Cliff</span>（Learning Process Rewards from the First Mistake）针对 <span class="wikilink">RLVR</span> 只有粗粒度 outcome reward、对中间推理指导不足的问题。核心洞察是从「第一个出错的步骤」学过程奖励（<span class="wikilink">FIRST</span>），避免额外训练专门的过程奖励模型（PRM）或依赖 on-policy 蒸馏（<span class="wikilink">OPD</span>）的重约束。</li>
+<li><strong>对比方法/Baselines</strong>: <span class="wikilink">GRPO</span>、<span class="wikilink">DAPO</span>、过程奖励建模、on-policy distillation，测于 <span class="wikilink">MATH-500</span>。</li>
+<li><strong>借鉴意义</strong>: 过程奖励是当前 reasoning RL 的核心议题，「从第一个错误定位学信号」这个切入点比训一个笨重 PRM 轻量，对做推理模型后训练有直接参考。</li>
+<li><strong>锐评</strong>: 「从第一个错误学过程奖励」这个 framing 我喜欢——它承认了一个朴素事实：一条推理链一旦第一步错了后面全是噪声，那奖励信号就该锚在断裂点。比动辄训个 PRM 优雅。HF 15 upvote 说明社区认。但「第一个错误」怎么无监督地精确定位？如果定位本身要靠另一个模型，那不过是把 PRM 的活换了个马甲。得看它怎么闭环。👀</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2609.02817" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🎯 RL 与后训练"><h3>8. Post-Training Language Models for Gold-Medal Performance in Coding Competitions</h3>
+<ul>
+<li><strong>作者</strong>: Aleksander Ficek11
+          1, Sean Narenthiran11
+          1, Mehrzad Samadi, Somshubra Majumdar, Boris Ginsburg</li>
+<li><strong>机构</strong>: NVIDIA. All rights reserved</li>
+<li><strong>链接</strong>: <a href="https://arxiv.org/abs/2609.02849">arXiv</a> | <a href="https://arxiv.org/pdf/2609.02849">PDF</a></li>
+<li>
+<p><strong>来源</strong>: 📰 HF Daily，⬆️ 6</p>
+</li>
+<li>
+<p><strong>核心方法</strong>: <span class="wikilink">Post-Training-IOI</span> 提出端到端专项化 pipeline：大规模题目 curation + 合成推理轨迹 + <span class="wikilink">SFT</span> + <span class="wikilink">RL</span> + 迭代 test-time compute，在 IOI/ICPC 竞赛编程上刷到金牌水平。</p>
+</li>
+<li><strong>对比方法/Baselines</strong>: <span class="wikilink">DeepSeek</span> 等；live <span class="wikilink">IOI</span> 2026 基准。</li>
+<li><strong>借鉴意义</strong>: 竞赛编程是 LLM 推理能力的硬测试，NVIDIA 的完整后训练配方对做 reasoning 模型有参考。</li>
+<li><strong>锐评</strong>: NVIDIA 又一篇「我们的 pipeline 刷到了金牌」。工程执行力毋庸置疑，但方法论上是 SFT+RL+test-time compute 的标准缝合，没有新范式。真正有价值的是它 live 参加 IOI 2026 的那部分（Section 5），说明不是刷榜过拟合。想抄后训练配方的可以看，想找新 idea 的略过。🫠</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2609.02849" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🎯 RL 与后训练"><h3>9. Learn from Whoever Is Right: Answer-Verified Multi-Teacher Distillation for Multi-Domain LLMs</h3>
+<ul>
+<li><strong>作者</strong>: Xixiang He, Xingming Li, Baiqi Wu, Qiyao Sun, Xuanyu Ji, Ao Cheng, Qingyong Hu\corresponding</li>
+<li><strong>机构</strong>: National University of Defense Technology, Zhejiang University</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2609.02548v1">arXiv</a> | <a href="https://arxiv.org/pdf/2609.02548v1">PDF</a></li>
+<li>
+<p><strong>来源</strong>: 📄 arXiv 关键词检索</p>
+</li>
+<li>
+<p><strong>核心方法</strong>: <span class="wikilink">Learn-from-Whoever</span>（Answer-Verified Multi-Teacher Distillation）批评「按 domain label 分配教师」的做法，改为「谁答对就跟谁学」：在共享样本上用答案验证来分配多教师监督（<span class="wikilink">SDPO</span>），把多域能力整合进单一可部署模型。</p>
+</li>
+<li><strong>对比方法/Baselines</strong>: joint/cascaded 多域 RL、off-policy 教师蒸馏、<span class="wikilink">GRPO</span>、<span class="wikilink">SFT</span>。</li>
+<li><strong>借鉴意义</strong>: 多域能力整合是模型部署的实际需求，「按对错而非按标签选教师」是合理的改进。</li>
+<li><strong>锐评</strong>: 「Learn from Whoever Is Right」这标题起得挺聪明，内核也对——domain label 是个粗糙的代理，answer-verified 的监督分配更精准。但这依赖任务有可验证答案（RLVR 那套），对开放生成任务就抓瞎了。适用范围窄，在可验证域内是稳的改进。🫠</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2609.02548v1" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🎯 RL 与后训练"><h3>10. NE-R1: Enhancing Named Entity Recognition Model via Reinforcement Learning</h3>
+<ul>
+<li><strong>作者</strong>: Meixuan Chen</li>
+</ul>
+<p>33footnotemark:, Hehan Li11footnotemark:, Ruizhi Zhao, Xin Lu, Peizhi Xu, Liwei Qian, Meifang Li, Shuanglong Li, Hanmeng Liu, Xin Pei, Yanbiao Ma22footnotemark:
+- <strong>机构</strong>: Affiliation: , Large Models and Intelligent Governance, Affiliation: Shenzhen Graduate School, Peking University, Email: luxin06@baidu.com, Email: liuhanmeng@baidu.com, ‡˜Work done during an internship at Baidu, Inc, Email: , Affiliation: Gaoling School of Artificial Intelligence, Email: qianliwei@baidu.com, Affiliation: Shenzhen University, Shenzhen, China, Email: lishuanglong@baidu.com, Next-Generation Intelligent Search and Recommendation, MOE, Email: lihehan@baidu.com, Affiliation: Engineering Research Center of, Email: xupeizhi@baidu.com, Renmin University of China, Beijing, China, Affiliation: Beijing Key Laboratory of Research on, Email: limeifang@baidu.com, Affiliation: Baidu, Inc., Beijing, China
+- <strong>链接</strong>: <a href="http://arxiv.org/abs/2609.02366v1">arXiv</a> | <a href="https://arxiv.org/pdf/2609.02366v1">PDF</a>
+- <strong>来源</strong>: 📄 arXiv 关键词检索</p>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2609.02366v1/pipline_new1.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2609.02366v1/multi_task_4.0.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: <span class="wikilink">NE-R1</span> 用 <span class="wikilink">RL</span> 增强 NER，针对长尾/领域实体，用 <span class="wikilink">MTCI</span> 多任务机制和自适应 <span class="wikilink">RAG</span>（只在不熟悉的 case 才检索外部知识，避免噪声和成本）。</li>
+<li><strong>对比方法/Baselines</strong>: ICL、fine-tuned LLM NER；测于 <span class="wikilink">CrossNER</span>、<span class="wikilink">MIT</span>。</li>
+<li><strong>借鉴意义</strong>: 赛道较窄，但「自适应决定是否 RAG」的思路对成本敏感的检索增强有一点通用参考。</li>
+<li><strong>锐评</strong>: NER 在 2026 年还单独发论文，本身就说明这活儿被 LLM 卷得没多少空间了。RL + 自适应 RAG 是把两个现成积木拼一起，「只在不熟悉时检索」这个 gating 思路还算务实。但整体赛道太窄，除非你正好做实体识别，否则没必要花时间。💤</li>
+</ul>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2609.02366v1" target="_blank" rel="noopener">📖 AI 精读</a></div><h2>🧠 Agent 记忆与规划</h2><div class="paper-card" data-topic="🧠 Agent 记忆与规划"><h3>11. CHIME: Credit-Aware Hierarchical Memory Evolution for Long-Horizon Agentic Planning</h3>
+<ul>
+<li><strong>作者</strong>: Yongshi Ye, Tian Lan, Feihu Jiang, Muyang Ye, Bin Zhu, Qianghuai Jia, Longyue Wang\corresponding, Zhao Xu, Weihua Luo, Xiaodong Shi\corresponding</li>
+<li><strong>机构</strong>: Alibaba Group, Institute of Artificial Intelligence, Xiamen University, Key Laboratory of Digital Protection and Intelligent Processing of Intangible Cultural Heritage, Zhejiang University, author: wanglongyue.wly@alibabainc.com, of Fujian and Taiwan (Xiamen University), Ministry of Culture and Tourism</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2609.02074v1">arXiv</a> | <a href="https://arxiv.org/pdf/2609.02074v1">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2609.02074v1/chime_method.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: <span class="wikilink">CHIME</span>（Credit-Aware Hierarchical Memory Evolution）属于 self-evolving memory 路线：冻结模型参数，只更新外部记忆库，把交互轨迹蒸馏成可复用经验来提升长程规划。相比 <span class="wikilink">ReasoningBank</span> 等，CHIME 加了「信用感知」的分层记忆进化机制，区分不同记忆条目对结果的贡献。</li>
+<li><strong>对比方法/Baselines</strong>: self-evolving memory 系（ReasoningBank 等），测于 <span class="wikilink">BFCL</span>、<span class="wikilink">VitaBench</span>、<span class="wikilink">BrowseComp</span>、<span class="wikilink">WebAnchor</span>。</li>
+<li><strong>借鉴意义</strong>: 参数冻结、只演化记忆库，规避昂贵后训练——对没有大规模训练资源但想让 agent 持续变强的场景很实用，是 agent memory 里比较务实的一支。</li>
+<li><strong>锐评</strong>: 今天至少有五篇在讲「self-evolving memory / 技能库」，CHIME 靠「credit-aware」勉强做出差异化：给记忆条目做信用归因，而不是把所有轨迹一股脑塞进 bank。这确实是记忆库膨胀后的真痛点。但我怀疑——信用归因本身在长程稀疏奖励下就极难，把 agentic RL 的老大难问题挪到记忆层，是不是只是换个地方犯难？benchmark 铺得挺全，值得看它信用估计的具体做法。👀</li>
+</ul>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2609.02074v1" target="_blank" rel="noopener">📖 AI 精读</a></div><h2>🤝 多智能体系统</h2><div class="paper-card" data-topic="🤝 多智能体系统"><h3>12. Codebook Agent: Amortized Topology Design for LLM Multi-Agent Systems</h3>
+<ul>
+<li><strong>作者</strong>: Jinxi Yu, Yubei Li, Eric Hanchen Jiang, Zhi Zhang, Dong Liu</li>
+<li><strong>机构</strong>: Affiliation: </li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2609.02264v1">arXiv</a> | <a href="https://arxiv.org/pdf/2609.02264v1">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2609.02264v1/Figures/Codebook_main.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: <span class="wikilink">Codebook-Agent</span>（Amortized Topology Design）批评现有多智能体拓扑设计把问题当作条件图生成——用 VAE/自回归/扩散 decoder 在 N×N 邻接空间搜索，再用图网络代理排序，太重。改为用一个「码本」（codebook）摊销拓扑设计：预学一组拓扑原型，query 时检索/组合而非从头生成。</li>
+<li><strong>对比方法/Baselines</strong>: <span class="wikilink">GPTSwarm</span>、<span class="wikilink">DyLAN</span> 等拓扑优化方法；测于 <span class="wikilink">HumanEval</span>、<span class="wikilink">MATH</span>、<span class="wikilink">MMLU</span>、<span class="wikilink">MBPP</span>、<span class="wikilink">MultiArith</span>。</li>
+<li><strong>借鉴意义</strong>: 多智能体系统的通信拓扑决定成本和精度，把它从「每次现搜」变成「码本摊销」能大幅降低设计开销，对做多 agent 编排的成本控制有价值。</li>
+<li><strong>锐评</strong>: 思路很对：多智能体拓扑设计根本不需要每个 query 都跑一遍扩散 decoder 去 N×N 空间里瞎搜，那是 GPTSwarm 时代的奢侈。用码本把常见拓扑摊销掉，检索组合就行——这是把「学结构」降维成「查结构」，工程上性价比高。风险是码本的表达力上限：真遇到码本没覆盖的怪异任务拓扑，退化成什么样？摘要没说 OOD 表现。多 agent 方向里今天最实用的一篇。👀</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2609.02264v1" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🤝 多智能体系统"><h3>13. MASkills: Continual Skills Optimization for Multi-Agent LLM Systems</h3>
+<ul>
+<li><strong>作者</strong>: Huaiyuan Yao   Xiaoou Liu   Charles Fleming   Tianlong Chen    Hua Wei</li>
+<li><strong>机构</strong>: Affiliation:  University of North Carolina at Chapel Hill  tianlong@cs.unc.edu, Affiliation:  Arizona State University  {huaiyuan, xiaoouli, hua.wei}@asu.edu, Affiliation:</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2609.02094v1">arXiv</a> | <a href="https://arxiv.org/pdf/2609.02094v1">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2609.02094v1/pipeline_MASkills.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: <span class="wikilink">MASkills</span>（Continual Skills Optimization）延续 Voyager 的技能库范式到多智能体 LLM 系统，把结构化程序知识（何时做、如何做、用什么工具）当作比经验记忆更可执行的单元，持续优化技能库。</li>
+<li><strong>对比方法/Baselines</strong>: self-reflection 记忆方法；测于 <span class="wikilink">LoCoMo</span>、<span class="wikilink">GAIA</span>、<span class="wikilink">HotpotQA</span>。</li>
+<li><strong>借鉴意义</strong>: 多智能体持续学习是热点，「技能作为可执行单元」比松散记忆更 actionable。</li>
+<li><strong>锐评</strong>: Voyager 已经是 2023 年的事了，把它套到多智能体上再叫「MASkills」，increer 的味道很冲。论证里「skills 比 memory 更 actionable」这个论点没错，但这是共识不是创新。除非它在技能的冲突消解、跨 agent 共享上有真东西，否则就是又一篇「我也搞了个技能库」。🫠</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2609.02094v1" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🤝 多智能体系统"><h3>14. Bilevel Coordinated Reflection: A Game-Theoretic Approach to Multi-Agent LLM Systems</h3>
+<ul>
+<li><strong>作者</strong>: Yihang Chen, Yuxiang Chen11footnotemark:, Yuxuan Huang, Meng Fang, Weilin Luo, Jun Wang</li>
+<li><strong>机构</strong>: UCL Centre for Artificial Intelligence</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2609.02750v1">arXiv</a> | <a href="https://arxiv.org/pdf/2609.02750v1">PDF</a></li>
+<li>
+<p><strong>来源</strong>: 📄 arXiv 关键词检索</p>
+</li>
+<li>
+<p><strong>核心方法</strong>: <span class="wikilink">Bilevel-Reflection</span> 把 orchestrator-worker 多智能体交互建模成 bilevel 协调博弈，为多智能体反思/记忆改进提供博弈论和随机逼近的收敛性分析，并强调外部验证（<span class="wikilink">Verifier-Gated</span>）的作用。</p>
+</li>
+<li><strong>对比方法/Baselines</strong>: <span class="wikilink">AutoGen</span>、<span class="wikilink">MetaGPT</span>、Reflexion/Self-Refine 等（均无收敛分析）。</li>
+<li><strong>借鉴意义</strong>: 给 orchestrator-worker 架构补上缺失的理论基础，对理解幻觉级联等失败模式有价值。</li>
+<li><strong>锐评</strong>: 诚实地说，这篇填的是理论空白——AutoGen/MetaGPT 们确实只有 empirical 结果没有收敛分析。但博弈论/随机逼近这套框架能不能真解释「幻觉级联」这种实际失败，还是只是给经验现象套了个数学外衣，我持怀疑。理论党会喜欢，工程党大概率翻两页就走。🫠</li>
+</ul>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2609.02750v1" target="_blank" rel="noopener">📖 AI 精读</a></div><h2>⚙️ 模型路由与服务</h2><div class="paper-card" data-topic="⚙️ 模型路由与服务"><h3>15. SCX Router: Streaming Zero-Shot Model Selection with a Decoder-KV Classifier and a Real-World Task Ontology</h3>
+<ul>
+<li><strong>作者</strong>: Ihor Stepanov, Aleksandr Smechov, Mykhailo Shtopko, Dmytro Vodianytskyi, Oleksandr Lukashov</li>
+<li><strong>机构</strong>: Affiliation: </li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2609.02292v1">arXiv</a> | <a href="https://arxiv.org/pdf/2609.02292v1">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2609.02292v1/figures/system_overview.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2609.02292v1/figures/gliclass_decoder_architecture.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2609.02292v1/figures/head_metrics.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: <span class="wikilink">SCX-Router</span> 做流式零样本模型选择：用一个 decoder-KV 分类器 + 真实任务本体（ontology），在 speed/cost/quality 上做 per-task 的模型选择，无需为路由重新训练。</li>
+<li><strong>对比方法/Baselines</strong>: 测于 <span class="wikilink">LiveBench</span>；对比其他 LLM router。</li>
+<li><strong>借鉴意义</strong>: 模型路由直接关系推理成本/延迟/质量的三角权衡，对多模型混布的线上服务有工程价值。</li>
+<li><strong>锐评</strong>: 模型路由已经卷成红海，SCX 的卖点是「流式 + 零样本 + decoder-KV 分类器」。零样本免训练是加分项，但路由这活的死穴永远是——你怎么在不实际跑的情况下准确预测某模型在这个 task 上的 quality？「任务本体」听着像是把难题外包给了一个人工分类体系。工程 trick 集合，够用但不惊艳。💤</li>
+</ul>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2609.02292v1" target="_blank" rel="noopener">📖 AI 精读</a></div></div>
+<div id="panel-生成式检索与推荐广告" class="tab-panel"><h2>🔍 生成式检索与推荐/广告</h2><div class="paper-card" data-topic="🔍 生成式检索与推荐/广告"><h3>1. It Takes Two to Match: Co-Evolving Generative Retriever with Reinforcement Learning</h3>
+<ul>
+<li><strong>作者</strong>: Runpeng Dai, Kaili Huang, Changsung Kang, Ciya Liao</li>
+<li><strong>机构</strong>: Ciya Liao: ciya.liao@apple.com, Affiliation: 1University of North Carolina at Chapel Hill  2Apple, Affiliation:</li>
+<li><strong>链接</strong>: <a href="https://arxiv.org/abs/2609.00638">arXiv</a> | <a href="https://arxiv.org/pdf/2609.00638">PDF</a></li>
+<li>
+<p><strong>来源</strong>: 📰 HF Daily，⬆️ 54</p>
+</li>
+<li>
+<p><strong>核心方法</strong>: <span class="wikilink">CoGR</span>（Co-Evolving Generative Retriever）针对搜索/广告召回的第一阶段，指出现有工作只把 <span class="wikilink">LLM</span> 用在 query 侧扩展/数据合成，最终匹配还是甩给下游 retriever。CoGR 让生成器和检索器通过 <span class="wikilink">RL</span>（<span class="wikilink">GRPO</span>）协同进化——生成侧不只是改写 query，而是直接参与匹配闭环，用检索反馈训练生成。对比 <span class="wikilink">SFT</span> 单向蒸馏，形成双向 co-evolution。</p>
+</li>
+<li><strong>对比方法/Baselines</strong>: <span class="wikilink">ANCE</span>、<span class="wikilink">DSI</span>（可微搜索索引）、纯 <span class="wikilink">SFT</span> 基线，数据集用 <span class="wikilink">WANDS</span>（商品检索）。</li>
+<li><strong>借鉴意义</strong>: 直接命中你最关心的「generative retrieval + 广告/搜索召回」。生成器参与最终匹配而非只做 query 侧增强，这个思路对召回粗排链路的重构有实打实的借鉴价值，而且是 Apple 工业团队做的，54 个 upvote 不是白来的。</li>
+<li><strong>锐评</strong>: 标题「It Takes Two to Match」有点营销腔，但内核是硬的：把生成式检索从「query 侧花活」拉回到「参与匹配的一等公民」，用 RL 闭环把生成器和检索器绑一起训。真正的问题是——co-evolution 的训练稳定性和线上召回延迟摘要里没细说，工业落地这两点才是生死线。但方向对，值得精读。🔥</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2609.00638" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🔍 生成式检索与推荐/广告"><h3>2. DMRL: Document-Mediated Reinforcement Learning for Skill Optimization in Advertising Recommendation</h3>
+<ul>
+<li><strong>作者</strong>: Wei Zhang, Hongji Li, Song Sun, Peng Yu, Xue Yang, Lei Zhao, Peng Jiang</li>
+<li><strong>机构</strong>: 1]Shanghai Jiao Tong University, \setsjtublue\settitlerulethickness3pt \abstractboxon\setabstractframecolorgray \setabstractbgcolorgray!10 \setlogotolineshift5mm \settoprulethickness2.5pt, Affiliation:</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2609.02170v1">arXiv</a> | <a href="https://arxiv.org/pdf/2609.02170v1">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2609.02170v1/figure3.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: <span class="wikilink">DMRL</span>（Document-Mediated RL）解决广告推荐里「用 LLM + 技能文档调参」的归因难题：现有做法是 prompt-driven 地改技能文档，但没法把奖励归因到具体的文档编辑。DMRL 用 <span class="wikilink">GRPO</span> 类方法（提出 <span class="wikilink">DRPO</span>）把每次文档 edit 当作可归因的动作，联合优化 <span class="wikilink">LTV</span>/商业回报与用户体验（<span class="wikilink">ST</span>/<span class="wikilink">LT</span> 短长期指标）。</li>
+<li><strong>对比方法/Baselines</strong>: <span class="wikilink">PES</span>、<span class="wikilink">AUD</span> 等广告系统调参方法，对比纯 prompt 优化。</li>
+<li><strong>借鉴意义</strong>: 作者含 Peng Jiang（快手广告系常见署名），这是把 LLM-as-optimizer 落到真实广告调参链路的工作，「文档编辑归因」这个抽象对你做广告投放/竞价参数优化极有参考价值。</li>
+<li><strong>锐评</strong>: 这篇是今天对广告工业最对口的一篇。把「改 prompt/技能文档」从玄学变成可归因的 RL 动作，思路干净。但我要泼冷水：广告系统里长短期指标（ST/LT）本身就充满 confounder，用离线归因去分配 reward 到单条文档编辑，很容易学到「相关不等于因果」的假信号——摘要没给因果隔离的实验设计，这是我最想拷问的点。方向强推，结论保留。👀</li>
+</ul>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2609.02170v1" target="_blank" rel="noopener">📖 AI 精读</a></div></div>
+<div id="panel-工具使用与agent框架" class="tab-panel"><h2>🛠️ 工具使用与 Agent 框架</h2><div class="paper-card" data-topic="🛠️ 工具使用与 Agent 框架"><h3>3. Harness Engineering in LLM Tool Use via Agent-Native Reusable Tool Primitives</h3>
+<ul>
+<li><strong>作者</strong>: Haibo Jin, Suijin Wang, Xucheng Yu, Haojing Luo, Haohan Wang</li>
+<li><strong>机构</strong>: Affiliation: Starc Institute, Email: , Affiliation: , Affiliation: School of Information Sciences, Affiliation: University of Illinois at Urbana-Champaign, Affiliation: University of Illinois Urbana-Champaign</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2609.01736v1">arXiv</a> | <a href="https://arxiv.org/pdf/2609.01736v1">PDF</a></li>
+<li>
+<p><strong>来源</strong>: 📄 arXiv 关键词检索</p>
+</li>
+<li>
+<p><strong>核心方法</strong>: <span class="wikilink">HEART</span>（Harness Engineering via Agent-native Reusable Tool primitives）针对工具调用两大痛点：多步/多轮推理因工具输出类型和 API schema 不兼容而脆断，以及大工具目录下的性能退化。做法是设计「agent 原生的可复用工具原语」，统一输出类型和 schema 契约。</p>
+</li>
+<li><strong>对比方法/Baselines</strong>: <span class="wikilink">ToolBench</span>、<span class="wikilink">NESTFUL</span>、<span class="wikilink">DFSDT</span>、<span class="wikilink">ReACT</span>，底座用 <span class="wikilink">GPT-5</span>/<span class="wikilink">GPT-4</span>。</li>
+<li><strong>借鉴意义</strong>: 如果你在搭 function-calling / tool-use 的 agent，「工具原语标准化」直接关系到大工具目录下的鲁棒性和可扩展性，这是 tool use 落地的工程核心。</li>
+<li><strong>锐评</strong>: score 5 是今天最高分，但我先说难听的：「harness engineering」「agent-native primitive」这类词堆一起有种 buzzword 焦虑感。不过它戳的痛点是真的——工具 schema 不兼容导致多轮脆断，谁做过 tool-use agent 谁头疼。关键看它的原语抽象是不是真通用，还是只在 ToolBench 那套上过拟合。「Starc Institute」这个机构我没听过，署名里 UIUC 撑场。值得看，但别被 GPT-5 的光环晃眼。👀</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2609.01736v1" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🛠️ 工具使用与 Agent 框架"><h3>4. APEx: Distillation of Agent Procedural Experience for Adaptive Deep Research Question Answering</h3>
+<ul>
+<li><strong>作者</strong>: Jie Ding, Rui Sun11footnotemark:, Xinyuan Zhang, Zeyu Zhang, Xin Liu</li>
+<li><strong>机构</strong>: Affiliation: Chinese Academy of Sciences, Affiliation: ByteDance Inc.{jieding25,rrsun}@mail.ustc.edu.cn, xliu@gia.cas.cn, Affiliation: University of Science and Technology of China, Affiliation: </li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2609.02253v1">arXiv</a> | <a href="https://arxiv.org/pdf/2609.02253v1">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2609.02253v1/frame.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2609.02253v1/train.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: <span class="wikilink">APEx</span>（Agent Procedural Experience distillation）针对 deep research agent：现有经验学习要么检索冗长的 task-specific 轨迹拖累决策，要么蒸馏的技能与下游策略脱节。APEx 分两级——instance-level 保留具体执行轨迹，category-level 蒸馏跨任务可复用技能，并用 <span class="wikilink">TTRL</span>（test-time RL）+ <span class="wikilink">GRPO</span> 把技能与策略适配耦合起来。</li>
+<li><strong>对比方法/Baselines</strong>: <span class="wikilink">ReAct</span>、检索式经验方法；测于 <span class="wikilink">HotpotQA</span>、<span class="wikilink">FVQA</span>、<span class="wikilink">SimpleVQA</span>。</li>
+<li><strong>借鉴意义</strong>: deep research / 多轮工具推理是 agent 的重要落地形态，「实例记忆 + 类别技能 + TTRL 耦合」比单纯记忆检索更接近可用的持续学习框架。字节系（ByteDance）参与。</li>
+<li><strong>锐评</strong>: 又一个「分层经验」框架，但 APEx 至少诚实地指出了同行的病灶：检索冗长轨迹拖累决策 vs 蒸馏技能与策略脱节。它想用 TTRL 把两者缝上——test-time 还在学，这点比纯离线蒸馏进取。质疑点：TTRL 在线上 deep research 场景的延迟和稳定性代价，摘要一如既往地避而不谈。ByteDance 挂名，值得看工程细节。👀</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2609.02253v1" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🛠️ 工具使用与 Agent 框架"><h3>5. Belief-Calibrated Optimization: An Explicit World Model for Agentic Optimization</h3>
+<ul>
+<li><strong>作者</strong>: Yuhan Chen, Zhihua Tian, Mahavir Dabas, Charith Peris, Rahul Gupta, Ming Jin, Feiyang Kang, Siyuan Zhang, Nan Wang, Ruoxi Jia</li>
+<li><strong>机构</strong>: Amazon</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2609.01861v1">arXiv</a> | <a href="https://arxiv.org/pdf/2609.01861v1">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2609.01861v1/figures/teaser.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: <span class="wikilink">Belief-Calibrated</span> Optimization 观察到：用 coding agent 当 optimizer 迭代改进 scaffold 时，每次编辑背后都有个「关于环境会如何响应」的信念，但这个信念通常是隐式的。本文把它显式化成一个 world model，区分 execution beliefs（编辑如何影响 agent 行为）和 evaluation beliefs，用它校准优化方向。</li>
+<li><strong>对比方法/Baselines</strong>: coding-agent-as-optimizer 基线；测于 <span class="wikilink">GAIA</span>、<span class="wikilink">Terminal-Bench</span>、<span class="wikilink">AppWorld</span>、<span class="wikilink">LongMemEval</span>、<span class="wikilink">LoCoMo</span>。</li>
+<li><strong>借鉴意义</strong>: 把 agent 自我优化里的隐式假设显式建模，是「让优化可解释、可纠偏」的正确方向，对做 agent scaffold 自动迭代（类似 auto-train 场景）有方法论价值。</li>
+<li><strong>锐评</strong>: 这篇有点意思：它没有再造一个新 agent，而是去追问「优化器每次改代码时脑子里那个隐式假设是什么」，然后把它拎出来做成显式世界模型。这是元层面的清醒——大多数 agent-as-optimizer 工作都在盲改。Amazon 出品，benchmark 铺得很全（GAIA/Terminal-Bench/AppWorld 都是硬骨头）。风险是显式信念建模本身引入的复杂度，会不会得不偿失。方向新颖，👀。</li>
+</ul>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2609.01861v1" target="_blank" rel="noopener">📖 AI 精读</a></div></div>
+<div id="panel-rl与后训练" class="tab-panel"><h2>🎯 RL 与后训练</h2><div class="paper-card" data-topic="🎯 RL 与后训练"><h3>6. PGPO: Potential-Guided Policy Optimization for Multi-Turn Agentic Tasks</h3>
+<ul>
+<li><strong>作者</strong>: Zheng, Yuyao, Sun, Haipeng, Bao, Junwei, Liu, Lemao, Jiang, Hongfei, Song, Yang, Dou, Dejing</li>
+<li><strong>机构</strong>: Fudan University</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2609.02236v1">arXiv</a> | <a href="https://arxiv.org/pdf/2609.02236v1">PDF</a></li>
+<li>
+<p><strong>来源</strong>: 📄 arXiv 关键词检索</p>
+</li>
+<li>
+<p><strong>核心方法</strong>: <span class="wikilink">PGPO</span>（Potential-Guided Policy Optimization）解决 group-based RL 在多轮 agentic 任务里「稀疏终局奖励导致中间动作信用粗糙」的问题。指出 <span class="wikilink">GiGPO</span> 虽引入 step-level advantage，但仍依赖单条轨迹的最终结果。PGPO 引入势函数（potential）来做更细粒度、跨轨迹的信用分配。</p>
+</li>
+<li><strong>对比方法/Baselines</strong>: <span class="wikilink">GiGPO</span> 及 group-based RL（GRPO 系）多轮基线。</li>
+<li><strong>借鉴意义</strong>: agentic RL 的信用分配是所有多步 agent 训练的通用瓶颈，势函数塑形是经典 RL 理论（potential-based reward shaping 有理论保证），用到 LLM agent 上是对的方向。</li>
+<li><strong>锐评</strong>: 把经典的 potential-based reward shaping 搬到 LLM 多轮 agent 的信用分配，理论根基比一堆拍脑袋的 heuristic step-reward 靠谱多了——势函数塑形不改变最优策略这个性质是有保证的。可惜 filtered 数据里 method_names 只剩 TeX/CSS（抽取翻车了），得看正文确认它是否真沿用了势函数的不变性保证。方向扎实，👀。</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2609.02236v1" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🎯 RL 与后训练"><h3>7. Cliff: Learning Process Rewards from the First Mistake</h3>
+<ul>
+<li><strong>作者</strong>: Peixuan Han, Runhui Wang, Ketan Ramaneti, Jie Hao, Gerald Friedland, Chris Kong</li>
+<li><strong>机构</strong>: Affiliation: University of Illinois Urbana-Champaign, Affiliation: Amazon Web Services, Affiliation: </li>
+<li><strong>链接</strong>: <a href="https://arxiv.org/abs/2609.02817">arXiv</a> | <a href="https://arxiv.org/pdf/2609.02817">PDF</a></li>
+<li><strong>来源</strong>: 📰 HF Daily，⬆️ 15</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2609.02817v1/main_fig.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: <span class="wikilink">Cliff</span>（Learning Process Rewards from the First Mistake）针对 <span class="wikilink">RLVR</span> 只有粗粒度 outcome reward、对中间推理指导不足的问题。核心洞察是从「第一个出错的步骤」学过程奖励（<span class="wikilink">FIRST</span>），避免额外训练专门的过程奖励模型（PRM）或依赖 on-policy 蒸馏（<span class="wikilink">OPD</span>）的重约束。</li>
+<li><strong>对比方法/Baselines</strong>: <span class="wikilink">GRPO</span>、<span class="wikilink">DAPO</span>、过程奖励建模、on-policy distillation，测于 <span class="wikilink">MATH-500</span>。</li>
+<li><strong>借鉴意义</strong>: 过程奖励是当前 reasoning RL 的核心议题，「从第一个错误定位学信号」这个切入点比训一个笨重 PRM 轻量，对做推理模型后训练有直接参考。</li>
+<li><strong>锐评</strong>: 「从第一个错误学过程奖励」这个 framing 我喜欢——它承认了一个朴素事实：一条推理链一旦第一步错了后面全是噪声，那奖励信号就该锚在断裂点。比动辄训个 PRM 优雅。HF 15 upvote 说明社区认。但「第一个错误」怎么无监督地精确定位？如果定位本身要靠另一个模型，那不过是把 PRM 的活换了个马甲。得看它怎么闭环。👀</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2609.02817" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🎯 RL 与后训练"><h3>8. Post-Training Language Models for Gold-Medal Performance in Coding Competitions</h3>
+<ul>
+<li><strong>作者</strong>: Aleksander Ficek11
+          1, Sean Narenthiran11
+          1, Mehrzad Samadi, Somshubra Majumdar, Boris Ginsburg</li>
+<li><strong>机构</strong>: NVIDIA. All rights reserved</li>
+<li><strong>链接</strong>: <a href="https://arxiv.org/abs/2609.02849">arXiv</a> | <a href="https://arxiv.org/pdf/2609.02849">PDF</a></li>
+<li>
+<p><strong>来源</strong>: 📰 HF Daily，⬆️ 6</p>
+</li>
+<li>
+<p><strong>核心方法</strong>: <span class="wikilink">Post-Training-IOI</span> 提出端到端专项化 pipeline：大规模题目 curation + 合成推理轨迹 + <span class="wikilink">SFT</span> + <span class="wikilink">RL</span> + 迭代 test-time compute，在 IOI/ICPC 竞赛编程上刷到金牌水平。</p>
+</li>
+<li><strong>对比方法/Baselines</strong>: <span class="wikilink">DeepSeek</span> 等；live <span class="wikilink">IOI</span> 2026 基准。</li>
+<li><strong>借鉴意义</strong>: 竞赛编程是 LLM 推理能力的硬测试，NVIDIA 的完整后训练配方对做 reasoning 模型有参考。</li>
+<li><strong>锐评</strong>: NVIDIA 又一篇「我们的 pipeline 刷到了金牌」。工程执行力毋庸置疑，但方法论上是 SFT+RL+test-time compute 的标准缝合，没有新范式。真正有价值的是它 live 参加 IOI 2026 的那部分（Section 5），说明不是刷榜过拟合。想抄后训练配方的可以看，想找新 idea 的略过。🫠</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2609.02849" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🎯 RL 与后训练"><h3>9. Learn from Whoever Is Right: Answer-Verified Multi-Teacher Distillation for Multi-Domain LLMs</h3>
+<ul>
+<li><strong>作者</strong>: Xixiang He, Xingming Li, Baiqi Wu, Qiyao Sun, Xuanyu Ji, Ao Cheng, Qingyong Hu\corresponding</li>
+<li><strong>机构</strong>: National University of Defense Technology, Zhejiang University</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2609.02548v1">arXiv</a> | <a href="https://arxiv.org/pdf/2609.02548v1">PDF</a></li>
+<li>
+<p><strong>来源</strong>: 📄 arXiv 关键词检索</p>
+</li>
+<li>
+<p><strong>核心方法</strong>: <span class="wikilink">Learn-from-Whoever</span>（Answer-Verified Multi-Teacher Distillation）批评「按 domain label 分配教师」的做法，改为「谁答对就跟谁学」：在共享样本上用答案验证来分配多教师监督（<span class="wikilink">SDPO</span>），把多域能力整合进单一可部署模型。</p>
+</li>
+<li><strong>对比方法/Baselines</strong>: joint/cascaded 多域 RL、off-policy 教师蒸馏、<span class="wikilink">GRPO</span>、<span class="wikilink">SFT</span>。</li>
+<li><strong>借鉴意义</strong>: 多域能力整合是模型部署的实际需求，「按对错而非按标签选教师」是合理的改进。</li>
+<li><strong>锐评</strong>: 「Learn from Whoever Is Right」这标题起得挺聪明，内核也对——domain label 是个粗糙的代理，answer-verified 的监督分配更精准。但这依赖任务有可验证答案（RLVR 那套），对开放生成任务就抓瞎了。适用范围窄，在可验证域内是稳的改进。🫠</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2609.02548v1" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🎯 RL 与后训练"><h3>10. NE-R1: Enhancing Named Entity Recognition Model via Reinforcement Learning</h3>
+<ul>
+<li><strong>作者</strong>: Meixuan Chen</li>
+</ul>
+<p>33footnotemark:, Hehan Li11footnotemark:, Ruizhi Zhao, Xin Lu, Peizhi Xu, Liwei Qian, Meifang Li, Shuanglong Li, Hanmeng Liu, Xin Pei, Yanbiao Ma22footnotemark:
+- <strong>机构</strong>: Affiliation: , Large Models and Intelligent Governance, Affiliation: Shenzhen Graduate School, Peking University, Email: luxin06@baidu.com, Email: liuhanmeng@baidu.com, ‡˜Work done during an internship at Baidu, Inc, Email: , Affiliation: Gaoling School of Artificial Intelligence, Email: qianliwei@baidu.com, Affiliation: Shenzhen University, Shenzhen, China, Email: lishuanglong@baidu.com, Next-Generation Intelligent Search and Recommendation, MOE, Email: lihehan@baidu.com, Affiliation: Engineering Research Center of, Email: xupeizhi@baidu.com, Renmin University of China, Beijing, China, Affiliation: Beijing Key Laboratory of Research on, Email: limeifang@baidu.com, Affiliation: Baidu, Inc., Beijing, China
+- <strong>链接</strong>: <a href="http://arxiv.org/abs/2609.02366v1">arXiv</a> | <a href="https://arxiv.org/pdf/2609.02366v1">PDF</a>
+- <strong>来源</strong>: 📄 arXiv 关键词检索</p>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2609.02366v1/pipline_new1.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2609.02366v1/multi_task_4.0.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: <span class="wikilink">NE-R1</span> 用 <span class="wikilink">RL</span> 增强 NER，针对长尾/领域实体，用 <span class="wikilink">MTCI</span> 多任务机制和自适应 <span class="wikilink">RAG</span>（只在不熟悉的 case 才检索外部知识，避免噪声和成本）。</li>
+<li><strong>对比方法/Baselines</strong>: ICL、fine-tuned LLM NER；测于 <span class="wikilink">CrossNER</span>、<span class="wikilink">MIT</span>。</li>
+<li><strong>借鉴意义</strong>: 赛道较窄，但「自适应决定是否 RAG」的思路对成本敏感的检索增强有一点通用参考。</li>
+<li><strong>锐评</strong>: NER 在 2026 年还单独发论文，本身就说明这活儿被 LLM 卷得没多少空间了。RL + 自适应 RAG 是把两个现成积木拼一起，「只在不熟悉时检索」这个 gating 思路还算务实。但整体赛道太窄，除非你正好做实体识别，否则没必要花时间。💤</li>
+</ul>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2609.02366v1" target="_blank" rel="noopener">📖 AI 精读</a></div></div>
+<div id="panel-agent记忆与规划" class="tab-panel"><h2>🧠 Agent 记忆与规划</h2><div class="paper-card" data-topic="🧠 Agent 记忆与规划"><h3>11. CHIME: Credit-Aware Hierarchical Memory Evolution for Long-Horizon Agentic Planning</h3>
+<ul>
+<li><strong>作者</strong>: Yongshi Ye, Tian Lan, Feihu Jiang, Muyang Ye, Bin Zhu, Qianghuai Jia, Longyue Wang\corresponding, Zhao Xu, Weihua Luo, Xiaodong Shi\corresponding</li>
+<li><strong>机构</strong>: Alibaba Group, Institute of Artificial Intelligence, Xiamen University, Key Laboratory of Digital Protection and Intelligent Processing of Intangible Cultural Heritage, Zhejiang University, author: wanglongyue.wly@alibabainc.com, of Fujian and Taiwan (Xiamen University), Ministry of Culture and Tourism</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2609.02074v1">arXiv</a> | <a href="https://arxiv.org/pdf/2609.02074v1">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2609.02074v1/chime_method.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: <span class="wikilink">CHIME</span>（Credit-Aware Hierarchical Memory Evolution）属于 self-evolving memory 路线：冻结模型参数，只更新外部记忆库，把交互轨迹蒸馏成可复用经验来提升长程规划。相比 <span class="wikilink">ReasoningBank</span> 等，CHIME 加了「信用感知」的分层记忆进化机制，区分不同记忆条目对结果的贡献。</li>
+<li><strong>对比方法/Baselines</strong>: self-evolving memory 系（ReasoningBank 等），测于 <span class="wikilink">BFCL</span>、<span class="wikilink">VitaBench</span>、<span class="wikilink">BrowseComp</span>、<span class="wikilink">WebAnchor</span>。</li>
+<li><strong>借鉴意义</strong>: 参数冻结、只演化记忆库，规避昂贵后训练——对没有大规模训练资源但想让 agent 持续变强的场景很实用，是 agent memory 里比较务实的一支。</li>
+<li><strong>锐评</strong>: 今天至少有五篇在讲「self-evolving memory / 技能库」，CHIME 靠「credit-aware」勉强做出差异化：给记忆条目做信用归因，而不是把所有轨迹一股脑塞进 bank。这确实是记忆库膨胀后的真痛点。但我怀疑——信用归因本身在长程稀疏奖励下就极难，把 agentic RL 的老大难问题挪到记忆层，是不是只是换个地方犯难？benchmark 铺得挺全，值得看它信用估计的具体做法。👀</li>
+</ul>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2609.02074v1" target="_blank" rel="noopener">📖 AI 精读</a></div></div>
+<div id="panel-多智能体系统" class="tab-panel"><h2>🤝 多智能体系统</h2><div class="paper-card" data-topic="🤝 多智能体系统"><h3>12. Codebook Agent: Amortized Topology Design for LLM Multi-Agent Systems</h3>
+<ul>
+<li><strong>作者</strong>: Jinxi Yu, Yubei Li, Eric Hanchen Jiang, Zhi Zhang, Dong Liu</li>
+<li><strong>机构</strong>: Affiliation: </li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2609.02264v1">arXiv</a> | <a href="https://arxiv.org/pdf/2609.02264v1">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2609.02264v1/Figures/Codebook_main.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: <span class="wikilink">Codebook-Agent</span>（Amortized Topology Design）批评现有多智能体拓扑设计把问题当作条件图生成——用 VAE/自回归/扩散 decoder 在 N×N 邻接空间搜索，再用图网络代理排序，太重。改为用一个「码本」（codebook）摊销拓扑设计：预学一组拓扑原型，query 时检索/组合而非从头生成。</li>
+<li><strong>对比方法/Baselines</strong>: <span class="wikilink">GPTSwarm</span>、<span class="wikilink">DyLAN</span> 等拓扑优化方法；测于 <span class="wikilink">HumanEval</span>、<span class="wikilink">MATH</span>、<span class="wikilink">MMLU</span>、<span class="wikilink">MBPP</span>、<span class="wikilink">MultiArith</span>。</li>
+<li><strong>借鉴意义</strong>: 多智能体系统的通信拓扑决定成本和精度，把它从「每次现搜」变成「码本摊销」能大幅降低设计开销，对做多 agent 编排的成本控制有价值。</li>
+<li><strong>锐评</strong>: 思路很对：多智能体拓扑设计根本不需要每个 query 都跑一遍扩散 decoder 去 N×N 空间里瞎搜，那是 GPTSwarm 时代的奢侈。用码本把常见拓扑摊销掉，检索组合就行——这是把「学结构」降维成「查结构」，工程上性价比高。风险是码本的表达力上限：真遇到码本没覆盖的怪异任务拓扑，退化成什么样？摘要没说 OOD 表现。多 agent 方向里今天最实用的一篇。👀</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2609.02264v1" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🤝 多智能体系统"><h3>13. MASkills: Continual Skills Optimization for Multi-Agent LLM Systems</h3>
+<ul>
+<li><strong>作者</strong>: Huaiyuan Yao   Xiaoou Liu   Charles Fleming   Tianlong Chen    Hua Wei</li>
+<li><strong>机构</strong>: Affiliation:  University of North Carolina at Chapel Hill  tianlong@cs.unc.edu, Affiliation:  Arizona State University  {huaiyuan, xiaoouli, hua.wei}@asu.edu, Affiliation:</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2609.02094v1">arXiv</a> | <a href="https://arxiv.org/pdf/2609.02094v1">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2609.02094v1/pipeline_MASkills.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: <span class="wikilink">MASkills</span>（Continual Skills Optimization）延续 Voyager 的技能库范式到多智能体 LLM 系统，把结构化程序知识（何时做、如何做、用什么工具）当作比经验记忆更可执行的单元，持续优化技能库。</li>
+<li><strong>对比方法/Baselines</strong>: self-reflection 记忆方法；测于 <span class="wikilink">LoCoMo</span>、<span class="wikilink">GAIA</span>、<span class="wikilink">HotpotQA</span>。</li>
+<li><strong>借鉴意义</strong>: 多智能体持续学习是热点，「技能作为可执行单元」比松散记忆更 actionable。</li>
+<li><strong>锐评</strong>: Voyager 已经是 2023 年的事了，把它套到多智能体上再叫「MASkills」，increer 的味道很冲。论证里「skills 比 memory 更 actionable」这个论点没错，但这是共识不是创新。除非它在技能的冲突消解、跨 agent 共享上有真东西，否则就是又一篇「我也搞了个技能库」。🫠</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2609.02094v1" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🤝 多智能体系统"><h3>14. Bilevel Coordinated Reflection: A Game-Theoretic Approach to Multi-Agent LLM Systems</h3>
+<ul>
+<li><strong>作者</strong>: Yihang Chen, Yuxiang Chen11footnotemark:, Yuxuan Huang, Meng Fang, Weilin Luo, Jun Wang</li>
+<li><strong>机构</strong>: UCL Centre for Artificial Intelligence</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2609.02750v1">arXiv</a> | <a href="https://arxiv.org/pdf/2609.02750v1">PDF</a></li>
+<li>
+<p><strong>来源</strong>: 📄 arXiv 关键词检索</p>
+</li>
+<li>
+<p><strong>核心方法</strong>: <span class="wikilink">Bilevel-Reflection</span> 把 orchestrator-worker 多智能体交互建模成 bilevel 协调博弈，为多智能体反思/记忆改进提供博弈论和随机逼近的收敛性分析，并强调外部验证（<span class="wikilink">Verifier-Gated</span>）的作用。</p>
+</li>
+<li><strong>对比方法/Baselines</strong>: <span class="wikilink">AutoGen</span>、<span class="wikilink">MetaGPT</span>、Reflexion/Self-Refine 等（均无收敛分析）。</li>
+<li><strong>借鉴意义</strong>: 给 orchestrator-worker 架构补上缺失的理论基础，对理解幻觉级联等失败模式有价值。</li>
+<li><strong>锐评</strong>: 诚实地说，这篇填的是理论空白——AutoGen/MetaGPT 们确实只有 empirical 结果没有收敛分析。但博弈论/随机逼近这套框架能不能真解释「幻觉级联」这种实际失败，还是只是给经验现象套了个数学外衣，我持怀疑。理论党会喜欢，工程党大概率翻两页就走。🫠</li>
+</ul>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2609.02750v1" target="_blank" rel="noopener">📖 AI 精读</a></div></div>
+<div id="panel-模型路由与服务" class="tab-panel"><h2>⚙️ 模型路由与服务</h2><div class="paper-card" data-topic="⚙️ 模型路由与服务"><h3>15. SCX Router: Streaming Zero-Shot Model Selection with a Decoder-KV Classifier and a Real-World Task Ontology</h3>
+<ul>
+<li><strong>作者</strong>: Ihor Stepanov, Aleksandr Smechov, Mykhailo Shtopko, Dmytro Vodianytskyi, Oleksandr Lukashov</li>
+<li><strong>机构</strong>: Affiliation: </li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2609.02292v1">arXiv</a> | <a href="https://arxiv.org/pdf/2609.02292v1">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2609.02292v1/figures/system_overview.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2609.02292v1/figures/gliclass_decoder_architecture.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2609.02292v1/figures/head_metrics.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: <span class="wikilink">SCX-Router</span> 做流式零样本模型选择：用一个 decoder-KV 分类器 + 真实任务本体（ontology），在 speed/cost/quality 上做 per-task 的模型选择，无需为路由重新训练。</li>
+<li><strong>对比方法/Baselines</strong>: 测于 <span class="wikilink">LiveBench</span>；对比其他 LLM router。</li>
+<li><strong>借鉴意义</strong>: 模型路由直接关系推理成本/延迟/质量的三角权衡，对多模型混布的线上服务有工程价值。</li>
+<li><strong>锐评</strong>: 模型路由已经卷成红海，SCX 的卖点是「流式 + 零样本 + decoder-KV 分类器」。零样本免训练是加分项，但路由这活的死穴永远是——你怎么在不实际跑的情况下准确预测某模型在这个 task 上的 quality？「任务本体」听着像是把难题外包给了一个人工分类体系。工程 trick 集合，够用但不惊艳。💤</li>
+</ul>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2609.02292v1" target="_blank" rel="noopener">📖 AI 精读</a></div></div>
+<hr>
+<h2>被排除的论文</h2>
+<ul>
+<li>Online Reinforcement Learning in the Met Office Unified Model — 命中 negative keyword「weather forecast」——数值天气预报耦合 RL，与你的领域无交集</li>
+<li>Examining the Vulnerability of Multi-Agent Medical Systems to Human Interventions — 命中 negative keyword「diagnosis/medical」——虽是多智能体但落在医疗诊断场景</li>
+<li>Interpretable Symptom Vectors for Depression in a Large Language Model — 命中 negative keyword「diagnosis」——抑郁症临床症状表征，医疗方向</li>
+<li>Automated Vulnerability Injection in Smart Contracts Using Large Language Models — 智能合约/区块链安全，与推荐/广告/agent 无交集，仅 LLM 沾边</li>
+<li>Eliciting ESG Preferences for Reinforcement Learning-Based Portfolio Optimization — 金融组合优化，虽用 RL 但赛道离你的推荐/广告/agent 核心太远</li>
+<li>Do Large Language Models Capture the Diversity in their Training Data? — 信息论分析 LLM 输出多样性，偏理论测量，无落地价值</li>
+<li>Door-in-the-Face Requests and Refusal Behaviour in LLMs — 心理学式的 LLM 拒答行为研究，偏 social science，无工程价值</li>
+<li>ASCII Attack: Recontextualising Harmful Requests — 越狱攻击，安全对抗方向，非你关注的推荐/agent 核心</li>
+<li>Transfer Safety Awareness for Cross-Modal Safety Drift in MLLMs — 多模态安全对齐，偏 safety 赛道</li>
+<li>MARS: What Retrieval Signals Are Hidden in MLLMs for Text-Video Retrieval — 文本-视频检索表征，多模态方向，与推荐/广告召回关联弱</li>
+<li>RideSkill: Hierarchical Algorithm for Generalized Ride Sharing — 网约车派单 MARL + LLM，运筹优化场景，离核心较远</li>
+<li>Loom: Weaving Diagnostic Strands into Free-Text Consensus — 分布式系统根因分析（RCA），运维方向，工程赛道不对口</li>
+<li>Reinforcement learning to choose optimizers — 用 RL 选数值优化器，偏 AutoML/黑盒优化，与 LLM/推荐无关</li>
+<li>Zeta-Lite: In-Browser SQL Database for Agentic Memory — 浏览器端 SQL 数据库基础设施，agent 记忆的存储层，偏系统工程</li>
+<li>Git4Data: Database-Native Version Control for AI Agents — 数据库版本控制基础设施，agent 数据管理层，偏系统工程</li>
+</ul>
+<p>「self-evolving memory / 技能库 / agentic RL 信用分配」三件套已经严重同质化，真正稀缺的是把 LLM 生成能力嵌进推荐/广告/检索工业链路的工作（今天只有 CoGR 和 DMRL 两篇），这才是护城河所在。</p>
