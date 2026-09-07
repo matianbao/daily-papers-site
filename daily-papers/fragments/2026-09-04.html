@@ -1,0 +1,709 @@
+<h1>🔪 今日锐评</h1>
+<p>今天是典型的「RLVR + 多智能体 + scaling law」三件套大杂烩。真正有信息量的就那么几篇：One-Shot 蒸馏（单条样本训几百步）和梯度对齐奖励（GAR）在挑战「奖励设计」的常识；离散扩散做无损加速有工程价值。剩下一大半是把 LLM 往各种垂直场景（肾病、糖尿病食谱、配电网、精算、飞行预测）里塞的换皮论文，以及一堆「我们提出一个 XXX 框架」的 agentic 宣言稿。跨模态生成检索那篇（WIDE）是今天离你 CTR/推荐主业最近的。</p>
+<h2>分流表</h2>
+<table>
+<thead>
+<tr>
+<th>等级</th>
+<th>论文</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>🔥 必读</td>
+<td><span class="wikilink">One-Shot-OPD</span>（单条训练样本就能恢复大部分全量蒸馏收益，data-minimal 的反直觉结论） · <span class="wikilink">GAR</span>（用梯度信号区分「同样正确但质量不同」的轨迹，直击 GRPO 二值奖励的死穴）</td>
+</tr>
+<tr>
+<td>👀 值得看</td>
+<td><span class="wikilink">Discrete-Diffusion-Speedup</span>（并行采样做无损加速，AR 分布不变） · <span class="wikilink">WIDE</span>（跨模态生成检索，处理文本query与视觉候选的信息不对称） · <span class="wikilink">DE-Venus</span>（把监督当作可演化的状态，RLVR 数据效率框架） · <span class="wikilink">NTEP</span>（给 agentic VLM 的每次工具调用算「必要性」奖励） · <span class="wikilink">Coupled-Scaling</span>（scaling law 依赖架构可达的表示几何，不是纯数据几何）</td>
+</tr>
+<tr>
+<td>💤 可跳过</td>
+<td><span class="wikilink">MOPD-KnowAcq</span>（pretraining 加辅助视角，结论偏经验、增量） · <span class="wikilink">MAD-Reweight</span>（多智能体辩论加记忆，缝合味重） · <span class="wikilink">Dude</span>（paper-code 差异检测的双检测多智能体，工程报告级） · <span class="wikilink">Value-Preserving-Agentic</span>（agentic 价值保全架构，纯立场文章）</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<div class="tab-bar"><button class="tab-btn active" data-tab="all" onclick="switchTab('all')">📋 全部<span class="tab-count">14</span></button><button class="tab-btn" data-tab="训练范式蒸馏与奖励" onclick="switchTab('训练范式蒸馏与奖励')">📄 🔥 训练范式：蒸馏与奖励<span class="tab-count">3</span></button><button class="tab-btn" data-tab="推理加速与架构" onclick="switchTab('推理加速与架构')">📄 ⚡ 推理加速与架构<span class="tab-count">1</span></button><button class="tab-btn" data-tab="生成检索与推荐" onclick="switchTab('生成检索与推荐')">🎨 📊 生成检索与推荐<span class="tab-count">1</span></button><button class="tab-btn" data-tab="agentic工具使用与推理" onclick="switchTab('agentic工具使用与推理')">🔧 🤖 Agentic 工具使用与推理<span class="tab-count">2</span></button><button class="tab-btn" data-tab="scalinglaw与泛化" onclick="switchTab('scalinglaw与泛化')">📄 📈 Scaling Law 与泛化<span class="tab-count">2</span></button><button class="tab-btn" data-tab="多智能体安全与监控" onclick="switchTab('多智能体安全与监控')">🛡 🛡️ 多智能体安全与监控<span class="tab-count">1</span></button><button class="tab-btn" data-tab="多智能体推理与记忆" onclick="switchTab('多智能体推理与记忆')">🧠 🧠 多智能体推理与记忆<span class="tab-count">1</span></button><button class="tab-btn" data-tab="多模态与空间推理" onclick="switchTab('多模态与空间推理')">🎨 🧊 多模态与空间推理<span class="tab-count">1</span></button><button class="tab-btn" data-tab="预训练与知识" onclick="switchTab('预训练与知识')">📄 🧪 预训练与知识<span class="tab-count">1</span></button><button class="tab-btn" data-tab="agentic垂直应用" onclick="switchTab('agentic垂直应用')">🤖 🏭 Agentic 垂直应用<span class="tab-count">1</span></button></div>
+<div id="panel-all" class="tab-panel active"><h2>🔥 训练范式：蒸馏与奖励</h2><div class="paper-card" data-topic="🔥 训练范式：蒸馏与奖励"><h3>1. Rethinking On-Policy Distillation of Large Language Models II: One Training Example</h3>
+<ul>
+<li><strong>作者</strong>: Zixuan Fu, Bingxiang He, Yuxin Zuo, Haohuan Huang, Jinqian Zhang, Ruhang Xiao, Cheng Qian, Qinyu Luo, Huan-ang Gao, Yudong Wang, Zhiyuan Liu, Ning Ding, Chaojun Xiao</li>
+<li><strong>机构</strong>: Affiliation: Northeastern University, Affiliation: University of Illinois Urbana-Champaign, Affiliation: University of Chinese Academy of Sciences, Affiliation: Johns Hopkins University*Equal Contribution.†Project Lead.‡Corresponding Authors, hebx24@mails.tsinghua.edu.cn, {dingning,xcj}@tsinghua.edu.cn, Affiliation:, Affiliation: Tsinghua University</li>
+<li><strong>链接</strong>: <a href="https://arxiv.org/abs/2609.04172">arXiv</a> | <a href="https://arxiv.org/pdf/2609.04172">PDF</a></li>
+<li><strong>来源</strong>: 📰 HF Daily，⬆️ 40</li>
+</ul>
+<details class="paper-note"><summary>📒 精读笔记: On-Policy Distillation Survey</summary><div class="note-body"><h1>On-Policy Distillation Survey</h1>
+<h2>📋 基本信息</h2>
+<ul>
+<li><strong>作者</strong>: Mingyang Song, Mao Zheng</li>
+<li><strong>机构</strong>: Tencent</li>
+<li><strong>链接</strong>: <a href="https://arxiv.org/abs/2604.00626">arXiv</a> | <a href="https://arxiv.org/pdf/2604.00626">PDF</a></li>
+</ul>
+<h2>🎯 研究动机与问题</h2>
+<p>知识蒸馏是将前沿大模型的推理能力迁移到可部署小模型的主要方法。但当前主流范式是 <strong>off-policy</strong> 的：</p>
+<ol>
+<li>学生模型在静态的教师生成数据上训练</li>
+<li>从未见过自己生成的错误 → <strong>exposure bias</strong></li>
+<li>训练-测试不匹配导致推理时错误累积</li>
+</ol>
+<p><strong>On-Policy Distillation (OPD)</strong> 让学生模型生成自己的 trajectory 并获取教师反馈，本质上是 <span class="wikilink">交互式模仿学习</span>。</p>
+<p>本综述是 <strong>首个</strong> OPD 的系统性综述。</p>
+<h2>🔧 方法详解</h2>
+<h3>统一 f-divergence 框架</h3>
+<p>将所有 OPD 方法统一到 <span class="math-inline">$f$</span>-divergence 框架下：</p>
+<div class="math-block">$$
+D_f(p \| q) = \mathbb{E}_{x \sim q}\left[f\left(\frac{p(x)}{q(x)}\right)\right]
+$$</div>
+
+<p>不同方法对应不同的 <span class="math-inline">$f$</span> 函数选择：
+- <strong>KL divergence</strong> (<span class="math-inline">$f(t) = t\log t$</span>): <span class="wikilink">GKD</span>
+- <strong>Reverse KL</strong> (<span class="math-inline">$f(t) = -\log t$</span>): <span class="wikilink">DistiLLM</span>
+- <strong>JSD</strong>: <span class="wikilink">MiniLLM</span></p>
+<h3>三维分类体系</h3>
+<p>沿三个正交维度组织：</p>
+<table>
+<thead>
+<tr>
+<th>维度</th>
+<th>类别</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Feedback Signal</strong></td>
+<td>Logit-based / Outcome-based / Self-play</td>
+</tr>
+<tr>
+<td><strong>Teacher Access</strong></td>
+<td>White-box / Black-box / Teacher-free</td>
+</tr>
+<tr>
+<td><strong>Loss Granularity</strong></td>
+<td>Token-level / Sequence-level / Hybrid</td>
+</tr>
+</tbody>
+</table>
+<h3>代表方法分析</h3>
+<table>
+<thead>
+<tr>
+<th>方法</th>
+<th>Feedback</th>
+<th>Teacher</th>
+<th>Granularity</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><span class="wikilink">GKD</span></td>
+<td>Logit</td>
+<td>White-box</td>
+<td>Token</td>
+</tr>
+<tr>
+<td><span class="wikilink">DistiLLM</span></td>
+<td>Logit</td>
+<td>White-box</td>
+<td>Token</td>
+</tr>
+<tr>
+<td><span class="wikilink">MiniLLM</span></td>
+<td>Logit</td>
+<td>White-box</td>
+<td>Sequence</td>
+</tr>
+<tr>
+<td><span class="wikilink">DKL</span></td>
+<td>Logit</td>
+<td>White-box</td>
+<td>Hybrid</td>
+</tr>
+<tr>
+<td><span class="wikilink">DPO</span></td>
+<td>Outcome</td>
+<td>Black-box</td>
+<td>Sequence</td>
+</tr>
+<tr>
+<td><span class="wikilink">GRPO</span></td>
+<td>Outcome</td>
+<td>Teacher-free</td>
+<td>Sequence</td>
+</tr>
+</tbody>
+</table>
+<h3>与 RL 的关系</h3>
+<p>OPD 与 <span class="wikilink">REINFORCE</span>, <span class="wikilink">PPO</span>, <span class="wikilink">GRPO</span> 等 RL 方法的联系：
+- On-policy 采样 = RL 中的环境交互
+- 教师反馈 = reward signal
+- Exposure bias = distribution shift</p>
+<h2>📊 关键对比</h2>
+<p>综述覆盖了 <span class="wikilink">SFT</span>, <span class="wikilink">DPO</span>, <span class="wikilink">GRPO</span>, <span class="wikilink">REINFORCE</span> 等方法的系统对比。</p>
+<h2>💡 核心贡献</h2>
+<ol>
+<li><strong>首个 OPD 综述</strong>：填补了 on-policy distillation 领域的系统性梳理空白</li>
+<li><strong>f-divergence 统一框架</strong>：用数学工具统一了不同方法的本质区别</li>
+<li><strong>三维分类体系</strong>：feedback/teacher access/granularity 提供清晰的方法定位</li>
+</ol>
+<h2>🤔 局限性与思考</h2>
+<ol>
+<li><strong>贡献主要在整理而非发现</strong>：survey 在 2026 年不稀缺，关键看能否提供 insight</li>
+<li><strong>实验验证缺乏</strong>：作为 survey 没有自己的实验对比</li>
+<li><strong>开放问题有价值</strong>：蒸馏 scaling law、不确定性感知反馈、agent-level 蒸馏是值得关注的方向</li>
+</ol>
+<h2>📚 相关工作</h2>
+<ul>
+<li><span class="wikilink">GKD</span>, <span class="wikilink">DistiLLM</span>, <span class="wikilink">MiniLLM</span>, <span class="wikilink">DKL</span>: 代表方法</li>
+<li><span class="wikilink">SFT</span>, <span class="wikilink">DPO</span>, <span class="wikilink">GRPO</span>, <span class="wikilink">REINFORCE</span>: RL/训练方法</li>
+<li><span class="wikilink">KL divergence</span>: 核心数学工具</li>
+</ul></div></details>
+
+<ul>
+<li><strong>核心方法</strong>: <span class="wikilink">On-Policy-Distillation</span>（OPD）用学生自己 rollout + 教师 token 级 dense 监督。本文把数据推到极限：只用 <span class="wikilink">One-Shot</span> 单条 query 训练，发现能持续改进数百步，跨任务/模型族恢复出全量数据 OPD 大部分收益，并提出 <span class="wikilink">MOPD</span> 变体。</li>
+<li><strong>对比方法/Baselines</strong>: 对比全量数据 <span class="wikilink">OPD</span>、<span class="wikilink">RLVR</span>、one-shot RLVR（KK 类设置），backbone 含 <span class="wikilink">DeepSeek</span> 系。</li>
+<li><strong>借鉴意义</strong>: 如果单样本蒸馏成立，意味着「数据规模」在 on-policy 蒸馏里远没想象中重要，对你做小模型对齐/降本的场景是直接可用的省钱结论。</li>
+<li><strong>锐评</strong>: HF 40 赞不是没道理——「一条样本训几百步还涨」这种反直觉结论天然吸睛。但要警惕：单样本能 work 往往是因为 base model 里知识已经在了，OPD 只是在「唤醒」而非「学习」，泛化边界（摘要说 across domains，但一条 query 的分布覆盖到底多广？）需要盯着看正文的任务集。真结论 or 精心挑的 query，读了才知道。👀</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2609.04172" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🔥 训练范式：蒸馏与奖励"><h3>2. Gradients Know What Outcomes Don't: Unlocking Reinforcement Learning for LLM Reasoning with Gradient-Aligned Rewards</h3>
+<ul>
+<li><strong>作者</strong>: Leqi Zheng, Jinbo Su, Fang Niu, Chaokun Wang*, Weiping Wang, Jiajun Zhang, Shannan Yan, Jie Wu, Zhaolu Kang, Rong Fu, Hang Zhang</li>
+<li><strong>机构</strong>: Affiliation:  Equal contribution.* Correspondence: chaokun@tsinghua.edu.cn, Affiliation: Tsinghua University, Affiliation: University of Macau, Affiliation: , Affiliation: Institute of Information Engineering, CAS, Affiliation: Renmin University of China, Affiliation: The Australian National University, Affiliation: USTC, Affiliation: Peking University</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2609.03342v1">arXiv</a> | <a href="https://arxiv.org/pdf/2609.03342v1">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2609.03342v1/figures/backbone.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: <span class="wikilink">GAR</span>（Gradient-Aligned Rewards）针对 <span class="wikilink">RLVR</span> 二值奖励的致命缺陷：所有正确轨迹拿相同 reward，<span class="wikilink">GRPO</span> 的 group-relative advantage 在正确组内塌缩成同一个值，无法偏好更高质量的推理。GAR 用梯度对齐信号构造 dense reward，无需离线标注或过程奖励模型（<span class="wikilink">PRM</span>）。</li>
+<li><strong>对比方法/Baselines</strong>: 对比 <span class="wikilink">GRPO</span>、<span class="wikilink">REINFORCE</span>、表面启发式 dense reward、过程奖励模型；评测集 <span class="wikilink">GPQA</span>、<span class="wikilink">MMLU</span>、KK。</li>
+<li><strong>借鉴意义</strong>: 直击 RLVR 训 CoT 时「正确但质量参差」无法区分的问题，对你做 ranking/推理模型 RL 微调时的信号设计有直接借鉴。</li>
+<li><strong>锐评</strong>: 问题定位很准——GRPO 在 Kc→K 时 advantage 塌缩确实是实战里 loss 摆烂的常见原因。用梯度而非外部标注来打分是个聪明的「免费午餐」思路。质疑点：梯度对齐本身有额外反传成本，且梯度信号可能奖励「训练集里已见过的解法」而非「更好的推理」，容易过拟合语料先验。但至少它诚实地承认了这个动机。🔥</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2609.03342v1" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🔥 训练范式：蒸馏与奖励"><h3>3. DE-Venus: A Data-Efficient RLVR Framework for Large Language Models</h3>
+<ul>
+<li><strong>作者</strong>: Shenzhi Yang, Guangcheng Zhu, Kai Tang, Zhengqing Zang, Xing Zheng, Haobo Wang, Yingfan Ma, Bowen Song, Bo Han, Bo An, Lei Feng, Weiqiang Wang, Junbo Zhao, Gang Chen</li>
+<li><strong>机构</strong>: 1]Zhejiang University    2Ant Group    3Hong Kong Baptist University, Affiliation:, 4Nanyang Technological University    5Southeast University, \addsecondlogo[0.95cm]assets/zjulogo.png</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2609.03324v1">arXiv</a> | <a href="https://arxiv.org/pdf/2609.03324v1">PDF</a></li>
+<li>
+<p><strong>来源</strong>: 📄 arXiv 关键词检索</p>
+</li>
+<li>
+<p><strong>核心方法</strong>: <span class="wikilink">DE-Venus</span>：数据高效 RLVR 框架，核心抽象是「把监督（label/reward）当作可演化的状态而非样本的不变属性」，其 confidence 和持久性可从数据准备一路演化到策略优化。三个模块：主动数据选择、弱监督、标注决策。</p>
+</li>
+<li><strong>对比方法/Baselines</strong>: 对比分别处理样本选择/不完整监督/噪声标签的既有方法（<span class="wikilink">TTRL</span> 等），基于 <span class="wikilink">GRPO</span>。</li>
+<li><strong>借鉴意义</strong>: RLVR 的 on-policy rollout 和可靠 target 都很贵，这套「监督即状态」的解耦对你降低 RL 训练成本、复用 pipeline 有价值。</li>
+<li><strong>锐评</strong>: 把「哪些样本值得标、标多准、什么时候标」统一成一个状态演化问题，抽象层次是对的，工程上把监督逻辑从分布式训练里解耦也确实能让对比实验更干净。风险：三模块耦合越多，超参越玄学，「data-efficient」的收益很容易被调参成本吃掉。要看它有没有给出无脑默认配置。👀</li>
+</ul>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2609.03324v1" target="_blank" rel="noopener">📖 AI 精读</a></div><h2>⚡ 推理加速与架构</h2><div class="paper-card" data-topic="⚡ 推理加速与架构"><h3>4. Unlocking Lossless Speedups in LLMs via Discrete Diffusion</h3>
+<ul>
+<li><strong>作者</strong>: Sahoo, Subham Sekhar, Chen, Lingjie, Pham, Khiem, Geuter, Jonathan, Dwivedi, Chaitanya, Pimpalkhute, Varad, Akhauri, Yash, Moreno, Alexander, Yurochkin, Mikhail, Wang, Zhenting, Elhoushi, Mostafa, Dey, Nolan, Bergsma, Shane, Hestness, Joel, Thickstun, John, Xing, Eric, Liu, Zhengzhong</li>
+<li><strong>机构</strong>: Diffusion Gemma (Google), Harvard University, University of Illinois Urbana-Champaign</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2609.04010v1">arXiv</a> | <a href="https://arxiv.org/pdf/2609.04010v1">PDF</a></li>
+<li>
+<p><strong>来源</strong>: 📄 arXiv 关键词检索</p>
+</li>
+<li>
+<p><strong>核心方法</strong>: <span class="wikilink">Discrete-Diffusion-Speedup</span>：diffusion-augmented LLM——用 AR 模型定义分布，但用离散扩散从该分布并行抽多个 token，声称无损（lossless）加速。来自 Diffusion Gemma / Google 系。</p>
+</li>
+<li><strong>对比方法/Baselines</strong>: 对比标准自回归 <span class="wikilink">NTP</span> 解码、推测解码（speculative decoding）类方法。</li>
+<li><strong>借鉴意义</strong>: 推理延迟是推荐/广告在线打分的硬约束，任何「分布不变的并行加速」都值得你关注能否迁移到 ranking 模型的自回归生成部分。</li>
+<li><strong>锐评</strong>: 「lossless」是最招人怀疑的词——如果真能在不改变 AR 分布的前提下并行出多 token，那和推测解码的区别与优势在哪，得看它的接受率和实际 wall-clock。Google 出品 + Diffusion Gemma 血统，工程可信度加分，但「无损」通常意味着加速比在困难 token 上会退化。别被标题的绝对化吓到，也别信到底。⚡</li>
+</ul>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2609.04010v1" target="_blank" rel="noopener">📖 AI 精读</a></div><h2>📊 生成检索与推荐</h2><div class="paper-card" data-topic="📊 生成检索与推荐"><h3>5. WIDE: Wildcard Inference with Dynamic Expansion for Cross-Modal Generative Retrieval</h3>
+<ul>
+<li><strong>作者</strong>: Teng Guo, Xin Wang, Jiayou Xu, Keying Zhou, Jifeng Shen, Haoxin Ruan</li>
+<li><strong>机构</strong>: Affiliation: , Affiliation: School of Electrical and Information Engineering, Jiangsu University, Zhenjiang, China, Note: , email:, Affiliation: College of Computer Science and Technology, Jilin University, Changchun, China, Alternate Affiliation: Key Laboratory of Symbolic Computation and Knowledge Engineering of Ministry of Education, Jilin University, Changchun, China, Alternate Affiliation: </li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2609.03554v1">arXiv</a> | <a href="https://arxiv.org/pdf/2609.03554v1">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2609.03554v1/aet_awd_bsr_architecture.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: <span class="wikilink">WIDE</span>（Wildcard Inference with Dynamic Expansion）：跨模态生成检索，用 seq2seq 统一表示学习与搜索。针对核心痛点——跨模态信息不对称（简短文本 query vs 稠密视觉候选），用通配符推理 + 动态扩展（<span class="wikilink">AET</span>/<span class="wikilink">AWD</span>/<span class="wikilink">BSR</span>）弥合 gap。数据集 <span class="wikilink">WebQA</span>、<span class="wikilink">COCO</span>、<span class="wikilink">VisualNews</span>。</li>
+<li><strong>对比方法/Baselines</strong>: 对比标准生成检索（单模态 seq2seq 检索）与跨模态双塔检索。</li>
+<li><strong>借鉴意义</strong>: 生成检索是你主业里生成式推荐/检索的直系亲属，「文本query与视觉候选信息量不匹配」的问题在多模态电商检索里完全同构。</li>
+<li><strong>锐评</strong>: 生成检索扩到跨模态确实卡在信息不对称这个点上——文本 query 短、视觉候选信息密度高，直接生成 doc id 会偏。通配符 + 动态扩展听起来是在生成端做「宽召回再收敛」，思路合理。但生成检索的老问题（docid 的可扩展性、新 item 冷启）摘要没提，跨模态只会更严重。今天离你主业最近的一篇，值得读方法细节。👀</li>
+</ul>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2609.03554v1" target="_blank" rel="noopener">📖 AI 精读</a></div><h2>🤖 Agentic 工具使用与推理</h2><div class="paper-card" data-topic="🤖 Agentic 工具使用与推理"><h3>6. Making Every Tool Call Count: Necessary Tool-Evidence Path Rewards for Agentic Vision-Language Models</h3>
+<ul>
+<li><strong>作者</strong>: Xingming Long, Yu Liu\corresponding, Zhiwei Yang, Hanqi Feng, Shaojie Zhang, Barnabas Poczos, Chao Jiang, Zhenbo Luo, Lei Jiang, Pei Fu\corresponding</li>
+<li><strong>机构</strong>: Department of Machine Learning, Carnegie Mellon University, Institute of Information Engineering, Chinese Academy of Sciences</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2609.03493v1">arXiv</a> | <a href="https://arxiv.org/pdf/2609.03493v1">PDF</a></li>
+<li>
+<p><strong>来源</strong>: 📄 arXiv 关键词检索</p>
+</li>
+<li>
+<p><strong>核心方法</strong>: <span class="wikilink">NTEP</span>（Necessary Tool-Evidence Path Rewards）：给 agentic VLM 的工具调用（图像裁剪、图搜、文搜）设计奖励，核心是奖励「必要的工具-证据路径」，避免模型乱调工具刷步数。基于 <span class="wikilink">GRPO</span>。</p>
+</li>
+<li><strong>对比方法/Baselines</strong>: 对比 Search-R1、R1-Searcher 等文本域 agentic 搜索方法，<span class="wikilink">OOD</span> 泛化评测。</li>
+<li><strong>借鉴意义</strong>: 「让每次工具调用都算数」正是 agent 系统在生产环境省 token/省调用成本的关键，对你做多轮 agent 编排的奖励设计有直接参考。</li>
+<li><strong>锐评</strong>: 痛点抓得好：现在的 tool-use agent 最大的病就是「为了拿奖励疯狂调工具」，本文给工具调用的「必要性」建模是对症下药。但「必要性」怎么定义是全文成败所在——如果靠反事实（去掉这次调用答案是否变差）来算，计算成本会爆炸；如果靠启发式，又回到主观打分。冲着这个问题值得读，就看它的必要性度量硬不硬。👀</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2609.03493v1" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🤖 Agentic 工具使用与推理"><h3>7. Two-Stage Reinforcement Learning for Sound and Adversarial Test Generation in Code LLMs</h3>
+<ul>
+<li><strong>作者</strong>: Jiacheng Xu, Wentao Zhang, Zhiyi Lyu, Fuxiang Zhang, Chaojie Wang, Yang Liu, Bo An</li>
+<li><strong>机构</strong>: Affiliation: , Email: , Affiliation: Nanyang Technological University, Singapore</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2609.03955v1">arXiv</a> | <a href="https://arxiv.org/pdf/2609.03955v1">PDF</a></li>
+<li>
+<p><strong>来源</strong>: 📄 arXiv 关键词检索</p>
+</li>
+<li>
+<p><strong>核心方法</strong>: <span class="wikilink">TACO</span>：两阶段 RL 自动生成代码测试用例，解决 code LLM 的 RLVR 反馈里「高质量测试稀缺」问题（测试须既 sound 又 discriminative）。用学到的模型自生成测试用例作为可执行反馈。</p>
+</li>
+<li><strong>对比方法/Baselines</strong>: 对比 <span class="wikilink">SFT</span>、单阶段 <span class="wikilink">RL</span>、<span class="wikilink">Distill-Qwen</span>；评测 <span class="wikilink">LiveCodeBench</span>、TACO。</li>
+<li><strong>借鉴意义</strong>: 自动生成可执行验证信号是 RLVR 在代码/工具场景的关键瓶颈，对你构造可验证奖励的 pipeline 有参考。</li>
+<li><strong>锐评</strong>: 「测试用例既要正确又要有区分度」这个 sound + discriminative 的二元约束抓得准——很多自动测试生成就死在只 sound 不 discriminative（全 pass 的废测试）。两阶段设计是合理的工程解。但用模型自己生成测试来训自己，鸡生蛋问题（生成器和被测都来自同源模型，盲点重叠）摘要没交代怎么破。读方法看它怎么防自欺。👀</li>
+</ul>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2609.03955v1" target="_blank" rel="noopener">📖 AI 精读</a></div><h2>📈 Scaling Law 与泛化</h2><div class="paper-card" data-topic="📈 Scaling Law 与泛化"><h3>8. Out-of-Distribution Generalisation with Sequence Models in Offline Multi-Agent Reinforcement Learning</h3>
+<ul>
+<li><strong>作者</strong>: Hidaoui, Oussama, Ebead, Omer, Sob, Ulrich Armel Mbou, Singh, Siddarth, Formanek, Juan Claude, Chalumeau, Felix, Mahjoub, Omayma, Abramowitz, Sasha, de Kock, Ruan John, Khlifi, Wiem, Nessir, Louay Ben, Toit, Simon Verster Du, Rajaonarivonivelomanantsoa, Daniel, Osman, Asim Awad, Fokam, Arnol Manuel, Shabe, Refiloe, Pretorius, Arnu</li>
+<li><strong>机构</strong>: InstaDeep   AIMS   Stellenbosch University</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2609.03667v1">arXiv</a> | <a href="https://arxiv.org/pdf/2609.03667v1">PDF</a></li>
+<li>
+<p><strong>来源</strong>: 📄 arXiv 关键词检索</p>
+</li>
+<li>
+<p><strong>核心方法</strong>: 对离线多智能体强化学习（<span class="wikilink">MARL</span>）的零样本任务泛化做系统实证：固定测试集、变动训练任务数（<span class="wikilink">LBF</span>/<span class="wikilink">RWARE</span>/<span class="wikilink">SMAX</span>/Connector 等环境），刻画任务多样性、数据集规模、网络容量三者的 scaling 行为。</p>
+</li>
+<li><strong>对比方法/Baselines</strong>: 多任务序列模型（<span class="wikilink">Multi-Task</span> sequence models）、<span class="wikilink">CQL</span> 等离线 RL 基线。</li>
+<li><strong>借鉴意义</strong>: 「任务多样性 vs 数据量 vs 容量」的 scaling 权衡，对你判断多任务推荐/多场景模型该堆数据还是堆任务有方法论参考。</li>
+<li><strong>锐评</strong>: score 6 是今天最高分，实证做得扎实（多环境、系统变量）值得肯定。但离线 MARL 的零样本泛化本身是个偏窄的问题，结论能否外推到序列建模的一般 scaling 存疑——这类「principled analysis」经常是把已知的幂律现象在新环境上重测一遍。作为 scaling 实证读物 OK，别指望有颠覆性定律。🫠</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2609.03667v1" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="📈 Scaling Law 与泛化"><h3>9. Coupled Scaling: A Representational Accessibility Framework for Neural Scaling Laws</h3>
+<ul>
+<li><strong>作者</strong>: Wang, Jie</li>
+<li><strong>机构</strong>: School of Civil and Commercial Law, Southwest University of Political Science and Law</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2609.03533v1">arXiv</a> | <a href="https://arxiv.org/pdf/2609.03533v1">PDF</a></li>
+<li>
+<p><strong>来源</strong>: 📄 arXiv 关键词检索</p>
+</li>
+<li>
+<p><strong>核心方法</strong>: <span class="wikilink">Coupled-Scaling</span>：任务条件化的 scaling 框架，主张有限预算下的 scaling 取决于「任务结构」与「架构-优化系统可高效到达的几何」之间的关系，而非仅由数据几何或数据-模型谱决定。</p>
+</li>
+<li><strong>对比方法/Baselines</strong>: 对比从数据几何或指定数据-模型谱推导 scaling 的既有理论。</li>
+<li><strong>借鉴意义</strong>: 如果 scaling 真的和架构可达表示强耦合，意味着换架构就能改变 scaling 曲线，对你选型（堆参数 vs 换结构）是重要判据。</li>
+<li><strong>锐评</strong>: 「同样的数据，不同架构 scale 得不一样」这个观察是对的，也是对纯数据几何 scaling 理论的合理修正。但「representational accessibility」这种概念很容易变成事后解释一切的万能框——任何 scaling 差异都能归因到「几何可达性」。得看它有没有给出可证伪的预测，而不是只解释现象。⚠️</li>
+</ul>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2609.03533v1" target="_blank" rel="noopener">📖 AI 精读</a></div><h2>🛡️ 多智能体安全与监控</h2><div class="paper-card" data-topic="🛡️ 多智能体安全与监控"><h3>10. You Can't Escape Your Own Activations : Evaluation Awareness and Multi-Agent Monitoring</h3>
+<ul>
+<li><strong>作者</strong>: Aritra Das, Jaee Ponde, Mihir More, Debayan Gupta</li>
+<li><strong>机构</strong>: Affiliation: </li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2609.03035v1">arXiv</a> | <a href="https://arxiv.org/pdf/2609.03035v1">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2609.03035v1/appendix_blackjack_auroc.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2609.03035v1/appendix_simmons_auroc.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: 研究 LLM agent 在多智能体系统里的合谋（collusion）：输出监控可被混淆/隐写绕过，故转向基于内部激活训练的 probe。关键设定——评估「知道自己在被监视」（evaluation awareness）的 agent，probe 从激活里抓合谋信号。</li>
+<li><strong>对比方法/Baselines</strong>: 对比输出层监控（output monitors）、常规激活 probe（在不知被监视的 agent 上评估）。</li>
+<li><strong>借鉴意义</strong>: 多智能体系统的对齐/监控是 agent 生产化绕不开的安全问题，「模型逃不掉自己的激活」这个角度对你做 agent 审计有启发。</li>
+<li><strong>锐评</strong>: 标题起得漂亮，问题也真实——现在的 agent 监控几乎都在输出层，稍微隐写就废了。转到激活层、且专门测「知道被监视」的 agent，实验设计比大多数安全论文诚实。质疑：probe 需要白盒访问激活，对闭源/第三方 agent 根本用不了；且「evaluation awareness」是靠 prompt 诱导出来的，和真实对抗环境里的自发合谋不是一回事。视角新，落地窄。👀</li>
+</ul>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2609.03035v1" target="_blank" rel="noopener">📖 AI 精读</a></div><h2>🧠 多智能体推理与记忆</h2><div class="paper-card" data-topic="🧠 多智能体推理与记忆"><h3>11. Remember and Reweight: Enhancing Multi-Agent Debate with Experience Memory and Confidence Estimation</h3>
+<ul>
+<li><strong>作者</strong>: Xuanfa Jin, Zhijian Ma, Yongcheng Zeng, Xinyu Cui, Haifeng Zhang, Jun Wang</li>
+<li><strong>机构</strong>: Affiliation: Institute of Automation, Chinese Academy of Sciences, Affiliation: , Affiliation: University College London, Affiliation: University of Chinese Academy of Sciences, Email: </li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2609.03619v1">arXiv</a> | <a href="https://arxiv.org/pdf/2609.03619v1">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2609.03619v1/framework.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: 针对 <span class="wikilink">MAD</span>（多智能体辩论）的「共享误解」漏洞（多数 agent 初始收敛到错误答案时辩论会放大而非纠错），提出用经验记忆（experience memory）+ 置信度估计来 remember and reweight。</li>
+<li><strong>对比方法/Baselines</strong>: 对比标准 <span class="wikilink">MAD</span>、<span class="wikilink">Self-Consistency</span>、<span class="wikilink">CoT</span>；评测 <span class="wikilink">TruthfulQA</span>。</li>
+<li><strong>借鉴意义</strong>: 多智能体系统的「群体性错误」是 agent 编排的真实风险，记忆+置信度加权的缓解思路可迁移到你的多路召回/多模型融合。</li>
+<li><strong>锐评</strong>: 「多数错时辩论越辩越错」这个现象确实存在，命名为 shared misconception 也贴切。但解法是标准缝合：记忆模块 + 置信度加权，两个都是 MAD 论文里被反复加过的组件。真正的问题是——如果初始多数就错，置信度估计凭什么不也一起错？摘要没说明置信度的独立信息来源。缝合味重，增量。🫠</li>
+</ul>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2609.03619v1" target="_blank" rel="noopener">📖 AI 精读</a></div><h2>🧊 多模态与空间推理</h2><div class="paper-card" data-topic="🧊 多模态与空间推理"><h3>12. GraFT: A Training-Free Framework for Spatial Reasoning in Multimodal Large Language Models via 3D Scene Graphs</h3>
+<ul>
+<li><strong>作者</strong>: Junqing Du, Fernando Ropero, Erkin Turkoz, Yanfeng Zhang, Lu Liu</li>
+<li><strong>机构</strong>: ††thanks: Corresponding author: zhangyanfeng8@huawei.com</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2609.03892v1">arXiv</a> | <a href="https://arxiv.org/pdf/2609.03892v1">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2609.03892v1/overview.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: <span class="wikilink">GraFT</span>：训练无关（training-free）的 MLLM 空间推理框架，通过构造 3D 场景图（3D scene graphs）来做精确几何测量、egocentric/allocentric 视角变换、细粒度 grounding。</li>
+<li><strong>对比方法/Baselines</strong>: 对比 SpatialVLM、SpatialRGPT 等需大规模度量监督的训练方法；评测 <span class="wikilink">ScanQA</span>、<span class="wikilink">VSI</span>-Bench；backbone <span class="wikilink">InternVL2</span>。</li>
+<li><strong>借鉴意义</strong>: training-free 用结构化中间表示补 MLLM 短板，这个「不训练、靠外部结构」的范式对你低成本增强多模态理解有借鉴。</li>
+<li><strong>锐评</strong>: MLLM 空间推理确实烂，用显式 3D 场景图当外挂是合理的绕道。training-free 是最大卖点也是最大风险——不训练意味着完全依赖场景图构造的质量，而从 2D 图像可靠重建 3D 场景图本身就是个未解难题，这里很可能把难度转移给了一个假设「已有好场景图」的上游模块。看它场景图从哪来。⚠️</li>
+</ul>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2609.03892v1" target="_blank" rel="noopener">📖 AI 精读</a></div><h2>🧪 预训练与知识</h2><div class="paper-card" data-topic="🧪 预训练与知识"><h3>13. Knowledge Acquisition During Pre-training? Large Language Models Learn Better With Auxiliary Views</h3>
+<ul>
+<li><strong>作者</strong>: Joseph Lee, Yidi Huang, Dokyoon Kim, Shu Yang, Li Shen††footnotemark:</li>
+<li><strong>机构</strong>: Affiliation: University of Pennsylvania, Philadelphia, PA, USA, Affiliation: , Email: </li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2609.04180v1">arXiv</a> | <a href="https://arxiv.org/pdf/2609.04180v1">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2609.04180v1/aux_base_minus_source_base_cosine_distance_all_projections.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2609.04180v1/1B_delta_parameters.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: <span class="wikilink">MOPD-KnowAcq</span>：研究 LLM 预训练如何习得知识，提出「辅助视角」（auxiliary views，即知识的重述/改写）在因果上有助于学习。受控实验证明：重复是习得的必要条件，改写（paraphrasing）只在小 batch size 下有帮助。</li>
+<li><strong>对比方法/Baselines</strong>: 受控预训练对照实验，涉及 <span class="wikilink">DPO</span>、<span class="wikilink">FFN</span> 参数分析，对比 <span class="wikilink">GPT-5</span> 等。</li>
+<li><strong>借鉴意义</strong>: 「什么样的数据重复/改写能提升知识习得」对你做领域预训练/数据配比有直接指导。</li>
+<li><strong>锐评</strong>: 受控实验做知识习得机制值得肯定，比一堆刷榜论文有科学味。但结论偏温和且早有预期——「重复必要、改写在小 batch 有用」基本印证了 physical-of-LM（Allen-Zhu）系列的既有发现，新增量有限。「小 batch 才有用」这个 caveat 反而说明实际大规模训练里改写可能没用，实用价值打折。💤</li>
+</ul>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2609.04180v1" target="_blank" rel="noopener">📖 AI 精读</a></div><h2>🏭 Agentic 垂直应用</h2><div class="paper-card" data-topic="🏭 Agentic 垂直应用"><h3>14. Adapting to Evolving Requirements: Agentic AI for Retail Supply Chain Operations</h3>
+<ul>
+<li><strong>作者</strong>: Lei Zheng, Liping Yang, Zihao Li, Guodong Lyu, Chaik Ming Koh, Chung-Piaw Teo</li>
+<li><strong>机构</strong>: University of Science and Technology of China, Affiliation: , Affiliation: Institute of Operations Research and Analytics, Affiliation: School of Business and Management, National University of Singapore[2pt] * Corresponding authors, National University of Singapore, Affiliation: School of Management, Hong Kong University of Science and Technology</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2609.03860v1">arXiv</a> | <a href="https://arxiv.org/pdf/2609.03860v1">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2609.03860v1/framework.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: Agentic AI 用于零售供应链运营：把耦合的决策模块建成带依赖边的模块化决策系统 S=(M,E)，用 LLM 的自然语言接口适应演化的需求，处理「一个需求有多条干预路径、下游效果不同」的问题。KPI/ESR/CR 指标。</li>
+<li><strong>对比方法/Baselines</strong>: 对比只聚焦单个优化模型的既有 LLM 方法；backbone <span class="wikilink">DeepSeek</span>。</li>
+<li><strong>借鉴意义</strong>: 把 agentic 系统建模成模块依赖图来编排异构决策 pipeline，这个抽象对你做多环节推荐/投放链路的 agent 编排有结构参考。</li>
+<li><strong>锐评</strong>: 供应链这种「多模块耦合、改一处动全身」的场景确实适合 agentic 编排，把它形式化成依赖图也是对的第一步。但摘要通篇是框架描述，最关键的「多条干预路径怎么选、下游效果怎么预估」——这才是难点——没给硬结果。工业 agentic 论文的通病：架构图很漂亮，端到端提升数字很虚。作为架构参考翻翻。🫠</li>
+</ul>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2609.03860v1" target="_blank" rel="noopener">📖 AI 精读</a></div></div>
+<div id="panel-训练范式蒸馏与奖励" class="tab-panel"><h2>🔥 训练范式：蒸馏与奖励</h2><div class="paper-card" data-topic="🔥 训练范式：蒸馏与奖励"><h3>1. Rethinking On-Policy Distillation of Large Language Models II: One Training Example</h3>
+<ul>
+<li><strong>作者</strong>: Zixuan Fu, Bingxiang He, Yuxin Zuo, Haohuan Huang, Jinqian Zhang, Ruhang Xiao, Cheng Qian, Qinyu Luo, Huan-ang Gao, Yudong Wang, Zhiyuan Liu, Ning Ding, Chaojun Xiao</li>
+<li><strong>机构</strong>: Affiliation: Northeastern University, Affiliation: University of Illinois Urbana-Champaign, Affiliation: University of Chinese Academy of Sciences, Affiliation: Johns Hopkins University*Equal Contribution.†Project Lead.‡Corresponding Authors, hebx24@mails.tsinghua.edu.cn, {dingning,xcj}@tsinghua.edu.cn, Affiliation:, Affiliation: Tsinghua University</li>
+<li><strong>链接</strong>: <a href="https://arxiv.org/abs/2609.04172">arXiv</a> | <a href="https://arxiv.org/pdf/2609.04172">PDF</a></li>
+<li><strong>来源</strong>: 📰 HF Daily，⬆️ 40</li>
+</ul>
+<details class="paper-note"><summary>📒 精读笔记: On-Policy Distillation Survey</summary><div class="note-body"><h1>On-Policy Distillation Survey</h1>
+<h2>📋 基本信息</h2>
+<ul>
+<li><strong>作者</strong>: Mingyang Song, Mao Zheng</li>
+<li><strong>机构</strong>: Tencent</li>
+<li><strong>链接</strong>: <a href="https://arxiv.org/abs/2604.00626">arXiv</a> | <a href="https://arxiv.org/pdf/2604.00626">PDF</a></li>
+</ul>
+<h2>🎯 研究动机与问题</h2>
+<p>知识蒸馏是将前沿大模型的推理能力迁移到可部署小模型的主要方法。但当前主流范式是 <strong>off-policy</strong> 的：</p>
+<ol>
+<li>学生模型在静态的教师生成数据上训练</li>
+<li>从未见过自己生成的错误 → <strong>exposure bias</strong></li>
+<li>训练-测试不匹配导致推理时错误累积</li>
+</ol>
+<p><strong>On-Policy Distillation (OPD)</strong> 让学生模型生成自己的 trajectory 并获取教师反馈，本质上是 <span class="wikilink">交互式模仿学习</span>。</p>
+<p>本综述是 <strong>首个</strong> OPD 的系统性综述。</p>
+<h2>🔧 方法详解</h2>
+<h3>统一 f-divergence 框架</h3>
+<p>将所有 OPD 方法统一到 <span class="math-inline">$f$</span>-divergence 框架下：</p>
+<div class="math-block">$$
+D_f(p \| q) = \mathbb{E}_{x \sim q}\left[f\left(\frac{p(x)}{q(x)}\right)\right]
+$$</div>
+
+<p>不同方法对应不同的 <span class="math-inline">$f$</span> 函数选择：
+- <strong>KL divergence</strong> (<span class="math-inline">$f(t) = t\log t$</span>): <span class="wikilink">GKD</span>
+- <strong>Reverse KL</strong> (<span class="math-inline">$f(t) = -\log t$</span>): <span class="wikilink">DistiLLM</span>
+- <strong>JSD</strong>: <span class="wikilink">MiniLLM</span></p>
+<h3>三维分类体系</h3>
+<p>沿三个正交维度组织：</p>
+<table>
+<thead>
+<tr>
+<th>维度</th>
+<th>类别</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Feedback Signal</strong></td>
+<td>Logit-based / Outcome-based / Self-play</td>
+</tr>
+<tr>
+<td><strong>Teacher Access</strong></td>
+<td>White-box / Black-box / Teacher-free</td>
+</tr>
+<tr>
+<td><strong>Loss Granularity</strong></td>
+<td>Token-level / Sequence-level / Hybrid</td>
+</tr>
+</tbody>
+</table>
+<h3>代表方法分析</h3>
+<table>
+<thead>
+<tr>
+<th>方法</th>
+<th>Feedback</th>
+<th>Teacher</th>
+<th>Granularity</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><span class="wikilink">GKD</span></td>
+<td>Logit</td>
+<td>White-box</td>
+<td>Token</td>
+</tr>
+<tr>
+<td><span class="wikilink">DistiLLM</span></td>
+<td>Logit</td>
+<td>White-box</td>
+<td>Token</td>
+</tr>
+<tr>
+<td><span class="wikilink">MiniLLM</span></td>
+<td>Logit</td>
+<td>White-box</td>
+<td>Sequence</td>
+</tr>
+<tr>
+<td><span class="wikilink">DKL</span></td>
+<td>Logit</td>
+<td>White-box</td>
+<td>Hybrid</td>
+</tr>
+<tr>
+<td><span class="wikilink">DPO</span></td>
+<td>Outcome</td>
+<td>Black-box</td>
+<td>Sequence</td>
+</tr>
+<tr>
+<td><span class="wikilink">GRPO</span></td>
+<td>Outcome</td>
+<td>Teacher-free</td>
+<td>Sequence</td>
+</tr>
+</tbody>
+</table>
+<h3>与 RL 的关系</h3>
+<p>OPD 与 <span class="wikilink">REINFORCE</span>, <span class="wikilink">PPO</span>, <span class="wikilink">GRPO</span> 等 RL 方法的联系：
+- On-policy 采样 = RL 中的环境交互
+- 教师反馈 = reward signal
+- Exposure bias = distribution shift</p>
+<h2>📊 关键对比</h2>
+<p>综述覆盖了 <span class="wikilink">SFT</span>, <span class="wikilink">DPO</span>, <span class="wikilink">GRPO</span>, <span class="wikilink">REINFORCE</span> 等方法的系统对比。</p>
+<h2>💡 核心贡献</h2>
+<ol>
+<li><strong>首个 OPD 综述</strong>：填补了 on-policy distillation 领域的系统性梳理空白</li>
+<li><strong>f-divergence 统一框架</strong>：用数学工具统一了不同方法的本质区别</li>
+<li><strong>三维分类体系</strong>：feedback/teacher access/granularity 提供清晰的方法定位</li>
+</ol>
+<h2>🤔 局限性与思考</h2>
+<ol>
+<li><strong>贡献主要在整理而非发现</strong>：survey 在 2026 年不稀缺，关键看能否提供 insight</li>
+<li><strong>实验验证缺乏</strong>：作为 survey 没有自己的实验对比</li>
+<li><strong>开放问题有价值</strong>：蒸馏 scaling law、不确定性感知反馈、agent-level 蒸馏是值得关注的方向</li>
+</ol>
+<h2>📚 相关工作</h2>
+<ul>
+<li><span class="wikilink">GKD</span>, <span class="wikilink">DistiLLM</span>, <span class="wikilink">MiniLLM</span>, <span class="wikilink">DKL</span>: 代表方法</li>
+<li><span class="wikilink">SFT</span>, <span class="wikilink">DPO</span>, <span class="wikilink">GRPO</span>, <span class="wikilink">REINFORCE</span>: RL/训练方法</li>
+<li><span class="wikilink">KL divergence</span>: 核心数学工具</li>
+</ul></div></details>
+
+<ul>
+<li><strong>核心方法</strong>: <span class="wikilink">On-Policy-Distillation</span>（OPD）用学生自己 rollout + 教师 token 级 dense 监督。本文把数据推到极限：只用 <span class="wikilink">One-Shot</span> 单条 query 训练，发现能持续改进数百步，跨任务/模型族恢复出全量数据 OPD 大部分收益，并提出 <span class="wikilink">MOPD</span> 变体。</li>
+<li><strong>对比方法/Baselines</strong>: 对比全量数据 <span class="wikilink">OPD</span>、<span class="wikilink">RLVR</span>、one-shot RLVR（KK 类设置），backbone 含 <span class="wikilink">DeepSeek</span> 系。</li>
+<li><strong>借鉴意义</strong>: 如果单样本蒸馏成立，意味着「数据规模」在 on-policy 蒸馏里远没想象中重要，对你做小模型对齐/降本的场景是直接可用的省钱结论。</li>
+<li><strong>锐评</strong>: HF 40 赞不是没道理——「一条样本训几百步还涨」这种反直觉结论天然吸睛。但要警惕：单样本能 work 往往是因为 base model 里知识已经在了，OPD 只是在「唤醒」而非「学习」，泛化边界（摘要说 across domains，但一条 query 的分布覆盖到底多广？）需要盯着看正文的任务集。真结论 or 精心挑的 query，读了才知道。👀</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2609.04172" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🔥 训练范式：蒸馏与奖励"><h3>2. Gradients Know What Outcomes Don't: Unlocking Reinforcement Learning for LLM Reasoning with Gradient-Aligned Rewards</h3>
+<ul>
+<li><strong>作者</strong>: Leqi Zheng, Jinbo Su, Fang Niu, Chaokun Wang*, Weiping Wang, Jiajun Zhang, Shannan Yan, Jie Wu, Zhaolu Kang, Rong Fu, Hang Zhang</li>
+<li><strong>机构</strong>: Affiliation:  Equal contribution.* Correspondence: chaokun@tsinghua.edu.cn, Affiliation: Tsinghua University, Affiliation: University of Macau, Affiliation: , Affiliation: Institute of Information Engineering, CAS, Affiliation: Renmin University of China, Affiliation: The Australian National University, Affiliation: USTC, Affiliation: Peking University</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2609.03342v1">arXiv</a> | <a href="https://arxiv.org/pdf/2609.03342v1">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2609.03342v1/figures/backbone.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: <span class="wikilink">GAR</span>（Gradient-Aligned Rewards）针对 <span class="wikilink">RLVR</span> 二值奖励的致命缺陷：所有正确轨迹拿相同 reward，<span class="wikilink">GRPO</span> 的 group-relative advantage 在正确组内塌缩成同一个值，无法偏好更高质量的推理。GAR 用梯度对齐信号构造 dense reward，无需离线标注或过程奖励模型（<span class="wikilink">PRM</span>）。</li>
+<li><strong>对比方法/Baselines</strong>: 对比 <span class="wikilink">GRPO</span>、<span class="wikilink">REINFORCE</span>、表面启发式 dense reward、过程奖励模型；评测集 <span class="wikilink">GPQA</span>、<span class="wikilink">MMLU</span>、KK。</li>
+<li><strong>借鉴意义</strong>: 直击 RLVR 训 CoT 时「正确但质量参差」无法区分的问题，对你做 ranking/推理模型 RL 微调时的信号设计有直接借鉴。</li>
+<li><strong>锐评</strong>: 问题定位很准——GRPO 在 Kc→K 时 advantage 塌缩确实是实战里 loss 摆烂的常见原因。用梯度而非外部标注来打分是个聪明的「免费午餐」思路。质疑点：梯度对齐本身有额外反传成本，且梯度信号可能奖励「训练集里已见过的解法」而非「更好的推理」，容易过拟合语料先验。但至少它诚实地承认了这个动机。🔥</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2609.03342v1" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🔥 训练范式：蒸馏与奖励"><h3>3. DE-Venus: A Data-Efficient RLVR Framework for Large Language Models</h3>
+<ul>
+<li><strong>作者</strong>: Shenzhi Yang, Guangcheng Zhu, Kai Tang, Zhengqing Zang, Xing Zheng, Haobo Wang, Yingfan Ma, Bowen Song, Bo Han, Bo An, Lei Feng, Weiqiang Wang, Junbo Zhao, Gang Chen</li>
+<li><strong>机构</strong>: 1]Zhejiang University    2Ant Group    3Hong Kong Baptist University, Affiliation:, 4Nanyang Technological University    5Southeast University, \addsecondlogo[0.95cm]assets/zjulogo.png</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2609.03324v1">arXiv</a> | <a href="https://arxiv.org/pdf/2609.03324v1">PDF</a></li>
+<li>
+<p><strong>来源</strong>: 📄 arXiv 关键词检索</p>
+</li>
+<li>
+<p><strong>核心方法</strong>: <span class="wikilink">DE-Venus</span>：数据高效 RLVR 框架，核心抽象是「把监督（label/reward）当作可演化的状态而非样本的不变属性」，其 confidence 和持久性可从数据准备一路演化到策略优化。三个模块：主动数据选择、弱监督、标注决策。</p>
+</li>
+<li><strong>对比方法/Baselines</strong>: 对比分别处理样本选择/不完整监督/噪声标签的既有方法（<span class="wikilink">TTRL</span> 等），基于 <span class="wikilink">GRPO</span>。</li>
+<li><strong>借鉴意义</strong>: RLVR 的 on-policy rollout 和可靠 target 都很贵，这套「监督即状态」的解耦对你降低 RL 训练成本、复用 pipeline 有价值。</li>
+<li><strong>锐评</strong>: 把「哪些样本值得标、标多准、什么时候标」统一成一个状态演化问题，抽象层次是对的，工程上把监督逻辑从分布式训练里解耦也确实能让对比实验更干净。风险：三模块耦合越多，超参越玄学，「data-efficient」的收益很容易被调参成本吃掉。要看它有没有给出无脑默认配置。👀</li>
+</ul>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2609.03324v1" target="_blank" rel="noopener">📖 AI 精读</a></div></div>
+<div id="panel-推理加速与架构" class="tab-panel"><h2>⚡ 推理加速与架构</h2><div class="paper-card" data-topic="⚡ 推理加速与架构"><h3>4. Unlocking Lossless Speedups in LLMs via Discrete Diffusion</h3>
+<ul>
+<li><strong>作者</strong>: Sahoo, Subham Sekhar, Chen, Lingjie, Pham, Khiem, Geuter, Jonathan, Dwivedi, Chaitanya, Pimpalkhute, Varad, Akhauri, Yash, Moreno, Alexander, Yurochkin, Mikhail, Wang, Zhenting, Elhoushi, Mostafa, Dey, Nolan, Bergsma, Shane, Hestness, Joel, Thickstun, John, Xing, Eric, Liu, Zhengzhong</li>
+<li><strong>机构</strong>: Diffusion Gemma (Google), Harvard University, University of Illinois Urbana-Champaign</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2609.04010v1">arXiv</a> | <a href="https://arxiv.org/pdf/2609.04010v1">PDF</a></li>
+<li>
+<p><strong>来源</strong>: 📄 arXiv 关键词检索</p>
+</li>
+<li>
+<p><strong>核心方法</strong>: <span class="wikilink">Discrete-Diffusion-Speedup</span>：diffusion-augmented LLM——用 AR 模型定义分布，但用离散扩散从该分布并行抽多个 token，声称无损（lossless）加速。来自 Diffusion Gemma / Google 系。</p>
+</li>
+<li><strong>对比方法/Baselines</strong>: 对比标准自回归 <span class="wikilink">NTP</span> 解码、推测解码（speculative decoding）类方法。</li>
+<li><strong>借鉴意义</strong>: 推理延迟是推荐/广告在线打分的硬约束，任何「分布不变的并行加速」都值得你关注能否迁移到 ranking 模型的自回归生成部分。</li>
+<li><strong>锐评</strong>: 「lossless」是最招人怀疑的词——如果真能在不改变 AR 分布的前提下并行出多 token，那和推测解码的区别与优势在哪，得看它的接受率和实际 wall-clock。Google 出品 + Diffusion Gemma 血统，工程可信度加分，但「无损」通常意味着加速比在困难 token 上会退化。别被标题的绝对化吓到，也别信到底。⚡</li>
+</ul>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2609.04010v1" target="_blank" rel="noopener">📖 AI 精读</a></div></div>
+<div id="panel-生成检索与推荐" class="tab-panel"><h2>📊 生成检索与推荐</h2><div class="paper-card" data-topic="📊 生成检索与推荐"><h3>5. WIDE: Wildcard Inference with Dynamic Expansion for Cross-Modal Generative Retrieval</h3>
+<ul>
+<li><strong>作者</strong>: Teng Guo, Xin Wang, Jiayou Xu, Keying Zhou, Jifeng Shen, Haoxin Ruan</li>
+<li><strong>机构</strong>: Affiliation: , Affiliation: School of Electrical and Information Engineering, Jiangsu University, Zhenjiang, China, Note: , email:, Affiliation: College of Computer Science and Technology, Jilin University, Changchun, China, Alternate Affiliation: Key Laboratory of Symbolic Computation and Knowledge Engineering of Ministry of Education, Jilin University, Changchun, China, Alternate Affiliation: </li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2609.03554v1">arXiv</a> | <a href="https://arxiv.org/pdf/2609.03554v1">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2609.03554v1/aet_awd_bsr_architecture.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: <span class="wikilink">WIDE</span>（Wildcard Inference with Dynamic Expansion）：跨模态生成检索，用 seq2seq 统一表示学习与搜索。针对核心痛点——跨模态信息不对称（简短文本 query vs 稠密视觉候选），用通配符推理 + 动态扩展（<span class="wikilink">AET</span>/<span class="wikilink">AWD</span>/<span class="wikilink">BSR</span>）弥合 gap。数据集 <span class="wikilink">WebQA</span>、<span class="wikilink">COCO</span>、<span class="wikilink">VisualNews</span>。</li>
+<li><strong>对比方法/Baselines</strong>: 对比标准生成检索（单模态 seq2seq 检索）与跨模态双塔检索。</li>
+<li><strong>借鉴意义</strong>: 生成检索是你主业里生成式推荐/检索的直系亲属，「文本query与视觉候选信息量不匹配」的问题在多模态电商检索里完全同构。</li>
+<li><strong>锐评</strong>: 生成检索扩到跨模态确实卡在信息不对称这个点上——文本 query 短、视觉候选信息密度高，直接生成 doc id 会偏。通配符 + 动态扩展听起来是在生成端做「宽召回再收敛」，思路合理。但生成检索的老问题（docid 的可扩展性、新 item 冷启）摘要没提，跨模态只会更严重。今天离你主业最近的一篇，值得读方法细节。👀</li>
+</ul>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2609.03554v1" target="_blank" rel="noopener">📖 AI 精读</a></div></div>
+<div id="panel-agentic工具使用与推理" class="tab-panel"><h2>🤖 Agentic 工具使用与推理</h2><div class="paper-card" data-topic="🤖 Agentic 工具使用与推理"><h3>6. Making Every Tool Call Count: Necessary Tool-Evidence Path Rewards for Agentic Vision-Language Models</h3>
+<ul>
+<li><strong>作者</strong>: Xingming Long, Yu Liu\corresponding, Zhiwei Yang, Hanqi Feng, Shaojie Zhang, Barnabas Poczos, Chao Jiang, Zhenbo Luo, Lei Jiang, Pei Fu\corresponding</li>
+<li><strong>机构</strong>: Department of Machine Learning, Carnegie Mellon University, Institute of Information Engineering, Chinese Academy of Sciences</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2609.03493v1">arXiv</a> | <a href="https://arxiv.org/pdf/2609.03493v1">PDF</a></li>
+<li>
+<p><strong>来源</strong>: 📄 arXiv 关键词检索</p>
+</li>
+<li>
+<p><strong>核心方法</strong>: <span class="wikilink">NTEP</span>（Necessary Tool-Evidence Path Rewards）：给 agentic VLM 的工具调用（图像裁剪、图搜、文搜）设计奖励，核心是奖励「必要的工具-证据路径」，避免模型乱调工具刷步数。基于 <span class="wikilink">GRPO</span>。</p>
+</li>
+<li><strong>对比方法/Baselines</strong>: 对比 Search-R1、R1-Searcher 等文本域 agentic 搜索方法，<span class="wikilink">OOD</span> 泛化评测。</li>
+<li><strong>借鉴意义</strong>: 「让每次工具调用都算数」正是 agent 系统在生产环境省 token/省调用成本的关键，对你做多轮 agent 编排的奖励设计有直接参考。</li>
+<li><strong>锐评</strong>: 痛点抓得好：现在的 tool-use agent 最大的病就是「为了拿奖励疯狂调工具」，本文给工具调用的「必要性」建模是对症下药。但「必要性」怎么定义是全文成败所在——如果靠反事实（去掉这次调用答案是否变差）来算，计算成本会爆炸；如果靠启发式，又回到主观打分。冲着这个问题值得读，就看它的必要性度量硬不硬。👀</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2609.03493v1" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🤖 Agentic 工具使用与推理"><h3>7. Two-Stage Reinforcement Learning for Sound and Adversarial Test Generation in Code LLMs</h3>
+<ul>
+<li><strong>作者</strong>: Jiacheng Xu, Wentao Zhang, Zhiyi Lyu, Fuxiang Zhang, Chaojie Wang, Yang Liu, Bo An</li>
+<li><strong>机构</strong>: Affiliation: , Email: , Affiliation: Nanyang Technological University, Singapore</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2609.03955v1">arXiv</a> | <a href="https://arxiv.org/pdf/2609.03955v1">PDF</a></li>
+<li>
+<p><strong>来源</strong>: 📄 arXiv 关键词检索</p>
+</li>
+<li>
+<p><strong>核心方法</strong>: <span class="wikilink">TACO</span>：两阶段 RL 自动生成代码测试用例，解决 code LLM 的 RLVR 反馈里「高质量测试稀缺」问题（测试须既 sound 又 discriminative）。用学到的模型自生成测试用例作为可执行反馈。</p>
+</li>
+<li><strong>对比方法/Baselines</strong>: 对比 <span class="wikilink">SFT</span>、单阶段 <span class="wikilink">RL</span>、<span class="wikilink">Distill-Qwen</span>；评测 <span class="wikilink">LiveCodeBench</span>、TACO。</li>
+<li><strong>借鉴意义</strong>: 自动生成可执行验证信号是 RLVR 在代码/工具场景的关键瓶颈，对你构造可验证奖励的 pipeline 有参考。</li>
+<li><strong>锐评</strong>: 「测试用例既要正确又要有区分度」这个 sound + discriminative 的二元约束抓得准——很多自动测试生成就死在只 sound 不 discriminative（全 pass 的废测试）。两阶段设计是合理的工程解。但用模型自己生成测试来训自己，鸡生蛋问题（生成器和被测都来自同源模型，盲点重叠）摘要没交代怎么破。读方法看它怎么防自欺。👀</li>
+</ul>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2609.03955v1" target="_blank" rel="noopener">📖 AI 精读</a></div></div>
+<div id="panel-scalinglaw与泛化" class="tab-panel"><h2>📈 Scaling Law 与泛化</h2><div class="paper-card" data-topic="📈 Scaling Law 与泛化"><h3>8. Out-of-Distribution Generalisation with Sequence Models in Offline Multi-Agent Reinforcement Learning</h3>
+<ul>
+<li><strong>作者</strong>: Hidaoui, Oussama, Ebead, Omer, Sob, Ulrich Armel Mbou, Singh, Siddarth, Formanek, Juan Claude, Chalumeau, Felix, Mahjoub, Omayma, Abramowitz, Sasha, de Kock, Ruan John, Khlifi, Wiem, Nessir, Louay Ben, Toit, Simon Verster Du, Rajaonarivonivelomanantsoa, Daniel, Osman, Asim Awad, Fokam, Arnol Manuel, Shabe, Refiloe, Pretorius, Arnu</li>
+<li><strong>机构</strong>: InstaDeep   AIMS   Stellenbosch University</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2609.03667v1">arXiv</a> | <a href="https://arxiv.org/pdf/2609.03667v1">PDF</a></li>
+<li>
+<p><strong>来源</strong>: 📄 arXiv 关键词检索</p>
+</li>
+<li>
+<p><strong>核心方法</strong>: 对离线多智能体强化学习（<span class="wikilink">MARL</span>）的零样本任务泛化做系统实证：固定测试集、变动训练任务数（<span class="wikilink">LBF</span>/<span class="wikilink">RWARE</span>/<span class="wikilink">SMAX</span>/Connector 等环境），刻画任务多样性、数据集规模、网络容量三者的 scaling 行为。</p>
+</li>
+<li><strong>对比方法/Baselines</strong>: 多任务序列模型（<span class="wikilink">Multi-Task</span> sequence models）、<span class="wikilink">CQL</span> 等离线 RL 基线。</li>
+<li><strong>借鉴意义</strong>: 「任务多样性 vs 数据量 vs 容量」的 scaling 权衡，对你判断多任务推荐/多场景模型该堆数据还是堆任务有方法论参考。</li>
+<li><strong>锐评</strong>: score 6 是今天最高分，实证做得扎实（多环境、系统变量）值得肯定。但离线 MARL 的零样本泛化本身是个偏窄的问题，结论能否外推到序列建模的一般 scaling 存疑——这类「principled analysis」经常是把已知的幂律现象在新环境上重测一遍。作为 scaling 实证读物 OK，别指望有颠覆性定律。🫠</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2609.03667v1" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="📈 Scaling Law 与泛化"><h3>9. Coupled Scaling: A Representational Accessibility Framework for Neural Scaling Laws</h3>
+<ul>
+<li><strong>作者</strong>: Wang, Jie</li>
+<li><strong>机构</strong>: School of Civil and Commercial Law, Southwest University of Political Science and Law</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2609.03533v1">arXiv</a> | <a href="https://arxiv.org/pdf/2609.03533v1">PDF</a></li>
+<li>
+<p><strong>来源</strong>: 📄 arXiv 关键词检索</p>
+</li>
+<li>
+<p><strong>核心方法</strong>: <span class="wikilink">Coupled-Scaling</span>：任务条件化的 scaling 框架，主张有限预算下的 scaling 取决于「任务结构」与「架构-优化系统可高效到达的几何」之间的关系，而非仅由数据几何或数据-模型谱决定。</p>
+</li>
+<li><strong>对比方法/Baselines</strong>: 对比从数据几何或指定数据-模型谱推导 scaling 的既有理论。</li>
+<li><strong>借鉴意义</strong>: 如果 scaling 真的和架构可达表示强耦合，意味着换架构就能改变 scaling 曲线，对你选型（堆参数 vs 换结构）是重要判据。</li>
+<li><strong>锐评</strong>: 「同样的数据，不同架构 scale 得不一样」这个观察是对的，也是对纯数据几何 scaling 理论的合理修正。但「representational accessibility」这种概念很容易变成事后解释一切的万能框——任何 scaling 差异都能归因到「几何可达性」。得看它有没有给出可证伪的预测，而不是只解释现象。⚠️</li>
+</ul>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2609.03533v1" target="_blank" rel="noopener">📖 AI 精读</a></div></div>
+<div id="panel-多智能体安全与监控" class="tab-panel"><h2>🛡️ 多智能体安全与监控</h2><div class="paper-card" data-topic="🛡️ 多智能体安全与监控"><h3>10. You Can't Escape Your Own Activations : Evaluation Awareness and Multi-Agent Monitoring</h3>
+<ul>
+<li><strong>作者</strong>: Aritra Das, Jaee Ponde, Mihir More, Debayan Gupta</li>
+<li><strong>机构</strong>: Affiliation: </li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2609.03035v1">arXiv</a> | <a href="https://arxiv.org/pdf/2609.03035v1">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2609.03035v1/appendix_blackjack_auroc.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2609.03035v1/appendix_simmons_auroc.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: 研究 LLM agent 在多智能体系统里的合谋（collusion）：输出监控可被混淆/隐写绕过，故转向基于内部激活训练的 probe。关键设定——评估「知道自己在被监视」（evaluation awareness）的 agent，probe 从激活里抓合谋信号。</li>
+<li><strong>对比方法/Baselines</strong>: 对比输出层监控（output monitors）、常规激活 probe（在不知被监视的 agent 上评估）。</li>
+<li><strong>借鉴意义</strong>: 多智能体系统的对齐/监控是 agent 生产化绕不开的安全问题，「模型逃不掉自己的激活」这个角度对你做 agent 审计有启发。</li>
+<li><strong>锐评</strong>: 标题起得漂亮，问题也真实——现在的 agent 监控几乎都在输出层，稍微隐写就废了。转到激活层、且专门测「知道被监视」的 agent，实验设计比大多数安全论文诚实。质疑：probe 需要白盒访问激活，对闭源/第三方 agent 根本用不了；且「evaluation awareness」是靠 prompt 诱导出来的，和真实对抗环境里的自发合谋不是一回事。视角新，落地窄。👀</li>
+</ul>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2609.03035v1" target="_blank" rel="noopener">📖 AI 精读</a></div></div>
+<div id="panel-多智能体推理与记忆" class="tab-panel"><h2>🧠 多智能体推理与记忆</h2><div class="paper-card" data-topic="🧠 多智能体推理与记忆"><h3>11. Remember and Reweight: Enhancing Multi-Agent Debate with Experience Memory and Confidence Estimation</h3>
+<ul>
+<li><strong>作者</strong>: Xuanfa Jin, Zhijian Ma, Yongcheng Zeng, Xinyu Cui, Haifeng Zhang, Jun Wang</li>
+<li><strong>机构</strong>: Affiliation: Institute of Automation, Chinese Academy of Sciences, Affiliation: , Affiliation: University College London, Affiliation: University of Chinese Academy of Sciences, Email: </li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2609.03619v1">arXiv</a> | <a href="https://arxiv.org/pdf/2609.03619v1">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2609.03619v1/framework.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: 针对 <span class="wikilink">MAD</span>（多智能体辩论）的「共享误解」漏洞（多数 agent 初始收敛到错误答案时辩论会放大而非纠错），提出用经验记忆（experience memory）+ 置信度估计来 remember and reweight。</li>
+<li><strong>对比方法/Baselines</strong>: 对比标准 <span class="wikilink">MAD</span>、<span class="wikilink">Self-Consistency</span>、<span class="wikilink">CoT</span>；评测 <span class="wikilink">TruthfulQA</span>。</li>
+<li><strong>借鉴意义</strong>: 多智能体系统的「群体性错误」是 agent 编排的真实风险，记忆+置信度加权的缓解思路可迁移到你的多路召回/多模型融合。</li>
+<li><strong>锐评</strong>: 「多数错时辩论越辩越错」这个现象确实存在，命名为 shared misconception 也贴切。但解法是标准缝合：记忆模块 + 置信度加权，两个都是 MAD 论文里被反复加过的组件。真正的问题是——如果初始多数就错，置信度估计凭什么不也一起错？摘要没说明置信度的独立信息来源。缝合味重，增量。🫠</li>
+</ul>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2609.03619v1" target="_blank" rel="noopener">📖 AI 精读</a></div></div>
+<div id="panel-多模态与空间推理" class="tab-panel"><h2>🧊 多模态与空间推理</h2><div class="paper-card" data-topic="🧊 多模态与空间推理"><h3>12. GraFT: A Training-Free Framework for Spatial Reasoning in Multimodal Large Language Models via 3D Scene Graphs</h3>
+<ul>
+<li><strong>作者</strong>: Junqing Du, Fernando Ropero, Erkin Turkoz, Yanfeng Zhang, Lu Liu</li>
+<li><strong>机构</strong>: ††thanks: Corresponding author: zhangyanfeng8@huawei.com</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2609.03892v1">arXiv</a> | <a href="https://arxiv.org/pdf/2609.03892v1">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2609.03892v1/overview.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: <span class="wikilink">GraFT</span>：训练无关（training-free）的 MLLM 空间推理框架，通过构造 3D 场景图（3D scene graphs）来做精确几何测量、egocentric/allocentric 视角变换、细粒度 grounding。</li>
+<li><strong>对比方法/Baselines</strong>: 对比 SpatialVLM、SpatialRGPT 等需大规模度量监督的训练方法；评测 <span class="wikilink">ScanQA</span>、<span class="wikilink">VSI</span>-Bench；backbone <span class="wikilink">InternVL2</span>。</li>
+<li><strong>借鉴意义</strong>: training-free 用结构化中间表示补 MLLM 短板，这个「不训练、靠外部结构」的范式对你低成本增强多模态理解有借鉴。</li>
+<li><strong>锐评</strong>: MLLM 空间推理确实烂，用显式 3D 场景图当外挂是合理的绕道。training-free 是最大卖点也是最大风险——不训练意味着完全依赖场景图构造的质量，而从 2D 图像可靠重建 3D 场景图本身就是个未解难题，这里很可能把难度转移给了一个假设「已有好场景图」的上游模块。看它场景图从哪来。⚠️</li>
+</ul>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2609.03892v1" target="_blank" rel="noopener">📖 AI 精读</a></div></div>
+<div id="panel-预训练与知识" class="tab-panel"><h2>🧪 预训练与知识</h2><div class="paper-card" data-topic="🧪 预训练与知识"><h3>13. Knowledge Acquisition During Pre-training? Large Language Models Learn Better With Auxiliary Views</h3>
+<ul>
+<li><strong>作者</strong>: Joseph Lee, Yidi Huang, Dokyoon Kim, Shu Yang, Li Shen††footnotemark:</li>
+<li><strong>机构</strong>: Affiliation: University of Pennsylvania, Philadelphia, PA, USA, Affiliation: , Email: </li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2609.04180v1">arXiv</a> | <a href="https://arxiv.org/pdf/2609.04180v1">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2609.04180v1/aux_base_minus_source_base_cosine_distance_all_projections.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2609.04180v1/1B_delta_parameters.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: <span class="wikilink">MOPD-KnowAcq</span>：研究 LLM 预训练如何习得知识，提出「辅助视角」（auxiliary views，即知识的重述/改写）在因果上有助于学习。受控实验证明：重复是习得的必要条件，改写（paraphrasing）只在小 batch size 下有帮助。</li>
+<li><strong>对比方法/Baselines</strong>: 受控预训练对照实验，涉及 <span class="wikilink">DPO</span>、<span class="wikilink">FFN</span> 参数分析，对比 <span class="wikilink">GPT-5</span> 等。</li>
+<li><strong>借鉴意义</strong>: 「什么样的数据重复/改写能提升知识习得」对你做领域预训练/数据配比有直接指导。</li>
+<li><strong>锐评</strong>: 受控实验做知识习得机制值得肯定，比一堆刷榜论文有科学味。但结论偏温和且早有预期——「重复必要、改写在小 batch 有用」基本印证了 physical-of-LM（Allen-Zhu）系列的既有发现，新增量有限。「小 batch 才有用」这个 caveat 反而说明实际大规模训练里改写可能没用，实用价值打折。💤</li>
+</ul>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2609.04180v1" target="_blank" rel="noopener">📖 AI 精读</a></div></div>
+<div id="panel-agentic垂直应用" class="tab-panel"><h2>🏭 Agentic 垂直应用</h2><div class="paper-card" data-topic="🏭 Agentic 垂直应用"><h3>14. Adapting to Evolving Requirements: Agentic AI for Retail Supply Chain Operations</h3>
+<ul>
+<li><strong>作者</strong>: Lei Zheng, Liping Yang, Zihao Li, Guodong Lyu, Chaik Ming Koh, Chung-Piaw Teo</li>
+<li><strong>机构</strong>: University of Science and Technology of China, Affiliation: , Affiliation: Institute of Operations Research and Analytics, Affiliation: School of Business and Management, National University of Singapore[2pt] * Corresponding authors, National University of Singapore, Affiliation: School of Management, Hong Kong University of Science and Technology</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2609.03860v1">arXiv</a> | <a href="https://arxiv.org/pdf/2609.03860v1">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2609.03860v1/framework.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: Agentic AI 用于零售供应链运营：把耦合的决策模块建成带依赖边的模块化决策系统 S=(M,E)，用 LLM 的自然语言接口适应演化的需求，处理「一个需求有多条干预路径、下游效果不同」的问题。KPI/ESR/CR 指标。</li>
+<li><strong>对比方法/Baselines</strong>: 对比只聚焦单个优化模型的既有 LLM 方法；backbone <span class="wikilink">DeepSeek</span>。</li>
+<li><strong>借鉴意义</strong>: 把 agentic 系统建模成模块依赖图来编排异构决策 pipeline，这个抽象对你做多环节推荐/投放链路的 agent 编排有结构参考。</li>
+<li><strong>锐评</strong>: 供应链这种「多模块耦合、改一处动全身」的场景确实适合 agentic 编排，把它形式化成依赖图也是对的第一步。但摘要通篇是框架描述，最关键的「多条干预路径怎么选、下游效果怎么预估」——这才是难点——没给硬结果。工业 agentic 论文的通病：架构图很漂亮，端到端提升数字很虚。作为架构参考翻翻。🫠</li>
+</ul>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2609.03860v1" target="_blank" rel="noopener">📖 AI 精读</a></div></div>
+<hr>
+<h2>被排除的论文</h2>
+<ul>
+<li>LLM4CKD: Large Language Models for Early Stage Chronic Kidney Disease Screening — 命中 negative_keywords（diagnosis/医疗筛查），与推荐/广告/agent 主线无关</li>
+<li>Investigating the Ability of Large Language Models to Analyze Recipes for Diabetes — 医疗健康垂直应用（糖尿病膳食），跳过</li>
+<li>FLY-EVAL++: Evaluation Protocol for Safety-Constrained Flight Prediction — 飞行物理预测评测，跨领域，与关注方向无交集</li>
+<li>Risk and Anomaly Identification for Distribution Network Optimal Operation — 配电网运营 RL，电力系统垂直领域</li>
+<li>Scaling Laws, Tabular Data and Actuarial Ratemaking Models — 精算定价，虽含 scaling law 但领域太窄，实用价值低</li>
+<li>Revisiting Topological Graphs for ... Vision Language Navigation in Continuous Environment — 命中 negative_keywords（embodied/navigation/机器人导航）</li>
+<li>Bioinfoysis Technical Report — 生物信息学 agent 技术报告，垂直领域</li>
+<li>Translation as a Decision Space: Multi-Agent Low-Resource Dialect Generation — 低资源方言机器翻译，与主线弱相关</li>
+<li>From Prior-Guided Heuristics to Deployable Agents (Deadline-Constrained Network Control) — 网络传输时延控制 RL，通信网络垂直领域</li>
+<li>The Civilization Framework: Sovereign-Anchored Communication Between Personal Multi-Agent Systems — 多智能体通信协议的立场/构想文，无实证，偏思辨</li>
+<li>DNative-Twin: Decision Graphs and Digital Twins for Reconstructable Agentic Decisions — agentic 决策可重构的数字孪生，概念性强、niche</li>
+<li>VeriPhy: Agentic Physical Reasoning for World Model Evaluation — 视频世界模型的物理一致性评测，偏视频生成评测，与主线弱相关</li>
+<li>Value-Preserving Architectures for Agentic AI Systems — agentic 价值保全的立场文章，无硬结果</li>
+<li>Multi-step Proximal Policy Improvement in Offline Reinforcement Learning — 离线 RL 几何视角，纯算法、与应用主线弱相关，从略</li>
+<li>IndicSafeEval: Safety Robustness under Multilingual Persuasive Jailbreak — 印度语系越狱安全评测，语言安全 niche，从略</li>
+<li>Dude: Dual-Detection Multi-Agent System for Paper-Code Discrepancy Detection — 论文-代码差异检测多智能体，工程报告级，从略</li>
+</ul>
+<p>RLVR 的研究重心正从「怎么训」转向「奖励信号怎么更细」（GAR 区分正确轨迹质量、NTEP 给工具调用算必要性、DE-Venus 把监督当可演化状态）——大家开始承认二值奖励和粗粒度监督已到天花板。</p>
