@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>2026-09-09 论文推荐</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.21/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.21/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.21/dist/contrib/auto-render.min.js"
+  onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}]});"></script>
+<link rel="stylesheet" href="style.css">
+<style>body{max-width:960px;}</style>
+
+</head>
+<body>
+<nav class="nav"><a href="index.html">🏠 首页</a><a href="2026-09-08.html">← 前一天</a></nav>
+<div class="detail-page"><h1>🔪 今日锐评</h1>
+<p>今天是「Agent 全家桶」大杂烩：从 recursive self-improvement 到多智能体 RL、prompt 优化、user simulation，一水儿的 agentic 灌水，真正有硬核实验支撑的没几篇。亮点是 Meta 的 A-MLE（把广告排序的迭代瓶颈从人换成 agent）和 MoE 超参 scaling law 这两篇工业味最重的，其余大多是「我们提出一个框架」体质。RSI 那篇 104 赞纯属 HF 情绪面炒作，别被点赞数骗了。</p>
+<h2>分流表</h2>
+<table>
+<thead>
+<tr>
+<th>等级</th>
+<th>论文</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>🔥 必读</td>
+<td><span class="wikilink">A-MLE</span>（Meta 把广告排序 ML 迭代交给 agent，跟你的广告/推荐主业强相关） · <span class="wikilink">MoE-HP-ScalingLaw</span>（超稀疏 MoE 的最优 lr/bs 会随激活率漂移，训大模型必读）</td>
+</tr>
+<tr>
+<td>👀 值得看</td>
+<td><span class="wikilink">SRPO</span>（多智能体 RL 的 setwise 优势估计，补 GRPO 的坑） · <span class="wikilink">SVRL</span>（用 RL 逼多模态 agent 学会自我验证） · <span class="wikilink">MAD-Layered</span>（拆穿多智能体 debate 到底有没有真分歧） · <span class="wikilink">MiniCPM4</span>（端侧高效 LLM + 可训练稀疏注意力，工程扎实）</td>
+</tr>
+<tr>
+<td>💤 可跳过</td>
+<td><span class="wikilink">NeoHorse-1</span>（RSI 大词包装，机制含糊） · <span class="wikilink">EHQ</span>（LLM 认知诚实度，测量框架多于洞见）</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<div class="tab-bar"><button class="tab-btn active" data-tab="all" onclick="switchTab('all')">📋 全部<span class="tab-count">15</span></button><button class="tab-btn" data-tab="推荐广告系统" onclick="switchTab('推荐广告系统')">📈 📊 推荐/广告系统<span class="tab-count">1</span></button><button class="tab-btn" data-tab="scalinglaw与训练" onclick="switchTab('scalinglaw与训练')">📄 📈 Scaling Law 与训练<span class="tab-count">1</span></button><button class="tab-btn" data-tab="多智能体与rl" onclick="switchTab('多智能体与rl')">📄 🤝 多智能体与 RL<span class="tab-count">4</span></button><button class="tab-btn" data-tab="高效llm" onclick="switchTab('高效llm')">🤖 ⚡ 高效 LLM<span class="tab-count">1</span></button><button class="tab-btn" data-tab="自进化agent" onclick="switchTab('自进化agent')">🤖 🔄 自进化 Agent<span class="tab-count">2</span></button><button class="tab-btn" data-tab="agent优化与评测" onclick="switchTab('agent优化与评测')">🤖 🔧 Agent 优化与评测<span class="tab-count">2</span></button><button class="tab-btn" data-tab="rl框架" onclick="switchTab('rl框架')">🏗 🎮 RL 框架<span class="tab-count">1</span></button><button class="tab-btn" data-tab="agentic生成综述" onclick="switchTab('agentic生成综述')">🎨 🎨 Agentic 生成（综述）<span class="tab-count">1</span></button><button class="tab-btn" data-tab="agent应用金融" onclick="switchTab('agent应用金融')">🤖 💹 Agent 应用（金融）<span class="tab-count">1</span></button><button class="tab-btn" data-tab="安全对齐" onclick="switchTab('安全对齐')">🛡 🛡️ 安全对齐<span class="tab-count">1</span></button></div>
+<div id="panel-all" class="tab-panel active"><h2>📊 推荐/广告系统</h2><div class="paper-card" data-topic="📊 推荐/广告系统"><h3>1. Agentic ML Exploration (A-MLE) for Ads Ranking</h3>
+<ul>
+<li><strong>作者</strong>: Gao, Erwin, Sunkara, Vinodh Kumar, Guan, Jingyi, Jia, Qinjin, Xu, Hangjun, Ji, Xiang, Wong, Sherman, Chavali, Surya Teja, Vaishnavi, Pratik, Pandhi, Aryan, Deng, Xiaoyu, Wang, Zhaodong, Inani, Samarth, Yang, Fan, Moberg, Jakob, Zu, Zoe, Bievre, Nicolas, Khenissi, Sami, Jaspal, Amit, Fakharizadi, Ehsan, Viswanathan, Srinidhi, Sun, Dorothy, Vanam, Abishek, Iyer, Sneha, Yadawad, Sheela, Chen, Wenjie, Nahum, Gaby, Gu, Junhua, Chu, Peter, Liu, Yucheng, Zhao, Xin, Cid, Vitor, Chen, Chaorong, Pappu, Vijay, Kumar, Ashwin, Chen, Wenlin, Schulte, Ben, Chandra, Deepak, Tewari, Ritwik</li>
+<li><strong>机构</strong>: Amit Jaspal, Affiliation: , email:, Affiliation: Meta Platforms, Inc., Menlo Park and New York, USA</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2609.08248v1">arXiv</a> | <a href="https://arxiv.org/pdf/2609.08248v1">PDF</a></li>
+<li>
+<p><strong>来源</strong>: 📄 arXiv 关键词检索</p>
+</li>
+<li>
+<p><strong>核心方法</strong>: <span class="wikilink">A-MLE</span>（Agentic ML Exploration）把工业广告排序栈的瓶颈重新定义为「人类 ML 迭代吞吐」而非模型容量或算力，用 <span class="wikilink">LLM</span> agent 自动跑研究-实现-训练-调试-评估-上线的循环，目标是自动产出统计显著的提升。区别于传统 <span class="wikilink">AutoML</span>/<span class="wikilink">NAS</span> 的固定搜索空间 + 单一目标，它面向开放式改进。</p>
+</li>
+<li><strong>对比方法/Baselines</strong>: 对比 <span class="wikilink">AutoML</span>（Feurer et al.）、<span class="wikilink">NAS</span>（<span class="wikilink">DARTS</span>、Real et al.）等固定搜索空间方法，作者论点是这些都解不了工业迭代的开放性问题。</li>
+<li><strong>借鉴意义</strong>: 直接命中你的广告/推荐主业——Meta 的作者团队（Deepak Chandra、Ritwik Tewari 等一长串工业 ID）说明这是真在线上跑的东西，不是玩具。对「怎么用 agent 加速自家排序模型迭代」有直接参考价值。</li>
+<li><strong>锐评</strong>: Meta 挂了 30+ 作者的 position/system 论文，工业 credibility 拉满，问题定义（瓶颈是人不是算力）也很诚实。但摘要里全是「我们发现瓶颈是 X」的宏大叙事，真正的 QPS/AUC 增益、agent 到底自动产出了几个显著提升，得翻正文核实——工业论文最爱报喜不报忧。冲着 Meta 广告栈的真实性去读，但对「A-MLE 完全自动化」的说法保持警惕。👀</li>
+</ul>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2609.08248v1" target="_blank" rel="noopener">📖 AI 精读</a></div><h2>📈 Scaling Law 与训练</h2><div class="paper-card" data-topic="📈 Scaling Law 与训练"><h3>2. Hyperparameter Scaling Laws Across MoE Sparsity</h3>
+<ul>
+<li><strong>作者</strong>: Changxin Tian, Kunlong Chen, Jia Liu, Ziqi Liu, Zhiqiang Zhang, Jun Zhou</li>
+<li><strong>机构</strong>: Email:, Affiliation:</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2609.08690v1">arXiv</a> | <a href="https://arxiv.org/pdf/2609.08690v1">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2609.08690v1/figure8-granularity-2-64.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: <span class="wikilink">MoE-HP-ScalingLaw</span> 指出常规超参 scaling law 在超稀疏 <span class="wikilink">MoE</span> 上失效：最优 <span class="wikilink">learning rate</span> 和 <span class="wikilink">batch size</span> 会随激活率（activation ratio）漂移，且无法用总参数量或激活参数量单独解释。作者做了控制实验隔离 scale 与 sparsity 的效应。</li>
+<li><strong>对比方法/Baselines</strong>: 对比只按总参/激活参数外推超参的传统 <span class="wikilink">muP</span>/<span class="wikilink">scaling law</span> 做法，证明它们在 ultra-sparse 区间不够用。</li>
+<li><strong>借鉴意义</strong>: 如果你要训 MoE 排序/生成模型，这直接影响你的超参迁移策略——按老规矩调 lr 可能系统性偏错。工程价值高。</li>
+<li><strong>锐评</strong>: 选题非常实在，戳中了 MoE 训练最烦人的痛点（超参不可靠迁移）。作者匿名（Email/Affiliation 都空着，疑似大厂投稿脱敏）反而说明可能有真实大规模实验背书。唯一悬念：结论到底能外推多大规模，还是只在他们那几个 activation ratio 上成立。别当万能公式，当经验规律读。🔥</li>
+</ul>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2609.08690v1" target="_blank" rel="noopener">📖 AI 精读</a></div><h2>🤝 多智能体与 RL</h2><div class="paper-card" data-topic="🤝 多智能体与 RL"><h3>3. SRPO: Setwise Relative Policy Optimization for Multi-Agent LLMs</h3>
+<ul>
+<li><strong>作者</strong>: Shengtian Yang, Ziyu Xiong, Yu Li, Yewen Li, Qingpeng Cai, Lei Feng</li>
+<li>
+<p><strong>机构</strong>: Affiliation: Southeast University, Nanjing, China, Affiliation: , Corresponding author</p>
+</li>
+<li>
+<p><strong>链接</strong>: <a href="http://arxiv.org/abs/2609.08452v1">arXiv</a> | <a href="https://arxiv.org/pdf/2609.08452v1">PDF</a></p>
+</li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2609.08452v1/Figure1_page2.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2609.08452v1/Figure2_page3.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: <span class="wikilink">SRPO</span>（Setwise Relative Policy Optimization）针对多智能体 <span class="wikilink">LLM</span> 的 RL：现有方法对每个 response/trajectory 单独优化，但多个输出可能共同造成一次状态转移，导致更新单元与系统实际动作错位。SRPO 改成对「set」做相对优势估计。</li>
+<li><strong>对比方法/Baselines</strong>: 承接 <span class="wikilink">PPO</span>（clipped ratio）和 <span class="wikilink">GRPO</span>（去 value function、组内相对优势），把 GRPO 的单 prompt 组扩展到多智能体协同的 setwise。</li>
+<li><strong>借鉴意义</strong>: 多智能体 RL 的 credit assignment 是真问题，如果你在做 agent 编排 + RL 训练，这个 setwise 视角值得借鉴。</li>
+<li><strong>锐评</strong>: 问题诊断很准——多 agent 联合导致一次状态转移，却按单 trajectory 更新，确实是 GRPO 直接搬到 MAS 的隐患。方法是对 GRPO 的自然扩展，不算颠覆但补得对。就是东南大学这组的实验覆盖（AIME、STOP 这些）能不能撑起「多智能体」这个大帽子存疑，别期待工业级规模。👀</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2609.08452v1" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🤝 多智能体与 RL"><h3>4. Eliciting Self-Verification in Multimodal Reasoning Agents with Reinforcement Learning</h3>
+<ul>
+<li><strong>作者</strong>: Vishwas Sathish, Viresh Ranjan11footnotemark:, Xinliang Zhu, Arnab Dhua, Douglas Gray</li>
+<li><strong>机构</strong>: Email: , Affiliation: Amazon, Affiliation: , Email: douggray@amazon.com, Email: vireshr@amazon.com, Email: xlzhu@amazon.com, Email: adhua@amazon.com, Affiliation: University of Washington</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2609.08025v1">arXiv</a> | <a href="https://arxiv.org/pdf/2609.08025v1">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2609.08025v1/x2.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2609.08025v1/x5.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: <span class="wikilink">SVRL</span> 用 <span class="wikilink">RL</span>（<span class="wikilink">GRPO</span>）诱导多模态 reasoning agent 学会「自我验证」：agent 调用 web search 等工具答复杂 query 时，逼它检验自己的中间结论而非直接信。基于 <span class="wikilink">FVQA</span>/<span class="wikilink">InfoSeek</span> 类知识密集 VQA。</li>
+<li><strong>对比方法/Baselines</strong>: 对比纯文本 GRPO 长推理（coding/math 有效但多模态工具用不稳），以及 <span class="wikilink">GPT-5</span> 等基线。</li>
+<li><strong>借鉴意义</strong>: 多模态 agent 的可靠工具使用是硬骨头，Amazon 团队做的，落地导向。对做 multimodal + tool use 的有参考。</li>
+<li><strong>锐评</strong>: Amazon 出品，选题（多模态自我验证）踩在痛点上，比纯刷 benchmark 的强。但「self-verification」这词最近被用滥了，关键看 RL reward 怎么设计才不退化成自我安慰。摘要没给 reward 细节，得看正文才知道是真验证还是又一个换皮 GRPO。👀</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2609.08025v1" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🤝 多智能体与 RL"><h3>5. From Event Logs to Governed Action: A BlueSky Agenda for Agentic Process Mining</h3>
+<ul>
+<li><strong>作者</strong>: Yang, Yiyuan, Wu, Zheshun, Chu, Yong, Chen, Zhenghua, Xu, Zenglin, Wen, Qingsong</li>
+<li><strong>机构</strong>: Affiliation: 3University of Glasgow, United Kingdom  4Fudan University, China  5Squirrel Ai Learning, United States, Affiliation: 1University of Oxford, United Kingdom  2Peng Cheng Laboratory, Shenzhen, China, Affiliation: </li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2609.07984v1">arXiv</a> | <a href="https://arxiv.org/pdf/2609.07984v1">PDF</a></li>
+<li>
+<p><strong>来源</strong>: 📄 arXiv 关键词检索</p>
+</li>
+<li>
+<p><strong>核心方法</strong>: <span class="wikilink">MAD-Layered</span> 对多智能体辩论做「分层解剖」：提出四个测量维度——(A) debater 自报的一致度、(B) 回复文本是否真的反驳、(C) 去掉诱导指令后立场是否保持、(D) 答案质量。质疑「debate 靠真分歧提升质量」这一被默认却很少验证的假设。</p>
+</li>
+<li><strong>对比方法/Baselines</strong>: 站在 <span class="wikilink">MAD</span>（Liang et al.）、Du et al. 2023 的对立面，接续 Smit et al. 等 skeptic 路线。</li>
+<li><strong>借鉴意义</strong>: 如果你在用多智能体 debate/ensemble 提质量，这篇会告诉你可能是自我安慰。祛魅价值高。</li>
+<li><strong>锐评</strong>: CMU 一个人（Chen Qian）单挑整个 multi-agent debate 圈，测量设计（尤其 C：撤掉指令后立场是否还在）相当机灵，直接戳「表演式分歧」的软肋。这种 negative-result / 祛魅论文往往比又一个新框架有用得多。就是样本和任务范围有限，别当成 debate 全盘无效的定论。👀</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2609.07984v1" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🤝 多智能体与 RL"><h3>6. Entropy-Regularized Rank-Masked Policy Optimization for Test-Time Reinforcement Learning in Code Generation</h3>
+<ul>
+<li><strong>作者</strong>: Jiacheng Xu, Feng Chen, Xiuneng Xu, Bo An</li>
+<li><strong>机构</strong>: Affiliation: , Affiliation: Nanyang Technological University, Singapore</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2609.09135v1">arXiv</a> | <a href="https://arxiv.org/pdf/2609.09135v1">PDF</a></li>
+<li>
+<p><strong>来源</strong>: 📄 arXiv 关键词检索</p>
+</li>
+<li>
+<p><strong>核心方法</strong>: <span class="wikilink">ERPO</span>（Entropy-Regularized Rank-Masked Policy Optimization）做代码生成的测试时 RL（<span class="wikilink">TTRL</span>）：现有 TTRL 靠答案级自投票取 reward，但代码不能按表面形式比对，投票信号失效。ERPO 用 rank-mask + 熵正则解决无标注测试任务的训练信号问题。</p>
+</li>
+<li><strong>对比方法/Baselines</strong>: 对比标准 <span class="wikilink">TTRL</span>（answer-level self-voting）、<span class="wikilink">GRPO</span>，在 <span class="wikilink">LiveCodeBench</span> 上评测。</li>
+<li><strong>借鉴意义</strong>: TTRL 在代码域的适配，做 code generation + RL 的可以关注。</li>
+<li><strong>锐评</strong>: 问题切得准——代码没法按表面形式投票，TTRL 直接搬过来确实废。rank-masked + 熵正则的组合听着合理，但一堆自造缩写（NSRPCR、GRPOPCR）读着累，且 NTU 单机构 + 无 method_summary，实验规模可能有限。方向对，落地待验证。⚠️</li>
+</ul>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2609.09135v1" target="_blank" rel="noopener">📖 AI 精读</a></div><h2>⚡ 高效 LLM</h2><div class="paper-card" data-topic="⚡ 高效 LLM"><h3>7. MiniCPM4: Ultra-Efficient LLMs on End Devices</h3>
+<ul>
+<li><strong>作者</strong>: MiniCPM Team</li>
+<li><strong>机构</strong>: MiniCPM Team</li>
+<li><strong>链接</strong>: <a href="https://arxiv.org/abs/2506.07900">arXiv</a> | <a href="https://arxiv.org/pdf/2506.07900">PDF</a></li>
+<li><strong>来源</strong>: 🔥 HF Trending，⬆️ 102</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2506.07900v2/ultrafineweb.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: <span class="wikilink">MiniCPM4</span> 从架构、训练数据、训练算法、推理系统四个维度做端侧高效 LLM。核心是 <span class="wikilink">InfLLM</span> v2——可训练的稀疏注意力，在 81% 注意力稀疏度下达到接近 full attention 的长上下文能力，配合 <span class="wikilink">QAT</span>/<span class="wikilink">GPTQ</span> 量化。</li>
+<li><strong>对比方法/Baselines</strong>: 对标端侧 LLM 与 full attention 长上下文方案，主打同等能力下的效率。</li>
+<li><strong>借鉴意义</strong>: 端侧部署 + 稀疏注意力，如果你关心推理成本/长序列，工程参考价值高。</li>
+<li><strong>锐评</strong>: MiniCPM 团队一贯的工程扎实作风，四维系统优化 + 可训练稀疏注意力（81% 稀疏还保长上下文）是实打实的活儿，102 HF 赞不算虚高。缺点是这类「全维度优化」报告很难判断每个组件的独立贡献，容易变成拼盘。冲着 InfLLM v2 去读，别指望它讲清楚每一分收益从哪来。👀</li>
+</ul>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2506.07900" target="_blank" rel="noopener">📖 AI 精读</a></div><h2>🔄 自进化 Agent</h2><div class="paper-card" data-topic="🔄 自进化 Agent"><h3>8. NeoHorse-1: Towards Recursive Self-Improvement via Agentic Post-Training with Routing Harness</h3>
+<ul>
+<li><strong>作者</strong>: NeoHorse Team</li>
+<li><strong>机构</strong>: NeoHorse Team</li>
+<li><strong>链接</strong>: <a href="https://arxiv.org/abs/2609.08183">arXiv</a> | <a href="https://arxiv.org/pdf/2609.08183">PDF</a></li>
+<li>
+<p><strong>来源</strong>: 📰 HF Daily，⬆️ 104</p>
+</li>
+<li>
+<p><strong>核心方法</strong>: <span class="wikilink">NeoHorse-1</span> 号称通过 agentic post-training 探索递归自我改进（<span class="wikilink">RSI</span>）：异构模型池 + 智能路由，记录预测能力并转化为下一轮学习信号。配 <span class="wikilink">PinchBench</span> 等自建 benchmark。</p>
+</li>
+<li><strong>对比方法/Baselines</strong>: 摘要未给清晰对比基线，主要围绕自建的 routing harness + post-training 流程。</li>
+<li><strong>借鉴意义</strong>: RSI 是热点大词，但对实际工程可迁移性存疑。</li>
+<li><strong>锐评</strong>: 104 HF 赞，但「递归自我改进」这种词一出现就该拉响警报。摘要通篇 RSI/agent-native/routing harness 的概念缝合，机制描述含糊（method_summary 直接空的），自建 benchmark 更是自说自话的重灾区。NeoHorse Team 匿名 + 大词 + 高赞，典型 HF 情绪面产物。除非你就想看 RSI 怎么讲故事，否则跳过。🫠</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2609.08183" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🔄 自进化 Agent"><h3>9. AuK Technical Report: An Open-Source Foundational Model for Speech Generation and Editing</h3>
+<ul>
+<li><strong>作者</strong>: Ma, Ziyang, Niu, Zhikang, Tu, Wenming, Wang, Tianrui, Yan, Ruiqi, Liu, Junxi, Huo, Yanru, Huang, Nickk, Liu, Yang, Xie, Qicong, Xie, Zeyu, Wang, Hui, Li, Haitao, Jiang, Zixuan, Li, Yalin, Fang, Jie, Duan, Yifan, Tian, Zeyue, Li, Guangzheng, Zhu, Haina, Wang, Shuyi, Wang, Jinwen, Cui, Mingyu, Tan, Tian, Auden, Liang, Sen, Yves, Steve, Yang, Shan, Bo, Liefeng, Zheng, Zilong, Yu, Kai, Chng, Eng-Siong, Chen, Xie</li>
+<li><strong>机构</strong>: AuK-Flash, GitHub,  Project Page</li>
+<li><strong>链接</strong>: <a href="https://arxiv.org/abs/2609.08936">arXiv</a> | <a href="https://arxiv.org/pdf/2609.08936">PDF</a></li>
+<li><strong>来源</strong>: 📰 HF Daily，⬆️ 16</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2609.08936v1/fig/pretrain_data_sunburst_hierarchical.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2609.08936v1/model.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: <span class="wikilink">Env-Scaffold</span> 针对长程任务 RL 的 reward 稀疏问题：不从 agent 侧 SFT 热身，而是把「环境」当脚手架，丰富反馈信号来 bootstrap 自进化 agent。基于 goal-conditioned <span class="wikilink">POMDP</span>，用 <span class="wikilink">GRPO</span>/<span class="wikilink">DAPO</span>/<span class="wikilink">GSPO</span> 在 <span class="wikilink">BFCL</span>/<span class="wikilink">SciWorld</span> 上评。</li>
+<li><strong>对比方法/Baselines</strong>: 对比 agent-side SFT warmup（受数据稀缺 + 探索受限所限），改从 environment 侧加反馈。</li>
+<li><strong>借鉴意义</strong>: 长程 agent RL 的 reward 稀疏是核心难题，做 agent 训练的值得看。</li>
+<li><strong>锐评</strong>: 复旦这组把视角从「改 agent」转到「改环境反馈」，思路方向对——reward sparsity 确实是长程 agent RL 最卡的地方。但「environment as scaffold」听着漂亮，具体怎么在不泄漏答案的前提下丰富反馈是关键，摘要没讲透。只有 6 个 HF 赞可能被低估了，值得翻正文看反馈设计。👀</li>
+</ul>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2609.08936" target="_blank" rel="noopener">📖 AI 精读</a></div><h2>🔧 Agent 优化与评测</h2><div class="paper-card" data-topic="🔧 Agent 优化与评测"><h3>10. Omni Interaction Agent Technical Report</h3>
+<ul>
+<li><strong>作者</strong>: Orantqing∗1</li>
+<li><strong>机构</strong>: Affiliation: 4The Chinese University of Hong Kong;  5Nanyang Technological University, Affiliation: , Affiliation: 1Hunyuan Speech Team, Tencent;  2Zhejiang University;  3Shanghai Jiao Tong University, ††footnotetext: ∗Equal contribution. †Corresponding author. Email: orantqing@gmail.com, shengpengji@zju.edu.cn</li>
+<li><strong>链接</strong>: <a href="https://arxiv.org/abs/2609.08977">arXiv</a> | <a href="https://arxiv.org/pdf/2609.08977">PDF</a></li>
+<li><strong>来源</strong>: 📰 HF Daily，⬆️ 44</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2609.08977v1/omni_pic.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2609.08977v1/gender_arc.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: <span class="wikilink">AgentGrad</span> 做多智能体系统（<span class="wikilink">MAS</span>）的 prompt 优化：现有 textual gradient 方法（<span class="wikilink">TextGrad</span>、<span class="wikilink">GEPA</span>）用自然语言反馈更新 prompt，AgentGrad 引入「intervention-guided」——通过干预定位到底哪个 agent 的 prompt 该改。基于 <span class="wikilink">HotpotQA</span> 等评测。</li>
+<li><strong>对比方法/Baselines</strong>: 对比 <span class="wikilink">TextGrad</span>、<span class="wikilink">GEPA</span>、<span class="wikilink">GPT-5</span> 等 textual gradient / APO 方法。</li>
+<li><strong>借鉴意义</strong>: MAS 的 prompt 调优是实用痛点，做 agent 编排的可参考。</li>
+<li><strong>锐评</strong>: intervention-guided 的思路（用干预做 credit assignment 定位坏 prompt）比无脑全局 textual gradient 聪明，KAIST + Meta AI 组合也靠谱。但 prompt 优化这赛道已经很拥挤，TextGrad/GEPA/DSPy 一堆，AgentGrad 的增量得看它在多 agent 上的定位精度到底比 baseline 高多少。incremental 但有用。🫠</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2609.08977" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🔧 Agent 优化与评测"><h3>11. A Three-Tier Persona Vector for Controllable User Simulation in Agentic Evaluation</h3>
+<ul>
+<li><strong>作者</strong>: Rahul Khedar<em>, Eshita</em>, Sneha Teja Sree Reddy Thondapu<em>, Mayank Malhotra</em></li>
+<li><strong>机构</strong>: Affiliation: </li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2609.08592v1">arXiv</a> | <a href="https://arxiv.org/pdf/2609.08592v1">PDF</a></li>
+<li>
+<p><strong>来源</strong>: 📄 arXiv 关键词检索</p>
+</li>
+<li>
+<p><strong>核心方法</strong>: <span class="wikilink">Three-Tier-Persona</span> 提出三层 persona 向量（23 个可操作维度：6 类人口统计 + 行为特质）来做可控 user simulation，用于评测工具增强的 <span class="wikilink">LLM</span> agent。解决现有评测用扁平角色描述（「你是愤怒客户」）产生千篇一律对话的问题。</p>
+</li>
+<li><strong>对比方法/Baselines</strong>: 对比 agenda-based 模拟器（手写规则）、neural user simulator（无显式控制）、<span class="wikilink">PersonaChat</span> 的 5 句 persona。</li>
+<li><strong>借鉴意义</strong>: 如果你做 agent 评测/对话系统，可控 user simulation 是实用工具。</li>
+<li><strong>锐评</strong>: 戳中了 agent 评测的真痛点——扁平 persona 产生同质对话确实让 eval 失真，23 维可控 persona 是务实的工程改进。但全员匿名（Affiliation 空）+ 一堆 * 通讯，且「23 个维度」很容易沦为拍脑袋堆砌，关键看这些维度是否真的产生了行为差异（有没有消融）。实用向，别期待理论深度。🫠</li>
+</ul>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2609.08592v1" target="_blank" rel="noopener">📖 AI 精读</a></div><h2>🎮 RL 框架</h2><div class="paper-card" data-topic="🎮 RL 框架"><h3>12. PlayTrain: An Efficient Reinforcement Learning Framework for LLM-Generated Adaptable JavaScript Games</h3>
+<ul>
+<li><strong>作者</strong>: Ryan Truong   Lance Ying   Samuel J. Gershman   Kazuki Irie</li>
+<li><strong>机构</strong>: Affiliation: Yale University, Department of Computer Science and Wu Tsai Institute, New Haven, CT, USA, Affiliation: , Affiliation: MIT, Department of Brain and Cognitive Sciences, Cambridge, MA, USA, Affiliation: Harvard University, Cambridge, MA, USA, Affiliation: Kempner Institute for the Study of Natural and Artificial Intelligence, Cambridge, MA, USA</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2609.09059v1">arXiv</a> | <a href="https://arxiv.org/pdf/2609.09059v1">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2609.09059v1/figures/generation.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2609.09059v1/figures/architecture_schematic.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: <span class="wikilink">PlayTrain</span> 用 <span class="wikilink">LLM</span> 从自然语言鲁棒生成/修改 JavaScript 游戏，配一个 JS-to-gym 后端高效跑 RL 训练。解决新建/改造视频游戏环境（VGE）需大量手写代码的痛点。</li>
+<li><strong>对比方法/Baselines</strong>: 对比 <span class="wikilink">ProcGen</span>/<span class="wikilink">ALE</span> 等固定环境，用 <span class="wikilink">PPO</span>/<span class="wikilink">IMPALA</span> 训练，<span class="wikilink">EnvPool</span>/<span class="wikilink">QuickJS</span> 做后端。</li>
+<li><strong>借鉴意义</strong>: 与你的推荐/广告主业弱相关，属 RL 环境生成方向。</li>
+<li><strong>锐评</strong>: Yale + MIT + Harvard + Kempner 的豪华配置，思路（LLM 生成可训练的 JS 游戏环境）挺新鲜，JS-to-gym 后端也是实在的工程贡献。但这跟你的核心关注（推荐/广告/agent）几乎不沾边，除非你对可程序化生成 RL 环境有兴趣。做得好，但对你偏离。👀</li>
+</ul>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2609.09059v1" target="_blank" rel="noopener">📖 AI 精读</a></div><h2>🎨 Agentic 生成（综述）</h2><div class="paper-card" data-topic="🎨 Agentic 生成（综述）"><h3>13. Agentic Visual Generation: From Generative Models to Agentic Control</h3>
+<ul>
+<li><strong>作者</strong>: Yinming Huang<em>, Shuyuan Tu</em>, Xi Yan*, Jiahao Zhan, Zihan Yang, Zhen Xing, Hui Zhang, Tiehua Zhang, Member, IEEE, Yu-Gang Jiang, Fellow, IEEE, Zuxuan Wu, Member, IEEE</li>
+<li><strong>机构</strong>: T. Zhang is with the School of Computer Science and Technology, Tongji University. Emails: tiehuaz@tongji.edu.cn, ††thanks: Y. Huang, S. Tu, X. Yan, Z. Yang, H. Zhang, Z. Wu, and Y-G. Jiang are with Fudan University. Emails: {ymhuang26, sytu23, 24307140086, yangzh26, hui_zhang23}@m.fudan.edu.cn, {zxwu, ygj}@fudan.edu.cn, Z. Xing is with Wan Team, Alibaba Tongyi Lab. Email: zxing20@fudan.edu.cn, J. Zhan is with CUHK, MMLab. Email: 1155271220@link.cuhk.edu.hk, Y. Huang and Z. Wu are also with Shanghai Innovative Institute</li>
+<li><strong>链接</strong>: <a href="https://arxiv.org/abs/2609.06758">arXiv</a> | <a href="https://arxiv.org/pdf/2609.06758">PDF</a></li>
+<li>
+<p><strong>来源</strong>: 📰 HF Daily，⬆️ 10</p>
+</li>
+<li>
+<p><strong>核心方法</strong>: <span class="wikilink">Agentic-Visual-Generation</span> 是一篇 survey/framework 文，把视觉生成从「单次调用生成模型」重新框定为「agentic 控制过程」：controller（<span class="wikilink">LLM</span>/<span class="wikilink">VLM</span>）负责规划、选工具、检查中间输出、修正失败、复用经验，generator 当执行器。提出 task 轴与 mechanism 轴。</p>
+</li>
+<li><strong>对比方法/Baselines</strong>: 梳理现有以 LLM/VLM 为 controller、生成模型为 tool 的系统（<span class="wikilink">ComfyUI</span> 类），做分类学。</li>
+<li><strong>借鉴意义</strong>: 如果你做多模态生成 + agent 编排，这篇提供了一个思考框架。</li>
+<li><strong>锐评</strong>: 复旦 + 阿里通义的 survey，controller/generator 分离 + task/mechanism 双轴的框架划分算清晰，适合建立 mental model。但本质是概念梳理文，没有新方法新实验，读它是为了拿分类学，不是拿 SOTA。当地图看，别当武器。🫠</li>
+</ul>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2609.06758" target="_blank" rel="noopener">📖 AI 精读</a></div><h2>💹 Agent 应用（金融）</h2><div class="paper-card" data-topic="💹 Agent 应用（金融）"><h3>14. GoAnt: Quality-Diversity Multi-Agent Search for Alpha Factor Discovery in Market Microstructure Data</h3>
+<ul>
+<li><strong>作者</strong>: Stella Zhao, Tommy Sha</li>
+<li><strong>机构</strong>: Stony Brook University, Stony Brook, NY, USA, University of Minnesota, Minneapolis, MN, USA</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2609.08719v1">arXiv</a> | <a href="https://arxiv.org/pdf/2609.08719v1">PDF</a></li>
+<li>
+<p><strong>来源</strong>: 📄 arXiv 关键词检索</p>
+</li>
+<li>
+<p><strong>核心方法</strong>: <span class="wikilink">GoAnt</span> 用 Quality-Diversity（<span class="wikilink">QD</span>）多智能体搜索做 alpha 因子发现：在固定评估预算下从量价/订单簿数据搜符号交易信号。用 <span class="wikilink">LLM</span> + <span class="wikilink">UCB</span> 引导，QD 保证行为多样性，避免重复探索冗余因子族。</p>
+</li>
+<li><strong>对比方法/Baselines</strong>: 对比单/多智能体 program-search 系统，主打抗过拟合（考虑执行成本）+ 行为多样性。</li>
+<li><strong>借鉴意义</strong>: 金融 alpha 挖掘，与主业弱相关，但 QD + multi-agent search 的机制有借鉴意义。</li>
+<li><strong>锐评</strong>: 把 Quality-Diversity 引进因子搜索、显式对抗「预测代理过拟合 + 冗余因子族」这两个量化老毛病，切入点比一般「LLM 挖 alpha」的水文聪明。但金融回测最容易自欺，「考虑执行成本后仍有效」这种话得看它的样本外和成本模型是否诚实。两人小团队，规模有限。方法有意思，结论存疑。⚠️</li>
+</ul>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2609.08719v1" target="_blank" rel="noopener">📖 AI 精读</a></div><h2>🛡️ 安全对齐</h2><div class="paper-card" data-topic="🛡️ 安全对齐"><h3>15. Risk-Conditioned Fine-Tuning of Large Language Models</h3>
+<ul>
+<li><strong>作者</strong>: Zixuan Liu, Fangzheng Wu, Brian Summa, Zizhan Zheng</li>
+<li><strong>机构</strong>: Affiliation: Department of Computer Science, Tulane University, New Orleans, LA, 70118, USA, Affiliation: </li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2609.08064v1">arXiv</a> | <a href="https://arxiv.org/pdf/2609.08064v1">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2609.08064v1/risk-condition-flowchart.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2609.08064v1/condition-mechnism.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: <span class="wikilink">RiskCond-FT</span> 做风险条件化的 LLM 微调：现有 Risk-Averse <span class="wikilink">RLHF</span> 优化 <span class="wikilink">CVaR</span> 但只能训固定风险等级，推理时无法调节风险厌恶度。本文让风险等级可在 inference 时调整。基于标准 RLHF 三阶段（<span class="wikilink">SFT</span> → reward → policy）。</li>
+<li><strong>对比方法/Baselines</strong>: 对比固定风险等级的 Risk-Averse RLHF（CVaR），在 <span class="wikilink">RealToxicityPrompts</span>/<span class="wikilink">IMDB</span> 上评。</li>
+<li><strong>借鉴意义</strong>: 可调风险的对齐对生产部署有价值（不同场景不同风险容忍度），做安全对齐的可看。</li>
+<li><strong>锐评</strong>: 「推理时可调风险等级」是个实用的产品化视角——一个模型服务多种风险容忍场景，不用为每个 CVaR 重训。Tulane 的工作，问题定义清晰。但 RealToxicityPrompts + IMDB 这种玩具级 benchmark 撑不起「生产部署」的说法，真实高风险场景的验证缺位。思路好，评测弱。⚠️</li>
+</ul>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2609.08064v1" target="_blank" rel="noopener">📖 AI 精读</a></div></div>
+<div id="panel-推荐广告系统" class="tab-panel"><h2>📊 推荐/广告系统</h2><div class="paper-card" data-topic="📊 推荐/广告系统"><h3>1. Agentic ML Exploration (A-MLE) for Ads Ranking</h3>
+<ul>
+<li><strong>作者</strong>: Gao, Erwin, Sunkara, Vinodh Kumar, Guan, Jingyi, Jia, Qinjin, Xu, Hangjun, Ji, Xiang, Wong, Sherman, Chavali, Surya Teja, Vaishnavi, Pratik, Pandhi, Aryan, Deng, Xiaoyu, Wang, Zhaodong, Inani, Samarth, Yang, Fan, Moberg, Jakob, Zu, Zoe, Bievre, Nicolas, Khenissi, Sami, Jaspal, Amit, Fakharizadi, Ehsan, Viswanathan, Srinidhi, Sun, Dorothy, Vanam, Abishek, Iyer, Sneha, Yadawad, Sheela, Chen, Wenjie, Nahum, Gaby, Gu, Junhua, Chu, Peter, Liu, Yucheng, Zhao, Xin, Cid, Vitor, Chen, Chaorong, Pappu, Vijay, Kumar, Ashwin, Chen, Wenlin, Schulte, Ben, Chandra, Deepak, Tewari, Ritwik</li>
+<li><strong>机构</strong>: Amit Jaspal, Affiliation: , email:, Affiliation: Meta Platforms, Inc., Menlo Park and New York, USA</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2609.08248v1">arXiv</a> | <a href="https://arxiv.org/pdf/2609.08248v1">PDF</a></li>
+<li>
+<p><strong>来源</strong>: 📄 arXiv 关键词检索</p>
+</li>
+<li>
+<p><strong>核心方法</strong>: <span class="wikilink">A-MLE</span>（Agentic ML Exploration）把工业广告排序栈的瓶颈重新定义为「人类 ML 迭代吞吐」而非模型容量或算力，用 <span class="wikilink">LLM</span> agent 自动跑研究-实现-训练-调试-评估-上线的循环，目标是自动产出统计显著的提升。区别于传统 <span class="wikilink">AutoML</span>/<span class="wikilink">NAS</span> 的固定搜索空间 + 单一目标，它面向开放式改进。</p>
+</li>
+<li><strong>对比方法/Baselines</strong>: 对比 <span class="wikilink">AutoML</span>（Feurer et al.）、<span class="wikilink">NAS</span>（<span class="wikilink">DARTS</span>、Real et al.）等固定搜索空间方法，作者论点是这些都解不了工业迭代的开放性问题。</li>
+<li><strong>借鉴意义</strong>: 直接命中你的广告/推荐主业——Meta 的作者团队（Deepak Chandra、Ritwik Tewari 等一长串工业 ID）说明这是真在线上跑的东西，不是玩具。对「怎么用 agent 加速自家排序模型迭代」有直接参考价值。</li>
+<li><strong>锐评</strong>: Meta 挂了 30+ 作者的 position/system 论文，工业 credibility 拉满，问题定义（瓶颈是人不是算力）也很诚实。但摘要里全是「我们发现瓶颈是 X」的宏大叙事，真正的 QPS/AUC 增益、agent 到底自动产出了几个显著提升，得翻正文核实——工业论文最爱报喜不报忧。冲着 Meta 广告栈的真实性去读，但对「A-MLE 完全自动化」的说法保持警惕。👀</li>
+</ul>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2609.08248v1" target="_blank" rel="noopener">📖 AI 精读</a></div></div>
+<div id="panel-scalinglaw与训练" class="tab-panel"><h2>📈 Scaling Law 与训练</h2><div class="paper-card" data-topic="📈 Scaling Law 与训练"><h3>2. Hyperparameter Scaling Laws Across MoE Sparsity</h3>
+<ul>
+<li><strong>作者</strong>: Changxin Tian, Kunlong Chen, Jia Liu, Ziqi Liu, Zhiqiang Zhang, Jun Zhou</li>
+<li><strong>机构</strong>: Email:, Affiliation:</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2609.08690v1">arXiv</a> | <a href="https://arxiv.org/pdf/2609.08690v1">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2609.08690v1/figure8-granularity-2-64.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: <span class="wikilink">MoE-HP-ScalingLaw</span> 指出常规超参 scaling law 在超稀疏 <span class="wikilink">MoE</span> 上失效：最优 <span class="wikilink">learning rate</span> 和 <span class="wikilink">batch size</span> 会随激活率（activation ratio）漂移，且无法用总参数量或激活参数量单独解释。作者做了控制实验隔离 scale 与 sparsity 的效应。</li>
+<li><strong>对比方法/Baselines</strong>: 对比只按总参/激活参数外推超参的传统 <span class="wikilink">muP</span>/<span class="wikilink">scaling law</span> 做法，证明它们在 ultra-sparse 区间不够用。</li>
+<li><strong>借鉴意义</strong>: 如果你要训 MoE 排序/生成模型，这直接影响你的超参迁移策略——按老规矩调 lr 可能系统性偏错。工程价值高。</li>
+<li><strong>锐评</strong>: 选题非常实在，戳中了 MoE 训练最烦人的痛点（超参不可靠迁移）。作者匿名（Email/Affiliation 都空着，疑似大厂投稿脱敏）反而说明可能有真实大规模实验背书。唯一悬念：结论到底能外推多大规模，还是只在他们那几个 activation ratio 上成立。别当万能公式，当经验规律读。🔥</li>
+</ul>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2609.08690v1" target="_blank" rel="noopener">📖 AI 精读</a></div></div>
+<div id="panel-多智能体与rl" class="tab-panel"><h2>🤝 多智能体与 RL</h2><div class="paper-card" data-topic="🤝 多智能体与 RL"><h3>3. SRPO: Setwise Relative Policy Optimization for Multi-Agent LLMs</h3>
+<ul>
+<li><strong>作者</strong>: Shengtian Yang, Ziyu Xiong, Yu Li, Yewen Li, Qingpeng Cai, Lei Feng</li>
+<li>
+<p><strong>机构</strong>: Affiliation: Southeast University, Nanjing, China, Affiliation: , Corresponding author</p>
+</li>
+<li>
+<p><strong>链接</strong>: <a href="http://arxiv.org/abs/2609.08452v1">arXiv</a> | <a href="https://arxiv.org/pdf/2609.08452v1">PDF</a></p>
+</li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2609.08452v1/Figure1_page2.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2609.08452v1/Figure2_page3.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: <span class="wikilink">SRPO</span>（Setwise Relative Policy Optimization）针对多智能体 <span class="wikilink">LLM</span> 的 RL：现有方法对每个 response/trajectory 单独优化，但多个输出可能共同造成一次状态转移，导致更新单元与系统实际动作错位。SRPO 改成对「set」做相对优势估计。</li>
+<li><strong>对比方法/Baselines</strong>: 承接 <span class="wikilink">PPO</span>（clipped ratio）和 <span class="wikilink">GRPO</span>（去 value function、组内相对优势），把 GRPO 的单 prompt 组扩展到多智能体协同的 setwise。</li>
+<li><strong>借鉴意义</strong>: 多智能体 RL 的 credit assignment 是真问题，如果你在做 agent 编排 + RL 训练，这个 setwise 视角值得借鉴。</li>
+<li><strong>锐评</strong>: 问题诊断很准——多 agent 联合导致一次状态转移，却按单 trajectory 更新，确实是 GRPO 直接搬到 MAS 的隐患。方法是对 GRPO 的自然扩展，不算颠覆但补得对。就是东南大学这组的实验覆盖（AIME、STOP 这些）能不能撑起「多智能体」这个大帽子存疑，别期待工业级规模。👀</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2609.08452v1" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🤝 多智能体与 RL"><h3>4. Eliciting Self-Verification in Multimodal Reasoning Agents with Reinforcement Learning</h3>
+<ul>
+<li><strong>作者</strong>: Vishwas Sathish, Viresh Ranjan11footnotemark:, Xinliang Zhu, Arnab Dhua, Douglas Gray</li>
+<li><strong>机构</strong>: Email: , Affiliation: Amazon, Affiliation: , Email: douggray@amazon.com, Email: vireshr@amazon.com, Email: xlzhu@amazon.com, Email: adhua@amazon.com, Affiliation: University of Washington</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2609.08025v1">arXiv</a> | <a href="https://arxiv.org/pdf/2609.08025v1">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2609.08025v1/x2.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2609.08025v1/x5.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: <span class="wikilink">SVRL</span> 用 <span class="wikilink">RL</span>（<span class="wikilink">GRPO</span>）诱导多模态 reasoning agent 学会「自我验证」：agent 调用 web search 等工具答复杂 query 时，逼它检验自己的中间结论而非直接信。基于 <span class="wikilink">FVQA</span>/<span class="wikilink">InfoSeek</span> 类知识密集 VQA。</li>
+<li><strong>对比方法/Baselines</strong>: 对比纯文本 GRPO 长推理（coding/math 有效但多模态工具用不稳），以及 <span class="wikilink">GPT-5</span> 等基线。</li>
+<li><strong>借鉴意义</strong>: 多模态 agent 的可靠工具使用是硬骨头，Amazon 团队做的，落地导向。对做 multimodal + tool use 的有参考。</li>
+<li><strong>锐评</strong>: Amazon 出品，选题（多模态自我验证）踩在痛点上，比纯刷 benchmark 的强。但「self-verification」这词最近被用滥了，关键看 RL reward 怎么设计才不退化成自我安慰。摘要没给 reward 细节，得看正文才知道是真验证还是又一个换皮 GRPO。👀</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2609.08025v1" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🤝 多智能体与 RL"><h3>5. From Event Logs to Governed Action: A BlueSky Agenda for Agentic Process Mining</h3>
+<ul>
+<li><strong>作者</strong>: Yang, Yiyuan, Wu, Zheshun, Chu, Yong, Chen, Zhenghua, Xu, Zenglin, Wen, Qingsong</li>
+<li><strong>机构</strong>: Affiliation: 3University of Glasgow, United Kingdom  4Fudan University, China  5Squirrel Ai Learning, United States, Affiliation: 1University of Oxford, United Kingdom  2Peng Cheng Laboratory, Shenzhen, China, Affiliation: </li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2609.07984v1">arXiv</a> | <a href="https://arxiv.org/pdf/2609.07984v1">PDF</a></li>
+<li>
+<p><strong>来源</strong>: 📄 arXiv 关键词检索</p>
+</li>
+<li>
+<p><strong>核心方法</strong>: <span class="wikilink">MAD-Layered</span> 对多智能体辩论做「分层解剖」：提出四个测量维度——(A) debater 自报的一致度、(B) 回复文本是否真的反驳、(C) 去掉诱导指令后立场是否保持、(D) 答案质量。质疑「debate 靠真分歧提升质量」这一被默认却很少验证的假设。</p>
+</li>
+<li><strong>对比方法/Baselines</strong>: 站在 <span class="wikilink">MAD</span>（Liang et al.）、Du et al. 2023 的对立面，接续 Smit et al. 等 skeptic 路线。</li>
+<li><strong>借鉴意义</strong>: 如果你在用多智能体 debate/ensemble 提质量，这篇会告诉你可能是自我安慰。祛魅价值高。</li>
+<li><strong>锐评</strong>: CMU 一个人（Chen Qian）单挑整个 multi-agent debate 圈，测量设计（尤其 C：撤掉指令后立场是否还在）相当机灵，直接戳「表演式分歧」的软肋。这种 negative-result / 祛魅论文往往比又一个新框架有用得多。就是样本和任务范围有限，别当成 debate 全盘无效的定论。👀</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2609.07984v1" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🤝 多智能体与 RL"><h3>6. Entropy-Regularized Rank-Masked Policy Optimization for Test-Time Reinforcement Learning in Code Generation</h3>
+<ul>
+<li><strong>作者</strong>: Jiacheng Xu, Feng Chen, Xiuneng Xu, Bo An</li>
+<li><strong>机构</strong>: Affiliation: , Affiliation: Nanyang Technological University, Singapore</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2609.09135v1">arXiv</a> | <a href="https://arxiv.org/pdf/2609.09135v1">PDF</a></li>
+<li>
+<p><strong>来源</strong>: 📄 arXiv 关键词检索</p>
+</li>
+<li>
+<p><strong>核心方法</strong>: <span class="wikilink">ERPO</span>（Entropy-Regularized Rank-Masked Policy Optimization）做代码生成的测试时 RL（<span class="wikilink">TTRL</span>）：现有 TTRL 靠答案级自投票取 reward，但代码不能按表面形式比对，投票信号失效。ERPO 用 rank-mask + 熵正则解决无标注测试任务的训练信号问题。</p>
+</li>
+<li><strong>对比方法/Baselines</strong>: 对比标准 <span class="wikilink">TTRL</span>（answer-level self-voting）、<span class="wikilink">GRPO</span>，在 <span class="wikilink">LiveCodeBench</span> 上评测。</li>
+<li><strong>借鉴意义</strong>: TTRL 在代码域的适配，做 code generation + RL 的可以关注。</li>
+<li><strong>锐评</strong>: 问题切得准——代码没法按表面形式投票，TTRL 直接搬过来确实废。rank-masked + 熵正则的组合听着合理，但一堆自造缩写（NSRPCR、GRPOPCR）读着累，且 NTU 单机构 + 无 method_summary，实验规模可能有限。方向对，落地待验证。⚠️</li>
+</ul>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2609.09135v1" target="_blank" rel="noopener">📖 AI 精读</a></div></div>
+<div id="panel-高效llm" class="tab-panel"><h2>⚡ 高效 LLM</h2><div class="paper-card" data-topic="⚡ 高效 LLM"><h3>7. MiniCPM4: Ultra-Efficient LLMs on End Devices</h3>
+<ul>
+<li><strong>作者</strong>: MiniCPM Team</li>
+<li><strong>机构</strong>: MiniCPM Team</li>
+<li><strong>链接</strong>: <a href="https://arxiv.org/abs/2506.07900">arXiv</a> | <a href="https://arxiv.org/pdf/2506.07900">PDF</a></li>
+<li><strong>来源</strong>: 🔥 HF Trending，⬆️ 102</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2506.07900v2/ultrafineweb.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: <span class="wikilink">MiniCPM4</span> 从架构、训练数据、训练算法、推理系统四个维度做端侧高效 LLM。核心是 <span class="wikilink">InfLLM</span> v2——可训练的稀疏注意力，在 81% 注意力稀疏度下达到接近 full attention 的长上下文能力，配合 <span class="wikilink">QAT</span>/<span class="wikilink">GPTQ</span> 量化。</li>
+<li><strong>对比方法/Baselines</strong>: 对标端侧 LLM 与 full attention 长上下文方案，主打同等能力下的效率。</li>
+<li><strong>借鉴意义</strong>: 端侧部署 + 稀疏注意力，如果你关心推理成本/长序列，工程参考价值高。</li>
+<li><strong>锐评</strong>: MiniCPM 团队一贯的工程扎实作风，四维系统优化 + 可训练稀疏注意力（81% 稀疏还保长上下文）是实打实的活儿，102 HF 赞不算虚高。缺点是这类「全维度优化」报告很难判断每个组件的独立贡献，容易变成拼盘。冲着 InfLLM v2 去读，别指望它讲清楚每一分收益从哪来。👀</li>
+</ul>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2506.07900" target="_blank" rel="noopener">📖 AI 精读</a></div></div>
+<div id="panel-自进化agent" class="tab-panel"><h2>🔄 自进化 Agent</h2><div class="paper-card" data-topic="🔄 自进化 Agent"><h3>8. NeoHorse-1: Towards Recursive Self-Improvement via Agentic Post-Training with Routing Harness</h3>
+<ul>
+<li><strong>作者</strong>: NeoHorse Team</li>
+<li><strong>机构</strong>: NeoHorse Team</li>
+<li><strong>链接</strong>: <a href="https://arxiv.org/abs/2609.08183">arXiv</a> | <a href="https://arxiv.org/pdf/2609.08183">PDF</a></li>
+<li>
+<p><strong>来源</strong>: 📰 HF Daily，⬆️ 104</p>
+</li>
+<li>
+<p><strong>核心方法</strong>: <span class="wikilink">NeoHorse-1</span> 号称通过 agentic post-training 探索递归自我改进（<span class="wikilink">RSI</span>）：异构模型池 + 智能路由，记录预测能力并转化为下一轮学习信号。配 <span class="wikilink">PinchBench</span> 等自建 benchmark。</p>
+</li>
+<li><strong>对比方法/Baselines</strong>: 摘要未给清晰对比基线，主要围绕自建的 routing harness + post-training 流程。</li>
+<li><strong>借鉴意义</strong>: RSI 是热点大词，但对实际工程可迁移性存疑。</li>
+<li><strong>锐评</strong>: 104 HF 赞，但「递归自我改进」这种词一出现就该拉响警报。摘要通篇 RSI/agent-native/routing harness 的概念缝合，机制描述含糊（method_summary 直接空的），自建 benchmark 更是自说自话的重灾区。NeoHorse Team 匿名 + 大词 + 高赞，典型 HF 情绪面产物。除非你就想看 RSI 怎么讲故事，否则跳过。🫠</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2609.08183" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🔄 自进化 Agent"><h3>9. AuK Technical Report: An Open-Source Foundational Model for Speech Generation and Editing</h3>
+<ul>
+<li><strong>作者</strong>: Ma, Ziyang, Niu, Zhikang, Tu, Wenming, Wang, Tianrui, Yan, Ruiqi, Liu, Junxi, Huo, Yanru, Huang, Nickk, Liu, Yang, Xie, Qicong, Xie, Zeyu, Wang, Hui, Li, Haitao, Jiang, Zixuan, Li, Yalin, Fang, Jie, Duan, Yifan, Tian, Zeyue, Li, Guangzheng, Zhu, Haina, Wang, Shuyi, Wang, Jinwen, Cui, Mingyu, Tan, Tian, Auden, Liang, Sen, Yves, Steve, Yang, Shan, Bo, Liefeng, Zheng, Zilong, Yu, Kai, Chng, Eng-Siong, Chen, Xie</li>
+<li><strong>机构</strong>: AuK-Flash, GitHub,  Project Page</li>
+<li><strong>链接</strong>: <a href="https://arxiv.org/abs/2609.08936">arXiv</a> | <a href="https://arxiv.org/pdf/2609.08936">PDF</a></li>
+<li><strong>来源</strong>: 📰 HF Daily，⬆️ 16</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2609.08936v1/fig/pretrain_data_sunburst_hierarchical.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2609.08936v1/model.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: <span class="wikilink">Env-Scaffold</span> 针对长程任务 RL 的 reward 稀疏问题：不从 agent 侧 SFT 热身，而是把「环境」当脚手架，丰富反馈信号来 bootstrap 自进化 agent。基于 goal-conditioned <span class="wikilink">POMDP</span>，用 <span class="wikilink">GRPO</span>/<span class="wikilink">DAPO</span>/<span class="wikilink">GSPO</span> 在 <span class="wikilink">BFCL</span>/<span class="wikilink">SciWorld</span> 上评。</li>
+<li><strong>对比方法/Baselines</strong>: 对比 agent-side SFT warmup（受数据稀缺 + 探索受限所限），改从 environment 侧加反馈。</li>
+<li><strong>借鉴意义</strong>: 长程 agent RL 的 reward 稀疏是核心难题，做 agent 训练的值得看。</li>
+<li><strong>锐评</strong>: 复旦这组把视角从「改 agent」转到「改环境反馈」，思路方向对——reward sparsity 确实是长程 agent RL 最卡的地方。但「environment as scaffold」听着漂亮，具体怎么在不泄漏答案的前提下丰富反馈是关键，摘要没讲透。只有 6 个 HF 赞可能被低估了，值得翻正文看反馈设计。👀</li>
+</ul>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2609.08936" target="_blank" rel="noopener">📖 AI 精读</a></div></div>
+<div id="panel-agent优化与评测" class="tab-panel"><h2>🔧 Agent 优化与评测</h2><div class="paper-card" data-topic="🔧 Agent 优化与评测"><h3>10. Omni Interaction Agent Technical Report</h3>
+<ul>
+<li><strong>作者</strong>: Orantqing∗1</li>
+<li><strong>机构</strong>: Affiliation: 4The Chinese University of Hong Kong;  5Nanyang Technological University, Affiliation: , Affiliation: 1Hunyuan Speech Team, Tencent;  2Zhejiang University;  3Shanghai Jiao Tong University, ††footnotetext: ∗Equal contribution. †Corresponding author. Email: orantqing@gmail.com, shengpengji@zju.edu.cn</li>
+<li><strong>链接</strong>: <a href="https://arxiv.org/abs/2609.08977">arXiv</a> | <a href="https://arxiv.org/pdf/2609.08977">PDF</a></li>
+<li><strong>来源</strong>: 📰 HF Daily，⬆️ 44</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2609.08977v1/omni_pic.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2609.08977v1/gender_arc.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: <span class="wikilink">AgentGrad</span> 做多智能体系统（<span class="wikilink">MAS</span>）的 prompt 优化：现有 textual gradient 方法（<span class="wikilink">TextGrad</span>、<span class="wikilink">GEPA</span>）用自然语言反馈更新 prompt，AgentGrad 引入「intervention-guided」——通过干预定位到底哪个 agent 的 prompt 该改。基于 <span class="wikilink">HotpotQA</span> 等评测。</li>
+<li><strong>对比方法/Baselines</strong>: 对比 <span class="wikilink">TextGrad</span>、<span class="wikilink">GEPA</span>、<span class="wikilink">GPT-5</span> 等 textual gradient / APO 方法。</li>
+<li><strong>借鉴意义</strong>: MAS 的 prompt 调优是实用痛点，做 agent 编排的可参考。</li>
+<li><strong>锐评</strong>: intervention-guided 的思路（用干预做 credit assignment 定位坏 prompt）比无脑全局 textual gradient 聪明，KAIST + Meta AI 组合也靠谱。但 prompt 优化这赛道已经很拥挤，TextGrad/GEPA/DSPy 一堆，AgentGrad 的增量得看它在多 agent 上的定位精度到底比 baseline 高多少。incremental 但有用。🫠</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2609.08977" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🔧 Agent 优化与评测"><h3>11. A Three-Tier Persona Vector for Controllable User Simulation in Agentic Evaluation</h3>
+<ul>
+<li><strong>作者</strong>: Rahul Khedar<em>, Eshita</em>, Sneha Teja Sree Reddy Thondapu<em>, Mayank Malhotra</em></li>
+<li><strong>机构</strong>: Affiliation: </li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2609.08592v1">arXiv</a> | <a href="https://arxiv.org/pdf/2609.08592v1">PDF</a></li>
+<li>
+<p><strong>来源</strong>: 📄 arXiv 关键词检索</p>
+</li>
+<li>
+<p><strong>核心方法</strong>: <span class="wikilink">Three-Tier-Persona</span> 提出三层 persona 向量（23 个可操作维度：6 类人口统计 + 行为特质）来做可控 user simulation，用于评测工具增强的 <span class="wikilink">LLM</span> agent。解决现有评测用扁平角色描述（「你是愤怒客户」）产生千篇一律对话的问题。</p>
+</li>
+<li><strong>对比方法/Baselines</strong>: 对比 agenda-based 模拟器（手写规则）、neural user simulator（无显式控制）、<span class="wikilink">PersonaChat</span> 的 5 句 persona。</li>
+<li><strong>借鉴意义</strong>: 如果你做 agent 评测/对话系统，可控 user simulation 是实用工具。</li>
+<li><strong>锐评</strong>: 戳中了 agent 评测的真痛点——扁平 persona 产生同质对话确实让 eval 失真，23 维可控 persona 是务实的工程改进。但全员匿名（Affiliation 空）+ 一堆 * 通讯，且「23 个维度」很容易沦为拍脑袋堆砌，关键看这些维度是否真的产生了行为差异（有没有消融）。实用向，别期待理论深度。🫠</li>
+</ul>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2609.08592v1" target="_blank" rel="noopener">📖 AI 精读</a></div></div>
+<div id="panel-rl框架" class="tab-panel"><h2>🎮 RL 框架</h2><div class="paper-card" data-topic="🎮 RL 框架"><h3>12. PlayTrain: An Efficient Reinforcement Learning Framework for LLM-Generated Adaptable JavaScript Games</h3>
+<ul>
+<li><strong>作者</strong>: Ryan Truong   Lance Ying   Samuel J. Gershman   Kazuki Irie</li>
+<li><strong>机构</strong>: Affiliation: Yale University, Department of Computer Science and Wu Tsai Institute, New Haven, CT, USA, Affiliation: , Affiliation: MIT, Department of Brain and Cognitive Sciences, Cambridge, MA, USA, Affiliation: Harvard University, Cambridge, MA, USA, Affiliation: Kempner Institute for the Study of Natural and Artificial Intelligence, Cambridge, MA, USA</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2609.09059v1">arXiv</a> | <a href="https://arxiv.org/pdf/2609.09059v1">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2609.09059v1/figures/generation.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2609.09059v1/figures/architecture_schematic.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: <span class="wikilink">PlayTrain</span> 用 <span class="wikilink">LLM</span> 从自然语言鲁棒生成/修改 JavaScript 游戏，配一个 JS-to-gym 后端高效跑 RL 训练。解决新建/改造视频游戏环境（VGE）需大量手写代码的痛点。</li>
+<li><strong>对比方法/Baselines</strong>: 对比 <span class="wikilink">ProcGen</span>/<span class="wikilink">ALE</span> 等固定环境，用 <span class="wikilink">PPO</span>/<span class="wikilink">IMPALA</span> 训练，<span class="wikilink">EnvPool</span>/<span class="wikilink">QuickJS</span> 做后端。</li>
+<li><strong>借鉴意义</strong>: 与你的推荐/广告主业弱相关，属 RL 环境生成方向。</li>
+<li><strong>锐评</strong>: Yale + MIT + Harvard + Kempner 的豪华配置，思路（LLM 生成可训练的 JS 游戏环境）挺新鲜，JS-to-gym 后端也是实在的工程贡献。但这跟你的核心关注（推荐/广告/agent）几乎不沾边，除非你对可程序化生成 RL 环境有兴趣。做得好，但对你偏离。👀</li>
+</ul>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2609.09059v1" target="_blank" rel="noopener">📖 AI 精读</a></div></div>
+<div id="panel-agentic生成综述" class="tab-panel"><h2>🎨 Agentic 生成（综述）</h2><div class="paper-card" data-topic="🎨 Agentic 生成（综述）"><h3>13. Agentic Visual Generation: From Generative Models to Agentic Control</h3>
+<ul>
+<li><strong>作者</strong>: Yinming Huang<em>, Shuyuan Tu</em>, Xi Yan*, Jiahao Zhan, Zihan Yang, Zhen Xing, Hui Zhang, Tiehua Zhang, Member, IEEE, Yu-Gang Jiang, Fellow, IEEE, Zuxuan Wu, Member, IEEE</li>
+<li><strong>机构</strong>: T. Zhang is with the School of Computer Science and Technology, Tongji University. Emails: tiehuaz@tongji.edu.cn, ††thanks: Y. Huang, S. Tu, X. Yan, Z. Yang, H. Zhang, Z. Wu, and Y-G. Jiang are with Fudan University. Emails: {ymhuang26, sytu23, 24307140086, yangzh26, hui_zhang23}@m.fudan.edu.cn, {zxwu, ygj}@fudan.edu.cn, Z. Xing is with Wan Team, Alibaba Tongyi Lab. Email: zxing20@fudan.edu.cn, J. Zhan is with CUHK, MMLab. Email: 1155271220@link.cuhk.edu.hk, Y. Huang and Z. Wu are also with Shanghai Innovative Institute</li>
+<li><strong>链接</strong>: <a href="https://arxiv.org/abs/2609.06758">arXiv</a> | <a href="https://arxiv.org/pdf/2609.06758">PDF</a></li>
+<li>
+<p><strong>来源</strong>: 📰 HF Daily，⬆️ 10</p>
+</li>
+<li>
+<p><strong>核心方法</strong>: <span class="wikilink">Agentic-Visual-Generation</span> 是一篇 survey/framework 文，把视觉生成从「单次调用生成模型」重新框定为「agentic 控制过程」：controller（<span class="wikilink">LLM</span>/<span class="wikilink">VLM</span>）负责规划、选工具、检查中间输出、修正失败、复用经验，generator 当执行器。提出 task 轴与 mechanism 轴。</p>
+</li>
+<li><strong>对比方法/Baselines</strong>: 梳理现有以 LLM/VLM 为 controller、生成模型为 tool 的系统（<span class="wikilink">ComfyUI</span> 类），做分类学。</li>
+<li><strong>借鉴意义</strong>: 如果你做多模态生成 + agent 编排，这篇提供了一个思考框架。</li>
+<li><strong>锐评</strong>: 复旦 + 阿里通义的 survey，controller/generator 分离 + task/mechanism 双轴的框架划分算清晰，适合建立 mental model。但本质是概念梳理文，没有新方法新实验，读它是为了拿分类学，不是拿 SOTA。当地图看，别当武器。🫠</li>
+</ul>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2609.06758" target="_blank" rel="noopener">📖 AI 精读</a></div></div>
+<div id="panel-agent应用金融" class="tab-panel"><h2>💹 Agent 应用（金融）</h2><div class="paper-card" data-topic="💹 Agent 应用（金融）"><h3>14. GoAnt: Quality-Diversity Multi-Agent Search for Alpha Factor Discovery in Market Microstructure Data</h3>
+<ul>
+<li><strong>作者</strong>: Stella Zhao, Tommy Sha</li>
+<li><strong>机构</strong>: Stony Brook University, Stony Brook, NY, USA, University of Minnesota, Minneapolis, MN, USA</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2609.08719v1">arXiv</a> | <a href="https://arxiv.org/pdf/2609.08719v1">PDF</a></li>
+<li>
+<p><strong>来源</strong>: 📄 arXiv 关键词检索</p>
+</li>
+<li>
+<p><strong>核心方法</strong>: <span class="wikilink">GoAnt</span> 用 Quality-Diversity（<span class="wikilink">QD</span>）多智能体搜索做 alpha 因子发现：在固定评估预算下从量价/订单簿数据搜符号交易信号。用 <span class="wikilink">LLM</span> + <span class="wikilink">UCB</span> 引导，QD 保证行为多样性，避免重复探索冗余因子族。</p>
+</li>
+<li><strong>对比方法/Baselines</strong>: 对比单/多智能体 program-search 系统，主打抗过拟合（考虑执行成本）+ 行为多样性。</li>
+<li><strong>借鉴意义</strong>: 金融 alpha 挖掘，与主业弱相关，但 QD + multi-agent search 的机制有借鉴意义。</li>
+<li><strong>锐评</strong>: 把 Quality-Diversity 引进因子搜索、显式对抗「预测代理过拟合 + 冗余因子族」这两个量化老毛病，切入点比一般「LLM 挖 alpha」的水文聪明。但金融回测最容易自欺，「考虑执行成本后仍有效」这种话得看它的样本外和成本模型是否诚实。两人小团队，规模有限。方法有意思，结论存疑。⚠️</li>
+</ul>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2609.08719v1" target="_blank" rel="noopener">📖 AI 精读</a></div></div>
+<div id="panel-安全对齐" class="tab-panel"><h2>🛡️ 安全对齐</h2><div class="paper-card" data-topic="🛡️ 安全对齐"><h3>15. Risk-Conditioned Fine-Tuning of Large Language Models</h3>
+<ul>
+<li><strong>作者</strong>: Zixuan Liu, Fangzheng Wu, Brian Summa, Zizhan Zheng</li>
+<li><strong>机构</strong>: Affiliation: Department of Computer Science, Tulane University, New Orleans, LA, 70118, USA, Affiliation: </li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2609.08064v1">arXiv</a> | <a href="https://arxiv.org/pdf/2609.08064v1">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2609.08064v1/risk-condition-flowchart.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2609.08064v1/condition-mechnism.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: <span class="wikilink">RiskCond-FT</span> 做风险条件化的 LLM 微调：现有 Risk-Averse <span class="wikilink">RLHF</span> 优化 <span class="wikilink">CVaR</span> 但只能训固定风险等级，推理时无法调节风险厌恶度。本文让风险等级可在 inference 时调整。基于标准 RLHF 三阶段（<span class="wikilink">SFT</span> → reward → policy）。</li>
+<li><strong>对比方法/Baselines</strong>: 对比固定风险等级的 Risk-Averse RLHF（CVaR），在 <span class="wikilink">RealToxicityPrompts</span>/<span class="wikilink">IMDB</span> 上评。</li>
+<li><strong>借鉴意义</strong>: 可调风险的对齐对生产部署有价值（不同场景不同风险容忍度），做安全对齐的可看。</li>
+<li><strong>锐评</strong>: 「推理时可调风险等级」是个实用的产品化视角——一个模型服务多种风险容忍场景，不用为每个 CVaR 重训。Tulane 的工作，问题定义清晰。但 RealToxicityPrompts + IMDB 这种玩具级 benchmark 撑不起「生产部署」的说法，真实高风险场景的验证缺位。思路好，评测弱。⚠️</li>
+</ul>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2609.08064v1" target="_blank" rel="noopener">📖 AI 精读</a></div></div>
+<hr>
+<h2>被排除的论文</h2>
+<ul>
+<li>Automated Chest CT Protocol Selection via LLM Text Embeddings — 医学影像 CT 协议选择，命中 negative_keywords（ct scan / medical imaging / diagnosis）</li>
+<li>MorphoOrgaAgent: Multi-Agent System for Autonomous Organoid Analysis — 类器官形态分析 + 药物测试，命中 negative_keywords（drug discovery / molecular），medical 场景</li>
+<li>AuK: Open-Source Foundational Model for Speech Generation and Editing — 语音生成与编辑，命中 negative_keywords（speech synthesis / audio generation）</li>
+<li>Omni Interaction Agent Technical Report (Gander) — 全双工语音/视频交互模型，核心是 speech/audio 交互，命中 negative_keywords（speech recognition / audio）</li>
+<li>SUN: Reaching for Novelty in Reinforcement Learning — goal-conditioned RL 探索（LunarLander/MountainCar 玩具环境），与推荐/广告/agent 主业无交集</li>
+<li>Routing Dense Layouts with History-Aware Offline RL using LSTM — EDA 芯片详细布线，与关注领域无交集</li>
+<li>Proactive Context-Forecasted Safety Constraints for Nonstationary RL — 偏自动驾驶/控制场景的安全 RL，与主业弱相关且靠近 autonomous driving negative</li>
+<li>Automated Design of Inventory Policy with LLMs — 运筹学库存策略，虽用 LLM 但属供应链优化，与推荐/广告/agent 核心无交集</li>
+<li>Evaluation of Contextual Understanding in LLMs (KG-based) — 知识图谱相似度评测 LLM 上下文理解，偏 NLP 评测边缘，相关性弱</li>
+<li>From Event Logs to Governed Action: Agentic Process Mining — 流程挖掘 BlueSky agenda，概念倡议文，无方法无实验</li>
+<li>PRIMUS: Identity, Governance, Verification for Multi-Agent Federations — 多智能体身份治理与验证，偏分布式系统/安全治理，与建模主业弱相关</li>
+<li>Do LLMs Know What They Don't Know II (EHQ) — 认知诚实度测量框架，纯评测文，洞见有限</li>
+<li>SGD in Multiclass Logistic Regression: Scaling Laws — 理论文（高维高斯混合的 SGD 动力学），虽有 scaling law 但纯理论，工程可迁移性低</li>
+<li>Suan: Rectifying Direct Preference Safety Alignment — DPO 安全对齐，incremental，与已推荐的 RiskCond-FT 重叠且较弱</li>
+<li>Vision: Data-Centric Anchoring for Robust Agentic AI — position/vision 文，讲 agentic AI 数据生命周期缺陷，无具体方法验证</li>
+</ul>
+<p>Agentic 已从「能不能做」卷到「怎么训、怎么评、靠不靠谱」——祛魅型（拆穿 debate 分歧）和工业落地型（Meta 广告排序 agent）比又一个新框架更值钱。</p></div>
+<footer style="text-align:center;color:var(--text2);margin:3em 0 1em;font-size:0.85em;">
+  Generated by daily-papers-web &middot; Powered by Claude Code
+</footer>
+<script src="tabs.js"></script>
+
+</body>
+</html>
