@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>2026-09-10 论文推荐</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.21/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.21/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.21/dist/contrib/auto-render.min.js"
+  onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}]});"></script>
+<link rel="stylesheet" href="style.css">
+<style>body{max-width:960px;}</style>
+
+</head>
+<body>
+<nav class="nav"><a href="index.html">🏠 首页</a><a href="2026-09-09.html">← 前一天</a><a href="2026-09-11.html">后一天 →</a></nav>
+<div class="detail-page"><h1>🔪 今日锐评</h1>
+<p>今天 22 篇里 Agent 安全/红队占了小半壁江山，一股「给 Agent 挂个 benchmark 就能发 paper」的味道扑面而来。真金白银的两篇：RadixArk 的 Miles（生产级后训练框架，47 赞不是白拿的）和字节的 AgenticGen（把广告视频生成做成 online-feedback 闭环，直接踩在你关注的广告赛道上）。RL 训练细节党可以看 BRACE 补 stale critic 的坑。其余多是「换个垂直领域重跑 AgentBench」的套路活。</p>
+<h2>分流表</h2>
+<table>
+<thead>
+<tr>
+<th>等级</th>
+<th>论文</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>🔥 必读</td>
+<td><span class="wikilink">Miles</span>（生产级 RL 后训练框架，token 对齐这个痛点抓得准，工程含量高） · <span class="wikilink">AgenticGen</span>（广告视频生成 + 在线业务反馈闭环，字节出品，正中广告赛道） · <span class="wikilink">BRACE</span>（异步 RL 里 stale critic 的偏差校正，做 RLHF/agentic RL 训练的必看）</td>
+</tr>
+<tr>
+<td>👀 值得看</td>
+<td><span class="wikilink">ConvMem</span>（把 CNN 思路搬到长上下文记忆，training-free 有点意思） · <span class="wikilink">MMPIBench</span>（多模态提示注入攻击 benchmark，Agent 安全防御方向） · <span class="wikilink">Complete-Reasoning-Traces</span>（质疑「完整推理轨迹一定更好」的后训练假设） · <span class="wikilink">Black-Box-Red-Teaming</span>（黑盒 Agent 红队自动化框架） · <span class="wikilink">MAAGL</span>（多智能体图学习，结构签名做 evidence 采样） · <span class="wikilink">VLX-VR</span>（agentic 视频推理，Think-Memory-Observation 循环）</td>
+</tr>
+<tr>
+<td>💤 可跳过</td>
+<td><span class="wikilink">Phi-Bench</span>（LLM 造基础设施的 benchmark，概念大于实用） · <span class="wikilink">Arbitrary-Cipher</span>（密文越狱免微调，安全趣闻） · <span class="wikilink">CS-Guard</span>（代码生成安全 guardrail benchmark，又一个 benchmark） · <span class="wikilink">LexAgentHallu</span>（法律 Agent 幻觉基准，垂直换皮） · <span class="wikilink">A-JIT</span>（agentic 即时软件构建，愿景 paper） · <span class="wikilink">Optimal-Value-Inference</span>（离线 RL 最优值推断，纯统计理论） · <span class="wikilink">Context-Operations</span>（LLM 系统工程建模的形式化操作，学术自嗨） · <span class="wikilink">Smart-Adaptive-Computing</span>（IoT-Edge-Cloud 里 LLM+DRL 综述向）</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<div class="tab-bar"><button class="tab-btn active" data-tab="all" onclick="switchTab('all')">📋 全部<span class="tab-count">15</span></button><button class="tab-btn" data-tab="agenticrl与后训练" onclick="switchTab('agenticrl与后训练')">🤖 🤖 Agentic RL 与后训练<span class="tab-count">3</span></button><button class="tab-btn" data-tab="广告与生成" onclick="switchTab('广告与生成')">🎨 📊 广告与生成<span class="tab-count">1</span></button><button class="tab-btn" data-tab="agent记忆与推理" onclick="switchTab('agent记忆与推理')">🧠 🧠 Agent 记忆与推理<span class="tab-count">4</span></button><button class="tab-btn" data-tab="agent安全与红队" onclick="switchTab('agent安全与红队')">🛡 🛡️ Agent 安全与红队<span class="tab-count">5</span></button><button class="tab-btn" data-tab="llm工程与代码" onclick="switchTab('llm工程与代码')">🤖 🛠️ LLM 工程与代码<span class="tab-count">2</span></button></div>
+<div id="panel-all" class="tab-panel active"><h2>🤖 Agentic RL 与后训练</h2><div class="paper-card" data-topic="🤖 Agentic RL 与后训练"><h3>1. Miles v0.1: Production-Level Post-Training</h3>
+<ul>
+<li><strong>作者</strong>: RadixArk</li>
+<li><strong>机构</strong>: trainer with a choice of two backends (NVIDIA Megatron-LM [3] and PyTorch FSDP [4])</li>
+<li><strong>链接</strong>: <a href="https://arxiv.org/abs/2609.08368">arXiv</a> | <a href="https://arxiv.org/pdf/2609.08368">PDF</a></li>
+<li>
+<p><strong>来源</strong>: 🔥 HF Trending，⬆️ 47</p>
+</li>
+<li>
+<p><strong>核心方法</strong>: <span class="wikilink">Miles</span> v0.1 基于 <span class="wikilink">slime</span> 重构了一套生产级 RL 后训练系统，核心原则是每个组件都要 verified/clean/customizable。最关键的洞察：多轮 agentic RL 里训练器必须看到 policy 实际采样的 token，而 rollout 引擎产出一套序列、训练器又从 messages 重建一套，两者一旦不匹配训练就失真。它把 message 解析、工具执行、chat-template 渲染这些环节可能改动 tokenization 的问题显式化。支持 <span class="wikilink">Megatron-LM</span> 和 <span class="wikilink">FSDP</span> 两种后端。</p>
+</li>
+<li><strong>对比方法/Baselines</strong>: 对标 <span class="wikilink">slime</span>（其前身），后端集成 NVIDIA <span class="wikilink">Megatron-LM</span> 与 PyTorch <span class="wikilink">FSDP</span>，训练目标涉及 <span class="wikilink">LoRA</span>、<span class="wikilink">GLM-5</span>。</li>
+<li><strong>借鉴意义</strong>: 如果你在搭 agentic RL / RLHF 训练管线，token 对齐这个坑是真实且致命的——rollout 与训练序列不一致会让梯度全错。这篇把工程细节摊开讲，比大多数只报指标的 paper 有用得多。</li>
+<li><strong>锐评</strong>: 47 赞在今天这批里断层第一，靠的不是花活而是把「多轮 agentic RL 训练器和 rollout 引擎 token 不一致」这个人人踩过、少有人认真讲的坑摆上台面。生产级框架论文最怕沦为 README，这篇至少把设计原则和失真链路讲清楚了。扣分点：v0.1 版本号很诚实，可复现性和真实规模验证还得等社区检验。🔥</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2609.08368" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🤖 Agentic RL 与后训练"><h3>2. BRACE: Anchored Bellman-Residual Correction for Stale Critics in Asynchronous RL</h3>
+<ul>
+<li><strong>作者</strong>: Guanqun Zhao, Zijun Xie, Binbin Zheng, Jiafeng Lu, Enlei Gong, Zeyu Chen</li>
+<li><strong>机构</strong>: Affiliation: University of Science and Technology of China, Affiliation: Peking University, Email: {zhaoguanqun, lujiafeng, gongenlei, chenzeyu01}@baidu.com∗Work done during an internship at Baidu Inc. †Corresponding authors, Affiliation: , Email: , Affiliation: Baidu Inc, Affiliation: Beijing University of Posts and Telecommunications</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2609.09783v1">arXiv</a> | <a href="https://arxiv.org/pdf/2609.09783v1">PDF</a></li>
+<li>
+<p><strong>来源</strong>: 📄 arXiv 关键词检索</p>
+</li>
+<li>
+<p><strong>核心方法</strong>: <span class="wikilink">BRACE</span> 针对异步 RL 训练中的 policy lag 问题：异步会让 critic 偏向陈旧的 behavior policy。已有异步 LLM 训练只校正 actor、不管 critic 偏差，而经典 RL 的 off-policy value correction 在长程 agentic 任务里失效（短 correction 撑不住长轨迹）。它提出锚定的 Bellman-residual 校正来修 stale critic。</p>
+</li>
+<li><strong>对比方法/Baselines</strong>: 对比 <span class="wikilink">PPO</span>、<span class="wikilink">DAPO</span>、<span class="wikilink">IcePop</span>，评测含 <span class="wikilink">BrowseComp</span>，涉及 <span class="wikilink">Monte-Carlo</span> value 估计。</li>
+<li><strong>借鉴意义</strong>: 异步 RL 已是 LLM 训练标配，critic 偏差是被 GRPO 类「干脆不要 value function」方案回避掉的真问题。这篇正面硬刚长程 agentic 任务的信用分配，方向对路。</li>
+<li><strong>锐评</strong>: 选题精准——大家都在异步、都在长程 agentic，但 stale critic 的偏差被 GRPO 一句「不要 critic 了」糊弄过去。BRACE 敢正面修 critic 值得加分。但异步 RL 论文的通病是复现门槛极高、baseline 调参空间巨大，锚定校正到底带来多少稳定增益、在多长 horizon 下失效，得看实验细节能不能扛住。👀</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2609.09783v1" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🤖 Agentic RL 与后训练"><h3>3. Optimal Value Inference for Reinforcement Learning</h3>
+<ul>
+<li><strong>作者</strong>: Nan Lu, Ethan Lee, James M. Robins, David Simchi-Levi, Junwei Lu</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2609.09981v1">arXiv</a> | <a href="https://arxiv.org/pdf/2609.09981v1">PDF</a></li>
+<li>
+<p><strong>来源</strong>: 📄 arXiv 关键词检索</p>
+</li>
+<li>
+<p><strong>核心方法</strong>: <span class="wikilink">Optimal-Value-Inference</span> 研究离线 RL 中最优值的推断，把两个新 nuisance 推导为自诱导 Bellman 方程的不动点，用 softmax 近似 max Bellman 算子，再通过 Neyman 正交性构造去偏估计量，并在 horizon 发散时建立渐近正态性。</p>
+</li>
+<li><strong>对比方法/Baselines</strong>: 接续 policy learning / dynamic treatment regime 文献（Kitagawa-Tetenov、Athey-Wager、Robins 等），基于 <span class="wikilink">MDP</span> 框架。</li>
+<li><strong>借鉴意义</strong>: 纯统计推断视角的离线 RL 最优值置信区间，对做因果/计量交叉的人有价值，但离 LLM agentic 训练较远。</li>
+<li><strong>锐评</strong>: 扎实的统计理论 paper，Neyman 正交 + 去偏这套是 double ML 的经典配方，搬到 RL 最优值推断上无可挑剔。问题是——对你的推荐/广告/Agent 场景，这属于「知道它存在就行」的档位，除非你真在做离线策略评估的置信区间。硬伤没有，实用性打折。🫠</li>
+</ul>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2609.09981v1" target="_blank" rel="noopener">📖 AI 精读</a></div><h2>📊 广告与生成</h2><div class="paper-card" data-topic="📊 广告与生成"><h3>4. AgenticGen: Reward-Guided Agentic Video Generation for Advertising</h3>
+<ul>
+<li><strong>作者</strong>: Bu, Xingyuan, Song, Chengru, Zhou, Hao, Zhou, Tao, Li, Dong, Li, Wei, Li, Shilong, Shi, Hao, Guo, Yongxin, Zhou, Donghao, Yang, Qiangpeng, Wen, Shilei</li>
+<li><strong>机构</strong>: ByteDance, The Chinese University of Hong Kong, Tsinghua University</li>
+<li><strong>链接</strong>: <a href="https://arxiv.org/abs/2609.09187">arXiv</a> | <a href="https://arxiv.org/pdf/2609.09187">PDF</a></li>
+<li>
+<p><strong>来源</strong>: 📰 HF Daily，⬆️ 2</p>
+</li>
+<li>
+<p><strong>核心方法</strong>: <span class="wikilink">AgenticGen</span> 把广告视频生成重新定义为「产品条件下的推理问题」，衡量标准是线上业务指标而非视频质量。它指出现有视频基础模型能从多模态条件生成逼真片段，但不会优化「产品应如何转化为有效广告」，也不会从线上业务反馈中改进后续生成。方案是 reward-guided 的 agentic 生成闭环。</p>
+</li>
+<li><strong>对比方法/Baselines</strong>: 构建在视频基础模型之上（摘要未点名具体基座），核心差异在于引入 reward 引导与在线反馈闭环。</li>
+<li><strong>借鉴意义</strong>: 这是今天唯一一篇直接踩在计算广告 + 生成式的交叉点上的，字节出品，把「生成效果」对齐到「线上业务指标」正是广告投放的核心诉求，对做广告创意生成/素材优化的团队直接相关。</li>
+<li><strong>锐评</strong>: 选题就是你的主场——把广告视频生成从「像不像真的」拉回到「转化好不好」，用 reward + 在线反馈闭环，这个 framing 比一堆只比 FVD 的视频生成 paper 清醒太多。字节的资源也能撑起线上验证。唯一遗憾是 filtered 摘要里 method_names 只剩 TeX/CSS（解析翻车），没看到具体 reward 建模和线上 A/B 数字，得翻原文确认闭环是真跑通还是 PPT。👀</li>
+</ul>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2609.09187" target="_blank" rel="noopener">📖 AI 精读</a></div><h2>🧠 Agent 记忆与推理</h2><div class="paper-card" data-topic="🧠 Agent 记忆与推理"><h3>5. ConvMem: Convolutional Memory for Long-Context Reasoning</h3>
+<ul>
+<li><strong>作者</strong>: Zhang, Hongming, Gu, Zhaozhen, Bai, Fengshuo, Hao, Ming, Zhang, Qingyang, Wang, Yuanyuan, Tang, Shiyang, Wang, Yanna, Xu, Bo</li>
+<li><strong>机构</strong>: Email: , Institute of Automation, Chinese Academy of Sciences</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2609.10441v1">arXiv</a> | <a href="https://arxiv.org/pdf/2609.10441v1">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2609.10441v1/overview1-v3.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2609.10441v1/overview2-v3.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: <span class="wikilink">ConvMem</span> 是 training-free 框架，把 CNN 的架构原理搬到长上下文推理。不同于 <span class="wikilink">MemAgent</span> 这类把文本当线性流顺序处理的记忆 Agent，ConvMem 把推理重构成分层多通道的卷积操作，定义了「语义卷积核」在文本上滑动提取。</li>
+<li><strong>对比方法/Baselines</strong>: 对比顺序记忆基线 <span class="wikilink">MemAgent</span>，评测 <span class="wikilink">HotpotQA</span>、<span class="wikilink">RULER</span>，涉及 <span class="wikilink">RAG</span>。</li>
+<li><strong>借鉴意义</strong>: 长上下文记忆是 Agent 落地的硬约束，training-free + 卷积式层次聚合的思路，对做 Agent memory / 长文档处理的人有借鉴价值。</li>
+<li><strong>锐评</strong>: 「把 CNN 搬到长上下文」这个类比听着像标题党，但 training-free 是加分项——不用重训就能上，工程友好。质疑点：卷积核在语义空间的「滑动」到底是隐喻还是有严格定义？RULER/HotpotQA 这类 benchmark 已经被刷烂，能不能证明比简单分块 RAG 强，得看消融。概念新鲜度够，实锤待验。👀</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2609.10441v1" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🧠 Agent 记忆与推理"><h3>6. Revisiting Complete Reasoning Traces for Post-Training</h3>
+<ul>
+<li><strong>作者</strong>: Hwang, Jaehui, Yun, Sangdoo, Heo, Byeongho, Han, Dongyoon</li>
+<li><strong>机构</strong>: Dongyoon Han, NAVER AI Lab, jaehui.hwang, dongyoon.han@navercorp.com</li>
+<li><strong>链接</strong>: <a href="https://arxiv.org/abs/2609.07103">arXiv</a> | <a href="https://arxiv.org/pdf/2609.07103">PDF</a></li>
+<li>
+<p><strong>来源</strong>: 📰 HF Daily，⬆️ 6</p>
+</li>
+<li>
+<p><strong>核心方法</strong>: <span class="wikilink">Complete-Reasoning-Traces</span> 质疑一个被默认的假设：LLM 后训练（尤其 SFT）用的推理轨迹通常很长、充满通向答案途中的绕路（detour），但从未认真验证过 LLM 是否真的从「学习完整轨迹」中获益。NAVER AI Lab 出品。</p>
+</li>
+<li><strong>对比方法/Baselines</strong>: 聚焦 <span class="wikilink">SFT</span> 场景下的推理轨迹，摘要未点名具体对比方法（filtered 解析只剩 TeX/CSS）。</li>
+<li><strong>借鉴意义</strong>: 对做推理模型蒸馏/SFT 数据构造的人是个好问题——如果绕路轨迹反而拖累，那数据清洗策略要重估。</li>
+<li><strong>锐评</strong>: 问对了问题：大家默认「思维链越完整越好」，但绕路和自我纠错到底是营养还是噪声，确实没人系统验证。NAVER 这篇的价值在质疑姿态本身。风险在于结论若只是「精简一下更好」那就有点 incremental，得看它能不能给出可操作的轨迹筛选准则。摘要信息太少，判决保守。👀</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2609.07103" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🧠 Agent 记忆与推理"><h3>7. Multi-Agent Agentic Graph Learning via Structural Signatures</h3>
+<ul>
+<li><strong>作者</strong>: Liang Qu, Jianxin Li, Hongzhi Yin, Hua Wang</li>
+<li><strong>机构</strong>: Affiliation: Victoria University, Melbourne, Australia, Affiliation: The University of Queensland, Brisbane, Australia, Affiliation: Edith Cowan University, Perth, Australia. Liang Qu: leoqu94@outlook.com, Affiliation: </li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2609.09565v1">arXiv</a> | <a href="https://arxiv.org/pdf/2609.09565v1">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2609.09565v1/Figure_1_motivation.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2609.09565v1/Figure_2_Framework.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: <span class="wikilink">MAAGL</span> 针对 agentic graph learning：现有方法要么单 Agent、要么多个 role-based Agent 编排，但本质都依赖共享推理。MAAGL 用「结构签名」（structural signatures）让多个 Agent 在图上顺序采样 evidence 支持最终预测，试图打破共享推理的瓶颈。</li>
+<li><strong>对比方法/Baselines</strong>: 对比 <span class="wikilink">GraphSAGE</span>、<span class="wikilink">ReaGAN</span>、<span class="wikilink">AgentGL</span>，在 <span class="wikilink">OGB</span> 上评测。</li>
+<li><strong>借鉴意义</strong>: 图 + 多智能体 + LLM 的交叉，对做图推理/知识图谱 Agent 有参考，但离推荐/广告主线略远。</li>
+<li><strong>锐评</strong>: 多智能体 + 图 + 结构签名，三个热词叠一起。质疑：「结构签名打破共享推理」这个卖点需要证明多 Agent 真的产生了互补 evidence 而非冗余投票——多 Agent 论文最容易翻车的地方就是「N 个 Agent 其实在说同一句话」。OGB 上有对比 AgentGL 算认真，但增益幅度和计算成本得核。🫠</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2609.09565v1" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🧠 Agent 记忆与推理"><h3>8. VLX-VR: An Agentic-Aware Video Reasoning Model</h3>
+<ul>
+<li><strong>作者</strong>: Sheng Li, Peng Liu, Qianqian Zhang, Tiancheng Zhao</li>
+<li><strong>机构</strong>: Email: , Email: tianchez@zju-bj.com, Affiliation: </li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2609.09985v1">arXiv</a> | <a href="https://arxiv.org/pdf/2609.09985v1">PDF</a></li>
+<li>
+<p><strong>来源</strong>: 📄 arXiv 关键词检索</p>
+</li>
+<li>
+<p><strong>核心方法</strong>: <span class="wikilink">VLX-VR</span> 是 agentic-aware 视频推理模型，训练在一个 Think-Memory-Observation 循环定义的视频推理框架内。针对现实视频理解需整合视觉/音频/文本/时序证据，而多数管线用固定视频上下文 + 单遍推理，无法在观测不完整/歧义/冲突时自适应获取证据。</p>
+</li>
+<li><strong>对比方法/Baselines</strong>: 对比 <span class="wikilink">VideoAgent</span>、<span class="wikilink">MINERVA</span>，涉及 <span class="wikilink">VLM</span>、<span class="wikilink">CDAV</span>。</li>
+<li><strong>借鉴意义</strong>: 多模态 Agent 推理，Think-Memory-Observation 这套循环对做视频理解 Agent 有结构参考。</li>
+<li><strong>锐评</strong>: Think-Memory-Observation 听起来就是 ReAct 换个马甲套到视频上。加分项是把「证据不完整时主动再看一眼」做成机制，这确实是单遍推理的痛点。但 zju-bj.com 邮箱 + 摘要没给硬指标，得看它比 VideoAgent 强在哪、是不是又一个「循环调用 VLM」的包装。👀</li>
+</ul>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2609.09985v1" target="_blank" rel="noopener">📖 AI 精读</a></div><h2>🛡️ Agent 安全与红队</h2><div class="paper-card" data-topic="🛡️ Agent 安全与红队"><h3>9. Black-Box Red Teaming of Agentic AI: A Taxonomy-Driven Framework for Automated Risk Discovery</h3>
+<ul>
+<li><strong>作者</strong>: Divyanshu Kumar, Nitin Aravind Birur, Tanay Baswa, Sahil Agarwal, Prashanth Harshangi</li>
+<li><strong>机构</strong>: Enkrypt AI, divyanshu,nitin, tanay, sahil, prashanth@enkryptai.com</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2609.09647v1">arXiv</a> | <a href="https://arxiv.org/pdf/2609.09647v1">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2609.09647v1/plots/risk_heatmap.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2609.09647v1/plots/restaurant_arch.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2609.09647v1/plots/stocks_arch.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: <span class="wikilink">Black-Box-Red-Teaming</span> 提出系统化的黑盒风险感知 Agent 评测框架（<span class="wikilink">SAGE</span>），只需基本系统描述即可运行。针对 Agent 已进生产、读取不可信输入、用真实权限调工具，而标准评测仍停留单轮、抓不住多步漏洞。</li>
+<li><strong>对比方法/Baselines</strong>: 参照 <span class="wikilink">AgentBench</span>、<span class="wikilink">SWE-bench</span>、<span class="wikilink">WebArena</span> 等 Agent 基准，用 <span class="wikilink">GPT-4</span>、<span class="wikilink">CrewAI</span>，对齐 <span class="wikilink">OWASP</span> 风险分类。</li>
+<li><strong>借鉴意义</strong>: Agent 安全是落地绕不开的一环，黑盒 + 只需系统描述降低了红队门槛，对要上线 Agent 的团队有实操价值。</li>
+<li><strong>锐评</strong>: 黑盒 + taxonomy-driven + 只要系统描述，工程化红队的方向是对的。但今天这批安全 paper 扎堆，套路高度雷同：定义 taxonomy → 跑几个 Agent 框架 → 出 heatmap。区分度在于 taxonomy 是否真覆盖了新攻击面、还是把 OWASP 抄一遍。Enkrypt AI 是安全公司，实用倾向可信，学术新意存疑。👀</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2609.09647v1" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🛡️ Agent 安全与红队"><h3>10. An Experimental Evaluation of Multimodal Prompt Injection Attacks on Agentic AI Frameworks</h3>
+<ul>
+<li><strong>作者</strong>: Viet K. Nguyen, Mohammad I. Husain</li>
+<li><strong>机构</strong>: Affiliation: California State Polytechnic University, Pomona, Affiliation: </li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2609.09404v1">arXiv</a> | <a href="https://arxiv.org/pdf/2609.09404v1">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2609.09404v1/architecture.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: <span class="wikilink">MMPIBench</span> 是可复现 benchmark，测量多模态提示注入：Agent 会读图，攻击者可把文本塞进图像，绕过用户直接进入 Agent 上下文。它建模了 Agent 循环里每一遍（input assembly → 决策 → 调工具 → 读返回）都是注入点。</li>
+<li><strong>对比方法/Baselines</strong>: 覆盖 <span class="wikilink">CrewAI</span>、<span class="wikilink">LangGraph</span>、<span class="wikilink">AutoGen</span>、<span class="wikilink">LlamaIndex</span> 四大框架，涉及 <span class="wikilink">OCR</span>、QR 码注入。</li>
+<li><strong>借鉴意义</strong>: 多模态 Agent 的图像注入是真实且被低估的攻击面，横跨四大主流框架的评测对选型/加固有直接参考。</li>
+<li><strong>锐评</strong>: 把「图像即注入通道」讲清楚了，且横扫 CrewAI/LangGraph/AutoGen/LlamaIndex 四大框架，覆盖面比大多数单框架 paper 诚实。加分。扣分：多模态注入的核心机制早有人提，benchmark 的贡献更多是「系统化跑一遍」，novelty 有限。但作为选型时的安全参照，实用性在线。👀</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2609.09404v1" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🛡️ Agent 安全与红队"><h3>11. Arbitrary Cipher Attacks Against Large Language Models Do Not Require Fine-Tuning</h3>
+<ul>
+<li><strong>作者</strong>: Thomas Rivasseau</li>
+<li><strong>机构</strong>: Affiliation: School of Information Studies, McGill University, Affiliation: </li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2609.09553v1">arXiv</a> | <a href="https://arxiv.org/pdf/2609.09553v1">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2609.09553v1/graphix/Attk.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2609.09553v1/graphix/OOD_comm.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2609.09553v1/graphix/gpt5.5.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: <span class="wikilink">Arbitrary-Cipher</span> 展示密文/隐蔽通信越狱攻击无需微调即可实施——此前这类攻击被认为需要通过商业模型的 fine-tuning API。作者从 tokenization（BPE 子词）角度切入构造攻击。</li>
+<li><strong>对比方法/Baselines</strong>: 针对 <span class="wikilink">OpenAI</span> <span class="wikilink">GPT</span> 系列（含 gpt5.5），报 <span class="wikilink">ASR</span>，涉及 <span class="wikilink">OOD</span> 通信。</li>
+<li><strong>借鉴意义</strong>: 免微调的密文越狱降低了攻击门槛，对做 LLM 安全对齐/内容审核的人是个警示。</li>
+<li><strong>锐评</strong>: 单作者、McGill，结论「密文越狱不用微调也行」有点吓人但可信——越狱本就是猫鼠游戏。价值在于把攻击门槛拉低这个事实。但这类 paper 天生偏 report 性质，缺乏防御侧贡献，读完更像安全趣闻而非可落地方法。⚠️</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2609.09553v1" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🛡️ Agent 安全与红队"><h3>12. CS-Guard: Benchmarking LLM Guardrails for Code Generation Security</h3>
+<ul>
+<li><strong>作者</strong>: Jinyang Li, Mingyu Guo, Hung X. Nguyen</li>
+<li><strong>机构</strong>: Email: , Affiliation: Adelaide University, Affiliation: </li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2609.09798v1">arXiv</a> | <a href="https://arxiv.org/pdf/2609.09798v1">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2609.09798v1/attack_illustrate.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: <span class="wikilink">CS-Guard</span> 号称首个系统评测代码生成安全 guardrail 的 benchmark，含 1000 条高质量恶意生成 prompt、7 种越狱攻击，以及新颖的「虚构场景攻击」（fictional scenario attack）——把恶意行为包装成合法软件开发场景。</li>
+<li><strong>对比方法/Baselines</strong>: 评测各类 guardrail，攻击涉及 obfuscation/fictional scenario 等类别（FSA）。</li>
+<li><strong>借鉴意义</strong>: 代码生成安全对 Copilot 类产品是刚需，虚构场景攻击这个 idea 有点意思，对做代码安全过滤的团队有参考。</li>
+<li><strong>锐评</strong>: 「首个 benchmark」+「1000 条 prompt」是标准的刷基准配方，但 fictional scenario attack（把恶意需求裹成合法开发场景）这个点子确实狡猾、比单纯混淆高级。可惜整体仍是「造个 benchmark 发个 paper」的模板，防御方案着墨少。数据集若开源尚可一用。🫠</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2609.09798v1" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🛡️ Agent 安全与红队"><h3>13. LexAgentHallu: A Hierarchical Benchmark for Profiling Hallucinations in Legal Agents</h3>
+<ul>
+<li><strong>作者</strong>: Yujin Zhou, Mingxuan Zheng, Chuxue Cao, Yidan Huang, Jiale Chen, Yike Guo, Sirui Han</li>
+<li><strong>机构</strong>: Email: , Affiliation: Hong Kong University of Science and Technology, Affiliation: </li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2609.09754v1">arXiv</a> | <a href="https://arxiv.org/pdf/2609.09754v1">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2609.09754v1/figure11.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2609.09754v1/fig_cooccurrence.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: <span class="wikilink">LexAgentHallu</span> 是分层 benchmark，刻画法律 Agent 的幻觉：工具增强的法律 Agent 会产生 agentic 幻觉，工具调用和推理错误级联成编造判例、错引权威。现有法律基准只测单轮 QA + 结果级指标，通用幻觉基准又缺法律诊断能力。</li>
+<li><strong>对比方法/Baselines</strong>: 对比 <span class="wikilink">LawBench</span>、<span class="wikilink">LexEval</span>、<span class="wikilink">LegalBench</span>、<span class="wikilink">LEXam</span> 等，Agent 用 <span class="wikilink">ReAct</span>。</li>
+<li><strong>借鉴意义</strong>: 法律是高风险垂直场景，工具调用错误级联成幻觉的诊断有价值，但对推荐/广告主线基本无关。</li>
+<li><strong>锐评</strong>: 又一篇「垂直领域 + Agent + 幻觉基准」的模板作，把 AgentBench 的套路搬到法律。分层刻画「工具错误如何级联成编造判例」比笼统测 QA 细致，算认真。但对你的领域几乎无迁移价值，属于「知道有这么个东西」即可。💤</li>
+</ul>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2609.09754v1" target="_blank" rel="noopener">📖 AI 精读</a></div><h2>🛠️ LLM 工程与代码</h2><div class="paper-card" data-topic="🛠️ LLM 工程与代码"><h3>14. Φ-Bench: Can Large Language Models Engineer the Infrastructure That Powers Them?</h3>
+<ul>
+<li><strong>作者</strong>: Leilei Ding, Shumin Wang, Yuting Huang, Fanqi Wan, Yinmin Zhang, Qi Han, Yiming Xu, Feiyuan Zhang, Xiaomeng Chu, Guoliang You, Wuyang Zhang, Daxin Jiang, Yanyong Zhang</li>
+<li><strong>机构</strong>: Peking University, The Hong Kong University of Science and Technology, University of Pennsylvania, University of Science and Technology of China, Yale University, and Yanyong Zhang <a href="&#109;&#97;&#105;&#108;&#116;&#111;&#58;&#121;&#97;&#110;&#121;&#111;&#110;&#103;&#122;&#64;&#117;&#115;&#116;&#99;&#46;&#101;&#100;&#117;&#46;&#99;&#110;">&#121;&#97;&#110;&#121;&#111;&#110;&#103;&#122;&#64;&#117;&#115;&#116;&#99;&#46;&#101;&#100;&#117;&#46;&#99;&#110;</a></li>
+<li><strong>链接</strong>: <a href="https://arxiv.org/abs/2609.10226">arXiv</a> | <a href="https://arxiv.org/pdf/2609.10226">PDF</a></li>
+<li><strong>来源</strong>: 📰 HF Daily，⬆️ 4</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2609.10226v1/framework.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: <span class="wikilink">Phi-Bench</span> 问一个宏大问题：LLM 能否工程化「支撑它们自己运行的基础设施」？针对现有 benchmark 只测孤立 kernel、预定义算子或预设优化目标，无法评估 LLM 端到端做基础设施工程的能力。</li>
+<li><strong>对比方法/Baselines</strong>: 评测 <span class="wikilink">DeepSeek</span> 等模型，涉及 KFC/BPB 等自定义指标。</li>
+<li><strong>借鉴意义</strong>: LLM 自举优化基础设施是个诱人的元问题，对做 AI infra / 编译优化的人有参考，但当前更多是提出问题而非解决。</li>
+<li><strong>锐评</strong>: Φ-Bench 这名字和「LLM 能否工程化自己的基础设施」的 framing 很唬人，署名机构一长串（北大/港科大/UPenn/USTC/Yale）阵仗不小。但「端到端基础设施工程」这种开放任务，评测标准的客观性是最大隐患——很容易变成「LLM 生成了能跑的代码就算赢」。概念价值 &gt; 落地价值。🫠</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2609.10226" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🛠️ LLM 工程与代码"><h3>15. A-JIT: Agentic Just-In-Time Software Construction</h3>
+<ul>
+<li><strong>作者</strong>: Mark Marron, Earl T. Barr</li>
+<li><strong>机构</strong>: email:, Affiliation: University of Kentucky, Affiliation: University College London, Affiliation: </li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2609.10248v1">arXiv</a> | <a href="https://arxiv.org/pdf/2609.10248v1">PDF</a></li>
+<li>
+<p><strong>来源</strong>: 📄 arXiv 关键词检索</p>
+</li>
+<li>
+<p><strong>核心方法</strong>: <span class="wikilink">A-JIT</span> 提出 Agentic Just-In-Time 软件构建范式，用能持续演化的动态软件系统替代静态二进制。核心是 tactile values 概念，基于 <span class="wikilink">BAPI</span> 格式实现任意值的人类可读往返序列化，并允许在值内嵌简单表达式求值。</p>
+</li>
+<li><strong>对比方法/Baselines</strong>: 基于 BAPI 格式（Marron 2024），涉及 ForecastSI/TempRange 等示例。</li>
+<li><strong>借鉴意义</strong>: 「软件即时按需生成」是有想象力的范式，但离生产实践很远，更适合关注 Agent 编程范式前沿的人。</li>
+<li><strong>锐评</strong>: 愿景很大——「代码不再是固定产物、而是永续演化的系统」，读着很科幻。但 vision paper 的通病是：demo 很美，一旦碰到生产环境的可靠性/可测试性/版本控制就现原形。tactile values + BAPI 是个具体抓手，算没完全飘在空中。当前阶段属于「记个方向」。💤</li>
+</ul>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2609.10248v1" target="_blank" rel="noopener">📖 AI 精读</a></div></div>
+<div id="panel-agenticrl与后训练" class="tab-panel"><h2>🤖 Agentic RL 与后训练</h2><div class="paper-card" data-topic="🤖 Agentic RL 与后训练"><h3>1. Miles v0.1: Production-Level Post-Training</h3>
+<ul>
+<li><strong>作者</strong>: RadixArk</li>
+<li><strong>机构</strong>: trainer with a choice of two backends (NVIDIA Megatron-LM [3] and PyTorch FSDP [4])</li>
+<li><strong>链接</strong>: <a href="https://arxiv.org/abs/2609.08368">arXiv</a> | <a href="https://arxiv.org/pdf/2609.08368">PDF</a></li>
+<li>
+<p><strong>来源</strong>: 🔥 HF Trending，⬆️ 47</p>
+</li>
+<li>
+<p><strong>核心方法</strong>: <span class="wikilink">Miles</span> v0.1 基于 <span class="wikilink">slime</span> 重构了一套生产级 RL 后训练系统，核心原则是每个组件都要 verified/clean/customizable。最关键的洞察：多轮 agentic RL 里训练器必须看到 policy 实际采样的 token，而 rollout 引擎产出一套序列、训练器又从 messages 重建一套，两者一旦不匹配训练就失真。它把 message 解析、工具执行、chat-template 渲染这些环节可能改动 tokenization 的问题显式化。支持 <span class="wikilink">Megatron-LM</span> 和 <span class="wikilink">FSDP</span> 两种后端。</p>
+</li>
+<li><strong>对比方法/Baselines</strong>: 对标 <span class="wikilink">slime</span>（其前身），后端集成 NVIDIA <span class="wikilink">Megatron-LM</span> 与 PyTorch <span class="wikilink">FSDP</span>，训练目标涉及 <span class="wikilink">LoRA</span>、<span class="wikilink">GLM-5</span>。</li>
+<li><strong>借鉴意义</strong>: 如果你在搭 agentic RL / RLHF 训练管线，token 对齐这个坑是真实且致命的——rollout 与训练序列不一致会让梯度全错。这篇把工程细节摊开讲，比大多数只报指标的 paper 有用得多。</li>
+<li><strong>锐评</strong>: 47 赞在今天这批里断层第一，靠的不是花活而是把「多轮 agentic RL 训练器和 rollout 引擎 token 不一致」这个人人踩过、少有人认真讲的坑摆上台面。生产级框架论文最怕沦为 README，这篇至少把设计原则和失真链路讲清楚了。扣分点：v0.1 版本号很诚实，可复现性和真实规模验证还得等社区检验。🔥</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2609.08368" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🤖 Agentic RL 与后训练"><h3>2. BRACE: Anchored Bellman-Residual Correction for Stale Critics in Asynchronous RL</h3>
+<ul>
+<li><strong>作者</strong>: Guanqun Zhao, Zijun Xie, Binbin Zheng, Jiafeng Lu, Enlei Gong, Zeyu Chen</li>
+<li><strong>机构</strong>: Affiliation: University of Science and Technology of China, Affiliation: Peking University, Email: {zhaoguanqun, lujiafeng, gongenlei, chenzeyu01}@baidu.com∗Work done during an internship at Baidu Inc. †Corresponding authors, Affiliation: , Email: , Affiliation: Baidu Inc, Affiliation: Beijing University of Posts and Telecommunications</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2609.09783v1">arXiv</a> | <a href="https://arxiv.org/pdf/2609.09783v1">PDF</a></li>
+<li>
+<p><strong>来源</strong>: 📄 arXiv 关键词检索</p>
+</li>
+<li>
+<p><strong>核心方法</strong>: <span class="wikilink">BRACE</span> 针对异步 RL 训练中的 policy lag 问题：异步会让 critic 偏向陈旧的 behavior policy。已有异步 LLM 训练只校正 actor、不管 critic 偏差，而经典 RL 的 off-policy value correction 在长程 agentic 任务里失效（短 correction 撑不住长轨迹）。它提出锚定的 Bellman-residual 校正来修 stale critic。</p>
+</li>
+<li><strong>对比方法/Baselines</strong>: 对比 <span class="wikilink">PPO</span>、<span class="wikilink">DAPO</span>、<span class="wikilink">IcePop</span>，评测含 <span class="wikilink">BrowseComp</span>，涉及 <span class="wikilink">Monte-Carlo</span> value 估计。</li>
+<li><strong>借鉴意义</strong>: 异步 RL 已是 LLM 训练标配，critic 偏差是被 GRPO 类「干脆不要 value function」方案回避掉的真问题。这篇正面硬刚长程 agentic 任务的信用分配，方向对路。</li>
+<li><strong>锐评</strong>: 选题精准——大家都在异步、都在长程 agentic，但 stale critic 的偏差被 GRPO 一句「不要 critic 了」糊弄过去。BRACE 敢正面修 critic 值得加分。但异步 RL 论文的通病是复现门槛极高、baseline 调参空间巨大，锚定校正到底带来多少稳定增益、在多长 horizon 下失效，得看实验细节能不能扛住。👀</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2609.09783v1" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🤖 Agentic RL 与后训练"><h3>3. Optimal Value Inference for Reinforcement Learning</h3>
+<ul>
+<li><strong>作者</strong>: Nan Lu, Ethan Lee, James M. Robins, David Simchi-Levi, Junwei Lu</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2609.09981v1">arXiv</a> | <a href="https://arxiv.org/pdf/2609.09981v1">PDF</a></li>
+<li>
+<p><strong>来源</strong>: 📄 arXiv 关键词检索</p>
+</li>
+<li>
+<p><strong>核心方法</strong>: <span class="wikilink">Optimal-Value-Inference</span> 研究离线 RL 中最优值的推断，把两个新 nuisance 推导为自诱导 Bellman 方程的不动点，用 softmax 近似 max Bellman 算子，再通过 Neyman 正交性构造去偏估计量，并在 horizon 发散时建立渐近正态性。</p>
+</li>
+<li><strong>对比方法/Baselines</strong>: 接续 policy learning / dynamic treatment regime 文献（Kitagawa-Tetenov、Athey-Wager、Robins 等），基于 <span class="wikilink">MDP</span> 框架。</li>
+<li><strong>借鉴意义</strong>: 纯统计推断视角的离线 RL 最优值置信区间，对做因果/计量交叉的人有价值，但离 LLM agentic 训练较远。</li>
+<li><strong>锐评</strong>: 扎实的统计理论 paper，Neyman 正交 + 去偏这套是 double ML 的经典配方，搬到 RL 最优值推断上无可挑剔。问题是——对你的推荐/广告/Agent 场景，这属于「知道它存在就行」的档位，除非你真在做离线策略评估的置信区间。硬伤没有，实用性打折。🫠</li>
+</ul>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2609.09981v1" target="_blank" rel="noopener">📖 AI 精读</a></div></div>
+<div id="panel-广告与生成" class="tab-panel"><h2>📊 广告与生成</h2><div class="paper-card" data-topic="📊 广告与生成"><h3>4. AgenticGen: Reward-Guided Agentic Video Generation for Advertising</h3>
+<ul>
+<li><strong>作者</strong>: Bu, Xingyuan, Song, Chengru, Zhou, Hao, Zhou, Tao, Li, Dong, Li, Wei, Li, Shilong, Shi, Hao, Guo, Yongxin, Zhou, Donghao, Yang, Qiangpeng, Wen, Shilei</li>
+<li><strong>机构</strong>: ByteDance, The Chinese University of Hong Kong, Tsinghua University</li>
+<li><strong>链接</strong>: <a href="https://arxiv.org/abs/2609.09187">arXiv</a> | <a href="https://arxiv.org/pdf/2609.09187">PDF</a></li>
+<li>
+<p><strong>来源</strong>: 📰 HF Daily，⬆️ 2</p>
+</li>
+<li>
+<p><strong>核心方法</strong>: <span class="wikilink">AgenticGen</span> 把广告视频生成重新定义为「产品条件下的推理问题」，衡量标准是线上业务指标而非视频质量。它指出现有视频基础模型能从多模态条件生成逼真片段，但不会优化「产品应如何转化为有效广告」，也不会从线上业务反馈中改进后续生成。方案是 reward-guided 的 agentic 生成闭环。</p>
+</li>
+<li><strong>对比方法/Baselines</strong>: 构建在视频基础模型之上（摘要未点名具体基座），核心差异在于引入 reward 引导与在线反馈闭环。</li>
+<li><strong>借鉴意义</strong>: 这是今天唯一一篇直接踩在计算广告 + 生成式的交叉点上的，字节出品，把「生成效果」对齐到「线上业务指标」正是广告投放的核心诉求，对做广告创意生成/素材优化的团队直接相关。</li>
+<li><strong>锐评</strong>: 选题就是你的主场——把广告视频生成从「像不像真的」拉回到「转化好不好」，用 reward + 在线反馈闭环，这个 framing 比一堆只比 FVD 的视频生成 paper 清醒太多。字节的资源也能撑起线上验证。唯一遗憾是 filtered 摘要里 method_names 只剩 TeX/CSS（解析翻车），没看到具体 reward 建模和线上 A/B 数字，得翻原文确认闭环是真跑通还是 PPT。👀</li>
+</ul>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2609.09187" target="_blank" rel="noopener">📖 AI 精读</a></div></div>
+<div id="panel-agent记忆与推理" class="tab-panel"><h2>🧠 Agent 记忆与推理</h2><div class="paper-card" data-topic="🧠 Agent 记忆与推理"><h3>5. ConvMem: Convolutional Memory for Long-Context Reasoning</h3>
+<ul>
+<li><strong>作者</strong>: Zhang, Hongming, Gu, Zhaozhen, Bai, Fengshuo, Hao, Ming, Zhang, Qingyang, Wang, Yuanyuan, Tang, Shiyang, Wang, Yanna, Xu, Bo</li>
+<li><strong>机构</strong>: Email: , Institute of Automation, Chinese Academy of Sciences</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2609.10441v1">arXiv</a> | <a href="https://arxiv.org/pdf/2609.10441v1">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2609.10441v1/overview1-v3.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2609.10441v1/overview2-v3.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: <span class="wikilink">ConvMem</span> 是 training-free 框架，把 CNN 的架构原理搬到长上下文推理。不同于 <span class="wikilink">MemAgent</span> 这类把文本当线性流顺序处理的记忆 Agent，ConvMem 把推理重构成分层多通道的卷积操作，定义了「语义卷积核」在文本上滑动提取。</li>
+<li><strong>对比方法/Baselines</strong>: 对比顺序记忆基线 <span class="wikilink">MemAgent</span>，评测 <span class="wikilink">HotpotQA</span>、<span class="wikilink">RULER</span>，涉及 <span class="wikilink">RAG</span>。</li>
+<li><strong>借鉴意义</strong>: 长上下文记忆是 Agent 落地的硬约束，training-free + 卷积式层次聚合的思路，对做 Agent memory / 长文档处理的人有借鉴价值。</li>
+<li><strong>锐评</strong>: 「把 CNN 搬到长上下文」这个类比听着像标题党，但 training-free 是加分项——不用重训就能上，工程友好。质疑点：卷积核在语义空间的「滑动」到底是隐喻还是有严格定义？RULER/HotpotQA 这类 benchmark 已经被刷烂，能不能证明比简单分块 RAG 强，得看消融。概念新鲜度够，实锤待验。👀</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2609.10441v1" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🧠 Agent 记忆与推理"><h3>6. Revisiting Complete Reasoning Traces for Post-Training</h3>
+<ul>
+<li><strong>作者</strong>: Hwang, Jaehui, Yun, Sangdoo, Heo, Byeongho, Han, Dongyoon</li>
+<li><strong>机构</strong>: Dongyoon Han, NAVER AI Lab, jaehui.hwang, dongyoon.han@navercorp.com</li>
+<li><strong>链接</strong>: <a href="https://arxiv.org/abs/2609.07103">arXiv</a> | <a href="https://arxiv.org/pdf/2609.07103">PDF</a></li>
+<li>
+<p><strong>来源</strong>: 📰 HF Daily，⬆️ 6</p>
+</li>
+<li>
+<p><strong>核心方法</strong>: <span class="wikilink">Complete-Reasoning-Traces</span> 质疑一个被默认的假设：LLM 后训练（尤其 SFT）用的推理轨迹通常很长、充满通向答案途中的绕路（detour），但从未认真验证过 LLM 是否真的从「学习完整轨迹」中获益。NAVER AI Lab 出品。</p>
+</li>
+<li><strong>对比方法/Baselines</strong>: 聚焦 <span class="wikilink">SFT</span> 场景下的推理轨迹，摘要未点名具体对比方法（filtered 解析只剩 TeX/CSS）。</li>
+<li><strong>借鉴意义</strong>: 对做推理模型蒸馏/SFT 数据构造的人是个好问题——如果绕路轨迹反而拖累，那数据清洗策略要重估。</li>
+<li><strong>锐评</strong>: 问对了问题：大家默认「思维链越完整越好」，但绕路和自我纠错到底是营养还是噪声，确实没人系统验证。NAVER 这篇的价值在质疑姿态本身。风险在于结论若只是「精简一下更好」那就有点 incremental，得看它能不能给出可操作的轨迹筛选准则。摘要信息太少，判决保守。👀</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2609.07103" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🧠 Agent 记忆与推理"><h3>7. Multi-Agent Agentic Graph Learning via Structural Signatures</h3>
+<ul>
+<li><strong>作者</strong>: Liang Qu, Jianxin Li, Hongzhi Yin, Hua Wang</li>
+<li><strong>机构</strong>: Affiliation: Victoria University, Melbourne, Australia, Affiliation: The University of Queensland, Brisbane, Australia, Affiliation: Edith Cowan University, Perth, Australia. Liang Qu: leoqu94@outlook.com, Affiliation: </li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2609.09565v1">arXiv</a> | <a href="https://arxiv.org/pdf/2609.09565v1">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2609.09565v1/Figure_1_motivation.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2609.09565v1/Figure_2_Framework.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: <span class="wikilink">MAAGL</span> 针对 agentic graph learning：现有方法要么单 Agent、要么多个 role-based Agent 编排，但本质都依赖共享推理。MAAGL 用「结构签名」（structural signatures）让多个 Agent 在图上顺序采样 evidence 支持最终预测，试图打破共享推理的瓶颈。</li>
+<li><strong>对比方法/Baselines</strong>: 对比 <span class="wikilink">GraphSAGE</span>、<span class="wikilink">ReaGAN</span>、<span class="wikilink">AgentGL</span>，在 <span class="wikilink">OGB</span> 上评测。</li>
+<li><strong>借鉴意义</strong>: 图 + 多智能体 + LLM 的交叉，对做图推理/知识图谱 Agent 有参考，但离推荐/广告主线略远。</li>
+<li><strong>锐评</strong>: 多智能体 + 图 + 结构签名，三个热词叠一起。质疑：「结构签名打破共享推理」这个卖点需要证明多 Agent 真的产生了互补 evidence 而非冗余投票——多 Agent 论文最容易翻车的地方就是「N 个 Agent 其实在说同一句话」。OGB 上有对比 AgentGL 算认真，但增益幅度和计算成本得核。🫠</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2609.09565v1" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🧠 Agent 记忆与推理"><h3>8. VLX-VR: An Agentic-Aware Video Reasoning Model</h3>
+<ul>
+<li><strong>作者</strong>: Sheng Li, Peng Liu, Qianqian Zhang, Tiancheng Zhao</li>
+<li><strong>机构</strong>: Email: , Email: tianchez@zju-bj.com, Affiliation: </li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2609.09985v1">arXiv</a> | <a href="https://arxiv.org/pdf/2609.09985v1">PDF</a></li>
+<li>
+<p><strong>来源</strong>: 📄 arXiv 关键词检索</p>
+</li>
+<li>
+<p><strong>核心方法</strong>: <span class="wikilink">VLX-VR</span> 是 agentic-aware 视频推理模型，训练在一个 Think-Memory-Observation 循环定义的视频推理框架内。针对现实视频理解需整合视觉/音频/文本/时序证据，而多数管线用固定视频上下文 + 单遍推理，无法在观测不完整/歧义/冲突时自适应获取证据。</p>
+</li>
+<li><strong>对比方法/Baselines</strong>: 对比 <span class="wikilink">VideoAgent</span>、<span class="wikilink">MINERVA</span>，涉及 <span class="wikilink">VLM</span>、<span class="wikilink">CDAV</span>。</li>
+<li><strong>借鉴意义</strong>: 多模态 Agent 推理，Think-Memory-Observation 这套循环对做视频理解 Agent 有结构参考。</li>
+<li><strong>锐评</strong>: Think-Memory-Observation 听起来就是 ReAct 换个马甲套到视频上。加分项是把「证据不完整时主动再看一眼」做成机制，这确实是单遍推理的痛点。但 zju-bj.com 邮箱 + 摘要没给硬指标，得看它比 VideoAgent 强在哪、是不是又一个「循环调用 VLM」的包装。👀</li>
+</ul>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2609.09985v1" target="_blank" rel="noopener">📖 AI 精读</a></div></div>
+<div id="panel-agent安全与红队" class="tab-panel"><h2>🛡️ Agent 安全与红队</h2><div class="paper-card" data-topic="🛡️ Agent 安全与红队"><h3>9. Black-Box Red Teaming of Agentic AI: A Taxonomy-Driven Framework for Automated Risk Discovery</h3>
+<ul>
+<li><strong>作者</strong>: Divyanshu Kumar, Nitin Aravind Birur, Tanay Baswa, Sahil Agarwal, Prashanth Harshangi</li>
+<li><strong>机构</strong>: Enkrypt AI, divyanshu,nitin, tanay, sahil, prashanth@enkryptai.com</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2609.09647v1">arXiv</a> | <a href="https://arxiv.org/pdf/2609.09647v1">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2609.09647v1/plots/risk_heatmap.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2609.09647v1/plots/restaurant_arch.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2609.09647v1/plots/stocks_arch.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: <span class="wikilink">Black-Box-Red-Teaming</span> 提出系统化的黑盒风险感知 Agent 评测框架（<span class="wikilink">SAGE</span>），只需基本系统描述即可运行。针对 Agent 已进生产、读取不可信输入、用真实权限调工具，而标准评测仍停留单轮、抓不住多步漏洞。</li>
+<li><strong>对比方法/Baselines</strong>: 参照 <span class="wikilink">AgentBench</span>、<span class="wikilink">SWE-bench</span>、<span class="wikilink">WebArena</span> 等 Agent 基准，用 <span class="wikilink">GPT-4</span>、<span class="wikilink">CrewAI</span>，对齐 <span class="wikilink">OWASP</span> 风险分类。</li>
+<li><strong>借鉴意义</strong>: Agent 安全是落地绕不开的一环，黑盒 + 只需系统描述降低了红队门槛，对要上线 Agent 的团队有实操价值。</li>
+<li><strong>锐评</strong>: 黑盒 + taxonomy-driven + 只要系统描述，工程化红队的方向是对的。但今天这批安全 paper 扎堆，套路高度雷同：定义 taxonomy → 跑几个 Agent 框架 → 出 heatmap。区分度在于 taxonomy 是否真覆盖了新攻击面、还是把 OWASP 抄一遍。Enkrypt AI 是安全公司，实用倾向可信，学术新意存疑。👀</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2609.09647v1" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🛡️ Agent 安全与红队"><h3>10. An Experimental Evaluation of Multimodal Prompt Injection Attacks on Agentic AI Frameworks</h3>
+<ul>
+<li><strong>作者</strong>: Viet K. Nguyen, Mohammad I. Husain</li>
+<li><strong>机构</strong>: Affiliation: California State Polytechnic University, Pomona, Affiliation: </li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2609.09404v1">arXiv</a> | <a href="https://arxiv.org/pdf/2609.09404v1">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2609.09404v1/architecture.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: <span class="wikilink">MMPIBench</span> 是可复现 benchmark，测量多模态提示注入：Agent 会读图，攻击者可把文本塞进图像，绕过用户直接进入 Agent 上下文。它建模了 Agent 循环里每一遍（input assembly → 决策 → 调工具 → 读返回）都是注入点。</li>
+<li><strong>对比方法/Baselines</strong>: 覆盖 <span class="wikilink">CrewAI</span>、<span class="wikilink">LangGraph</span>、<span class="wikilink">AutoGen</span>、<span class="wikilink">LlamaIndex</span> 四大框架，涉及 <span class="wikilink">OCR</span>、QR 码注入。</li>
+<li><strong>借鉴意义</strong>: 多模态 Agent 的图像注入是真实且被低估的攻击面，横跨四大主流框架的评测对选型/加固有直接参考。</li>
+<li><strong>锐评</strong>: 把「图像即注入通道」讲清楚了，且横扫 CrewAI/LangGraph/AutoGen/LlamaIndex 四大框架，覆盖面比大多数单框架 paper 诚实。加分。扣分：多模态注入的核心机制早有人提，benchmark 的贡献更多是「系统化跑一遍」，novelty 有限。但作为选型时的安全参照，实用性在线。👀</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2609.09404v1" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🛡️ Agent 安全与红队"><h3>11. Arbitrary Cipher Attacks Against Large Language Models Do Not Require Fine-Tuning</h3>
+<ul>
+<li><strong>作者</strong>: Thomas Rivasseau</li>
+<li><strong>机构</strong>: Affiliation: School of Information Studies, McGill University, Affiliation: </li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2609.09553v1">arXiv</a> | <a href="https://arxiv.org/pdf/2609.09553v1">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2609.09553v1/graphix/Attk.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2609.09553v1/graphix/OOD_comm.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2609.09553v1/graphix/gpt5.5.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: <span class="wikilink">Arbitrary-Cipher</span> 展示密文/隐蔽通信越狱攻击无需微调即可实施——此前这类攻击被认为需要通过商业模型的 fine-tuning API。作者从 tokenization（BPE 子词）角度切入构造攻击。</li>
+<li><strong>对比方法/Baselines</strong>: 针对 <span class="wikilink">OpenAI</span> <span class="wikilink">GPT</span> 系列（含 gpt5.5），报 <span class="wikilink">ASR</span>，涉及 <span class="wikilink">OOD</span> 通信。</li>
+<li><strong>借鉴意义</strong>: 免微调的密文越狱降低了攻击门槛，对做 LLM 安全对齐/内容审核的人是个警示。</li>
+<li><strong>锐评</strong>: 单作者、McGill，结论「密文越狱不用微调也行」有点吓人但可信——越狱本就是猫鼠游戏。价值在于把攻击门槛拉低这个事实。但这类 paper 天生偏 report 性质，缺乏防御侧贡献，读完更像安全趣闻而非可落地方法。⚠️</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2609.09553v1" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🛡️ Agent 安全与红队"><h3>12. CS-Guard: Benchmarking LLM Guardrails for Code Generation Security</h3>
+<ul>
+<li><strong>作者</strong>: Jinyang Li, Mingyu Guo, Hung X. Nguyen</li>
+<li><strong>机构</strong>: Email: , Affiliation: Adelaide University, Affiliation: </li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2609.09798v1">arXiv</a> | <a href="https://arxiv.org/pdf/2609.09798v1">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2609.09798v1/attack_illustrate.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: <span class="wikilink">CS-Guard</span> 号称首个系统评测代码生成安全 guardrail 的 benchmark，含 1000 条高质量恶意生成 prompt、7 种越狱攻击，以及新颖的「虚构场景攻击」（fictional scenario attack）——把恶意行为包装成合法软件开发场景。</li>
+<li><strong>对比方法/Baselines</strong>: 评测各类 guardrail，攻击涉及 obfuscation/fictional scenario 等类别（FSA）。</li>
+<li><strong>借鉴意义</strong>: 代码生成安全对 Copilot 类产品是刚需，虚构场景攻击这个 idea 有点意思，对做代码安全过滤的团队有参考。</li>
+<li><strong>锐评</strong>: 「首个 benchmark」+「1000 条 prompt」是标准的刷基准配方，但 fictional scenario attack（把恶意需求裹成合法开发场景）这个点子确实狡猾、比单纯混淆高级。可惜整体仍是「造个 benchmark 发个 paper」的模板，防御方案着墨少。数据集若开源尚可一用。🫠</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2609.09798v1" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🛡️ Agent 安全与红队"><h3>13. LexAgentHallu: A Hierarchical Benchmark for Profiling Hallucinations in Legal Agents</h3>
+<ul>
+<li><strong>作者</strong>: Yujin Zhou, Mingxuan Zheng, Chuxue Cao, Yidan Huang, Jiale Chen, Yike Guo, Sirui Han</li>
+<li><strong>机构</strong>: Email: , Affiliation: Hong Kong University of Science and Technology, Affiliation: </li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2609.09754v1">arXiv</a> | <a href="https://arxiv.org/pdf/2609.09754v1">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2609.09754v1/figure11.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2609.09754v1/fig_cooccurrence.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: <span class="wikilink">LexAgentHallu</span> 是分层 benchmark，刻画法律 Agent 的幻觉：工具增强的法律 Agent 会产生 agentic 幻觉，工具调用和推理错误级联成编造判例、错引权威。现有法律基准只测单轮 QA + 结果级指标，通用幻觉基准又缺法律诊断能力。</li>
+<li><strong>对比方法/Baselines</strong>: 对比 <span class="wikilink">LawBench</span>、<span class="wikilink">LexEval</span>、<span class="wikilink">LegalBench</span>、<span class="wikilink">LEXam</span> 等，Agent 用 <span class="wikilink">ReAct</span>。</li>
+<li><strong>借鉴意义</strong>: 法律是高风险垂直场景，工具调用错误级联成幻觉的诊断有价值，但对推荐/广告主线基本无关。</li>
+<li><strong>锐评</strong>: 又一篇「垂直领域 + Agent + 幻觉基准」的模板作，把 AgentBench 的套路搬到法律。分层刻画「工具错误如何级联成编造判例」比笼统测 QA 细致，算认真。但对你的领域几乎无迁移价值，属于「知道有这么个东西」即可。💤</li>
+</ul>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2609.09754v1" target="_blank" rel="noopener">📖 AI 精读</a></div></div>
+<div id="panel-llm工程与代码" class="tab-panel"><h2>🛠️ LLM 工程与代码</h2><div class="paper-card" data-topic="🛠️ LLM 工程与代码"><h3>14. Φ-Bench: Can Large Language Models Engineer the Infrastructure That Powers Them?</h3>
+<ul>
+<li><strong>作者</strong>: Leilei Ding, Shumin Wang, Yuting Huang, Fanqi Wan, Yinmin Zhang, Qi Han, Yiming Xu, Feiyuan Zhang, Xiaomeng Chu, Guoliang You, Wuyang Zhang, Daxin Jiang, Yanyong Zhang</li>
+<li><strong>机构</strong>: Peking University, The Hong Kong University of Science and Technology, University of Pennsylvania, University of Science and Technology of China, Yale University, and Yanyong Zhang <a href="&#109;&#97;&#105;&#108;&#116;&#111;&#58;&#121;&#97;&#110;&#121;&#111;&#110;&#103;&#122;&#64;&#117;&#115;&#116;&#99;&#46;&#101;&#100;&#117;&#46;&#99;&#110;">&#121;&#97;&#110;&#121;&#111;&#110;&#103;&#122;&#64;&#117;&#115;&#116;&#99;&#46;&#101;&#100;&#117;&#46;&#99;&#110;</a></li>
+<li><strong>链接</strong>: <a href="https://arxiv.org/abs/2609.10226">arXiv</a> | <a href="https://arxiv.org/pdf/2609.10226">PDF</a></li>
+<li><strong>来源</strong>: 📰 HF Daily，⬆️ 4</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2609.10226v1/framework.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: <span class="wikilink">Phi-Bench</span> 问一个宏大问题：LLM 能否工程化「支撑它们自己运行的基础设施」？针对现有 benchmark 只测孤立 kernel、预定义算子或预设优化目标，无法评估 LLM 端到端做基础设施工程的能力。</li>
+<li><strong>对比方法/Baselines</strong>: 评测 <span class="wikilink">DeepSeek</span> 等模型，涉及 KFC/BPB 等自定义指标。</li>
+<li><strong>借鉴意义</strong>: LLM 自举优化基础设施是个诱人的元问题，对做 AI infra / 编译优化的人有参考，但当前更多是提出问题而非解决。</li>
+<li><strong>锐评</strong>: Φ-Bench 这名字和「LLM 能否工程化自己的基础设施」的 framing 很唬人，署名机构一长串（北大/港科大/UPenn/USTC/Yale）阵仗不小。但「端到端基础设施工程」这种开放任务，评测标准的客观性是最大隐患——很容易变成「LLM 生成了能跑的代码就算赢」。概念价值 &gt; 落地价值。🫠</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2609.10226" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🛠️ LLM 工程与代码"><h3>15. A-JIT: Agentic Just-In-Time Software Construction</h3>
+<ul>
+<li><strong>作者</strong>: Mark Marron, Earl T. Barr</li>
+<li><strong>机构</strong>: email:, Affiliation: University of Kentucky, Affiliation: University College London, Affiliation: </li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2609.10248v1">arXiv</a> | <a href="https://arxiv.org/pdf/2609.10248v1">PDF</a></li>
+<li>
+<p><strong>来源</strong>: 📄 arXiv 关键词检索</p>
+</li>
+<li>
+<p><strong>核心方法</strong>: <span class="wikilink">A-JIT</span> 提出 Agentic Just-In-Time 软件构建范式，用能持续演化的动态软件系统替代静态二进制。核心是 tactile values 概念，基于 <span class="wikilink">BAPI</span> 格式实现任意值的人类可读往返序列化，并允许在值内嵌简单表达式求值。</p>
+</li>
+<li><strong>对比方法/Baselines</strong>: 基于 BAPI 格式（Marron 2024），涉及 ForecastSI/TempRange 等示例。</li>
+<li><strong>借鉴意义</strong>: 「软件即时按需生成」是有想象力的范式，但离生产实践很远，更适合关注 Agent 编程范式前沿的人。</li>
+<li><strong>锐评</strong>: 愿景很大——「代码不再是固定产物、而是永续演化的系统」，读着很科幻。但 vision paper 的通病是：demo 很美，一旦碰到生产环境的可靠性/可测试性/版本控制就现原形。tactile values + BAPI 是个具体抓手，算没完全飘在空中。当前阶段属于「记个方向」。💤</li>
+</ul>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2609.10248v1" target="_blank" rel="noopener">📖 AI 精读</a></div></div>
+<hr>
+<h2>被排除的论文</h2>
+<ul>
+<li>Multi-Agent Reinforcement Learning for Autonomous UAV Exploration in Wildfire Response — UAV 自主导航属机器人/自主系统领域，命中 negative_keywords（robot/autonomous），与推荐/广告/LLM 主线无关</li>
+<li>Searching for New Physics with Reinforcement Learning — 粒子物理 SMEFT 应用，仅蹭 RL 关键词，领域完全无关</li>
+<li>OntologyAligner: ... Biomedical Ontology Normalization — 生物医学本体归一化，命中 negative_keywords（biomedical/diagnosis）</li>
+<li>Distributed Physical Layer Authentication and Collaborative RSMA in Non-Terrestrial Networks via Graph RL — 无线通信物理层认证，仅蹭 Graph RL，属电信领域，与关注方向无交集</li>
+<li>HiRAD: A Flexible Large-Scale AGV Routing System — 仓储 AGV 路径规划（MAPF），命中 negative_keywords（robot/manipulation-adjacent），与主线无关</li>
+</ul>
+<p>Agent 安全/红队论文正在批量涌现，但同质化严重（定义 taxonomy → 跑几个框架 → 出 heatmap），真正有工程增量的是把 RL 后训练的 token 对齐、stale critic 这些落地痛点讲透的系统级工作。</p></div>
+<footer style="text-align:center;color:var(--text2);margin:3em 0 1em;font-size:0.85em;">
+  Generated by daily-papers-web &middot; Powered by Claude Code
+</footer>
+<script src="tabs.js"></script>
+
+</body>
+</html>
