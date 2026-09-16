@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>2026-09-16 论文推荐</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.21/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.21/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.21/dist/contrib/auto-render.min.js"
+  onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}]});"></script>
+<link rel="stylesheet" href="style.css">
+<style>body{max-width:960px;}</style>
+
+</head>
+<body>
+<nav class="nav"><a href="index.html">🏠 首页</a><a href="2026-09-15.html">← 前一天</a></nav>
+<div class="detail-page"><h1>🔪 今日锐评</h1>
+<p>今天是 Agent 大杂烩日：30 篇候选里超过一半都在往 LLM 上贴 "agentic" 标签，真正有硬核贡献的没几篇。亮点是几篇直面 agent 系统性失效的工作（社会性协作崩溃、长程压测、递归自改进），以及两篇罕见地做正经科学的——LLM 的 belief state 几何和 stegomalware 权重隐写。推荐系统/广告方向今天颗粒无收，全是 agent 和多模态幻觉。</p>
+<h2>分流表</h2>
+<table>
+<thead>
+<tr>
+<th>等级</th>
+<th>论文</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>🔥 必读</td>
+<td><span class="wikilink">RSIAgent</span>（training-free 递归自改进 + 自主记忆构建，67 upvotes 不是白来的） · <span class="wikilink">Belief-State-Geometry</span>（用 HMM 探针证明 LLM 在 in-context 里真的建了贝叶斯信念几何，少有的机制可解释性硬货）</td>
+</tr>
+<tr>
+<td>👀 值得看</td>
+<td><span class="wikilink">Social-Harness</span>（诚实且能干的 agent 之间照样协作崩溃，直击 agentic society 痛点） · <span class="wikilink">Emergence-World</span>（长程多 agent 对抗压测环境，安全评估视角） · <span class="wikilink">Context-Trimming</span>（agentic workflow 上下文裁剪的失效边界与预算护栏，工程实用） · <span class="wikilink">Mo-Models</span>（8 种 MAS 模型选择策略系统评测，反直觉结论） · <span class="wikilink">SAVOR</span>（置信度校准 RL 治多模态幻觉） · <span class="wikilink">Stegomalware</span>（权重排列对称性藏毒 + 中和，供应链安全） · <span class="wikilink">VLoc-Bench</span>（仓库级 agent 漏洞定位 benchmark）</td>
+</tr>
+<tr>
+<td>💤 可跳过</td>
+<td><span class="wikilink">Agentic-Tabular-HPO</span>（让 agent 设计 HPO 搜索空间，结论平淡） · <span class="wikilink">AREA</span>（又一篇 MLLM 证据选择，增量） · <span class="wikilink">SSAV</span>（training-free 幻觉验证，和 SAVOR 撞车但更弱） · <span class="wikilink">SEAA</span>（自涌现 agent 架构，概念堆砌大于实证）</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<div class="tab-bar"><button class="tab-btn active" data-tab="all" onclick="switchTab('all')">📋 全部<span class="tab-count">18</span></button><button class="tab-btn" data-tab="agent自改进与失效模式" onclick="switchTab('agent自改进与失效模式')">🤖 🤖 Agent 自改进与失效模式<span class="tab-count">4</span></button><button class="tab-btn" data-tab="llm机制与可解释性" onclick="switchTab('llm机制与可解释性')">🤖 🧠 LLM 机制与可解释性<span class="tab-count">2</span></button><button class="tab-btn" data-tab="agent工程与系统" onclick="switchTab('agent工程与系统')">🤖 ⚙️ Agent 工程与系统<span class="tab-count">4</span></button><button class="tab-btn" data-tab="多模态幻觉治理" onclick="switchTab('多模态幻觉治理')">🎨 👁️ 多模态幻觉治理<span class="tab-count">3</span></button><button class="tab-btn" data-tab="多模态生成" onclick="switchTab('多模态生成')">🎨 🎬 多模态生成<span class="tab-count">1</span></button><button class="tab-btn" data-tab="llm安全" onclick="switchTab('llm安全')">🛡 🔒 LLM 安全<span class="tab-count">2</span></button><button class="tab-btn" data-tab="agent记忆" onclick="switchTab('agent记忆')">🧠 🧩 Agent 记忆<span class="tab-count">1</span></button><button class="tab-btn" data-tab="其他agent应用" onclick="switchTab('其他agent应用')">🤖 🔬 其他 Agent 应用<span class="tab-count">1</span></button></div>
+<div id="panel-all" class="tab-panel active"><h2>🤖 Agent 自改进与失效模式</h2><div class="paper-card" data-topic="🤖 Agent 自改进与失效模式"><h3>1. RSIAgent: Autonomous Exploration for Recursive Self-improvement in New Environments</h3>
+<ul>
+<li><strong>作者</strong>: Sibo Zhu, Shicheng Fan, Xinyue Wang, Wenyi Wu, Kun Zhou, Biwei Huang</li>
+<li><strong>机构</strong>: 2]University of California San Diego, 3]University of Illinois Chicago, Affiliation: , Email: </li>
+<li><strong>链接</strong>: <a href="https://arxiv.org/abs/2609.15364">arXiv</a> | <a href="https://arxiv.org/pdf/2609.15364">PDF</a></li>
+<li><strong>来源</strong>: 🔥 HF Trending，⬆️ 67</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2609.15364v1/RSIAgent.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2609.15364v1/ExRSI_framework.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2609.15364v1/assets/memory_case_studies/03_T049_baseline_runtime_render.jpg" /></div>
+<ul>
+<li><strong>核心方法</strong>: <span class="wikilink">RSIAgent</span> 是一个 training-free 的多 agent 框架，通过 curriculum / actor / verifier 三类 agent 协作，在陌生环境中做递归自改进（<span class="wikilink">RSI</span>）。核心是 autonomous memory construction——agent 自主探索环境、验证结果、把有效经验沉淀进记忆，从而在不改权重的前提下持续变强。</li>
+<li><strong>对比方法/Baselines</strong>: 对比 <span class="wikilink">GLM-5</span> 等基座 agent，在 GUI / <span class="wikilink">ALE</span> 类环境上评测 <span class="wikilink">PASS</span>/<span class="wikilink">FAIL</span> 成功率。</li>
+<li><strong>借鉴意义</strong>: 对做 agent memory 和 tool use 的人有直接价值：证明了不 fine-tune、纯靠记忆机制也能实现 self-improvement，成本极低。</li>
+<li><strong>锐评</strong>: training-free + 递归自改进 + 三 agent 分工，思路干净，67 upvotes 说明社区认可。但老问题依旧："验证器"本身可靠吗？verifier 是同一个 LLM 的话，自我验证的天花板就是模型自己的判断力，记忆里沉淀的可能是自信的错误。想看它在对抗环境里 verifier 被骗时会发生什么。👀</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2609.15364" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🤖 Agent 自改进与失效模式"><h3>2. Emergence World: Adversarial Stress-Testing of Long-Horizon Multi-Agent Systems</h3>
+<ul>
+<li><strong>作者</strong>: Deepak Akkil   Tamer Abuelsaad   Karthik Vikram</li>
+<li><strong>机构</strong>: Affiliation: </li>
+<li><strong>链接</strong>: <a href="https://arxiv.org/abs/2609.17320">arXiv</a> | <a href="https://arxiv.org/pdf/2609.17320">PDF</a></li>
+<li><strong>来源</strong>: 📰 HF Daily，⬆️ 0</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2609.17320v1/figures/Conformity.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2609.17320v1/figures/language_pct_opaque_timeseries.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2609.17320v1/figures/model_persona_variation.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: <span class="wikilink">Emergence-World</span> 是一个持续运行的多 agent 环境，专门对长程自主系统做对抗压力测试。核心论点：agent 的失效会通过记忆、工具、其他 agent 和环境状态在交互结束后长期传播，孤立评估单次模型响应根本抓不到这种安全风险。</li>
+<li><strong>对比方法/Baselines</strong>: 在 <span class="wikilink">GPT-5</span>、<span class="wikilink">DeepSeek</span> 等模型上观察 conformity（从众）、语言漂移等涌现行为。</li>
+<li><strong>借鉴意义</strong>: 对 agent 安全评估是重要视角转换：从"单轮回答对不对"转向"长程部署里失效如何累积传播"。</li>
+<li><strong>锐评</strong>: 选题非常对——大家都在刷单轮 benchmark，很少有人管 agent 长期跑起来后失效怎么滚雪球。conformity 时间序列图很有说服力。可惜 hf upvotes 是 0，可能是写作或 demo 没跟上。方法论价值 &gt; 当前影响力，值得埋伏。👀</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2609.17320" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🤖 Agent 自改进与失效模式"><h3>3. Agentic Societies Need a Social Harness</h3>
+<ul>
+<li><strong>作者</strong>: Tapan Chugh, Vidushi Singh, Krish Jain, Arvind Krishnamurthy, Ratul Mahajan</li>
+<li><strong>机构</strong>: Affiliation:, Affiliation: University of Washington, Seattle, Washington, USA</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2609.17527v1">arXiv</a> | <a href="https://arxiv.org/pdf/2609.17527v1">PDF</a></li>
+<li>
+<p><strong>来源</strong>: 📄 arXiv 关键词检索</p>
+</li>
+<li>
+<p><strong>核心方法</strong>: <span class="wikilink">Social-Harness</span> 实验性地证明：在跨信任边界、代表不同 principal 的 agentic society 里，即使全是诚实且能干的 agent，用现有 harness 和消息原语也常常达不成好结果；而少数 faulty/malicious agent 就能拖垮整个协作。作者主张需要一个专门的 "social harness" 层。</p>
+</li>
+<li><strong>对比方法/Baselines</strong>: 基于 <span class="wikilink">OpenClaw</span>/<span class="wikilink">NanoClaw</span> 等 harness 做协作失败模式分析（RQ1 诚实 agent 为何失败，RQ2 恶意 agent 引入什么新失效）。</li>
+<li><strong>借鉴意义</strong>: 对所有想搭多 agent 系统的人是当头一棒：协作失败不是模型不够聪明，是缺乏社会性协调机制。</li>
+<li><strong>锐评</strong>: "诚实且能干的 agent 照样协作崩溃"这个结论比"恶意 agent 搞破坏"有意思得多，因为它说明问题出在通信原语和协调机制而非 agent 本身。华盛顿大学这帮人（Krishnamurthy/Mahajan 是系统方向老手）看问题的角度是对的。扣分项："social harness"目前更像纲领而非成品方案。⚠️</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2609.17527v1" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🤖 Agent 自改进与失效模式"><h3>4. Self-Emergence Agent Architecture:Behavior-Inertia HMM, Reflexive Metacognition,and Social-Contrastive Self-Modeling</h3>
+<ul>
+<li><strong>作者</strong>: Xiaoyang Liu</li>
+<li><strong>机构</strong>: Affiliation: , Email: </li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2609.17331v1">arXiv</a> | <a href="https://arxiv.org/pdf/2609.17331v1">PDF</a></li>
+<li>
+<p><strong>来源</strong>: 📄 arXiv 关键词检索</p>
+</li>
+<li>
+<p><strong>核心方法</strong>: <span class="wikilink">SEAA</span> 提出自涌现 agent 架构，用 behavior-inertia HMM 建模行为惯性、reflexive metacognition 做反思、social-contrastive self-modeling 建立自我-他者边界，声称解决 LLM agent 的人格漂移、非进化反思和缺乏自我边界三大结构性缺陷。</p>
+</li>
+<li><strong>对比方法/Baselines</strong>: 在 <span class="wikilink">DeepSeek</span> 上用 HMM + <span class="wikilink">EMA</span> 等做行为建模。</li>
+<li><strong>借鉴意义</strong>: 对 generative agent 模拟方向有概念启发，但落地价值存疑。</li>
+<li><strong>锐评</strong>: 开头引庄子"子非鱼"就知道调性了——哲学包装很足，SEAA/MOST/LEAST/REASON 一堆自造缩写。单作者、无 upvotes、缺乏扎实实验对比，属于概念先行的 position paper。想法不坏，但"自涌现"这种词需要用硬 benchmark 兑现，现在兑现不了。🫠</li>
+</ul>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2609.17331v1" target="_blank" rel="noopener">📖 AI 精读</a></div><h2>🧠 LLM 机制与可解释性</h2><div class="paper-card" data-topic="🧠 LLM 机制与可解释性"><h3>5. Large Language Models Develop Belief State Geometry In-Context</h3>
+<ul>
+<li><strong>作者</strong>: Balcells, Daniel, Lee, Andrew Jun, Rastogi, Chirag, Riechers, Paul M., Shai, Adam, Poncini, Xavier</li>
+<li><strong>机构</strong>: Astera Institute</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2609.17376v1">arXiv</a> | <a href="https://arxiv.org/pdf/2609.17376v1">PDF</a></li>
+<li>
+<p><strong>来源</strong>: 📄 arXiv 关键词检索</p>
+</li>
+<li>
+<p><strong>核心方法</strong>: <span class="wikilink">Belief-State-Geometry</span> 在受控设置下研究 ICL 的表征：用隐马尔可夫模型（<span class="wikilink">HMM</span>）生成的数据 prompt LLM，然后探针检测模型内部是否表征了 belief state——即给定观测 token 历史后，对 HMM 隐藏状态的后验分布。</p>
+</li>
+<li><strong>对比方法/Baselines</strong>: 线性/非线性探针在 HMM 后验几何上的拟合。</li>
+<li><strong>借鉴意义</strong>: 对理解 ICL 本质是重要一步：如果 LLM 真的在内部维护贝叶斯信念更新，那 ICL 就不只是模式匹配，而是隐式的贝叶斯推断。</li>
+<li><strong>锐评</strong>: Astera Institute 出品，罕见的做正经科学而非刷榜的工作。用 HMM 做 ground-truth 后验、再探针验证 belief state geometry，实验设计干净、可证伪。这类机制可解释性研究比又一篇 agent 框架有长期价值得多。唯一遗憾：HMM 太玩具，真实语言的 belief state 会不会同样干净是个大问号。🔥</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2609.17376v1" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🧠 LLM 机制与可解释性"><h3>6. Do LLMs Have Values? A Quantitative Analysis and Alignment Framework for Values in Large Language Models</h3>
+<ul>
+<li><strong>作者</strong>: Keqing Zhang, Jingyu Chen, Yufan Liu, Yongqiang Zhu, Nai Ding, Lai Jiang, Congyan Lang, Bing Li, Weiming Hu</li>
+<li><strong>机构</strong>: Email: , Affiliation: Zhejiang University, Affiliation: State Key Laboratory of Multimodal Artificial Intelligence Systems, Institute of Automation, Chinese Academy of Sciences, Affiliation: , Affiliation: Beijing Jiaotong University, Affiliation: School of Industry-education Integration, University of Chinese Academy of Sciences, Affiliation: Beihang University</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2609.16589v1">arXiv</a> | <a href="https://arxiv.org/pdf/2609.16589v1">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2609.16589v1/241.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2609.16589v1/242.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: 研究 LLM 是否"有价值观"：量化分析 LLM 面对措辞微变时的 swing（波动）与面对纠偏指令时的 rigidity（顽固）这一行为悖论，提出对齐框架（<span class="wikilink">PEC</span> + <span class="wikilink">WVS</span> 世界价值观调查），用 <span class="wikilink">SFT</span>/<span class="wikilink">DPO</span> 校准。</li>
+<li><strong>对比方法/Baselines</strong>: <span class="wikilink">CoT</span> prompting、<span class="wikilink">DPO</span>、<span class="wikilink">UMAP</span> 可视化价值分布。</li>
+<li><strong>借鉴意义</strong>: 对 alignment 研究有价值：把"价值观不一致"拆成 swing 和 rigidity 两个可测维度。</li>
+<li><strong>锐评</strong>: "swing 与 rigidity 并存"这个悖论抓得准——模型对措辞敏感却对纠偏指令免疫，确实是 alignment 的尴尬现实。框架和实验都算扎实。但"LLM 有没有价值观"这个标题党式提问，答案本质还是"取决于你怎么探测"，形而上讨论多于工程结论。👀</li>
+</ul>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2609.16589v1" target="_blank" rel="noopener">📖 AI 精读</a></div><h2>⚙️ Agent 工程与系统</h2><div class="paper-card" data-topic="⚙️ Agent 工程与系统"><h3>7. Protocol-Preserving Context Trimming for Agentic Workflows: Benefits, Failure Regimes, and Budget Guardrails</h3>
+<ul>
+<li><strong>作者</strong>: Gaggar, Harish</li>
+<li><strong>机构</strong>: Email: harish_gaggar@intuit.com</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2609.16461v1">arXiv</a> | <a href="https://arxiv.org/pdf/2609.16461v1">PDF</a></li>
+<li>
+<p><strong>来源</strong>: 📄 arXiv 关键词检索</p>
+</li>
+<li>
+<p><strong>核心方法</strong>: <span class="wikilink">Context-Trimming</span> 研究 protocol-preserving 的上下文裁剪：在多步 agentic workflow 里，把"保留协议关键信息（指令、工具状态、未决依赖）"作为可靠性约束来裁剪历史，控制上下文无限增长带来的成本。核心贡献是刻画了裁剪的收益、失效regime 和预算护栏（budget guardrails）。</p>
+</li>
+<li><strong>对比方法/Baselines</strong>: 无脑截断 vs protocol-preserving 裁剪的可靠性对比。</li>
+<li><strong>借鉴意义</strong>: 对做 agent 工程的人极实用：上下文爆炸是真实痛点，这篇给出了何时裁、裁多少不会崩的边界。</li>
+<li><strong>锐评</strong>: Intuit 工程师写的，一看就是被生产环境上下文成本教育过的。不追求 fancy，直接给 failure regime 和 guardrail，这种"什么时候会崩"的负面结论比"我们又快了 X%"有用得多。缺图缺 method_summary 是硬伤，需要读正文才知道护栏具体怎么设。👀</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2609.16461v1" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="⚙️ Agent 工程与系统"><h3>8. Mo' Models, Mo' Problems: How to best select model pools when designing Multi-Agent Systems</h3>
+<ul>
+<li><strong>作者</strong>: Sara Vera Marjanović, Jiacheng Xu, Aleksandr Laptev, Grigor Nalbandyan, Erik Arakelyan, Evelina Bakhaturina</li>
+<li><strong>机构</strong>: Affiliation: NVIDIA*Work done during internship at NVIDIA, Correspondence:jiachengx@nvidia.com, Affiliation: , Affiliation: University of Copenhagen</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2609.17306v1">arXiv</a> | <a href="https://arxiv.org/pdf/2609.17306v1">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2609.17306v1/images/MAS_types.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2609.17306v1/images/emojis/thought-balloon.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2609.17306v1/images/Dataset_correlations.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: <span class="wikilink">Mo-Models</span> 系统评测了 8 种多 agent 系统（<span class="wikilink">MAS</span>）的模型选择策略（模型大小、准确率、答案多样性），覆盖 before-generation（routing）和 after-generation 两类，回答"开源模型池这么大，怎么挑最优组合"。</li>
+<li><strong>对比方法/Baselines</strong>: 在 <span class="wikilink">GPQA</span>、<span class="wikilink">HLE</span> 等上对比不同选择策略。</li>
+<li><strong>借鉴意义</strong>: 对搭 MAS 的人有直接指导：模型池不是越大越好，选择策略比模型数量更关键。</li>
+<li><strong>锐评</strong>: NVIDIA 实习生的活，选题很实在——大家堆 agent 时凭感觉选模型，很少有人系统研究"怎么选"。8 种策略横评有工程参考价值。标题玩 Notorious B.I.G. 的梗（Mo Money Mo Problems）加分。就是结论可能高度依赖所选 benchmark，换个任务域未必成立。👀</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2609.17306v1" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="⚙️ Agent 工程与系统"><h3>9. Cognitive Admission Control: Risk-Conditioned Assurance for Consequential Actions in Agentic Distributed Systems</h3>
+<ul>
+<li><strong>作者</strong>: Jun He, Deying Yu</li>
+<li><strong>机构</strong>: Affiliation: </li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2609.16313v1">arXiv</a> | <a href="https://arxiv.org/pdf/2609.16313v1">PDF</a></li>
+<li>
+<p><strong>来源</strong>: 📄 arXiv 关键词检索</p>
+</li>
+<li>
+<p><strong>核心方法</strong>: <span class="wikilink">CAC</span>（Cognitive Admission Control）为 agentic 分布式系统里的 consequential action（会改动外部基础设施的动作）提供风险条件化的准入控制：策略把"带类型的动作 + 建模风险"映射到 assurance obligation（谓词、证据类、作用域、新鲜度、witness-set 约束），用类型化 admission calculus 保证只有证据充分才放行。</p>
+</li>
+<li><strong>对比方法/Baselines</strong>: <span class="wikilink">TypeScript</span> 实现的 <span class="wikilink">AdmissionValid</span>/<span class="wikilink">LivePolicy</span>/<span class="wikilink">UnsafeEffect</span> 形式化验证。</li>
+<li><strong>借鉴意义</strong>: 对 agent 安全落地有价值：给"agent 有权限但没证据就不该执行"提供了形式化框架。</li>
+<li><strong>锐评</strong>: 把准入控制这套经典系统安全思路搬到 agent 上，方向对。类型化 calculus + 证据 discharge 有理论严谨性。但这类形式化框架的通病是：优雅归优雅，真实 LLM agent 的"证据"往往是自然语言、难以谓词化，工程落地和纸面模型之间差着一整个鸿沟。⚠️</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2609.16313v1" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="⚙️ Agent 工程与系统"><h3>10. End-to-End Latency-Minimizing and Load-Balanced Request Scheduling for Edge LLM Inference in Agentic AI Services</h3>
+<ul>
+<li><strong>作者</strong>: Zhen Li, Jun Cai, Senior Member, IEEE, Haoran Gao, An Li, Tan Li</li>
+<li><strong>机构</strong>: Zhen Li, Jun Cai (corresponding author), An Li, and Haoran Gao are with the Department of Electrical and Computer Engineering, Concordia University, Montreal, QC, H3G 1M8, Canada. (E-mail: {zhen.li, jun.cai}@concordia.ca, {haoran.gao, an.li}@mail.concordia.ca), Tan Li is with the Department of Computer Science, Hang Seng University of Hong Kong, Hong Kong SAR. (E-mail: tanli@hsu.edu.hk)</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2609.17193v1">arXiv</a> | <a href="https://arxiv.org/pdf/2609.17193v1">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2609.17193v1/SystemModel.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: 针对 edge LLM 推理的端到端时延最小化 + 负载均衡请求调度：在异构边缘服务器上，考虑通信/计算能力差异和动态推理状态，做时变且跨时隙耦合的服务器选择，用 <span class="wikilink">PPO</span> 优化。</li>
+<li><strong>对比方法/Baselines</strong>: 对比 Orca 迭代级调度、vLLM <span class="wikilink">PagedAttention</span>/<span class="wikilink">KV</span> cache 等连续批处理方案。</li>
+<li><strong>借鉴意义</strong>: 对 agent 服务的推理基础设施有参考价值。</li>
+<li><strong>锐评</strong>: 扎实的系统调度工作，把边缘 LLM serving 建成时变耦合优化再上 PPO，工程完整。但"agentic AI"这个帽子戴得有点勉强——本质是分布式推理调度，和 agent 的 planning/tool use 关系不大，蹭热词嫌疑。做 serving 的可以看，做 agent 的关系不大。🫠</li>
+</ul>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2609.17193v1" target="_blank" rel="noopener">📖 AI 精读</a></div><h2>👁️ 多模态幻觉治理</h2><div class="paper-card" data-topic="👁️ 多模态幻觉治理"><h3>11. SAVOR: Self-Aware Visual Grounding via Confidence-Calibrated Reinforcement Learning for Multimodal Hallucination Mitigation</h3>
+<ul>
+<li><strong>作者</strong>: Zixiu Ding, Zilin Zhao, Yingjie He, Xinlang Kang, Guansu Wang, Wei Zhang🖂</li>
+<li><strong>机构</strong>: Affiliation: Central South University, Affiliation: , Affiliation: Peking University</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2609.16601v1">arXiv</a> | <a href="https://arxiv.org/pdf/2609.16601v1">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2609.16601v1/overview.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: <span class="wikilink">SAVOR</span> 用置信度校准的强化学习治多模态幻觉：不改 decoding、不做 DPO，而是让模型学会"何时自己的回答不可靠"。用 <span class="wikilink">GRPO</span> 训练，以 <span class="wikilink">ECE</span> 校准置信度，让 self-aware visual grounding 显式建模不确定性。</li>
+<li><strong>对比方法/Baselines</strong>: 对比 <span class="wikilink">DPO</span> 变体、<span class="wikilink">RLHF</span>，在 <span class="wikilink">POPE</span>/<span class="wikilink">AMBER</span>/<span class="wikilink">HallusionBench</span> 上用 <span class="wikilink">InternVL3</span> 评测。</li>
+<li><strong>借鉴意义</strong>: 对做 MLLM 可靠性的人有价值：从"哪个答案更好"转向"什么时候该不确定"。</li>
+<li><strong>锐评</strong>: 切入点比一般幻觉工作聪明——DPO 教"选哪个"，但不教"什么时候该闭嘴"，SAVOR 用置信度校准补这个洞。GRPO + ECE 组合合理，benchmark 覆盖全。质疑点：置信度校准和幻觉抑制之间的因果链需要更强证据，校准好了不必然幻觉就少。👀</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2609.16601v1" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="👁️ 多模态幻觉治理"><h3>12. Semantic-Spatial Agreement Verification for Mitigating Object Hallucination in Multimodal Large Language Models</h3>
+<ul>
+<li><strong>作者</strong>: Ziheng Ren, Qian Gao, Jun Fan, Guohui Ding, Zhenyu Yang, Yuteng Xiao</li>
+<li><strong>机构</strong>: Big Data Applied Technology, Faculty of Computer Science and Technology, Center in Jinan), Qilu University of Technology (Shandong Academy of, Guohui Ding is with Shenyang Aerospace University, Shenyang, China, Laboratory of Computing Power Network and Information Security, Ministry the data and parameter levels, but the cost of high-quality data, Qilu University of Technology (Shandong Academy of Sciences), Jinan 250353, candidate distributions, perform contrastive decoding, or apply, and Information System Security, Shandong Fundamental Research Center, and the Key Laboratory of Computing Power Network and Information Security, direct preference optimization [8], [9]. These approaches</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2609.17269v1">arXiv</a> | <a href="https://arxiv.org/pdf/2609.17269v1">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2609.17269v1/media/image1.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2609.17269v1/media/image2a.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: <span class="wikilink">SSAV</span>（Semantic-Spatial Agreement Verification）是 training-free 的物体幻觉验证方法：检查 MLLM 声称的物体在语义和空间上是否一致，不一致则判为幻觉。</li>
+<li><strong>对比方法/Baselines</strong>: 对比对比解码、DPO，在 <span class="wikilink">POPE</span>/<span class="wikilink">MME</span>/<span class="wikilink">CHAIR</span> 上评测。</li>
+<li><strong>借鉴意义</strong>: training-free 对部署友好，但方法新意有限。</li>
+<li><strong>锐评</strong>: 和 SAVOR 同一天撞车但更弱——SAVOR 从训练侧做置信度校准，SSAV 只是推理时加个语义-空间一致性检查。training-free 是卖点也是天花板：没触及模型为什么幻觉的根因，只是事后过滤。作者机构信息乱成一团（affiliation 字段像没清洗），细节把控存疑。🫠</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2609.17269v1" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="👁️ 多模态幻觉治理"><h3>13. Layers, Sinks, and Scaling: Adaptive Evidence Selection for Multimodal Large Language Models</h3>
+<ul>
+<li><strong>作者</strong>: Zhenbin Wang, Lei Zhang*, Lituan Wang, Wei Huang, Yan Wang, Zhenwei Zhang</li>
+<li><strong>机构</strong>: Sichuan University</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2609.16795v1">arXiv</a> | <a href="https://arxiv.org/pdf/2609.16795v1">PDF</a></li>
+<li>
+<p><strong>来源</strong>: 📄 arXiv 关键词检索</p>
+</li>
+<li>
+<p><strong>核心方法</strong>: <span class="wikilink">AREA</span> 做 MLLM 的自适应证据选择：针对 MLLM 在文本和视觉两模态都可能忽略关键证据的问题，利用 layers/attention sinks/scaling 做自适应证据选择，增强知识密集型 VQA。</p>
+</li>
+<li><strong>对比方法/Baselines</strong>: 在 <span class="wikilink">ViQuAE</span>/<span class="wikilink">AMBER</span> 等 KB-VQA 上评测。</li>
+<li><strong>借鉴意义</strong>: 对多模态检索增强有增量价值。</li>
+<li><strong>锐评</strong>: 又一篇"MLLM 忽略了关键证据所以我们来选证据"的工作。attention sink 这个观察点还行，但整体是把已知现象（模型对某些 token/region 注意力弱）包装成新方法。缺图、缺 method_summary，创新度存疑，属于增量填坑。🫠</li>
+</ul>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2609.16795v1" target="_blank" rel="noopener">📖 AI 精读</a></div><h2>🎬 多模态生成</h2><div class="paper-card" data-topic="🎬 多模态生成"><h3>14. LynnReal-Omni: Native multi-modal Video Generation for Agentic Visual Workflows</h3>
+<ul>
+<li><strong>作者</strong>: LynnReal AI*</li>
+<li><strong>机构</strong>: LynnReal AI, Lynnreal-Omni contributors are listed at the end of the report</li>
+<li><strong>链接</strong>: <a href="https://arxiv.org/abs/2609.15863">arXiv</a> | <a href="https://arxiv.org/pdf/2609.15863">PDF</a></li>
+<li><strong>来源</strong>: 🔥 HF Trending，⬆️ 46</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2609.15863v1/data_pipeline_new.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2609.15863v1/native_dit1.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2609.15863v1/vae_training.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: <span class="wikilink">LynnReal-Omni</span> 是原生多模态视频生成模型，服务 agentic visual workflow。针对视频扩散模型随机、难控、长程漂移的问题，用 agentic visual creation 提供显式参考、可编辑 3D 场景、可执行游戏状态来稳定控制，核心是 <span class="wikilink">MSAVP</span> + 原生 <span class="wikilink">DiT</span> 架构。</li>
+<li><strong>对比方法/Baselines</strong>: 对比 <span class="wikilink">MiniMax</span>、<span class="wikilink">LTX-2</span> 等视频生成模型。</li>
+<li><strong>借鉴意义</strong>: 对多模态生成 + agent 结合方向有参考，46 upvotes 有热度。</li>
+<li><strong>锐评</strong>: 把 agentic 控制信号（3D 场景、游戏状态）喂给视频 DiT 来解决可控性，思路是对的方向。但作者列表"LynnReal AI*"匿名 + "contributors listed at end"，加上 method_names 里混进 OpenAI/LAION/AI 这种噪声词，报告气质大于论文气质。热度真实，硬指标待验证——视频生成最怕 cherry-pick demo。👀</li>
+</ul>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2609.15863" target="_blank" rel="noopener">📖 AI 精读</a></div><h2>🔒 LLM 安全</h2><div class="paper-card" data-topic="🔒 LLM 安全"><h3>15. Permutation-Based Stegomalware in Large Language Models: Threats and Countermeasures</h3>
+<ul>
+<li><strong>作者</strong>: Danny Wood, James Stringer</li>
+<li><strong>机构</strong>: Affiliation: , Email: </li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2609.16193v1">arXiv</a> | <a href="https://arxiv.org/pdf/2609.16193v1">PDF</a></li>
+<li>
+<p><strong>来源</strong>: 📄 arXiv 关键词检索</p>
+</li>
+<li>
+<p><strong>核心方法</strong>: <span class="wikilink">Stegomalware</span> 研究 LLM 权重隐写恶意载荷的威胁与防御：利用模型权重的排列对称性（permutation symmetry）在权重里嵌入 payload，并提出 <span class="wikilink">PermaNet</span> 来跨全部权重中和这类隐写恶意软件（此前工作只能部分中和）。</p>
+</li>
+<li><strong>对比方法/Baselines</strong>: 对比 <span class="wikilink">MaleficNet</span> 攻击、在 <span class="wikilink">TinyLlama</span> 上验证 <span class="wikilink">MHA</span> 权重中和。</li>
+<li><strong>借鉴意义</strong>: 对模型供应链安全（HuggingFace 分发的预训练模型）是重要威胁与防御研究。</li>
+<li><strong>锐评</strong>: 选题又冷又重要——大家都在下载 HF 上的权重，很少有人担心权重本身被塞了隐写恶意载荷。用排列对称性藏毒很巧妙，PermaNet 声称能全权重中和是实打实的防御贡献。这种"攻击可行性 + 防御方案"配套的安全研究含金量高。TinyLlama 规模偏小，大模型上是否同样有效需验证。👀</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2609.16193v1" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🔒 LLM 安全"><h3>16. Vulnerability Localization Benchmark: Measuring Agentic Security Analysis at Repository Scale</h3>
+<ul>
+<li><strong>作者</strong>: Aman Priyanshu, Supriti Vijay, Kimia Majd, Xuhong He, Fraser Burch, Takahiro Matsumoto, Jianliang He, Baturay Saglam, Arthur Goldblatt, Zhuoran Yang, Amin Karbasi</li>
+<li><strong>机构</strong>: Affiliation: Yale University, Affiliation: Carnegie Mellon University, Affiliation:</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2609.15939v1">arXiv</a> | <a href="https://arxiv.org/pdf/2609.15939v1">PDF</a></li>
+<li>
+<p><strong>来源</strong>: 📄 arXiv 关键词检索</p>
+</li>
+<li>
+<p><strong>核心方法</strong>: <span class="wikilink">VLoc-Bench</span> 是仓库级 agent 漏洞定位 benchmark：给定弱点类别（<span class="wikilink">CWE</span>）和陌生仓库，让 agent 找出与该弱点相关的实现文件。设计原则是 repository-agnostic——不泄露仓库特定信息，agent 命名的每个文件都来自自己的搜索。</p>
+</li>
+<li><strong>对比方法/Baselines</strong>: 在 <span class="wikilink">GPT-5</span>、<span class="wikilink">GLM-5</span> 等上评测 <span class="wikilink">CodeScout</span>，用 <span class="wikilink">TNR</span> 等指标。</li>
+<li><strong>借鉴意义</strong>: 对 agent 安全分析评估补了空白：以往只测能否检测/修复漏洞，没测能否定位。</li>
+<li><strong>锐评</strong>: 指出了一个真实盲点——安全评估都在测"能不能修"，跳过了"能不能先找到"。repository-agnostic 设计（不给仓库特定线索）保证了评的是搜索能力而非记忆，这个方法论洁癖值得表扬。耶鲁+CMU 阵容靠谱。就是 benchmark 类工作的价值取决于难度和覆盖，得看它区分度够不够。👀</li>
+</ul>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2609.15939v1" target="_blank" rel="noopener">📖 AI 精读</a></div><h2>🧩 Agent 记忆</h2><div class="paper-card" data-topic="🧩 Agent 记忆"><h3>17. Interactive Memory Learning for Long-Term Conversations</h3>
+<ul>
+<li><strong>作者</strong>: Cai Ke, Jiangyue Yan, Han Zhang, Xin Liu11footnotemark:, Zike Yuan, Yue Yu, Hui Wang,</li>
+<li><strong>机构</strong>: Affiliation: , Email: , Affiliation: Pengcheng Laboratory, China, Affiliation: Harbin Institute of Technology, Shenzhen, China</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2609.17088v1">arXiv</a> | <a href="https://arxiv.org/pdf/2609.17088v1">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2609.17088v1/fig1-7.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2609.17088v1/fig2_new_v2.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: <span class="wikilink">Interactive Memory Learning</span> 针对长程对话：现有方法被动归档信息、不做自适应记忆估值，无法自进化或对齐演变的用户需求。本文用 <span class="wikilink">RL</span> 让 agent 交互式学习记忆管理（<span class="wikilink">RMM</span>），主动评估记忆价值。</li>
+<li><strong>对比方法/Baselines</strong>: 对比 <span class="wikilink">THEANINE</span> 等，在 <span class="wikilink">MSC</span> 等长程对话数据集上评测。</li>
+<li><strong>借鉴意义</strong>: 对 agent memory 方向有价值：从静态启发式归档转向 RL 驱动的自适应记忆估值。</li>
+<li><strong>锐评</strong>: "被动归档 vs 主动估值"的问题定位是对的——现在多数 memory 系统就是无脑存，不管哪条记忆真有用。用 RL 学记忆价值是合理方向。但 RL 训记忆管理的老难题是奖励信号稀疏且延迟（一条记忆的价值可能几十轮后才体现），想看它怎么解决 credit assignment。和你笔记库里 <span class="wikilink">Mem0</span>/<span class="wikilink">MemOS</span> 可对比着读。👀</li>
+</ul>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2609.17088v1" target="_blank" rel="noopener">📖 AI 精读</a></div><h2>🔬 其他 Agent 应用</h2><div class="paper-card" data-topic="🔬 其他 Agent 应用"><h3>18. Agentic Search Spaces for Tabular Machine Learning</h3>
+<ul>
+<li><strong>作者</strong>: Renat Sergazinov†, Artem Chistyakov†‡, Sergey Pankevich†‡, Artem Babenko†‡</li>
+<li><strong>机构</strong>: ††thanks: Corresponding author, email at &lt;mc.sergazinov@gmail.com&gt; † Yandex ‡ HSE University</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2609.16309v1">arXiv</a> | <a href="https://arxiv.org/pdf/2609.16309v1">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2609.16309v1/main_budget_curve.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: <span class="wikilink">Agentic-Tabular-HPO</span> 研究 agentic AI 能否为表格模型设计出超越作者默认的扩展 HPO 搜索空间。</li>
+<li><strong>对比方法/Baselines</strong>: 在 <span class="wikilink">TabM</span>/<span class="wikilink">RealMLP</span>/<span class="wikilink">LightGBM</span> 上对比 <span class="wikilink">AutoGluon</span>/<span class="wikilink">AutoPyTorch</span> 等 AutoML。</li>
+<li><strong>借鉴意义</strong>: 对 AutoML + LLM agent 结合有小众参考价值。</li>
+<li><strong>锐评</strong>: 问题具体（agent 能不能设计更好的 HPO 搜索空间），Yandex 出品实验规范。但结论大概率是"能小幅提升但不惊艳"——让 LLM 调超参搜索空间本质是把先验知识翻译成搜索范围，天花板受限于 LLM 见过的调参经验。属于扎实但注定 incremental 的工作。🫠</li>
+</ul>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2609.16309v1" target="_blank" rel="noopener">📖 AI 精读</a></div></div>
+<div id="panel-agent自改进与失效模式" class="tab-panel"><h2>🤖 Agent 自改进与失效模式</h2><div class="paper-card" data-topic="🤖 Agent 自改进与失效模式"><h3>1. RSIAgent: Autonomous Exploration for Recursive Self-improvement in New Environments</h3>
+<ul>
+<li><strong>作者</strong>: Sibo Zhu, Shicheng Fan, Xinyue Wang, Wenyi Wu, Kun Zhou, Biwei Huang</li>
+<li><strong>机构</strong>: 2]University of California San Diego, 3]University of Illinois Chicago, Affiliation: , Email: </li>
+<li><strong>链接</strong>: <a href="https://arxiv.org/abs/2609.15364">arXiv</a> | <a href="https://arxiv.org/pdf/2609.15364">PDF</a></li>
+<li><strong>来源</strong>: 🔥 HF Trending，⬆️ 67</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2609.15364v1/RSIAgent.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2609.15364v1/ExRSI_framework.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2609.15364v1/assets/memory_case_studies/03_T049_baseline_runtime_render.jpg" /></div>
+<ul>
+<li><strong>核心方法</strong>: <span class="wikilink">RSIAgent</span> 是一个 training-free 的多 agent 框架，通过 curriculum / actor / verifier 三类 agent 协作，在陌生环境中做递归自改进（<span class="wikilink">RSI</span>）。核心是 autonomous memory construction——agent 自主探索环境、验证结果、把有效经验沉淀进记忆，从而在不改权重的前提下持续变强。</li>
+<li><strong>对比方法/Baselines</strong>: 对比 <span class="wikilink">GLM-5</span> 等基座 agent，在 GUI / <span class="wikilink">ALE</span> 类环境上评测 <span class="wikilink">PASS</span>/<span class="wikilink">FAIL</span> 成功率。</li>
+<li><strong>借鉴意义</strong>: 对做 agent memory 和 tool use 的人有直接价值：证明了不 fine-tune、纯靠记忆机制也能实现 self-improvement，成本极低。</li>
+<li><strong>锐评</strong>: training-free + 递归自改进 + 三 agent 分工，思路干净，67 upvotes 说明社区认可。但老问题依旧："验证器"本身可靠吗？verifier 是同一个 LLM 的话，自我验证的天花板就是模型自己的判断力，记忆里沉淀的可能是自信的错误。想看它在对抗环境里 verifier 被骗时会发生什么。👀</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2609.15364" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🤖 Agent 自改进与失效模式"><h3>2. Emergence World: Adversarial Stress-Testing of Long-Horizon Multi-Agent Systems</h3>
+<ul>
+<li><strong>作者</strong>: Deepak Akkil   Tamer Abuelsaad   Karthik Vikram</li>
+<li><strong>机构</strong>: Affiliation: </li>
+<li><strong>链接</strong>: <a href="https://arxiv.org/abs/2609.17320">arXiv</a> | <a href="https://arxiv.org/pdf/2609.17320">PDF</a></li>
+<li><strong>来源</strong>: 📰 HF Daily，⬆️ 0</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2609.17320v1/figures/Conformity.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2609.17320v1/figures/language_pct_opaque_timeseries.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2609.17320v1/figures/model_persona_variation.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: <span class="wikilink">Emergence-World</span> 是一个持续运行的多 agent 环境，专门对长程自主系统做对抗压力测试。核心论点：agent 的失效会通过记忆、工具、其他 agent 和环境状态在交互结束后长期传播，孤立评估单次模型响应根本抓不到这种安全风险。</li>
+<li><strong>对比方法/Baselines</strong>: 在 <span class="wikilink">GPT-5</span>、<span class="wikilink">DeepSeek</span> 等模型上观察 conformity（从众）、语言漂移等涌现行为。</li>
+<li><strong>借鉴意义</strong>: 对 agent 安全评估是重要视角转换：从"单轮回答对不对"转向"长程部署里失效如何累积传播"。</li>
+<li><strong>锐评</strong>: 选题非常对——大家都在刷单轮 benchmark，很少有人管 agent 长期跑起来后失效怎么滚雪球。conformity 时间序列图很有说服力。可惜 hf upvotes 是 0，可能是写作或 demo 没跟上。方法论价值 &gt; 当前影响力，值得埋伏。👀</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2609.17320" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🤖 Agent 自改进与失效模式"><h3>3. Agentic Societies Need a Social Harness</h3>
+<ul>
+<li><strong>作者</strong>: Tapan Chugh, Vidushi Singh, Krish Jain, Arvind Krishnamurthy, Ratul Mahajan</li>
+<li><strong>机构</strong>: Affiliation:, Affiliation: University of Washington, Seattle, Washington, USA</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2609.17527v1">arXiv</a> | <a href="https://arxiv.org/pdf/2609.17527v1">PDF</a></li>
+<li>
+<p><strong>来源</strong>: 📄 arXiv 关键词检索</p>
+</li>
+<li>
+<p><strong>核心方法</strong>: <span class="wikilink">Social-Harness</span> 实验性地证明：在跨信任边界、代表不同 principal 的 agentic society 里，即使全是诚实且能干的 agent，用现有 harness 和消息原语也常常达不成好结果；而少数 faulty/malicious agent 就能拖垮整个协作。作者主张需要一个专门的 "social harness" 层。</p>
+</li>
+<li><strong>对比方法/Baselines</strong>: 基于 <span class="wikilink">OpenClaw</span>/<span class="wikilink">NanoClaw</span> 等 harness 做协作失败模式分析（RQ1 诚实 agent 为何失败，RQ2 恶意 agent 引入什么新失效）。</li>
+<li><strong>借鉴意义</strong>: 对所有想搭多 agent 系统的人是当头一棒：协作失败不是模型不够聪明，是缺乏社会性协调机制。</li>
+<li><strong>锐评</strong>: "诚实且能干的 agent 照样协作崩溃"这个结论比"恶意 agent 搞破坏"有意思得多，因为它说明问题出在通信原语和协调机制而非 agent 本身。华盛顿大学这帮人（Krishnamurthy/Mahajan 是系统方向老手）看问题的角度是对的。扣分项："social harness"目前更像纲领而非成品方案。⚠️</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2609.17527v1" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🤖 Agent 自改进与失效模式"><h3>4. Self-Emergence Agent Architecture:Behavior-Inertia HMM, Reflexive Metacognition,and Social-Contrastive Self-Modeling</h3>
+<ul>
+<li><strong>作者</strong>: Xiaoyang Liu</li>
+<li><strong>机构</strong>: Affiliation: , Email: </li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2609.17331v1">arXiv</a> | <a href="https://arxiv.org/pdf/2609.17331v1">PDF</a></li>
+<li>
+<p><strong>来源</strong>: 📄 arXiv 关键词检索</p>
+</li>
+<li>
+<p><strong>核心方法</strong>: <span class="wikilink">SEAA</span> 提出自涌现 agent 架构，用 behavior-inertia HMM 建模行为惯性、reflexive metacognition 做反思、social-contrastive self-modeling 建立自我-他者边界，声称解决 LLM agent 的人格漂移、非进化反思和缺乏自我边界三大结构性缺陷。</p>
+</li>
+<li><strong>对比方法/Baselines</strong>: 在 <span class="wikilink">DeepSeek</span> 上用 HMM + <span class="wikilink">EMA</span> 等做行为建模。</li>
+<li><strong>借鉴意义</strong>: 对 generative agent 模拟方向有概念启发，但落地价值存疑。</li>
+<li><strong>锐评</strong>: 开头引庄子"子非鱼"就知道调性了——哲学包装很足，SEAA/MOST/LEAST/REASON 一堆自造缩写。单作者、无 upvotes、缺乏扎实实验对比，属于概念先行的 position paper。想法不坏，但"自涌现"这种词需要用硬 benchmark 兑现，现在兑现不了。🫠</li>
+</ul>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2609.17331v1" target="_blank" rel="noopener">📖 AI 精读</a></div></div>
+<div id="panel-llm机制与可解释性" class="tab-panel"><h2>🧠 LLM 机制与可解释性</h2><div class="paper-card" data-topic="🧠 LLM 机制与可解释性"><h3>5. Large Language Models Develop Belief State Geometry In-Context</h3>
+<ul>
+<li><strong>作者</strong>: Balcells, Daniel, Lee, Andrew Jun, Rastogi, Chirag, Riechers, Paul M., Shai, Adam, Poncini, Xavier</li>
+<li><strong>机构</strong>: Astera Institute</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2609.17376v1">arXiv</a> | <a href="https://arxiv.org/pdf/2609.17376v1">PDF</a></li>
+<li>
+<p><strong>来源</strong>: 📄 arXiv 关键词检索</p>
+</li>
+<li>
+<p><strong>核心方法</strong>: <span class="wikilink">Belief-State-Geometry</span> 在受控设置下研究 ICL 的表征：用隐马尔可夫模型（<span class="wikilink">HMM</span>）生成的数据 prompt LLM，然后探针检测模型内部是否表征了 belief state——即给定观测 token 历史后，对 HMM 隐藏状态的后验分布。</p>
+</li>
+<li><strong>对比方法/Baselines</strong>: 线性/非线性探针在 HMM 后验几何上的拟合。</li>
+<li><strong>借鉴意义</strong>: 对理解 ICL 本质是重要一步：如果 LLM 真的在内部维护贝叶斯信念更新，那 ICL 就不只是模式匹配，而是隐式的贝叶斯推断。</li>
+<li><strong>锐评</strong>: Astera Institute 出品，罕见的做正经科学而非刷榜的工作。用 HMM 做 ground-truth 后验、再探针验证 belief state geometry，实验设计干净、可证伪。这类机制可解释性研究比又一篇 agent 框架有长期价值得多。唯一遗憾：HMM 太玩具，真实语言的 belief state 会不会同样干净是个大问号。🔥</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2609.17376v1" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🧠 LLM 机制与可解释性"><h3>6. Do LLMs Have Values? A Quantitative Analysis and Alignment Framework for Values in Large Language Models</h3>
+<ul>
+<li><strong>作者</strong>: Keqing Zhang, Jingyu Chen, Yufan Liu, Yongqiang Zhu, Nai Ding, Lai Jiang, Congyan Lang, Bing Li, Weiming Hu</li>
+<li><strong>机构</strong>: Email: , Affiliation: Zhejiang University, Affiliation: State Key Laboratory of Multimodal Artificial Intelligence Systems, Institute of Automation, Chinese Academy of Sciences, Affiliation: , Affiliation: Beijing Jiaotong University, Affiliation: School of Industry-education Integration, University of Chinese Academy of Sciences, Affiliation: Beihang University</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2609.16589v1">arXiv</a> | <a href="https://arxiv.org/pdf/2609.16589v1">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2609.16589v1/241.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2609.16589v1/242.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: 研究 LLM 是否"有价值观"：量化分析 LLM 面对措辞微变时的 swing（波动）与面对纠偏指令时的 rigidity（顽固）这一行为悖论，提出对齐框架（<span class="wikilink">PEC</span> + <span class="wikilink">WVS</span> 世界价值观调查），用 <span class="wikilink">SFT</span>/<span class="wikilink">DPO</span> 校准。</li>
+<li><strong>对比方法/Baselines</strong>: <span class="wikilink">CoT</span> prompting、<span class="wikilink">DPO</span>、<span class="wikilink">UMAP</span> 可视化价值分布。</li>
+<li><strong>借鉴意义</strong>: 对 alignment 研究有价值：把"价值观不一致"拆成 swing 和 rigidity 两个可测维度。</li>
+<li><strong>锐评</strong>: "swing 与 rigidity 并存"这个悖论抓得准——模型对措辞敏感却对纠偏指令免疫，确实是 alignment 的尴尬现实。框架和实验都算扎实。但"LLM 有没有价值观"这个标题党式提问，答案本质还是"取决于你怎么探测"，形而上讨论多于工程结论。👀</li>
+</ul>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2609.16589v1" target="_blank" rel="noopener">📖 AI 精读</a></div></div>
+<div id="panel-agent工程与系统" class="tab-panel"><h2>⚙️ Agent 工程与系统</h2><div class="paper-card" data-topic="⚙️ Agent 工程与系统"><h3>7. Protocol-Preserving Context Trimming for Agentic Workflows: Benefits, Failure Regimes, and Budget Guardrails</h3>
+<ul>
+<li><strong>作者</strong>: Gaggar, Harish</li>
+<li><strong>机构</strong>: Email: harish_gaggar@intuit.com</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2609.16461v1">arXiv</a> | <a href="https://arxiv.org/pdf/2609.16461v1">PDF</a></li>
+<li>
+<p><strong>来源</strong>: 📄 arXiv 关键词检索</p>
+</li>
+<li>
+<p><strong>核心方法</strong>: <span class="wikilink">Context-Trimming</span> 研究 protocol-preserving 的上下文裁剪：在多步 agentic workflow 里，把"保留协议关键信息（指令、工具状态、未决依赖）"作为可靠性约束来裁剪历史，控制上下文无限增长带来的成本。核心贡献是刻画了裁剪的收益、失效regime 和预算护栏（budget guardrails）。</p>
+</li>
+<li><strong>对比方法/Baselines</strong>: 无脑截断 vs protocol-preserving 裁剪的可靠性对比。</li>
+<li><strong>借鉴意义</strong>: 对做 agent 工程的人极实用：上下文爆炸是真实痛点，这篇给出了何时裁、裁多少不会崩的边界。</li>
+<li><strong>锐评</strong>: Intuit 工程师写的，一看就是被生产环境上下文成本教育过的。不追求 fancy，直接给 failure regime 和 guardrail，这种"什么时候会崩"的负面结论比"我们又快了 X%"有用得多。缺图缺 method_summary 是硬伤，需要读正文才知道护栏具体怎么设。👀</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2609.16461v1" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="⚙️ Agent 工程与系统"><h3>8. Mo' Models, Mo' Problems: How to best select model pools when designing Multi-Agent Systems</h3>
+<ul>
+<li><strong>作者</strong>: Sara Vera Marjanović, Jiacheng Xu, Aleksandr Laptev, Grigor Nalbandyan, Erik Arakelyan, Evelina Bakhaturina</li>
+<li><strong>机构</strong>: Affiliation: NVIDIA*Work done during internship at NVIDIA, Correspondence:jiachengx@nvidia.com, Affiliation: , Affiliation: University of Copenhagen</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2609.17306v1">arXiv</a> | <a href="https://arxiv.org/pdf/2609.17306v1">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2609.17306v1/images/MAS_types.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2609.17306v1/images/emojis/thought-balloon.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2609.17306v1/images/Dataset_correlations.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: <span class="wikilink">Mo-Models</span> 系统评测了 8 种多 agent 系统（<span class="wikilink">MAS</span>）的模型选择策略（模型大小、准确率、答案多样性），覆盖 before-generation（routing）和 after-generation 两类，回答"开源模型池这么大，怎么挑最优组合"。</li>
+<li><strong>对比方法/Baselines</strong>: 在 <span class="wikilink">GPQA</span>、<span class="wikilink">HLE</span> 等上对比不同选择策略。</li>
+<li><strong>借鉴意义</strong>: 对搭 MAS 的人有直接指导：模型池不是越大越好，选择策略比模型数量更关键。</li>
+<li><strong>锐评</strong>: NVIDIA 实习生的活，选题很实在——大家堆 agent 时凭感觉选模型，很少有人系统研究"怎么选"。8 种策略横评有工程参考价值。标题玩 Notorious B.I.G. 的梗（Mo Money Mo Problems）加分。就是结论可能高度依赖所选 benchmark，换个任务域未必成立。👀</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2609.17306v1" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="⚙️ Agent 工程与系统"><h3>9. Cognitive Admission Control: Risk-Conditioned Assurance for Consequential Actions in Agentic Distributed Systems</h3>
+<ul>
+<li><strong>作者</strong>: Jun He, Deying Yu</li>
+<li><strong>机构</strong>: Affiliation: </li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2609.16313v1">arXiv</a> | <a href="https://arxiv.org/pdf/2609.16313v1">PDF</a></li>
+<li>
+<p><strong>来源</strong>: 📄 arXiv 关键词检索</p>
+</li>
+<li>
+<p><strong>核心方法</strong>: <span class="wikilink">CAC</span>（Cognitive Admission Control）为 agentic 分布式系统里的 consequential action（会改动外部基础设施的动作）提供风险条件化的准入控制：策略把"带类型的动作 + 建模风险"映射到 assurance obligation（谓词、证据类、作用域、新鲜度、witness-set 约束），用类型化 admission calculus 保证只有证据充分才放行。</p>
+</li>
+<li><strong>对比方法/Baselines</strong>: <span class="wikilink">TypeScript</span> 实现的 <span class="wikilink">AdmissionValid</span>/<span class="wikilink">LivePolicy</span>/<span class="wikilink">UnsafeEffect</span> 形式化验证。</li>
+<li><strong>借鉴意义</strong>: 对 agent 安全落地有价值：给"agent 有权限但没证据就不该执行"提供了形式化框架。</li>
+<li><strong>锐评</strong>: 把准入控制这套经典系统安全思路搬到 agent 上，方向对。类型化 calculus + 证据 discharge 有理论严谨性。但这类形式化框架的通病是：优雅归优雅，真实 LLM agent 的"证据"往往是自然语言、难以谓词化，工程落地和纸面模型之间差着一整个鸿沟。⚠️</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2609.16313v1" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="⚙️ Agent 工程与系统"><h3>10. End-to-End Latency-Minimizing and Load-Balanced Request Scheduling for Edge LLM Inference in Agentic AI Services</h3>
+<ul>
+<li><strong>作者</strong>: Zhen Li, Jun Cai, Senior Member, IEEE, Haoran Gao, An Li, Tan Li</li>
+<li><strong>机构</strong>: Zhen Li, Jun Cai (corresponding author), An Li, and Haoran Gao are with the Department of Electrical and Computer Engineering, Concordia University, Montreal, QC, H3G 1M8, Canada. (E-mail: {zhen.li, jun.cai}@concordia.ca, {haoran.gao, an.li}@mail.concordia.ca), Tan Li is with the Department of Computer Science, Hang Seng University of Hong Kong, Hong Kong SAR. (E-mail: tanli@hsu.edu.hk)</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2609.17193v1">arXiv</a> | <a href="https://arxiv.org/pdf/2609.17193v1">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2609.17193v1/SystemModel.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: 针对 edge LLM 推理的端到端时延最小化 + 负载均衡请求调度：在异构边缘服务器上，考虑通信/计算能力差异和动态推理状态，做时变且跨时隙耦合的服务器选择，用 <span class="wikilink">PPO</span> 优化。</li>
+<li><strong>对比方法/Baselines</strong>: 对比 Orca 迭代级调度、vLLM <span class="wikilink">PagedAttention</span>/<span class="wikilink">KV</span> cache 等连续批处理方案。</li>
+<li><strong>借鉴意义</strong>: 对 agent 服务的推理基础设施有参考价值。</li>
+<li><strong>锐评</strong>: 扎实的系统调度工作，把边缘 LLM serving 建成时变耦合优化再上 PPO，工程完整。但"agentic AI"这个帽子戴得有点勉强——本质是分布式推理调度，和 agent 的 planning/tool use 关系不大，蹭热词嫌疑。做 serving 的可以看，做 agent 的关系不大。🫠</li>
+</ul>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2609.17193v1" target="_blank" rel="noopener">📖 AI 精读</a></div></div>
+<div id="panel-多模态幻觉治理" class="tab-panel"><h2>👁️ 多模态幻觉治理</h2><div class="paper-card" data-topic="👁️ 多模态幻觉治理"><h3>11. SAVOR: Self-Aware Visual Grounding via Confidence-Calibrated Reinforcement Learning for Multimodal Hallucination Mitigation</h3>
+<ul>
+<li><strong>作者</strong>: Zixiu Ding, Zilin Zhao, Yingjie He, Xinlang Kang, Guansu Wang, Wei Zhang🖂</li>
+<li><strong>机构</strong>: Affiliation: Central South University, Affiliation: , Affiliation: Peking University</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2609.16601v1">arXiv</a> | <a href="https://arxiv.org/pdf/2609.16601v1">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2609.16601v1/overview.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: <span class="wikilink">SAVOR</span> 用置信度校准的强化学习治多模态幻觉：不改 decoding、不做 DPO，而是让模型学会"何时自己的回答不可靠"。用 <span class="wikilink">GRPO</span> 训练，以 <span class="wikilink">ECE</span> 校准置信度，让 self-aware visual grounding 显式建模不确定性。</li>
+<li><strong>对比方法/Baselines</strong>: 对比 <span class="wikilink">DPO</span> 变体、<span class="wikilink">RLHF</span>，在 <span class="wikilink">POPE</span>/<span class="wikilink">AMBER</span>/<span class="wikilink">HallusionBench</span> 上用 <span class="wikilink">InternVL3</span> 评测。</li>
+<li><strong>借鉴意义</strong>: 对做 MLLM 可靠性的人有价值：从"哪个答案更好"转向"什么时候该不确定"。</li>
+<li><strong>锐评</strong>: 切入点比一般幻觉工作聪明——DPO 教"选哪个"，但不教"什么时候该闭嘴"，SAVOR 用置信度校准补这个洞。GRPO + ECE 组合合理，benchmark 覆盖全。质疑点：置信度校准和幻觉抑制之间的因果链需要更强证据，校准好了不必然幻觉就少。👀</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2609.16601v1" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="👁️ 多模态幻觉治理"><h3>12. Semantic-Spatial Agreement Verification for Mitigating Object Hallucination in Multimodal Large Language Models</h3>
+<ul>
+<li><strong>作者</strong>: Ziheng Ren, Qian Gao, Jun Fan, Guohui Ding, Zhenyu Yang, Yuteng Xiao</li>
+<li><strong>机构</strong>: Big Data Applied Technology, Faculty of Computer Science and Technology, Center in Jinan), Qilu University of Technology (Shandong Academy of, Guohui Ding is with Shenyang Aerospace University, Shenyang, China, Laboratory of Computing Power Network and Information Security, Ministry the data and parameter levels, but the cost of high-quality data, Qilu University of Technology (Shandong Academy of Sciences), Jinan 250353, candidate distributions, perform contrastive decoding, or apply, and Information System Security, Shandong Fundamental Research Center, and the Key Laboratory of Computing Power Network and Information Security, direct preference optimization [8], [9]. These approaches</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2609.17269v1">arXiv</a> | <a href="https://arxiv.org/pdf/2609.17269v1">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2609.17269v1/media/image1.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2609.17269v1/media/image2a.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: <span class="wikilink">SSAV</span>（Semantic-Spatial Agreement Verification）是 training-free 的物体幻觉验证方法：检查 MLLM 声称的物体在语义和空间上是否一致，不一致则判为幻觉。</li>
+<li><strong>对比方法/Baselines</strong>: 对比对比解码、DPO，在 <span class="wikilink">POPE</span>/<span class="wikilink">MME</span>/<span class="wikilink">CHAIR</span> 上评测。</li>
+<li><strong>借鉴意义</strong>: training-free 对部署友好，但方法新意有限。</li>
+<li><strong>锐评</strong>: 和 SAVOR 同一天撞车但更弱——SAVOR 从训练侧做置信度校准，SSAV 只是推理时加个语义-空间一致性检查。training-free 是卖点也是天花板：没触及模型为什么幻觉的根因，只是事后过滤。作者机构信息乱成一团（affiliation 字段像没清洗），细节把控存疑。🫠</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2609.17269v1" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="👁️ 多模态幻觉治理"><h3>13. Layers, Sinks, and Scaling: Adaptive Evidence Selection for Multimodal Large Language Models</h3>
+<ul>
+<li><strong>作者</strong>: Zhenbin Wang, Lei Zhang*, Lituan Wang, Wei Huang, Yan Wang, Zhenwei Zhang</li>
+<li><strong>机构</strong>: Sichuan University</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2609.16795v1">arXiv</a> | <a href="https://arxiv.org/pdf/2609.16795v1">PDF</a></li>
+<li>
+<p><strong>来源</strong>: 📄 arXiv 关键词检索</p>
+</li>
+<li>
+<p><strong>核心方法</strong>: <span class="wikilink">AREA</span> 做 MLLM 的自适应证据选择：针对 MLLM 在文本和视觉两模态都可能忽略关键证据的问题，利用 layers/attention sinks/scaling 做自适应证据选择，增强知识密集型 VQA。</p>
+</li>
+<li><strong>对比方法/Baselines</strong>: 在 <span class="wikilink">ViQuAE</span>/<span class="wikilink">AMBER</span> 等 KB-VQA 上评测。</li>
+<li><strong>借鉴意义</strong>: 对多模态检索增强有增量价值。</li>
+<li><strong>锐评</strong>: 又一篇"MLLM 忽略了关键证据所以我们来选证据"的工作。attention sink 这个观察点还行，但整体是把已知现象（模型对某些 token/region 注意力弱）包装成新方法。缺图、缺 method_summary，创新度存疑，属于增量填坑。🫠</li>
+</ul>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2609.16795v1" target="_blank" rel="noopener">📖 AI 精读</a></div></div>
+<div id="panel-多模态生成" class="tab-panel"><h2>🎬 多模态生成</h2><div class="paper-card" data-topic="🎬 多模态生成"><h3>14. LynnReal-Omni: Native multi-modal Video Generation for Agentic Visual Workflows</h3>
+<ul>
+<li><strong>作者</strong>: LynnReal AI*</li>
+<li><strong>机构</strong>: LynnReal AI, Lynnreal-Omni contributors are listed at the end of the report</li>
+<li><strong>链接</strong>: <a href="https://arxiv.org/abs/2609.15863">arXiv</a> | <a href="https://arxiv.org/pdf/2609.15863">PDF</a></li>
+<li><strong>来源</strong>: 🔥 HF Trending，⬆️ 46</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2609.15863v1/data_pipeline_new.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2609.15863v1/native_dit1.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2609.15863v1/vae_training.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: <span class="wikilink">LynnReal-Omni</span> 是原生多模态视频生成模型，服务 agentic visual workflow。针对视频扩散模型随机、难控、长程漂移的问题，用 agentic visual creation 提供显式参考、可编辑 3D 场景、可执行游戏状态来稳定控制，核心是 <span class="wikilink">MSAVP</span> + 原生 <span class="wikilink">DiT</span> 架构。</li>
+<li><strong>对比方法/Baselines</strong>: 对比 <span class="wikilink">MiniMax</span>、<span class="wikilink">LTX-2</span> 等视频生成模型。</li>
+<li><strong>借鉴意义</strong>: 对多模态生成 + agent 结合方向有参考，46 upvotes 有热度。</li>
+<li><strong>锐评</strong>: 把 agentic 控制信号（3D 场景、游戏状态）喂给视频 DiT 来解决可控性，思路是对的方向。但作者列表"LynnReal AI*"匿名 + "contributors listed at end"，加上 method_names 里混进 OpenAI/LAION/AI 这种噪声词，报告气质大于论文气质。热度真实，硬指标待验证——视频生成最怕 cherry-pick demo。👀</li>
+</ul>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2609.15863" target="_blank" rel="noopener">📖 AI 精读</a></div></div>
+<div id="panel-llm安全" class="tab-panel"><h2>🔒 LLM 安全</h2><div class="paper-card" data-topic="🔒 LLM 安全"><h3>15. Permutation-Based Stegomalware in Large Language Models: Threats and Countermeasures</h3>
+<ul>
+<li><strong>作者</strong>: Danny Wood, James Stringer</li>
+<li><strong>机构</strong>: Affiliation: , Email: </li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2609.16193v1">arXiv</a> | <a href="https://arxiv.org/pdf/2609.16193v1">PDF</a></li>
+<li>
+<p><strong>来源</strong>: 📄 arXiv 关键词检索</p>
+</li>
+<li>
+<p><strong>核心方法</strong>: <span class="wikilink">Stegomalware</span> 研究 LLM 权重隐写恶意载荷的威胁与防御：利用模型权重的排列对称性（permutation symmetry）在权重里嵌入 payload，并提出 <span class="wikilink">PermaNet</span> 来跨全部权重中和这类隐写恶意软件（此前工作只能部分中和）。</p>
+</li>
+<li><strong>对比方法/Baselines</strong>: 对比 <span class="wikilink">MaleficNet</span> 攻击、在 <span class="wikilink">TinyLlama</span> 上验证 <span class="wikilink">MHA</span> 权重中和。</li>
+<li><strong>借鉴意义</strong>: 对模型供应链安全（HuggingFace 分发的预训练模型）是重要威胁与防御研究。</li>
+<li><strong>锐评</strong>: 选题又冷又重要——大家都在下载 HF 上的权重，很少有人担心权重本身被塞了隐写恶意载荷。用排列对称性藏毒很巧妙，PermaNet 声称能全权重中和是实打实的防御贡献。这种"攻击可行性 + 防御方案"配套的安全研究含金量高。TinyLlama 规模偏小，大模型上是否同样有效需验证。👀</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2609.16193v1" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🔒 LLM 安全"><h3>16. Vulnerability Localization Benchmark: Measuring Agentic Security Analysis at Repository Scale</h3>
+<ul>
+<li><strong>作者</strong>: Aman Priyanshu, Supriti Vijay, Kimia Majd, Xuhong He, Fraser Burch, Takahiro Matsumoto, Jianliang He, Baturay Saglam, Arthur Goldblatt, Zhuoran Yang, Amin Karbasi</li>
+<li><strong>机构</strong>: Affiliation: Yale University, Affiliation: Carnegie Mellon University, Affiliation:</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2609.15939v1">arXiv</a> | <a href="https://arxiv.org/pdf/2609.15939v1">PDF</a></li>
+<li>
+<p><strong>来源</strong>: 📄 arXiv 关键词检索</p>
+</li>
+<li>
+<p><strong>核心方法</strong>: <span class="wikilink">VLoc-Bench</span> 是仓库级 agent 漏洞定位 benchmark：给定弱点类别（<span class="wikilink">CWE</span>）和陌生仓库，让 agent 找出与该弱点相关的实现文件。设计原则是 repository-agnostic——不泄露仓库特定信息，agent 命名的每个文件都来自自己的搜索。</p>
+</li>
+<li><strong>对比方法/Baselines</strong>: 在 <span class="wikilink">GPT-5</span>、<span class="wikilink">GLM-5</span> 等上评测 <span class="wikilink">CodeScout</span>，用 <span class="wikilink">TNR</span> 等指标。</li>
+<li><strong>借鉴意义</strong>: 对 agent 安全分析评估补了空白：以往只测能否检测/修复漏洞，没测能否定位。</li>
+<li><strong>锐评</strong>: 指出了一个真实盲点——安全评估都在测"能不能修"，跳过了"能不能先找到"。repository-agnostic 设计（不给仓库特定线索）保证了评的是搜索能力而非记忆，这个方法论洁癖值得表扬。耶鲁+CMU 阵容靠谱。就是 benchmark 类工作的价值取决于难度和覆盖，得看它区分度够不够。👀</li>
+</ul>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2609.15939v1" target="_blank" rel="noopener">📖 AI 精读</a></div></div>
+<div id="panel-agent记忆" class="tab-panel"><h2>🧩 Agent 记忆</h2><div class="paper-card" data-topic="🧩 Agent 记忆"><h3>17. Interactive Memory Learning for Long-Term Conversations</h3>
+<ul>
+<li><strong>作者</strong>: Cai Ke, Jiangyue Yan, Han Zhang, Xin Liu11footnotemark:, Zike Yuan, Yue Yu, Hui Wang,</li>
+<li><strong>机构</strong>: Affiliation: , Email: , Affiliation: Pengcheng Laboratory, China, Affiliation: Harbin Institute of Technology, Shenzhen, China</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2609.17088v1">arXiv</a> | <a href="https://arxiv.org/pdf/2609.17088v1">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2609.17088v1/fig1-7.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2609.17088v1/fig2_new_v2.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: <span class="wikilink">Interactive Memory Learning</span> 针对长程对话：现有方法被动归档信息、不做自适应记忆估值，无法自进化或对齐演变的用户需求。本文用 <span class="wikilink">RL</span> 让 agent 交互式学习记忆管理（<span class="wikilink">RMM</span>），主动评估记忆价值。</li>
+<li><strong>对比方法/Baselines</strong>: 对比 <span class="wikilink">THEANINE</span> 等，在 <span class="wikilink">MSC</span> 等长程对话数据集上评测。</li>
+<li><strong>借鉴意义</strong>: 对 agent memory 方向有价值：从静态启发式归档转向 RL 驱动的自适应记忆估值。</li>
+<li><strong>锐评</strong>: "被动归档 vs 主动估值"的问题定位是对的——现在多数 memory 系统就是无脑存，不管哪条记忆真有用。用 RL 学记忆价值是合理方向。但 RL 训记忆管理的老难题是奖励信号稀疏且延迟（一条记忆的价值可能几十轮后才体现），想看它怎么解决 credit assignment。和你笔记库里 <span class="wikilink">Mem0</span>/<span class="wikilink">MemOS</span> 可对比着读。👀</li>
+</ul>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2609.17088v1" target="_blank" rel="noopener">📖 AI 精读</a></div></div>
+<div id="panel-其他agent应用" class="tab-panel"><h2>🔬 其他 Agent 应用</h2><div class="paper-card" data-topic="🔬 其他 Agent 应用"><h3>18. Agentic Search Spaces for Tabular Machine Learning</h3>
+<ul>
+<li><strong>作者</strong>: Renat Sergazinov†, Artem Chistyakov†‡, Sergey Pankevich†‡, Artem Babenko†‡</li>
+<li><strong>机构</strong>: ††thanks: Corresponding author, email at &lt;mc.sergazinov@gmail.com&gt; † Yandex ‡ HSE University</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2609.16309v1">arXiv</a> | <a href="https://arxiv.org/pdf/2609.16309v1">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2609.16309v1/main_budget_curve.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: <span class="wikilink">Agentic-Tabular-HPO</span> 研究 agentic AI 能否为表格模型设计出超越作者默认的扩展 HPO 搜索空间。</li>
+<li><strong>对比方法/Baselines</strong>: 在 <span class="wikilink">TabM</span>/<span class="wikilink">RealMLP</span>/<span class="wikilink">LightGBM</span> 上对比 <span class="wikilink">AutoGluon</span>/<span class="wikilink">AutoPyTorch</span> 等 AutoML。</li>
+<li><strong>借鉴意义</strong>: 对 AutoML + LLM agent 结合有小众参考价值。</li>
+<li><strong>锐评</strong>: 问题具体（agent 能不能设计更好的 HPO 搜索空间），Yandex 出品实验规范。但结论大概率是"能小幅提升但不惊艳"——让 LLM 调超参搜索空间本质是把先验知识翻译成搜索范围，天花板受限于 LLM 见过的调参经验。属于扎实但注定 incremental 的工作。🫠</li>
+</ul>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2609.16309v1" target="_blank" rel="noopener">📖 AI 精读</a></div></div>
+<hr>
+<h2>被排除的论文</h2>
+<ul>
+<li>Large Language Models in the Loop (Networked Control Survey) — 控制系统/CPS 综述，与推荐/广告/agent 核心方向弱相关，且 method_names 只有 TeX/CSS 说明抽取失败</li>
+<li>CLEAR: Cross-Source Evidence Adjudication in Medicine — 命中 negative_keyword（medical/diagnosis），医学 RAG</li>
+<li>Intrinsic Motivation in RL: Adaptive Self-Organisation — 生物细胞类比的 RL 综述性 perspective，偏理论且离用户方向远</li>
+<li>Extracting ontology-compliant knowledge from irradiated materials — 材料科学文本抽取，领域无关</li>
+<li>DriveMCP: Agentic AI for Driver Assistance — 命中 negative_keyword（autonomous driving / ADAS）</li>
+<li>The Role of Demographic Signals in LLM Student Assessment — 教育公平性研究，与用户技术方向弱相关</li>
+<li>Multi-Agent Learning with Cooperation-Driven Optimization — MNIST/CIFAR 上的 ANN 优化，multi-agent 只是训练技巧命名，非 LLM agent</li>
+<li>Integrating AHP with LLMs for Multi-Criteria Decision-Making — 抽取失败（method_names 仅 TeX/CSS），AHP 决策方法偏运筹小众</li>
+<li>A multimodal LLM for autism spectrum disorder screening (ASDchat) — 命中 negative_keyword（medical/diagnosis），自闭症筛查</li>
+<li>Scaling Laws for Physics-Aware ACOPF Surrogate Learning — 电力系统最优潮流代理模型，虽有 scaling law 但领域（power flow）无关</li>
+<li>Towards Surrogate Based Dequantization of Quantum RL — 量子强化学习去量子化，理论物理方向，与用户方向无关</li>
+<li>Skill-based Agentic Evaluation for Real-time Data Science — 抽取失败（method_names 仅 TeX/CSS），数据科学 agent 评测，信息不足难以点评</li>
+</ul>
+<p>"给 LLM 贴 agentic 标签"已进入通货膨胀阶段——真正有价值的转向了 agent 的系统性失效（协作崩溃、长程漂移、记忆污染）和罕见的机制可解释性；推荐/广告方向今日在 arxiv 主流视野中彻底缺席。</p></div>
+<footer style="text-align:center;color:var(--text2);margin:3em 0 1em;font-size:0.85em;">
+  Generated by daily-papers-web &middot; Powered by Claude Code
+</footer>
+<script src="tabs.js"></script>
+
+</body>
+</html>
