@@ -1,0 +1,694 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>2026-09-17 论文推荐</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.21/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.21/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.21/dist/contrib/auto-render.min.js"
+  onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}]});"></script>
+<link rel="stylesheet" href="style.css">
+<style>body{max-width:960px;}</style>
+
+</head>
+<body>
+<nav class="nav"><a href="index.html">🏠 首页</a><a href="2026-09-16.html">← 前一天</a><a href="2026-10-08.html">后一天 →</a></nav>
+<div class="detail-page"><h1>🔪 今日锐评</h1>
+<p>今天是标准的 arXiv 灌水日：30 篇候选里近一半在 agentic AI 的边角料上打转（能耗、审计、社会偏见、O-RAN），真正对推荐/广告主战场有用的只有 Meta 的 LIGE-GR 一篇硬货。亮点是几篇把 agentic 系统当作\"复杂系统\"来审视的工作——安全、可靠性、组合失效——这些比又一个 multi-agent pipeline 有价值。MemOS 又双叒被 HF 热榜捞上来了，已有笔记不重复。</p>
+<h2>分流表</h2>
+<table>
+<thead>
+<tr>
+<th>等级</th>
+<th>论文</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>🔥 必读</td>
+<td><span class="wikilink">LIGE-GR</span>（Meta 把成熟工业排序系统平滑升级到生成式推荐，工业界最关心的\"怎么不推倒重来\"问题）</td>
+</tr>
+<tr>
+<td>👀 值得看</td>
+<td><span class="wikilink">DualSQL</span>（单 backbone 驱动双 agent，schema linking 与 SQL 生成协同训练，反对\"每任务一个模型\"） · <span class="wikilink">WFM</span>（腾讯把 GraphRAG 升级成 Wiki Foundation Model，agent 长期记忆的新形态） · <span class="wikilink">CPV</span>（每一步都合规、整条链却违规——agentic workflow 的组合失效，指出了当前 step-scoped 治理的盲区） · <span class="wikilink">Label-free-steering</span>（test-time RL 压缩到 bias-only 子空间，无标签也能自我提升） · <span class="wikilink">Recursive-Reasoning-ICL</span>（拆解 LLM agent 到底在递归推理还是统计外推） · <span class="wikilink">Agentic-Workflow-Portfolios</span>（在算力成本约束下选 workflow 组合，而非只用平均最优）</td>
+</tr>
+<tr>
+<td>💤 可跳过</td>
+<td><span class="wikilink">CoRe-MARL</span>（灾害物流 MARL，领域太偏） · <span class="wikilink">APGEM</span>（量子 RL 解车辆路径，双重小众） · <span class="wikilink">TimesFM</span>（2023 老论文被热榜反复捞） · <span class="wikilink">GYROval</span>（文化价值 benchmark，与主线无关）</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<div class="tab-bar"><button class="tab-btn active" data-tab="all" onclick="switchTab('all')">📋 全部<span class="tab-count">16</span></button><button class="tab-btn" data-tab="推荐系统与生成式检索" onclick="switchTab('推荐系统与生成式检索')">🎨 📊 推荐系统与生成式检索<span class="tab-count">1</span></button><button class="tab-btn" data-tab="agent框架多智能体工具" onclick="switchTab('agent框架多智能体工具')">🏗 🤖 Agent 框架 / 多智能体 / 工具<span class="tab-count">5</span></button><button class="tab-btn" data-tab="记忆与知识表示" onclick="switchTab('记忆与知识表示')">🧠 🧠 记忆与知识表示<span class="tab-count">3</span></button><button class="tab-btn" data-tab="agent安全可靠性审计" onclick="switchTab('agent安全可靠性审计')">🛡 🛡️ Agent 安全 / 可靠性 / 审计<span class="tab-count">4</span></button><button class="tab-btn" data-tab="强化学习与推理方法" onclick="switchTab('强化学习与推理方法')">📄 🎯 强化学习与推理方法<span class="tab-count">3</span></button></div>
+<div id="panel-all" class="tab-panel active"><h2>📊 推荐系统与生成式检索</h2><div class="paper-card" data-topic="📊 推荐系统与生成式检索"><h3>1. LIGE-GR: A Smooth Leap from Ranking to Generative Recommendation in the LLM Era</h3>
+<ul>
+<li><strong>作者</strong>: Venkat Srinivas⋆, Chenzhang He⋆, Sam Woodmansee⋆, Shawn Lian⋆, Wenjie Hu⋆, Renjie Jiang⋆, Ziheng Huang, Xinyuan Zhang, Zhihao Zheng, Zhuoran Yu, Rui Li, Lei Yuan, Ziwei Li, Jimmy Jia, Mert Terzihan, Ekrem Kocaguneli, Yiming Liao, Zhichen Zhao, Yue Yin, Yue Weng, Wanlin Ma, Xufeng Cai, Weimiao Wu, Yezhou Huang, Du Zhang, Yukun Ding, Aaron Johnston, Yueming Wang, Zhaojie Gong, Yuting Zhang, Serena Li, Adithya Ganesh, Boying Liu, Haichuan Yang, Xialu Li, Matt Ma, Qunshu Zhang, John Joshua Miller, Praveen Rathinavelu, Cheng Huang, Aadhar Sachdeva, Josh Karns, Andres Aaron Gutierrez, Neil Agarwal, Gustas Pladis, Vladimir Batygin, Gopal Ray, Aditya Priyadarshi, Shantanu Patil, Zhe Wang, Penny Pan, Yiping Han, Arun Singh, Guangdeng Liao, Bi Xue, Xinyao Hu, Yang Song, Yisong Song, Meihong Wang, Haotian Wu, Deepak Agarwal, Ji Liu</li>
+<li><strong>机构</strong>: Affiliation: Meta Platforms, Inc., Menlo Park, CA, USA, Affiliation: </li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2609.18148v1">arXiv</a> | <a href="https://arxiv.org/pdf/2609.18148v1">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2609.18148v1/figures/framework.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2609.18148v1/figures/model.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: 把 itemwise 推荐重构为 <span class="wikilink">listwise</span> / 生成式框架，让成熟工业推荐系统\"平滑\"升级到 LLM 时代的生成范式，而不是推倒重来。核心是把现有 itemwise system 升级成 listwise system，再引入生成式推荐。</li>
+<li><strong>对比方法/Baselines</strong>: 对比传统 itemwise ranking 与 <span class="wikilink">生成式推荐</span>（<span class="wikilink">GR</span>）范式，涉及 <span class="wikilink">CF</span> 协同过滤基线。</li>
+<li><strong>借鉴意义</strong>: 这是今天唯一直接命中推荐/广告主战场的工作，且来自 Meta 工业界，作者名单长达 60+ 人——典型的\"已上线\"级别项目。对做 CTR/排序模型迁移到生成式的团队有直接参考价值。</li>
+<li><strong>锐评</strong>: 作者名单堆了整整一屏，一看就是 Meta 的正规军而非灌水。真正的价值在\"smooth leap\"三个字：工业界最痛的不是生成式推荐效果好不好，而是怎么在不推翻现有 itemwise pipeline 的前提下渐进升级。可惜摘要对\"两个挑战\"只开了个头就断了，方法细节全靠 method_summary 里那句\"upgrade itemwise to listwise\"撑着，得看正文。冲着 Meta 和这个选题也值得精读。🔥</li>
+</ul>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2609.18148v1" target="_blank" rel="noopener">📖 AI 精读</a></div><h2>🤖 Agent 框架 / 多智能体 / 工具</h2><div class="paper-card" data-topic="🤖 Agent 框架 / 多智能体 / 工具"><h3>2. DualSQL: Text-to-SQL with Multi-Agent Reinforcement Learning</h3>
+<ul>
+<li><strong>作者</strong>: Shijie Chen, Yu Gan, Yeounoh Chung, Jiani Zhang, Quannan Li, Sravan Bodapati, Cody Greer, Yu Su, Fatma Ozcan</li>
+<li><strong>机构</strong>: Affiliation: The Ohio State University, Affiliation: , Affiliation: Google LLC, Email: , ††thanks: Work done during Shijie Chen’s internship at Google, Email: gany@google.com, Email: fozcan@google.com</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2609.18135v1">arXiv</a> | <a href="https://arxiv.org/pdf/2609.18135v1">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2609.18135v1/MANL2SQL_Training.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: <span class="wikilink">DualSQL</span> 用单一模型 backbone 驱动两个 agent，同时做 schema linking 和 SQL 生成，用 <span class="wikilink">RL</span> 训练以利用两个任务间的协同，反对现有\"每个任务训练独立模型\"的做法。</li>
+<li><strong>对比方法/Baselines</strong>: 在 <span class="wikilink">BIRD</span> 上用 <span class="wikilink">EX</span>（执行准确率）评估，涉及 <span class="wikilink">REX</span> 等 Text-to-SQL 基线。</li>
+<li><strong>借鉴意义</strong>: 对 tool use / function calling 场景有借鉴意义：把相关子任务用共享 backbone + RL 联合训练，是降低多 agent pipeline 部署成本的通用思路。</li>
+<li><strong>锐评</strong>: \"两个任务本来相关，你们却训两个模型\"这个批评切中要害，单 backbone 共享确实优雅。但 multi-agent + RL + Text-to-SQL 这个组合已经相当拥挤，能不能在 BIRD 上真刷出 SOTA 才是关键，摘要没给数字，emoji 只能先给个观望。Google 实习产出，质量应该有底。👀</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2609.18135v1" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🤖 Agent 框架 / 多智能体 / 工具"><h3>3. Clueing up LLMs with Tool-Augmented Deductive Reasoning</h3>
+<ul>
+<li><strong>作者</strong>: Rebecca Ansell, Autumn Toney-Wails,</li>
+<li><strong>机构</strong>: Affiliation: , Affiliation:  Georgetown University, Email: </li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2609.18736v1">arXiv</a> | <a href="https://arxiv.org/pdf/2609.18736v1">PDF</a></li>
+<li>
+<p><strong>来源</strong>: 📄 arXiv 关键词检索</p>
+</li>
+<li>
+<p><strong>核心方法</strong>: 用 <span class="wikilink">Tool-Augmented</span> 演绎推理让 LLM 在长交互中保持逻辑一致，跨多步整合证据、维持与先前推断的一致性、在新约束下更新信念。用 Cluedo 类推理游戏作为 testbed。</p>
+</li>
+<li><strong>对比方法/Baselines</strong>: 对比 <span class="wikilink">GPT</span> 系列纯 LLM 推理与工具增强版本。</li>
+<li><strong>借鉴意义</strong>: 多步演绎一致性是 agent 可靠性的核心短板，工具增强是当前主流补丁思路，对做 agent reasoning 的团队有参考。</li>
+<li><strong>锐评</strong>: 拿\"Clue/妙探寻凶\"当推理 benchmark 是个聪明的选题——需求信念更新、证据整合，天然对抗\"统计外推\"。但\"tool-augmented\"这剂药方大家都在开，真正的问题是工具究竟补上了推理能力还是只是外挂了个计算器，摘要没说清。测试床有趣，方法保守。👀</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2609.18736v1" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🤖 Agent 框架 / 多智能体 / 工具"><h3>4. HypoEvolve: Genetic Algorithms Enable Multi-Agent LLMs to Discover Scientific Hypotheses</h3>
+<ul>
+<li><strong>作者</strong>: Jieyuan Liu, Mengzhou Hu, Jefferson Chen, JungHo Kong, Pratibha Jagannatha, Yiming Gao, Dexter Pratt, Hsin-Yuan Lee, Zhiting Hu, Trey Ideker, Wei Wang, Eric P. Xing, Zhen Wang</li>
+<li><strong>机构</strong>: Texas A&amp;M University, Affiliation: , Mohamed bin Zayed University of Artificial Intelligence, Affiliation: Carnegie Mellon University, Affiliation: University of California San Diego</li>
+<li><strong>链接</strong>: <a href="https://arxiv.org/abs/2609.15938">arXiv</a> | <a href="https://arxiv.org/pdf/2609.15938">PDF</a></li>
+<li>
+<p><strong>来源</strong>: 📰 HF Daily，⬆️ 11</p>
+</li>
+<li>
+<p><strong>核心方法</strong>: <span class="wikilink">HypoEvolve</span> 用遗传算法驱动多 agent LLM 做科学假设发现，通过 critique、comparison、revision 结合进化搜索，系统研究不同\"agent 协作形式\"如何影响假设质量。</p>
+</li>
+<li><strong>对比方法/Baselines</strong>: 对比 HypoGeniC、SciMON、ResearchAgent 等文献驱动的假设生成系统。</li>
+<li><strong>借鉴意义</strong>: 对多 agent 协作机制设计有方法论价值——它不是又造一个系统，而是把\"协作形式\"当变量来研究。</li>
+<li><strong>锐评</strong>: HF 上 11 个 upvote，选题诚实：不吹\"我们发现了新科学\"，而是问\"哪种 agent 协作方式产出的假设更好\"，这种 ablation 式的态度比灌水系统健康。遗传算法 + LLM 不新，但用在\"协作拓扑\"这个维度上有点意思。领域偏生物（CRISPR/DepMap），做推荐的看方法论即可。👀</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2609.15938" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🤖 Agent 框架 / 多智能体 / 工具"><h3>5. Designing Agentic AI Workflow Portfolios under Imperfect Selection and Compute Cost</h3>
+<ul>
+<li><strong>作者</strong>: Mojtaba Abdolmaleki, Stefanus Jasin, Boyu Wang</li>
+<li><strong>机构</strong>: Ross School of Business, University of Michigan, United States, mojtabaa@umich.edu, Ross School of Business, University of Michigan, United States, sjasin@umich.edu, School of Management, University of San Francisco, United States, bwang62@usfca.edu</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2609.18126v1">arXiv</a> | <a href="https://arxiv.org/pdf/2609.18126v1">PDF</a></li>
+<li>
+<p><strong>来源</strong>: 📄 arXiv 关键词检索</p>
+</li>
+<li>
+<p><strong>核心方法</strong>: 在 imperfect selection 和 compute cost 双重约束下设计 <span class="wikilink">agentic workflow</span> 组合（portfolio），指出\"只用平均性能最高的 workflow\"是次优的，因为不同 workflow 在不同实例上成功。用子模优化 / 覆盖问题建模。</p>
+</li>
+<li><strong>对比方法/Baselines</strong>: 对比 <span class="wikilink">ADAS</span>、model routing、cascades 等自动 workflow 设计与聚合方法。</li>
+<li><strong>借鉴意义</strong>: 算力成本约束下的 workflow 选择直接关系 agent 系统的线上经济性，对广告/推荐这种成本敏感场景尤其相关。</li>
+<li><strong>锐评</strong>: 这篇的运筹味很正：Ross 商学院出品，把 agentic workflow 选择建模成 assortment/覆盖优化，而不是玄学调 prompt。\"平均最优≠实例最优\"这个观察对做线上系统的人是常识，但把它形式化成 portfolio 优化并考虑 compute cost 是加分项。缺图缺实验数字，理论框架能不能落地存疑。👀</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2609.18126v1" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🤖 Agent 框架 / 多智能体 / 工具"><h3>6. Recursive Reasoning or Statistical Extrapolation? In-Context Learning in Multi-Agent Interdependent Decision-Making</h3>
+<ul>
+<li><strong>作者</strong>: Yu Liu, Wenwen Li, Yifan Dou, Guangnan Ye</li>
+<li><strong>机构</strong>: Affiliation: , Affiliation: yuliu23@m.fudan.edu.cn, {liwwen,yfdou,yegn}@fudan.edu.cn, Affiliation: Fudan University</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2609.18591v1">arXiv</a> | <a href="https://arxiv.org/pdf/2609.18591v1">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2609.18591v1/assets/graphs/network.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2609.18591v1/assets/graphs/finite_state_machine.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2609.18591v1/assets/plots/history_length_plots/gpt-5-chat--increasing.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: 在多 agent 不完全信息博弈（需递归信念推理）中，用 <span class="wikilink">ICL</span> 拆解 LLM agent 的改进到底来自\"精炼内部推理\"还是\"统计模式外推\"，用 GPT-5 等模型做实验。</li>
+<li><strong>对比方法/Baselines</strong>: 对比不同历史长度下 <span class="wikilink">GPT-5</span> 的决策表现，用有限状态机建模博弈。</li>
+<li><strong>借鉴意义</strong>: 这是对 agent 能力边界的诚实拷问，直接关系到我们该不该信任 LLM agent 的\"推理\"。</li>
+<li><strong>锐评</strong>: 问了一个大家都在回避的问题：LLM agent 靠 ICL 变强，到底是真在递归推理还是在背模式？用不完全信息博弈来逼出区别是好设计。风险是结论可能又是\"看情况\"式的模糊——但即使如此，把\"推理 vs 外推\"做成可测的实验也比空谈强。复旦出品。👀</li>
+</ul>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2609.18591v1" target="_blank" rel="noopener">📖 AI 精读</a></div><h2>🧠 记忆与知识表示</h2><div class="paper-card" data-topic="🧠 记忆与知识表示"><h3>7. WFM: Wiki Foundation Model for Complex Agentic Reasoning</h3>
+<ul>
+<li><strong>作者</strong>: Dong, Junnan, Luo, Linhao, Zhang, Senlei, Chen, Gong, Guo, Taian, Yu, Yifei, Tao, Rong, Guo, Tao, Zhang, Qian-Wen, An, Siyu, Qiao, Ruizhi, Sun, Xing</li>
+<li><strong>机构</strong>: 1Tencent Youtu Lab  2Monash University, 3Hong Kong Baptist University  4Shenzhen University</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2609.18182v1">arXiv</a> | <a href="https://arxiv.org/pdf/2609.18182v1">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2609.18182v1/running.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2609.18182v1/figure1.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2609.18182v1/wfm_parameter_analysis.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: <span class="wikilink">WFM</span>（Wiki Foundation Model）把稀疏图拓扑与稠密文本语义统一学习，在 <span class="wikilink">GFM</span>（Graph Foundation Model）范式上融合 LLM Wiki 知识表示，为 agent 提供持久非参数记忆与检索增强。</li>
+<li><strong>对比方法/Baselines</strong>: 对比 <span class="wikilink">GraphRAG</span>、<span class="wikilink">RAG</span>，在 <span class="wikilink">HotpotQA</span>、PersonaMem、RHELM 等上评估。</li>
+<li><strong>借鉴意义</strong>: agent 长期记忆是当前热点，把 GraphRAG 升级成\"基础模型\"是野心不小的方向，对做 agent memory / RAG 的团队值得跟。</li>
+<li><strong>锐评</strong>: 腾讯优图出品，思路是\"图太稀疏、机器可读性差，所以造个 Wiki Foundation Model 把图和文本语义捏一起\"。方向对——GraphRAG 的稀疏性确实是痛点。但\"Foundation Model\"这个词现在被滥用得厉害，一个针对 wiki 知识表示的模型配不配叫 foundation，得看它的泛化实验够不够硬。benchmark 选得还算主流，可以看看。👀</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2609.18182v1" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🧠 记忆与知识表示"><h3>8. Collaborative Memory for Multi-Agent VLM Systems</h3>
+<ul>
+<li><strong>作者</strong>: Huixin Zhang<em>, Shao-Jun Xia</em>†, Di Wang†, Liangxi Liu†, Hainan Xiong, Zihao Wang</li>
+<li><strong>机构</strong>: Affiliation: , Affiliation: Northeastern University, Boston, United States, Affiliation: Duke University, Durham, United States, email:, Affiliation: Harvard University, Cambridge, United States, Affiliation: Texas A&amp;M University, College Station, United States</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2609.17921v1">arXiv</a> | <a href="https://arxiv.org/pdf/2609.17921v1">PDF</a></li>
+<li>
+<p><strong>来源</strong>: 📄 arXiv 关键词检索</p>
+</li>
+<li>
+<p><strong>核心方法</strong>: 为多 agent <span class="wikilink">VLM</span> 系统设计协作记忆（<span class="wikilink">CVF</span>），处理不同 agent 检查不同图像区域/视频帧/源版本时的\"解释不一致\"，通过判断冲突主张是否基于同一证据与上下文来做 reconciliation。</p>
+</li>
+<li><strong>对比方法/Baselines</strong>: 对比单 agent VLM 与无协作记忆的多 agent 基线。</li>
+<li><strong>借鉴意义</strong>: 分布式感知下的记忆一致性是多模态 agent 的真实难题，对做多模态推荐/内容理解有参考。</li>
+<li><strong>锐评</strong>: 抓住了一个被忽视的点：多 agent VLM 里，冲突不一定是谁错了，而是大家看的根本不是同一块证据。把 reconciliation 建成\"先确认是否 condition 在同一证据上\"是清醒的设计。但摘要通篇是框架描述，没有一个量化结果，缺图缺数字，容易沦为\"讲故事\"型论文。谨慎观望。⚠️</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2609.17921v1" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🧠 记忆与知识表示"><h3>9. MemOS: A Memory OS for AI System</h3>
+<ul>
+<li><strong>作者</strong>: Zhiyu Li, Chenyang Xi, Chunyu Li, Ding Chen, Boyu Chen, Shichao Song, Simin Niu, Hanyu Wang, Jiawei Yang, Chen Tang, Qingchen Yu, Jihao Zhao, Yezhaohui Wang, Peng Liu, Zehao Lin, Pengyuan Wang, Jiahao Huo, Tianyi Chen, Kai Chen, Kehang Li, Zhen Tao, Huayi Lai, Hao Wu, Bo Tang, Zhengren Wang, Zhaoxin Fan, Ningyu Zhang, Linfeng Zhang, Junchi Yan, Mingchuan Yang, Tong Xu, Wei Xu, Huajun Chen, Haofen Wang, Hongkang Yang, Wentao Zhang, Zhi-Qin John Xu, Siheng Chen, Feiyu Xiong</li>
+<li><strong>机构</strong>: 6]University of Science and Technology of China, 10]Shanghai Jiao Tong University, Affiliation:, 5]Zhejiang University, 3]Research Institute of China Telecom, 7]Peking University, 4]Tongji University, 2]Institute for Advanced Algorithms Research, Shanghai, 8]Renmin University of China, 9]Beihang University</li>
+<li><strong>链接</strong>: <a href="https://arxiv.org/abs/2507.03724">arXiv</a> | <a href="https://arxiv.org/pdf/2507.03724">PDF</a></li>
+<li><strong>来源</strong>: 🔥 HF Trending，⬆️ 170</li>
+</ul>
+<details class="paper-note"><summary>📒 精读笔记: MemOS</summary><div class="note-body"><h1>MemOS: A Memory Operating System for AI</h1>
+<h2>📋 基本信息</h2>
+<ul>
+<li><strong>来源</strong>: HF Trending，⬆️ 166</li>
+</ul>
+<h2>🎯 研究动机与问题</h2>
+<p>AI 系统的记忆管理日益复杂，需要一个操作系统级别的抽象来统一管理不同类型的记忆。</p>
+<h2>🔧 方法详解</h2>
+<h3>核心模块</h3>
+<p>MemOS 包含三个核心模块：</p>
+<ol>
+<li><strong><span class="wikilink">MemScheduler</span></strong>：记忆调度器，决定何时加载/卸载记忆</li>
+<li><strong><span class="wikilink">MemCube</span></strong>：记忆容器，封装不同类型的记忆单元</li>
+<li><strong><span class="wikilink">MemStore</span></strong>：记忆存储层，支持持久化</li>
+</ol>
+<h3>架构</h3>
+<div class="math-block">$$
+\text{MemOS} = \text{MemScheduler} + \text{MemCube} + \text{MemStore}
+$$</div>
+
+<ul>
+<li>MemScheduler 负责记忆生命周期管理</li>
+<li>MemCube 封装 <span class="wikilink">KV cache</span>、向量记忆、结构化记忆等</li>
+<li>MemStore 提供持久化和检索能力</li>
+</ul>
+<h3>对比</h3>
+<table>
+<thead>
+<tr>
+<th>特性</th>
+<th>RAG</th>
+<th>MemGPT</th>
+<th>MemOS</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>记忆类型</td>
+<td>文档</td>
+<td>Context + 外部</td>
+<td>多类型统一</td>
+</tr>
+<tr>
+<td>调度</td>
+<td>无</td>
+<td>简单</td>
+<td>MemScheduler</td>
+</tr>
+<tr>
+<td>生命周期</td>
+<td>无</td>
+<td>部分</td>
+<td>完整</td>
+</tr>
+<tr>
+<td>KV cache</td>
+<td>无</td>
+<td>无</td>
+<td>集成</td>
+</tr>
+</tbody>
+</table>
+<h2>📊 实验结果</h2>
+<p>166 个 upvotes 表明社区对概念框架的高关注度。</p>
+<h2>💡 核心贡献</h2>
+<ol>
+<li><strong>OS 级抽象</strong>：将 agent memory 提升到操作系统层级</li>
+<li><strong>统一管理</strong>：支持 KV cache、向量记忆、结构化记忆等多种类型</li>
+</ol>
+<h2>🤔 局限性与思考</h2>
+<ol>
+<li><strong>概念大于实质</strong>：MemScheduler 说白了就是个优先级队列</li>
+<li>离真正的 "OS" 差了十个抽象层</li>
+<li>166 upvotes 但学术贡献偏弱</li>
+<li>wrapper 性质明显，核心创新不足</li>
+</ol>
+<h2>📚 相关工作</h2>
+<ul>
+<li><span class="wikilink">MemGPT</span>: 早期 agent memory 系统</li>
+<li><span class="wikilink">RAG</span>: 传统检索方案</li>
+<li><span class="wikilink">KV cache</span>: 核心管理对象</li>
+</ul></div></details>
+
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2507.03724v4/img/memory_circuitry_theory_updated.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2507.03724v4/HumanVsLLM.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2507.03724v4/Framework.png" /></div>
+<ul>
+<li><strong>锐评</strong>: 又被 HF 热榜（170 upvotes）捞上来了。已有精读笔记，不重复点评——把 LLM 记忆当操作系统管理（MemCube/MemScheduler/MemGovernance）的思路依然是 agent 记忆方向的重要参考，想复习直接翻笔记。💤（仅指\"又上榜\"，非贬低论文本身）</li>
+</ul>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2507.03724" target="_blank" rel="noopener">📖 AI 精读</a></div><h2>🛡️ Agent 安全 / 可靠性 / 审计</h2><div class="paper-card" data-topic="🛡️ Agent 安全 / 可靠性 / 审计"><h3>10. Compositional Policy Violations: When Step-Level Compliance Fails In Agentic AI Workflows</h3>
+<ul>
+<li><strong>作者</strong>: Ashwini Kurady, Sri Sai Charith Grandhi, Rajesh Gupta, Sumit Mamoria</li>
+<li><strong>机构</strong>: Email: </li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2609.18820v1">arXiv</a> | <a href="https://arxiv.org/pdf/2609.18820v1">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2609.18820v1/CPVArchitecture-scrnshot.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: 定义 <span class="wikilink">CPV</span>（Compositional Policy Violation）：每一步都满足其 step-scoped 策略、且各步执行正确，但组合执行违反 workflow 级策略。指出当前治理几乎全是 step-scoped（输入输出分类器、per-turn rails），漏掉了组合失效。</li>
+<li><strong>对比方法/Baselines</strong>: 对比 <span class="wikilink">NeMo</span> Guardrails 等 step-scoped 治理方案。</li>
+<li><strong>借鉴意义</strong>: 对在受监管场景（金融/医疗/广告合规）部署 agent 的团队是必读级警示——你的每一步都合规，不代表整条链合规。</li>
+<li><strong>锐评</strong>: 今天最有洞察的一篇。它指出的失效模式很反直觉但真实：referral 阈值、授权上限这类策略是\"整条执行\"的属性，而现有护栏全在管单步。没有 bug、没有违反规格，系统却整体违规——这正是 agent 上线后最难查的那类事故。选题扎实，就看它的检测方法（COPE）够不够可操作。🔥</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2609.18820v1" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🛡️ Agent 安全 / 可靠性 / 审计"><h3>11. A Study of the Reliability of Agentic AI-Generated Programs</h3>
+<ul>
+<li><strong>作者</strong>: Shafique, Ayesha, MIller, Barton P., Heymann, Elisa R.</li>
+<li><strong>机构</strong>: About Trusted CI, September, The mission of Trusted CI is to provide the National Science Foundation (NSF) community with a</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2609.18298v1">arXiv</a> | <a href="https://arxiv.org/pdf/2609.18298v1">PDF</a></li>
+<li>
+<p><strong>来源</strong>: 📄 arXiv 关键词检索</p>
+</li>
+<li>
+<p><strong>核心方法</strong>: 用三种实践客观验证\"agentic AI 生成代码更快更可靠\"这一宣称：应用典型 best-practice agentic 开发流程并检验其可靠性。</p>
+</li>
+<li><strong>对比方法/Baselines</strong>: 对比 agentic AI 生成代码与人工/传统流程。</li>
+<li><strong>借鉴意义</strong>: 对正在把 coding agent 引入生产的团队是一盆冷水式的实证参考。</li>
+<li><strong>锐评</strong>: 态度可贵：不吹 agent 编程多神，而是问\"怎么客观验证这些宣称\"。Trusted CI / 大学背景，方法应该严谨。但摘要只写了\"first, we applied...\"就戛然而止，method_names 全是 TeX/CSS 说明富化没抓到干货，结论到底是正面还是负面完全看不出来，得翻正文。选题好，信息量在摘要里被藏起来了。👀</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2609.18298v1" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🛡️ Agent 安全 / 可靠性 / 审计"><h3>12. Who Audits Whom, on What Substrate, with What Evidence? An Independence-Graded Audit Protocol for Agentic AI</h3>
+<ul>
+<li><strong>作者</strong>: Mohamed Chahine Ghanem</li>
+<li><strong>机构</strong>: Affiliation: Keele University, School of Computer Science and Mathematics, Keele, United Kingdom, Affiliation: , email:, CCS: Security and privacy Systems securityCCS: Computing methodologies Intelligent agentsCCS: Social and professional topics Computing / technology policy, Affiliation: University of Liverpool, Cybersecurity Institute, Liverpool, United Kingdom</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2609.18272v1">arXiv</a> | <a href="https://arxiv.org/pdf/2609.18272v1">PDF</a></li>
+<li>
+<p><strong>来源</strong>: 📄 arXiv 关键词检索</p>
+</li>
+<li>
+<p><strong>核心方法</strong>: 提出独立性分级的审计协议：把 agentic AI 审计的\"独立性\"从二元升级为三个正交轴——principal（谁控制审计者）、substrate（审计者是否与被审计者共享底座）、evidence 独立性。</p>
+</li>
+<li><strong>对比方法/Baselines</strong>: 对比现有把审计独立性当二元处理的 assurance 框架（ISO/IEC 标准）。</li>
+<li><strong>借鉴意义</strong>: 随着 agent 既是被审计对象又成为审计者，独立性分级对 AI 治理/合规团队有制度设计价值。</li>
+<li><strong>锐评</strong>: 这篇是政策/治理向而非技术向，但\"agent 正在同时变成审计者和被审计者\"这个观察够尖锐。把独立性拆成三轴（谁控制、共不共享底座、证据来源）是有用的分析框架。缺点也明显：全是概念，无实验无落地，作者自己都承认\"高分审计只买到了well-attested irrelevance\"。当思想材料读，别指望能直接用。⚠️</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2609.18272v1" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🛡️ Agent 安全 / 可靠性 / 审计"><h3>13. Beyond Routine Compliance: Cunning Data Cultivates Safety Vigilance in Large Language Models</h3>
+<ul>
+<li><strong>作者</strong>: Youjia Wang, Lin Xu\corresponding, Yang Sun, Yuxiao Lu, Chengfang Fang, Jie Shi</li>
+<li><strong>机构</strong>: ††thanks: Work done while interning at Huawei</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2609.18515v1">arXiv</a> | <a href="https://arxiv.org/pdf/2609.18515v1">PDF</a></li>
+<li>
+<p><strong>来源</strong>: 📄 arXiv 关键词检索</p>
+</li>
+<li>
+<p><strong>核心方法</strong>: 提出安全对齐不仅需\"知道边界\"还需\"vigilance\"（察觉异常前提、误导推理、潜在风险）。用\"cunning data\"训练模型，把有害意图藏在看似无害的上下文里，用 <span class="wikilink">SFT</span> + <span class="wikilink">GRPO</span> 训练。</p>
+</li>
+<li><strong>对比方法/Baselines</strong>: 对比 <span class="wikilink">DeepSeek</span>、在 <span class="wikilink">WildJailbreak</span> 上用 <span class="wikilink">ASR</span>（攻击成功率）评估。</li>
+<li><strong>借鉴意义</strong>: 对做 LLM 安全对齐的团队有直接价值——常规拒答训练挡不住\"隐藏意图\"攻击。</li>
+<li><strong>锐评</strong>: \"vigilance\"这个提法比又一个拒答数据集有价值：真正危险的不是明晃晃的有害请求，而是包在无害语境里的意图。用\"狡猾数据\"专门训练警觉性是对的方向。华为实习产出，用 GRPO 也算跟上潮流。就是\"cunning data\"怎么构造、会不会过拟合到特定攻击模式，是它的命门。👀</li>
+</ul>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2609.18515v1" target="_blank" rel="noopener">📖 AI 精读</a></div><h2>🎯 强化学习与推理方法</h2><div class="paper-card" data-topic="🎯 强化学习与推理方法"><h3>14. Label-free steering: Compressing test-time reinforcement learning into bias-only subspaces</h3>
+<ul>
+<li><strong>作者</strong>: Naveen Vakada, Mingyuan Li, Shaoxiong Ji</li>
+<li><strong>机构</strong>: Affiliation: , Affiliation: University of Turku, Finland  ⋅\cdot  ELLIS Institute Finland, Email: </li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2609.18587v1">arXiv</a> | <a href="https://arxiv.org/pdf/2609.18587v1">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2609.18587v1/main_diagram.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: <span class="wikilink">Label-free-steering</span>：把 test-time RL（<span class="wikilink">TTRL</span>）压缩到\"bias-only\"子空间——只更新极少量 bias 参数，用无标签的 majority-vote 伪信号做 reward，验证严格受限的奖励+优化空间下 test-time 自适应仍能涌现。</li>
+<li><strong>对比方法/Baselines</strong>: 对比全参数 TTRL、<span class="wikilink">LoRA</span>，在 <span class="wikilink">MATH-500</span>、<span class="wikilink">MathVista</span>、MMAU、LogicVista 上评估。</li>
+<li><strong>借鉴意义</strong>: 如果只调 bias 就能实现 test-time 提升，对推理模型的低成本自适应部署很有吸引力。</li>
+<li><strong>锐评</strong>: 这个消融很漂亮：把 TTRL 逼到极限——奖励无标签、优化空间只剩 bias 参数——看它还灵不灵。如果结论是\"灵\"，那对\"test-time RL 到底改了什么\"是很强的机制性证据；如果不灵，也是有价值的负结果。比大多数\"我又调了个 TTRL\"的论文有想法。就看多 benchmark 上的数字稳不稳。👀</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2609.18587v1" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🎯 强化学习与推理方法"><h3>15. Online Robust Reinforcement Learning Through Monte-Carlo Planning</h3>
+<ul>
+<li><strong>作者</strong>: Tuan Dam, Kishan Panaganti, Brahim Driss, Adam Wierman</li>
+<li><strong>机构</strong>: Correspondence to:, Affiliation: Univ. Lille, Inria, CNRS, Centrale Lille, UMR 9189-CRIStAL, Affiliation:, Affiliation: Hanoi University of Science and Technology, Hanoi, Vietnam, Affiliation: Department of Computing and Mathematical Sciences, California Insitute of Technology</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2609.18599v1">arXiv</a> | <a href="https://arxiv.org/pdf/2609.18599v1">PDF</a></li>
+<li>
+<p><strong>来源</strong>: 📄 arXiv 关键词检索</p>
+</li>
+<li>
+<p><strong>核心方法</strong>: 在线鲁棒 RL：把 <span class="wikilink">MCTS</span>（<span class="wikilink">UCT</span>）扩展到 simulator 与真实动态不一致的场景，用 <span class="wikilink">RMDP</span> 框架处理低保真模拟器的建模失配。</p>
+</li>
+<li><strong>对比方法/Baselines</strong>: 对比标准 MCTS/UCT，涉及 Robust-Power / Stochastic-Power 等鲁棒变体。</li>
+<li><strong>借鉴意义</strong>: sim-to-real 失配是 RL 落地的老大难，把鲁棒性做进 planning 层对实际部署有意义。</li>
+<li><strong>锐评</strong>: 老实的理论 RL 工作：承认\"MCTS 假设模拟器=真实世界\"这个前提在现实里站不住，然后往里塞鲁棒性。Caltech + Inria 的组合，数学应该扎实。问题是这类工作往往停在 toy 环境，真实低保真模拟器上的收益有多大是关键。对纯 RL 研究者友好，应用向的可跳。👀</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2609.18599v1" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🎯 强化学习与推理方法"><h3>16. Attention Dispersion as a Diagnostic Signal for Hallucination in Large Language Models</h3>
+<ul>
+<li><strong>作者</strong>: Shardul P. More, Tanuja S. Pawar</li>
+<li><strong>机构</strong>: Affiliation: Rajarambapu Institute of Technology, Affiliation: , Email: </li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2609.18320v1">arXiv</a> | <a href="https://arxiv.org/pdf/2609.18320v1">PDF</a></li>
+<li>
+<p><strong>来源</strong>: 📄 arXiv 关键词检索</p>
+</li>
+<li>
+<p><strong>核心方法</strong>: 把内部注意力机制的\"时间波动性\"（attention dispersion）作为幻觉的诊断信号，区别于依赖输出置信度的传统方法——后者因现代对齐技术导致 logits 校准失真。</p>
+</li>
+<li><strong>对比方法/Baselines</strong>: 对比 output-based confidence / self-consistency，在 <span class="wikilink">MATH-500</span>、CalibratedMath 上用 <span class="wikilink">AUC</span> 评估。</li>
+<li><strong>借鉴意义</strong>: 幻觉检测是可靠性刚需，从内部注意力找信号是绕开\"logits 被 RLHF 搞坏\"的合理思路。</li>
+<li><strong>锐评</strong>: 切入点不错：既然对齐把输出 logits 的校准搞坏了，那就去看内部注意力的时序抖动。这个\"往模型内部看\"的方向比又一个采样投票法有新意。但注意力可解释性这条路踩坑无数，\"attention dispersion 高=幻觉\"的因果关系很容易被证伪，AUC 数字得够硬才站得住。小机构出品，谨慎乐观。⚠️</li>
+</ul>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2609.18320v1" target="_blank" rel="noopener">📖 AI 精读</a></div></div>
+<div id="panel-推荐系统与生成式检索" class="tab-panel"><h2>📊 推荐系统与生成式检索</h2><div class="paper-card" data-topic="📊 推荐系统与生成式检索"><h3>1. LIGE-GR: A Smooth Leap from Ranking to Generative Recommendation in the LLM Era</h3>
+<ul>
+<li><strong>作者</strong>: Venkat Srinivas⋆, Chenzhang He⋆, Sam Woodmansee⋆, Shawn Lian⋆, Wenjie Hu⋆, Renjie Jiang⋆, Ziheng Huang, Xinyuan Zhang, Zhihao Zheng, Zhuoran Yu, Rui Li, Lei Yuan, Ziwei Li, Jimmy Jia, Mert Terzihan, Ekrem Kocaguneli, Yiming Liao, Zhichen Zhao, Yue Yin, Yue Weng, Wanlin Ma, Xufeng Cai, Weimiao Wu, Yezhou Huang, Du Zhang, Yukun Ding, Aaron Johnston, Yueming Wang, Zhaojie Gong, Yuting Zhang, Serena Li, Adithya Ganesh, Boying Liu, Haichuan Yang, Xialu Li, Matt Ma, Qunshu Zhang, John Joshua Miller, Praveen Rathinavelu, Cheng Huang, Aadhar Sachdeva, Josh Karns, Andres Aaron Gutierrez, Neil Agarwal, Gustas Pladis, Vladimir Batygin, Gopal Ray, Aditya Priyadarshi, Shantanu Patil, Zhe Wang, Penny Pan, Yiping Han, Arun Singh, Guangdeng Liao, Bi Xue, Xinyao Hu, Yang Song, Yisong Song, Meihong Wang, Haotian Wu, Deepak Agarwal, Ji Liu</li>
+<li><strong>机构</strong>: Affiliation: Meta Platforms, Inc., Menlo Park, CA, USA, Affiliation: </li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2609.18148v1">arXiv</a> | <a href="https://arxiv.org/pdf/2609.18148v1">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2609.18148v1/figures/framework.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2609.18148v1/figures/model.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: 把 itemwise 推荐重构为 <span class="wikilink">listwise</span> / 生成式框架，让成熟工业推荐系统\"平滑\"升级到 LLM 时代的生成范式，而不是推倒重来。核心是把现有 itemwise system 升级成 listwise system，再引入生成式推荐。</li>
+<li><strong>对比方法/Baselines</strong>: 对比传统 itemwise ranking 与 <span class="wikilink">生成式推荐</span>（<span class="wikilink">GR</span>）范式，涉及 <span class="wikilink">CF</span> 协同过滤基线。</li>
+<li><strong>借鉴意义</strong>: 这是今天唯一直接命中推荐/广告主战场的工作，且来自 Meta 工业界，作者名单长达 60+ 人——典型的\"已上线\"级别项目。对做 CTR/排序模型迁移到生成式的团队有直接参考价值。</li>
+<li><strong>锐评</strong>: 作者名单堆了整整一屏，一看就是 Meta 的正规军而非灌水。真正的价值在\"smooth leap\"三个字：工业界最痛的不是生成式推荐效果好不好，而是怎么在不推翻现有 itemwise pipeline 的前提下渐进升级。可惜摘要对\"两个挑战\"只开了个头就断了，方法细节全靠 method_summary 里那句\"upgrade itemwise to listwise\"撑着，得看正文。冲着 Meta 和这个选题也值得精读。🔥</li>
+</ul>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2609.18148v1" target="_blank" rel="noopener">📖 AI 精读</a></div></div>
+<div id="panel-agent框架多智能体工具" class="tab-panel"><h2>🤖 Agent 框架 / 多智能体 / 工具</h2><div class="paper-card" data-topic="🤖 Agent 框架 / 多智能体 / 工具"><h3>2. DualSQL: Text-to-SQL with Multi-Agent Reinforcement Learning</h3>
+<ul>
+<li><strong>作者</strong>: Shijie Chen, Yu Gan, Yeounoh Chung, Jiani Zhang, Quannan Li, Sravan Bodapati, Cody Greer, Yu Su, Fatma Ozcan</li>
+<li><strong>机构</strong>: Affiliation: The Ohio State University, Affiliation: , Affiliation: Google LLC, Email: , ††thanks: Work done during Shijie Chen’s internship at Google, Email: gany@google.com, Email: fozcan@google.com</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2609.18135v1">arXiv</a> | <a href="https://arxiv.org/pdf/2609.18135v1">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2609.18135v1/MANL2SQL_Training.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: <span class="wikilink">DualSQL</span> 用单一模型 backbone 驱动两个 agent，同时做 schema linking 和 SQL 生成，用 <span class="wikilink">RL</span> 训练以利用两个任务间的协同，反对现有\"每个任务训练独立模型\"的做法。</li>
+<li><strong>对比方法/Baselines</strong>: 在 <span class="wikilink">BIRD</span> 上用 <span class="wikilink">EX</span>（执行准确率）评估，涉及 <span class="wikilink">REX</span> 等 Text-to-SQL 基线。</li>
+<li><strong>借鉴意义</strong>: 对 tool use / function calling 场景有借鉴意义：把相关子任务用共享 backbone + RL 联合训练，是降低多 agent pipeline 部署成本的通用思路。</li>
+<li><strong>锐评</strong>: \"两个任务本来相关，你们却训两个模型\"这个批评切中要害，单 backbone 共享确实优雅。但 multi-agent + RL + Text-to-SQL 这个组合已经相当拥挤，能不能在 BIRD 上真刷出 SOTA 才是关键，摘要没给数字，emoji 只能先给个观望。Google 实习产出，质量应该有底。👀</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2609.18135v1" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🤖 Agent 框架 / 多智能体 / 工具"><h3>3. Clueing up LLMs with Tool-Augmented Deductive Reasoning</h3>
+<ul>
+<li><strong>作者</strong>: Rebecca Ansell, Autumn Toney-Wails,</li>
+<li><strong>机构</strong>: Affiliation: , Affiliation:  Georgetown University, Email: </li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2609.18736v1">arXiv</a> | <a href="https://arxiv.org/pdf/2609.18736v1">PDF</a></li>
+<li>
+<p><strong>来源</strong>: 📄 arXiv 关键词检索</p>
+</li>
+<li>
+<p><strong>核心方法</strong>: 用 <span class="wikilink">Tool-Augmented</span> 演绎推理让 LLM 在长交互中保持逻辑一致，跨多步整合证据、维持与先前推断的一致性、在新约束下更新信念。用 Cluedo 类推理游戏作为 testbed。</p>
+</li>
+<li><strong>对比方法/Baselines</strong>: 对比 <span class="wikilink">GPT</span> 系列纯 LLM 推理与工具增强版本。</li>
+<li><strong>借鉴意义</strong>: 多步演绎一致性是 agent 可靠性的核心短板，工具增强是当前主流补丁思路，对做 agent reasoning 的团队有参考。</li>
+<li><strong>锐评</strong>: 拿\"Clue/妙探寻凶\"当推理 benchmark 是个聪明的选题——需求信念更新、证据整合，天然对抗\"统计外推\"。但\"tool-augmented\"这剂药方大家都在开，真正的问题是工具究竟补上了推理能力还是只是外挂了个计算器，摘要没说清。测试床有趣，方法保守。👀</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2609.18736v1" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🤖 Agent 框架 / 多智能体 / 工具"><h3>4. HypoEvolve: Genetic Algorithms Enable Multi-Agent LLMs to Discover Scientific Hypotheses</h3>
+<ul>
+<li><strong>作者</strong>: Jieyuan Liu, Mengzhou Hu, Jefferson Chen, JungHo Kong, Pratibha Jagannatha, Yiming Gao, Dexter Pratt, Hsin-Yuan Lee, Zhiting Hu, Trey Ideker, Wei Wang, Eric P. Xing, Zhen Wang</li>
+<li><strong>机构</strong>: Texas A&amp;M University, Affiliation: , Mohamed bin Zayed University of Artificial Intelligence, Affiliation: Carnegie Mellon University, Affiliation: University of California San Diego</li>
+<li><strong>链接</strong>: <a href="https://arxiv.org/abs/2609.15938">arXiv</a> | <a href="https://arxiv.org/pdf/2609.15938">PDF</a></li>
+<li>
+<p><strong>来源</strong>: 📰 HF Daily，⬆️ 11</p>
+</li>
+<li>
+<p><strong>核心方法</strong>: <span class="wikilink">HypoEvolve</span> 用遗传算法驱动多 agent LLM 做科学假设发现，通过 critique、comparison、revision 结合进化搜索，系统研究不同\"agent 协作形式\"如何影响假设质量。</p>
+</li>
+<li><strong>对比方法/Baselines</strong>: 对比 HypoGeniC、SciMON、ResearchAgent 等文献驱动的假设生成系统。</li>
+<li><strong>借鉴意义</strong>: 对多 agent 协作机制设计有方法论价值——它不是又造一个系统，而是把\"协作形式\"当变量来研究。</li>
+<li><strong>锐评</strong>: HF 上 11 个 upvote，选题诚实：不吹\"我们发现了新科学\"，而是问\"哪种 agent 协作方式产出的假设更好\"，这种 ablation 式的态度比灌水系统健康。遗传算法 + LLM 不新，但用在\"协作拓扑\"这个维度上有点意思。领域偏生物（CRISPR/DepMap），做推荐的看方法论即可。👀</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2609.15938" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🤖 Agent 框架 / 多智能体 / 工具"><h3>5. Designing Agentic AI Workflow Portfolios under Imperfect Selection and Compute Cost</h3>
+<ul>
+<li><strong>作者</strong>: Mojtaba Abdolmaleki, Stefanus Jasin, Boyu Wang</li>
+<li><strong>机构</strong>: Ross School of Business, University of Michigan, United States, mojtabaa@umich.edu, Ross School of Business, University of Michigan, United States, sjasin@umich.edu, School of Management, University of San Francisco, United States, bwang62@usfca.edu</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2609.18126v1">arXiv</a> | <a href="https://arxiv.org/pdf/2609.18126v1">PDF</a></li>
+<li>
+<p><strong>来源</strong>: 📄 arXiv 关键词检索</p>
+</li>
+<li>
+<p><strong>核心方法</strong>: 在 imperfect selection 和 compute cost 双重约束下设计 <span class="wikilink">agentic workflow</span> 组合（portfolio），指出\"只用平均性能最高的 workflow\"是次优的，因为不同 workflow 在不同实例上成功。用子模优化 / 覆盖问题建模。</p>
+</li>
+<li><strong>对比方法/Baselines</strong>: 对比 <span class="wikilink">ADAS</span>、model routing、cascades 等自动 workflow 设计与聚合方法。</li>
+<li><strong>借鉴意义</strong>: 算力成本约束下的 workflow 选择直接关系 agent 系统的线上经济性，对广告/推荐这种成本敏感场景尤其相关。</li>
+<li><strong>锐评</strong>: 这篇的运筹味很正：Ross 商学院出品，把 agentic workflow 选择建模成 assortment/覆盖优化，而不是玄学调 prompt。\"平均最优≠实例最优\"这个观察对做线上系统的人是常识，但把它形式化成 portfolio 优化并考虑 compute cost 是加分项。缺图缺实验数字，理论框架能不能落地存疑。👀</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2609.18126v1" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🤖 Agent 框架 / 多智能体 / 工具"><h3>6. Recursive Reasoning or Statistical Extrapolation? In-Context Learning in Multi-Agent Interdependent Decision-Making</h3>
+<ul>
+<li><strong>作者</strong>: Yu Liu, Wenwen Li, Yifan Dou, Guangnan Ye</li>
+<li><strong>机构</strong>: Affiliation: , Affiliation: yuliu23@m.fudan.edu.cn, {liwwen,yfdou,yegn}@fudan.edu.cn, Affiliation: Fudan University</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2609.18591v1">arXiv</a> | <a href="https://arxiv.org/pdf/2609.18591v1">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2609.18591v1/assets/graphs/network.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2609.18591v1/assets/graphs/finite_state_machine.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2609.18591v1/assets/plots/history_length_plots/gpt-5-chat--increasing.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: 在多 agent 不完全信息博弈（需递归信念推理）中，用 <span class="wikilink">ICL</span> 拆解 LLM agent 的改进到底来自\"精炼内部推理\"还是\"统计模式外推\"，用 GPT-5 等模型做实验。</li>
+<li><strong>对比方法/Baselines</strong>: 对比不同历史长度下 <span class="wikilink">GPT-5</span> 的决策表现，用有限状态机建模博弈。</li>
+<li><strong>借鉴意义</strong>: 这是对 agent 能力边界的诚实拷问，直接关系到我们该不该信任 LLM agent 的\"推理\"。</li>
+<li><strong>锐评</strong>: 问了一个大家都在回避的问题：LLM agent 靠 ICL 变强，到底是真在递归推理还是在背模式？用不完全信息博弈来逼出区别是好设计。风险是结论可能又是\"看情况\"式的模糊——但即使如此，把\"推理 vs 外推\"做成可测的实验也比空谈强。复旦出品。👀</li>
+</ul>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2609.18591v1" target="_blank" rel="noopener">📖 AI 精读</a></div></div>
+<div id="panel-记忆与知识表示" class="tab-panel"><h2>🧠 记忆与知识表示</h2><div class="paper-card" data-topic="🧠 记忆与知识表示"><h3>7. WFM: Wiki Foundation Model for Complex Agentic Reasoning</h3>
+<ul>
+<li><strong>作者</strong>: Dong, Junnan, Luo, Linhao, Zhang, Senlei, Chen, Gong, Guo, Taian, Yu, Yifei, Tao, Rong, Guo, Tao, Zhang, Qian-Wen, An, Siyu, Qiao, Ruizhi, Sun, Xing</li>
+<li><strong>机构</strong>: 1Tencent Youtu Lab  2Monash University, 3Hong Kong Baptist University  4Shenzhen University</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2609.18182v1">arXiv</a> | <a href="https://arxiv.org/pdf/2609.18182v1">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2609.18182v1/running.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2609.18182v1/figure1.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2609.18182v1/wfm_parameter_analysis.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: <span class="wikilink">WFM</span>（Wiki Foundation Model）把稀疏图拓扑与稠密文本语义统一学习，在 <span class="wikilink">GFM</span>（Graph Foundation Model）范式上融合 LLM Wiki 知识表示，为 agent 提供持久非参数记忆与检索增强。</li>
+<li><strong>对比方法/Baselines</strong>: 对比 <span class="wikilink">GraphRAG</span>、<span class="wikilink">RAG</span>，在 <span class="wikilink">HotpotQA</span>、PersonaMem、RHELM 等上评估。</li>
+<li><strong>借鉴意义</strong>: agent 长期记忆是当前热点，把 GraphRAG 升级成\"基础模型\"是野心不小的方向，对做 agent memory / RAG 的团队值得跟。</li>
+<li><strong>锐评</strong>: 腾讯优图出品，思路是\"图太稀疏、机器可读性差，所以造个 Wiki Foundation Model 把图和文本语义捏一起\"。方向对——GraphRAG 的稀疏性确实是痛点。但\"Foundation Model\"这个词现在被滥用得厉害，一个针对 wiki 知识表示的模型配不配叫 foundation，得看它的泛化实验够不够硬。benchmark 选得还算主流，可以看看。👀</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2609.18182v1" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🧠 记忆与知识表示"><h3>8. Collaborative Memory for Multi-Agent VLM Systems</h3>
+<ul>
+<li><strong>作者</strong>: Huixin Zhang<em>, Shao-Jun Xia</em>†, Di Wang†, Liangxi Liu†, Hainan Xiong, Zihao Wang</li>
+<li><strong>机构</strong>: Affiliation: , Affiliation: Northeastern University, Boston, United States, Affiliation: Duke University, Durham, United States, email:, Affiliation: Harvard University, Cambridge, United States, Affiliation: Texas A&amp;M University, College Station, United States</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2609.17921v1">arXiv</a> | <a href="https://arxiv.org/pdf/2609.17921v1">PDF</a></li>
+<li>
+<p><strong>来源</strong>: 📄 arXiv 关键词检索</p>
+</li>
+<li>
+<p><strong>核心方法</strong>: 为多 agent <span class="wikilink">VLM</span> 系统设计协作记忆（<span class="wikilink">CVF</span>），处理不同 agent 检查不同图像区域/视频帧/源版本时的\"解释不一致\"，通过判断冲突主张是否基于同一证据与上下文来做 reconciliation。</p>
+</li>
+<li><strong>对比方法/Baselines</strong>: 对比单 agent VLM 与无协作记忆的多 agent 基线。</li>
+<li><strong>借鉴意义</strong>: 分布式感知下的记忆一致性是多模态 agent 的真实难题，对做多模态推荐/内容理解有参考。</li>
+<li><strong>锐评</strong>: 抓住了一个被忽视的点：多 agent VLM 里，冲突不一定是谁错了，而是大家看的根本不是同一块证据。把 reconciliation 建成\"先确认是否 condition 在同一证据上\"是清醒的设计。但摘要通篇是框架描述，没有一个量化结果，缺图缺数字，容易沦为\"讲故事\"型论文。谨慎观望。⚠️</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2609.17921v1" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🧠 记忆与知识表示"><h3>9. MemOS: A Memory OS for AI System</h3>
+<ul>
+<li><strong>作者</strong>: Zhiyu Li, Chenyang Xi, Chunyu Li, Ding Chen, Boyu Chen, Shichao Song, Simin Niu, Hanyu Wang, Jiawei Yang, Chen Tang, Qingchen Yu, Jihao Zhao, Yezhaohui Wang, Peng Liu, Zehao Lin, Pengyuan Wang, Jiahao Huo, Tianyi Chen, Kai Chen, Kehang Li, Zhen Tao, Huayi Lai, Hao Wu, Bo Tang, Zhengren Wang, Zhaoxin Fan, Ningyu Zhang, Linfeng Zhang, Junchi Yan, Mingchuan Yang, Tong Xu, Wei Xu, Huajun Chen, Haofen Wang, Hongkang Yang, Wentao Zhang, Zhi-Qin John Xu, Siheng Chen, Feiyu Xiong</li>
+<li><strong>机构</strong>: 6]University of Science and Technology of China, 10]Shanghai Jiao Tong University, Affiliation:, 5]Zhejiang University, 3]Research Institute of China Telecom, 7]Peking University, 4]Tongji University, 2]Institute for Advanced Algorithms Research, Shanghai, 8]Renmin University of China, 9]Beihang University</li>
+<li><strong>链接</strong>: <a href="https://arxiv.org/abs/2507.03724">arXiv</a> | <a href="https://arxiv.org/pdf/2507.03724">PDF</a></li>
+<li><strong>来源</strong>: 🔥 HF Trending，⬆️ 170</li>
+</ul>
+<details class="paper-note"><summary>📒 精读笔记: MemOS</summary><div class="note-body"><h1>MemOS: A Memory Operating System for AI</h1>
+<h2>📋 基本信息</h2>
+<ul>
+<li><strong>来源</strong>: HF Trending，⬆️ 166</li>
+</ul>
+<h2>🎯 研究动机与问题</h2>
+<p>AI 系统的记忆管理日益复杂，需要一个操作系统级别的抽象来统一管理不同类型的记忆。</p>
+<h2>🔧 方法详解</h2>
+<h3>核心模块</h3>
+<p>MemOS 包含三个核心模块：</p>
+<ol>
+<li><strong><span class="wikilink">MemScheduler</span></strong>：记忆调度器，决定何时加载/卸载记忆</li>
+<li><strong><span class="wikilink">MemCube</span></strong>：记忆容器，封装不同类型的记忆单元</li>
+<li><strong><span class="wikilink">MemStore</span></strong>：记忆存储层，支持持久化</li>
+</ol>
+<h3>架构</h3>
+<div class="math-block">$$
+\text{MemOS} = \text{MemScheduler} + \text{MemCube} + \text{MemStore}
+$$</div>
+
+<ul>
+<li>MemScheduler 负责记忆生命周期管理</li>
+<li>MemCube 封装 <span class="wikilink">KV cache</span>、向量记忆、结构化记忆等</li>
+<li>MemStore 提供持久化和检索能力</li>
+</ul>
+<h3>对比</h3>
+<table>
+<thead>
+<tr>
+<th>特性</th>
+<th>RAG</th>
+<th>MemGPT</th>
+<th>MemOS</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>记忆类型</td>
+<td>文档</td>
+<td>Context + 外部</td>
+<td>多类型统一</td>
+</tr>
+<tr>
+<td>调度</td>
+<td>无</td>
+<td>简单</td>
+<td>MemScheduler</td>
+</tr>
+<tr>
+<td>生命周期</td>
+<td>无</td>
+<td>部分</td>
+<td>完整</td>
+</tr>
+<tr>
+<td>KV cache</td>
+<td>无</td>
+<td>无</td>
+<td>集成</td>
+</tr>
+</tbody>
+</table>
+<h2>📊 实验结果</h2>
+<p>166 个 upvotes 表明社区对概念框架的高关注度。</p>
+<h2>💡 核心贡献</h2>
+<ol>
+<li><strong>OS 级抽象</strong>：将 agent memory 提升到操作系统层级</li>
+<li><strong>统一管理</strong>：支持 KV cache、向量记忆、结构化记忆等多种类型</li>
+</ol>
+<h2>🤔 局限性与思考</h2>
+<ol>
+<li><strong>概念大于实质</strong>：MemScheduler 说白了就是个优先级队列</li>
+<li>离真正的 "OS" 差了十个抽象层</li>
+<li>166 upvotes 但学术贡献偏弱</li>
+<li>wrapper 性质明显，核心创新不足</li>
+</ol>
+<h2>📚 相关工作</h2>
+<ul>
+<li><span class="wikilink">MemGPT</span>: 早期 agent memory 系统</li>
+<li><span class="wikilink">RAG</span>: 传统检索方案</li>
+<li><span class="wikilink">KV cache</span>: 核心管理对象</li>
+</ul></div></details>
+
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2507.03724v4/img/memory_circuitry_theory_updated.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2507.03724v4/HumanVsLLM.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2507.03724v4/Framework.png" /></div>
+<ul>
+<li><strong>锐评</strong>: 又被 HF 热榜（170 upvotes）捞上来了。已有精读笔记，不重复点评——把 LLM 记忆当操作系统管理（MemCube/MemScheduler/MemGovernance）的思路依然是 agent 记忆方向的重要参考，想复习直接翻笔记。💤（仅指\"又上榜\"，非贬低论文本身）</li>
+</ul>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2507.03724" target="_blank" rel="noopener">📖 AI 精读</a></div></div>
+<div id="panel-agent安全可靠性审计" class="tab-panel"><h2>🛡️ Agent 安全 / 可靠性 / 审计</h2><div class="paper-card" data-topic="🛡️ Agent 安全 / 可靠性 / 审计"><h3>10. Compositional Policy Violations: When Step-Level Compliance Fails In Agentic AI Workflows</h3>
+<ul>
+<li><strong>作者</strong>: Ashwini Kurady, Sri Sai Charith Grandhi, Rajesh Gupta, Sumit Mamoria</li>
+<li><strong>机构</strong>: Email: </li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2609.18820v1">arXiv</a> | <a href="https://arxiv.org/pdf/2609.18820v1">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2609.18820v1/CPVArchitecture-scrnshot.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: 定义 <span class="wikilink">CPV</span>（Compositional Policy Violation）：每一步都满足其 step-scoped 策略、且各步执行正确，但组合执行违反 workflow 级策略。指出当前治理几乎全是 step-scoped（输入输出分类器、per-turn rails），漏掉了组合失效。</li>
+<li><strong>对比方法/Baselines</strong>: 对比 <span class="wikilink">NeMo</span> Guardrails 等 step-scoped 治理方案。</li>
+<li><strong>借鉴意义</strong>: 对在受监管场景（金融/医疗/广告合规）部署 agent 的团队是必读级警示——你的每一步都合规，不代表整条链合规。</li>
+<li><strong>锐评</strong>: 今天最有洞察的一篇。它指出的失效模式很反直觉但真实：referral 阈值、授权上限这类策略是\"整条执行\"的属性，而现有护栏全在管单步。没有 bug、没有违反规格，系统却整体违规——这正是 agent 上线后最难查的那类事故。选题扎实，就看它的检测方法（COPE）够不够可操作。🔥</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2609.18820v1" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🛡️ Agent 安全 / 可靠性 / 审计"><h3>11. A Study of the Reliability of Agentic AI-Generated Programs</h3>
+<ul>
+<li><strong>作者</strong>: Shafique, Ayesha, MIller, Barton P., Heymann, Elisa R.</li>
+<li><strong>机构</strong>: About Trusted CI, September, The mission of Trusted CI is to provide the National Science Foundation (NSF) community with a</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2609.18298v1">arXiv</a> | <a href="https://arxiv.org/pdf/2609.18298v1">PDF</a></li>
+<li>
+<p><strong>来源</strong>: 📄 arXiv 关键词检索</p>
+</li>
+<li>
+<p><strong>核心方法</strong>: 用三种实践客观验证\"agentic AI 生成代码更快更可靠\"这一宣称：应用典型 best-practice agentic 开发流程并检验其可靠性。</p>
+</li>
+<li><strong>对比方法/Baselines</strong>: 对比 agentic AI 生成代码与人工/传统流程。</li>
+<li><strong>借鉴意义</strong>: 对正在把 coding agent 引入生产的团队是一盆冷水式的实证参考。</li>
+<li><strong>锐评</strong>: 态度可贵：不吹 agent 编程多神，而是问\"怎么客观验证这些宣称\"。Trusted CI / 大学背景，方法应该严谨。但摘要只写了\"first, we applied...\"就戛然而止，method_names 全是 TeX/CSS 说明富化没抓到干货，结论到底是正面还是负面完全看不出来，得翻正文。选题好，信息量在摘要里被藏起来了。👀</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2609.18298v1" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🛡️ Agent 安全 / 可靠性 / 审计"><h3>12. Who Audits Whom, on What Substrate, with What Evidence? An Independence-Graded Audit Protocol for Agentic AI</h3>
+<ul>
+<li><strong>作者</strong>: Mohamed Chahine Ghanem</li>
+<li><strong>机构</strong>: Affiliation: Keele University, School of Computer Science and Mathematics, Keele, United Kingdom, Affiliation: , email:, CCS: Security and privacy Systems securityCCS: Computing methodologies Intelligent agentsCCS: Social and professional topics Computing / technology policy, Affiliation: University of Liverpool, Cybersecurity Institute, Liverpool, United Kingdom</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2609.18272v1">arXiv</a> | <a href="https://arxiv.org/pdf/2609.18272v1">PDF</a></li>
+<li>
+<p><strong>来源</strong>: 📄 arXiv 关键词检索</p>
+</li>
+<li>
+<p><strong>核心方法</strong>: 提出独立性分级的审计协议：把 agentic AI 审计的\"独立性\"从二元升级为三个正交轴——principal（谁控制审计者）、substrate（审计者是否与被审计者共享底座）、evidence 独立性。</p>
+</li>
+<li><strong>对比方法/Baselines</strong>: 对比现有把审计独立性当二元处理的 assurance 框架（ISO/IEC 标准）。</li>
+<li><strong>借鉴意义</strong>: 随着 agent 既是被审计对象又成为审计者，独立性分级对 AI 治理/合规团队有制度设计价值。</li>
+<li><strong>锐评</strong>: 这篇是政策/治理向而非技术向，但\"agent 正在同时变成审计者和被审计者\"这个观察够尖锐。把独立性拆成三轴（谁控制、共不共享底座、证据来源）是有用的分析框架。缺点也明显：全是概念，无实验无落地，作者自己都承认\"高分审计只买到了well-attested irrelevance\"。当思想材料读，别指望能直接用。⚠️</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2609.18272v1" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🛡️ Agent 安全 / 可靠性 / 审计"><h3>13. Beyond Routine Compliance: Cunning Data Cultivates Safety Vigilance in Large Language Models</h3>
+<ul>
+<li><strong>作者</strong>: Youjia Wang, Lin Xu\corresponding, Yang Sun, Yuxiao Lu, Chengfang Fang, Jie Shi</li>
+<li><strong>机构</strong>: ††thanks: Work done while interning at Huawei</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2609.18515v1">arXiv</a> | <a href="https://arxiv.org/pdf/2609.18515v1">PDF</a></li>
+<li>
+<p><strong>来源</strong>: 📄 arXiv 关键词检索</p>
+</li>
+<li>
+<p><strong>核心方法</strong>: 提出安全对齐不仅需\"知道边界\"还需\"vigilance\"（察觉异常前提、误导推理、潜在风险）。用\"cunning data\"训练模型，把有害意图藏在看似无害的上下文里，用 <span class="wikilink">SFT</span> + <span class="wikilink">GRPO</span> 训练。</p>
+</li>
+<li><strong>对比方法/Baselines</strong>: 对比 <span class="wikilink">DeepSeek</span>、在 <span class="wikilink">WildJailbreak</span> 上用 <span class="wikilink">ASR</span>（攻击成功率）评估。</li>
+<li><strong>借鉴意义</strong>: 对做 LLM 安全对齐的团队有直接价值——常规拒答训练挡不住\"隐藏意图\"攻击。</li>
+<li><strong>锐评</strong>: \"vigilance\"这个提法比又一个拒答数据集有价值：真正危险的不是明晃晃的有害请求，而是包在无害语境里的意图。用\"狡猾数据\"专门训练警觉性是对的方向。华为实习产出，用 GRPO 也算跟上潮流。就是\"cunning data\"怎么构造、会不会过拟合到特定攻击模式，是它的命门。👀</li>
+</ul>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2609.18515v1" target="_blank" rel="noopener">📖 AI 精读</a></div></div>
+<div id="panel-强化学习与推理方法" class="tab-panel"><h2>🎯 强化学习与推理方法</h2><div class="paper-card" data-topic="🎯 强化学习与推理方法"><h3>14. Label-free steering: Compressing test-time reinforcement learning into bias-only subspaces</h3>
+<ul>
+<li><strong>作者</strong>: Naveen Vakada, Mingyuan Li, Shaoxiong Ji</li>
+<li><strong>机构</strong>: Affiliation: , Affiliation: University of Turku, Finland  ⋅\cdot  ELLIS Institute Finland, Email: </li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2609.18587v1">arXiv</a> | <a href="https://arxiv.org/pdf/2609.18587v1">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2609.18587v1/main_diagram.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: <span class="wikilink">Label-free-steering</span>：把 test-time RL（<span class="wikilink">TTRL</span>）压缩到\"bias-only\"子空间——只更新极少量 bias 参数，用无标签的 majority-vote 伪信号做 reward，验证严格受限的奖励+优化空间下 test-time 自适应仍能涌现。</li>
+<li><strong>对比方法/Baselines</strong>: 对比全参数 TTRL、<span class="wikilink">LoRA</span>，在 <span class="wikilink">MATH-500</span>、<span class="wikilink">MathVista</span>、MMAU、LogicVista 上评估。</li>
+<li><strong>借鉴意义</strong>: 如果只调 bias 就能实现 test-time 提升，对推理模型的低成本自适应部署很有吸引力。</li>
+<li><strong>锐评</strong>: 这个消融很漂亮：把 TTRL 逼到极限——奖励无标签、优化空间只剩 bias 参数——看它还灵不灵。如果结论是\"灵\"，那对\"test-time RL 到底改了什么\"是很强的机制性证据；如果不灵，也是有价值的负结果。比大多数\"我又调了个 TTRL\"的论文有想法。就看多 benchmark 上的数字稳不稳。👀</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2609.18587v1" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🎯 强化学习与推理方法"><h3>15. Online Robust Reinforcement Learning Through Monte-Carlo Planning</h3>
+<ul>
+<li><strong>作者</strong>: Tuan Dam, Kishan Panaganti, Brahim Driss, Adam Wierman</li>
+<li><strong>机构</strong>: Correspondence to:, Affiliation: Univ. Lille, Inria, CNRS, Centrale Lille, UMR 9189-CRIStAL, Affiliation:, Affiliation: Hanoi University of Science and Technology, Hanoi, Vietnam, Affiliation: Department of Computing and Mathematical Sciences, California Insitute of Technology</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2609.18599v1">arXiv</a> | <a href="https://arxiv.org/pdf/2609.18599v1">PDF</a></li>
+<li>
+<p><strong>来源</strong>: 📄 arXiv 关键词检索</p>
+</li>
+<li>
+<p><strong>核心方法</strong>: 在线鲁棒 RL：把 <span class="wikilink">MCTS</span>（<span class="wikilink">UCT</span>）扩展到 simulator 与真实动态不一致的场景，用 <span class="wikilink">RMDP</span> 框架处理低保真模拟器的建模失配。</p>
+</li>
+<li><strong>对比方法/Baselines</strong>: 对比标准 MCTS/UCT，涉及 Robust-Power / Stochastic-Power 等鲁棒变体。</li>
+<li><strong>借鉴意义</strong>: sim-to-real 失配是 RL 落地的老大难，把鲁棒性做进 planning 层对实际部署有意义。</li>
+<li><strong>锐评</strong>: 老实的理论 RL 工作：承认\"MCTS 假设模拟器=真实世界\"这个前提在现实里站不住，然后往里塞鲁棒性。Caltech + Inria 的组合，数学应该扎实。问题是这类工作往往停在 toy 环境，真实低保真模拟器上的收益有多大是关键。对纯 RL 研究者友好，应用向的可跳。👀</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2609.18599v1" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🎯 强化学习与推理方法"><h3>16. Attention Dispersion as a Diagnostic Signal for Hallucination in Large Language Models</h3>
+<ul>
+<li><strong>作者</strong>: Shardul P. More, Tanuja S. Pawar</li>
+<li><strong>机构</strong>: Affiliation: Rajarambapu Institute of Technology, Affiliation: , Email: </li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2609.18320v1">arXiv</a> | <a href="https://arxiv.org/pdf/2609.18320v1">PDF</a></li>
+<li>
+<p><strong>来源</strong>: 📄 arXiv 关键词检索</p>
+</li>
+<li>
+<p><strong>核心方法</strong>: 把内部注意力机制的\"时间波动性\"（attention dispersion）作为幻觉的诊断信号，区别于依赖输出置信度的传统方法——后者因现代对齐技术导致 logits 校准失真。</p>
+</li>
+<li><strong>对比方法/Baselines</strong>: 对比 output-based confidence / self-consistency，在 <span class="wikilink">MATH-500</span>、CalibratedMath 上用 <span class="wikilink">AUC</span> 评估。</li>
+<li><strong>借鉴意义</strong>: 幻觉检测是可靠性刚需，从内部注意力找信号是绕开\"logits 被 RLHF 搞坏\"的合理思路。</li>
+<li><strong>锐评</strong>: 切入点不错：既然对齐把输出 logits 的校准搞坏了，那就去看内部注意力的时序抖动。这个\"往模型内部看\"的方向比又一个采样投票法有新意。但注意力可解释性这条路踩坑无数，\"attention dispersion 高=幻觉\"的因果关系很容易被证伪，AUC 数字得够硬才站得住。小机构出品，谨慎乐观。⚠️</li>
+</ul>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2609.18320v1" target="_blank" rel="noopener">📖 AI 精读</a></div></div>
+<hr>
+<h2>被排除的论文</h2>
+<ul>
+<li>CoRe-MARL: Cooperative Redistribution Under Unknown Dynamics — 灾害应急物资分配的 MARL，领域离推荐/广告/LLM 主线太远</li>
+<li>Where Should Agents Live? Energy-Memory Characterization of Agentic AI — 电信 5G/6G 边缘云能耗表征，agentic 只是背景，与用户关注点弱相关</li>
+<li>A decoder-only foundation model for time-series forecasting (TimesFM) — 2023 年老论文被 HF 热榜反复捞出，非新增内容</li>
+<li>Bias Amplification in Multi-Agent Network — 偏计算社会科学的观点动力学，非推荐/广告/agent 方法论主线</li>
+<li>An Empirical Evaluation of Cost-Efficient LLMs on Algorithmic Programming — LLM 代码能力实证，选题弱相关且富化未抓到方法细节</li>
+<li>Evidence-Grounded Agentic Formulation Development in an Autonomous Laboratory — 命中 negative_keywords：drug delivery / 药物制剂，领域排除</li>
+<li>RLLBC-Lib: An Educational Code Library for RL — 教学用 RL 代码库，工具向非研究向</li>
+<li>Social Laws for Multi-agent Coordination in Stochastic Environments — 多智能体协调理论，偏经典 MAS，与 LLM/推荐主线弱相关</li>
+<li>Taming the Agentic RAN: Arbitration of AI Agents in O-RAN — 电信 O-RAN 无线资源仲裁，领域太专</li>
+<li>Clueing up... 已收录 — （已在正文点评，此处不重复）</li>
+<li>Cultural Competence in Context: LLM Passes Turing Test in Finland — 芬兰语图灵测试的社会科学实验，与主线无关</li>
+<li>GYROval: Benchmark for Cultural Value Orientation in LLMs — 文化价值取向 benchmark，非核心关注领域</li>
+<li>APGEM: Adaptive Policy-Guided Error Mitigation for Quantum RL on CVRP — 量子 RL + 车辆路径，双重小众</li>
+<li>From a River in Gilead...: Covert Dialect Bias in LLMs — 方言偏见/语言画像，偏社会公平研究</li>
+<li>Adaptive hybrid coupling with operator inference and RL — 数值 PDE 域分解方法，与主线无关</li>
+</ul>
+<p>今天的 agentic AI 论文正从\"造系统\"转向\"审系统\"——组合失效、可靠性验证、审计独立性、能耗成本，说明这波 agent 热潮开始进入\"该担心它上线后会不会出事\"的成熟期。</p></div>
+<footer style="text-align:center;color:var(--text2);margin:3em 0 1em;font-size:0.85em;">
+  Generated by daily-papers-web &middot; Powered by Claude Code
+</footer>
+<script src="tabs.js"></script>
+
+</body>
+</html>
