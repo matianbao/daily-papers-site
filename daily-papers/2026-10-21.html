@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>2026-10-21 论文推荐</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.21/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.21/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.21/dist/contrib/auto-render.min.js"
+  onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}]});"></script>
+<link rel="stylesheet" href="style.css">
+<style>body{max-width:960px;}</style>
+
+</head>
+<body>
+<nav class="nav"><a href="index.html">🏠 首页</a><a href="2026-10-20.html">← 前一天</a></nav>
+<div class="detail-page"><h1>🔪 今日锐评</h1>
+<p>今天是 agentic 全家桶大乱斗：长程 agent 的信用分配（credit assignment）一天出了三篇，generative retrieval、LLM 路由、on-policy 蒸馏各有新活。最扎实的是那篇把 SID 设计自动进化的生成式检索工作和 NVIDIA 戳破 on-policy 蒸馏假设的分析型论文；最水的是一堆『把 agent 套到某个垂直领域』的 framework 论文。信用分配今天内卷到让人怀疑是不是同一个组投了三个会。</p>
+<h2>分流表</h2>
+<table>
+<thead>
+<tr>
+<th>等级</th>
+<th>论文</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>🔥 必读</td>
+<td><span class="wikilink">EVOLVE</span>（生成式检索的 SID 设计第一次能自动搜索优化，直指 recsys/GR 命门） · <span class="wikilink">Self-Credit</span>（长程 agentic RL 稀疏奖励的 intra-group rescaling，和 TrajEvolve/FALCA 同题可对照）</td>
+</tr>
+<tr>
+<td>👀 值得看</td>
+<td><span class="wikilink">TCOD</span>（NVIDIA 反驳 on-policy 蒸馏的 compounding error 叙事，观点锋利） · <span class="wikilink">FALCA</span>（deep search agent 的分层信用分配 + falsification） · <span class="wikilink">TrajEvolve</span>（hindsight credit assignment，和 Self-Credit 直接撞车） · <span class="wikilink">COMPASS</span>（把 LLM 路由做成 agentic，自己查证据再选模型） · <span class="wikilink">BitMTP</span>（低比特 + 多 token 预测的联合加速，工程味重） · <span class="wikilink">RITE</span>（e-commerce agent 对 silent tool error 的韧性评测，落地场景贴切） · <span class="wikilink">SAS-vs-MAS</span>（多 agent 协作在有用户参与时还值不值，推翻纯 autonomous 结论） · <span class="wikilink">Watermark-Attack</span>（统计式 LLM 水印的统一攻击框架，安全向）</td>
+</tr>
+<tr>
+<td>💤 可跳过</td>
+<td><span class="wikilink">AnomalyAgent</span>（VLM 投票做异常检测，agentic 包装 + ensemble） · <span class="wikilink">RELAY</span>（历史构建修复的 agentic repair，SE 工程向） · <span class="wikilink">ACE-Compression</span>（压缩模型的能力维度评测，角度新但不解决问题） · <span class="wikilink">ORCA</span>（object-centric RL 换相对坐标系，纯 RL 表征）</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<div class="tab-bar"><button class="tab-btn active" data-tab="all" onclick="switchTab('all')">📋 全部<span class="tab-count">16</span></button><button class="tab-btn" data-tab="生成式检索与推荐" onclick="switchTab('生成式检索与推荐')">🎨 📊 生成式检索与推荐<span class="tab-count">1</span></button><button class="tab-btn" data-tab="长程agent信用分配今日三连" onclick="switchTab('长程agent信用分配今日三连')">🤖 🧠 长程 Agent 信用分配（今日三连）<span class="tab-count">4</span></button><button class="tab-btn" data-tab="推理与记忆" onclick="switchTab('推理与记忆')">🧠 🧠 推理与记忆<span class="tab-count">1</span></button><button class="tab-btn" data-tab="llm路由与编排" onclick="switchTab('llm路由与编排')">🤖 🤖 LLM 路由与编排<span class="tab-count">1</span></button><button class="tab-btn" data-tab="agent落地与韧性" onclick="switchTab('agent落地与韧性')">🤖 🛒 Agent 落地与韧性<span class="tab-count">2</span></button><button class="tab-btn" data-tab="高效推理与部署" onclick="switchTab('高效推理与部署')">📄 ⚙️ 高效推理与部署<span class="tab-count">2</span></button><button class="tab-btn" data-tab="多agent系统" onclick="switchTab('多agent系统')">🤖 🤝 多 Agent 系统<span class="tab-count">1</span></button><button class="tab-btn" data-tab="llm安全与水印" onclick="switchTab('llm安全与水印')">🛡 🔐 LLM 安全与水印<span class="tab-count">1</span></button><button class="tab-btn" data-tab="代码与llm能力" onclick="switchTab('代码与llm能力')">🤖 💻 代码与 LLM 能力<span class="tab-count">1</span></button><button class="tab-btn" data-tab="多模态agent略过向" onclick="switchTab('多模态agent略过向')">🎨 🖼️ 多模态 Agent（略过向）<span class="tab-count">1</span></button><button class="tab-btn" data-tab="强化学习表征" onclick="switchTab('强化学习表征')">📄 🎮 强化学习表征<span class="tab-count">1</span></button></div>
+<div id="panel-all" class="tab-panel active"><h2>📊 生成式检索与推荐</h2><div class="paper-card" data-topic="📊 生成式检索与推荐"><h3>1. Evolving Semantic Indexes for Generative Retrieval</h3>
+<ul>
+<li><strong>作者</strong>: Jinming Nian, Jyun-Yu Jiang, Henry Tsai, Yi Fang, Zhirong Liang</li>
+<li><strong>机构</strong>: Email: , Email: henrytsai@haas.executivealumni.berkeley.edu, Affiliation: Santa Clara University, Affiliation: </li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2610.28568v1">arXiv</a> | <a href="https://arxiv.org/pdf/2610.28568v1">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2610.28568v1/method.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: 把生成式检索（<span class="wikilink">GR</span>）里一直靠手工拍脑袋的语义 ID（<span class="wikilink">SID</span>）设计——构造、碰撞处理、解码、训练四个互相耦合又不可微的组件——交给一个 LLM 驱动的进化搜索 <span class="wikilink">EVOLVE</span> 去自动优化。核心是把离散、相互依赖、无法端到端梯度优化的设计空间，用 block-wise 的进化/搜索框架探索，在 <span class="wikilink">NQ</span> 等检索基准上对比 <span class="wikilink">TIGER</span> 等手工 SID。</li>
+<li><strong>对比方法/Baselines</strong>: <span class="wikilink">TIGER</span>（手工 SID 的代表）、标准 <span class="wikilink">GR</span> 管线、<span class="wikilink">SEARCH</span> 相关基线</li>
+<li><strong>借鉴意义</strong>: 直接打在 recsys/生成式检索的命门上：所有人都知道 SID 设计决定 GR 上限，但没人能端到端优化它。能自动搜索出更好的 SID，对工业级 generative recommendation 是真·降本提效。</li>
+<li><strong>锐评</strong>: 终于有人不装了——承认 SID 设计就是 GR 的玄学，然后真去自动化它。切入点精准，四个不可微组件的拆解很到位。唯一担心：进化搜索的计算开销和 SID 空间爆炸，论文最好给出搜索成本 vs 收益曲线，否则就是『用 100 倍算力换 2% recall』的老套路。摘要没提搜索预算，存疑。🔥</li>
+</ul>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2610.28568v1" target="_blank" rel="noopener">📖 AI 精读</a></div><h2>🧠 长程 Agent 信用分配（今日三连）</h2><div class="paper-card" data-topic="🧠 长程 Agent 信用分配（今日三连）"><h3>2. Self-Credit: Credit Assignment for Long-Horizon Agentic RL via Intra-group Rescaling</h3>
+<ul>
+<li><strong>作者</strong>: Fangcong Yin, Ming Yin, Tanvi Bhandarkar, Aashu Singh, Eryk Helenowski, Shlok Kumar Mishra, Saghar Hosseini, Karthik Abinav Sankararaman, Greg Durrett, Dinkar Juyal</li>
+<li><strong>机构</strong>: Affiliation: New York University, Affiliation: Duke University, Affiliation: </li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2610.28388v1">arXiv</a> | <a href="https://arxiv.org/pdf/2610.28388v1">PDF</a></li>
+<li>
+<p><strong>来源</strong>: 📄 arXiv 关键词检索</p>
+</li>
+<li>
+<p><strong>核心方法</strong>: <span class="wikilink">Self-Credit</span> 针对 RLVR 奖励稀疏、长程任务信用分配难的问题，用自生成的信用分配在 group-based RL（<span class="wikilink">GRPO</span> 家族）内部做 intra-group rescaling，把稀疏的 outcome reward 变成 dense 监督信号。三个组件搭在组内相对比较上，在 <span class="wikilink">BrowseComp</span>、<span class="wikilink">GAIA</span> 等 deep search 基准测。</p>
+</li>
+<li><strong>对比方法/Baselines</strong>: <span class="wikilink">GRPO</span>、<span class="wikilink">GiGPO</span>、<span class="wikilink">ECHO</span></li>
+<li><strong>借鉴意义</strong>: 长程 agent 训练（deep search、多轮 tool use）的核心瓶颈就是稀疏奖励下的信用分配，和推荐里的延迟/稀疏反馈问题同构，方法可迁移。</li>
+<li><strong>锐评</strong>: intra-group rescaling 的思路干净，不引入额外 reward model 这点加分（省钱）。但今天 FALCA、TrajEvolve、Self-Credit 三篇都在做长程信用分配，彼此几乎不引用对方，强烈怀疑是同一波人卷同一个坑。想看谁真的 SOTA 得把三篇放一起 benchmark，现在各说各话。👀</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2610.28388v1" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🧠 长程 Agent 信用分配（今日三连）"><h3>3. Capable Teacher, Myopic Scorer: Reward-Free Teacher Repair for Agentic On-Policy Distillation</h3>
+<ul>
+<li><strong>作者</strong>: Shu Zhao, Tan Yu</li>
+<li><strong>机构</strong>: Email: , Affiliation: NVIDIA, Affiliation: </li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2610.28586v1">arXiv</a> | <a href="https://arxiv.org/pdf/2610.28586v1">PDF</a></li>
+<li>
+<p><strong>来源</strong>: 📄 arXiv 关键词检索</p>
+</li>
+<li>
+<p><strong>核心方法</strong>: <span class="wikilink">TCOD</span>（Capable Teacher, Myopic Scorer）质疑 agentic on-policy 蒸馏（<span class="wikilink">OPD</span>）里流行的 compounding error 叙事：主流方法假设学生跑偏后会离开 teacher 可靠区域，于是用 episode 课程、teacher 引导轮次把训练限制在该区域内。这篇提出 reward-free 的 teacher repair，直接修复 teacher 打分短视的问题，在 <span class="wikilink">WebShop</span>、<span class="wikilink">ScienceWorld</span> 上对比 <span class="wikilink">TCOD</span>-F2B、<span class="wikilink">FutureBridge</span>。</p>
+</li>
+<li><strong>对比方法/Baselines</strong>: ReOPD、TCOD-F2B、Guided-OPD、<span class="wikilink">FutureBridge</span></li>
+<li><strong>借鉴意义</strong>: on-policy 蒸馏是训练小 agent 的主流路线，推翻『compounding error 是主因』的共识会改变整个蒸馏课程设计思路。</li>
+<li><strong>锐评</strong>: NVIDIA 出手，观点锋利——不跟着『把训练困在 teacher 舒适区』的叙事走，而是说问题出在 teacher 自己打分短视（myopic scorer）。这种挑战共识的分析型论文比又一个 framework 有价值得多。标题起得也好。扣分项：reward-free repair 的泛化边界要看实验，别只在两个 toy 环境上成立。👀</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2610.28586v1" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🧠 长程 Agent 信用分配（今日三连）"><h3>4. FALCA: Falsification-Aware Reinforcement Learning with Hierarchical Credit Assignment for Long-Horizon Deep Search Agents</h3>
+<ul>
+<li><strong>作者</strong>: Zijun Dou, Kun Luo, Chaofan Li, Shuqi Lu, Zheng Liu\corresponding</li>
+<li><strong>机构</strong>: royz.dou,luokun695,zhengliu1026@gmail.com</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2610.28361v1">arXiv</a> | <a href="https://arxiv.org/pdf/2610.28361v1">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2610.28361v1/method7.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: <span class="wikilink">FALCA</span> 给 long-horizon deep search agent 做『证伪感知』+分层信用分配：针对 agent 早期错误（锚定错误候选、收集部分支持证据、忽略矛盾）沿轨迹被放大的问题，用 falsification-aware 的 RL 在多层级做 credit assignment，基于 <span class="wikilink">ReAct</span>/IRCoT 式的推理-检索交织。在 <span class="wikilink">BrowseComp</span>、<span class="wikilink">GAIA</span>、<span class="wikilink">WideSearch</span> 上测。</li>
+<li><strong>对比方法/Baselines</strong>: <span class="wikilink">SFT</span> baseline、outcome-based <span class="wikilink">RL</span>、<span class="wikilink">ReAct</span> 式 agent</li>
+<li><strong>借鉴意义</strong>: deep search / 深度检索 agent 和搜索推荐场景高度相关，证伪机制对抗『确认偏误式证据收集』是个有意思的角度。</li>
+<li><strong>锐评</strong>: 『证伪感知』这个点子不错——让 agent 主动找反例而不是一路确认自己的错误猜测，比单纯堆 reward 聪明。但 falsification + hierarchical credit 两个 buzzword 叠一起，复杂度上去了，消融必须说清到底是哪个在起作用，否则就是把简单问题包装复杂。和 Self-Credit 同基准，建议对照看。👀</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2610.28361v1" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🧠 长程 Agent 信用分配（今日三连）"><h3>5. TrajEvolve: Trajectory Evolution for Reinforcement Learning with Hindsight Credit Assignment</h3>
+<ul>
+<li><strong>作者</strong>: Yi Wen, Hao Chen11footnotemark:, Wanyu Wang, Maolin Wang, Pengyue Jia, Derong Xu, Huize Tan, Yingyi Zhang, Wenlin Zhang, Weihong Luo, Xiku Du, Xiangyu Zhao</li>
+<li><strong>机构</strong>: Email: , Affiliation: City University of Hong Kong, Affiliation: Tencent, Affiliation: Nanjing University, Affiliation: </li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2610.28060v1">arXiv</a> | <a href="https://arxiv.org/pdf/2610.28060v1">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2610.28060v1/framework.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: <span class="wikilink">TrajEvolve</span> 用 hindsight credit assignment 做轨迹进化：针对长程任务里成功轨迹采样不足、收敛慢的问题，对已有轨迹做 hindsight 式改写与信用重分配，基于 <span class="wikilink">GRPO</span>/<span class="wikilink">GiGPO</span>/<span class="wikilink">RLOO</span> 家族，在 <span class="wikilink">WebShop</span> 等上测。</li>
+<li><strong>对比方法/Baselines</strong>: <span class="wikilink">GRPO</span>、<span class="wikilink">PPO</span>、<span class="wikilink">GiGPO</span>、<span class="wikilink">RLOO</span></li>
+<li><strong>借鉴意义</strong>: hindsight 思路（把失败轨迹重标为对另一目标成功）在 agent RL 里复用经典 HER 思想，解决稀疏成功样本。</li>
+<li><strong>锐评</strong>: hindsight 在机器人 RL 里是老朋友了（HER），搬到 LLM agent 轨迹上算合理迁移，但也正因为老，novelty 要打个问号。和 Self-Credit 都在 group-based RL 上做 rescaling，差异点需要论文自己讲清楚——否则读者会觉得今天这三篇是同一篇的三个 ablation。🫠</li>
+</ul>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2610.28060v1" target="_blank" rel="noopener">📖 AI 精读</a></div><h2>🧠 推理与记忆</h2><div class="paper-card" data-topic="🧠 推理与记忆"><h3>6. MemT-1.0: Towards Memory-Native Evolution</h3>
+<ul>
+<li><strong>作者</strong>: MemTensor Team</li>
+<li><strong>链接</strong>: <a href="https://arxiv.org/abs/2610.26825">arXiv</a> | <a href="https://arxiv.org/pdf/2610.26825">PDF</a></li>
+<li><strong>来源</strong>: 🔥 HF Trending，⬆️ 147</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2610.26825v2/memt-arc.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2610.26825v2/application.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2610.26825v2/figure_efficiency.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: <span class="wikilink">MemT-1.0</span> 把记忆做成基础模型的原生能力（memory-native），不靠外挂检索。基于 Metis，用 Gated DeltaNet-2 在每一轮内做稳定的 token 级记忆更新；每个选中的 Transformer block 加一个 native memory block，并行跑原始注意力和记忆注意力，含动态局部记忆 + 可训练 hyper memory，配 native 的存取流程。在 <span class="wikilink">LoCoMo</span> 上测，涉及 <span class="wikilink">CPT</span>/<span class="wikilink">LoRA</span>/<span class="wikilink">KD</span> 训练。</li>
+<li><strong>对比方法/Baselines</strong>: 外挂记忆检索方案、<span class="wikilink">DeepSeek</span> 等基线、<span class="wikilink">BEAM</span></li>
+<li><strong>借鉴意义</strong>: 把记忆内化进模型计算而非外挂 RAG，是记忆架构的另一条技术路线，对长期个性化/用户建模有潜在价值。HF 147 赞说明关注度高。</li>
+<li><strong>锐评</strong>: MemTensor 团队继续押『记忆原生化』这条线，HF 147 upvote 不是白来的。架构图（并行原始+记忆注意力）看着挺讲究，但『memory foundation model』这种宏大叙事最怕实测拉胯——只报 LoCoMo 一个 benchmark 远远不够，长程记忆的评测必须多样化。另外 Gated DeltaNet-2 + hyper memory 的训练稳定性和成本，摘要只说『stable』没给数，持保留。👀</li>
+</ul>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2610.26825" target="_blank" rel="noopener">📖 AI 精读</a></div><h2>🤖 LLM 路由与编排</h2><div class="paper-card" data-topic="🤖 LLM 路由与编排"><h3>7. COMPASS: Routing via Capability-Oriented Model Profiling with Adaptive Search, Selection, and Tool Use</h3>
+<ul>
+<li><strong>作者</strong>: Amin Rezaei</li>
+<li><strong>机构</strong>: University of Minnesota</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2610.27822v1">arXiv</a> | <a href="https://arxiv.org/pdf/2610.27822v1">PDF</a></li>
+<li>
+<p><strong>来源</strong>: 📄 arXiv 关键词检索</p>
+</li>
+<li>
+<p><strong>核心方法</strong>: <span class="wikilink">COMPASS</span> 把 LLM 路由从『训练一个专用 router』改成 agentic：LLM 跟着一份 routing recipe，用工具去收集各候选模型的性能和成本证据，必要时先看候选答案再选模型，避免模型/任务变化时 router 需要重训。在 <span class="wikilink">TerminalBench</span> 等上对比 <span class="wikilink">Avengers-Pro</span>、<span class="wikilink">FrugalGPT</span>。</p>
+</li>
+<li><strong>对比方法/Baselines</strong>: <span class="wikilink">FrugalGPT</span>、<span class="wikilink">Avengers-Pro</span>、one-step trainable routers</li>
+<li><strong>借鉴意义</strong>: 模型路由是降本核心（贵模型只在该用时用），把它 agentic 化解决了 router 随模型迭代就失效的痛点，工程价值明确。</li>
+<li><strong>锐评</strong>: 痛点抓得准——专用 router 确实一换模型就废。用 agent 动态查证据选模型，优雅但贵：每次路由都要额外的工具调用和候选答案 inspection，省下的钱可能被路由本身的开销吃掉。关键看它给没给『路由开销 vs 节省成本』的净收益账，没有的话就是拆东墙补西墙。👀</li>
+</ul>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2610.27822v1" target="_blank" rel="noopener">📖 AI 精读</a></div><h2>🛒 Agent 落地与韧性</h2><div class="paper-card" data-topic="🛒 Agent 落地与韧性"><h3>8. RITE: Evaluating End-to-End Resilience to Silent Tool Errors in E-Commerce Agentic Systems</h3>
+<ul>
+<li><strong>作者</strong>: Wenshuo Zhang, Yuquan Lin, Yushi Sun, Yishi Lin, Rui Sheng, Peng He, Han Gao, Jikai Wang, Yifeng Rong, Co-corresponding authors</li>
+<li><strong>机构</strong>: Affiliation: The Hong Kong University of Science and Technology, Affiliation: Tencentwzhangeb@connect.ust.hk, {crazyrong, teddyjkwang}@tencent.com, Affiliation: </li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2610.27777v1">arXiv</a> | <a href="https://arxiv.org/pdf/2610.27777v1">PDF</a></li>
+<li>
+<p><strong>来源</strong>: 📄 arXiv 关键词检索</p>
+</li>
+<li>
+<p><strong>核心方法</strong>: <span class="wikilink">RITE</span> 评测 e-commerce agent 对 silent tool error（工具静默返回错误值、无显式失败信号）的端到端韧性。形式化 Silent-error Resilience Task：agent 收到 query，反复从工具集选择执行，其中某次工具悄悄返回错误结果，看 agent 能否仍完成原任务。用 RSR（韧性成功率）在 <span class="wikilink">GLM-5</span>、<span class="wikilink">Claude-Opus</span> 等上测。</p>
+</li>
+<li><strong>对比方法/Baselines</strong>: 多个 LLM backbone（<span class="wikilink">GLM-5</span>、<span class="wikilink">Claude-Opus</span> 等）的横向对比</li>
+<li><strong>借鉴意义</strong>: 电商 agent 是最接近钱的落地场景，silent error（工具返回看似合理实则错误的值）正是工业部署最隐蔽的坑，评测维度切中要害。</li>
+<li><strong>锐评</strong>: 这个问题真实到让人头皮发麻——工具不报错但返回错值，比直接崩溃危险一百倍，因为错误会静默传播进最终决策。Tencent 做电商 agent 评测找这个角度很专业。扣分：benchmark 论文的价值取决于它暴露的失败模式有多系统，如果只是『各模型 RSR 排个名』就浪费了好选题。👀</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2610.27777v1" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🛒 Agent 落地与韧性"><h3>9. RELAY: Scaling Historical Build Restoration through Rule Reuse and Agentic Repair</h3>
+<ul>
+<li><strong>作者</strong>: Olivier Nourry, Yoshiki Higo</li>
+<li><strong>机构</strong>: Affiliation: The University of Osaka, Osaka, Japan, Journal: TOSEMCCS: Software and its engineering Software evolutionCCS: Software and its engineering Maintaining softwareCCS: Software and its engineering Software maintenance toolsCCS: Computing methodologies Intelligent agentsCCS: Security and privacy Software security engineering, email:, Affiliation: </li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2610.27784v1">arXiv</a> | <a href="https://arxiv.org/pdf/2610.27784v1">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2610.27784v1/figures/pipeline-figure-v9-preview.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2610.27784v1/figures/rule-figure-v4-preview.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: <span class="wikilink">RELAY</span> 做历史软件构建的修复：漏洞 benchmark 和 SE 研究依赖重建历史软件，但构建依赖的基础镜像、包会独立于源码变化而失效。在 14159 个 <span class="wikilink">OSS</span>-Fuzz 案例上发现 69.7% 已无法重建；用规则复用 + agentic repair（<span class="wikilink">LLM</span>/<span class="wikilink">GPT-5</span>）扩展修复，失败症状可归为少数几类复发模式。</li>
+<li><strong>对比方法/Baselines</strong>: 无规则复用的纯 agentic repair、人工修复</li>
+<li><strong>借鉴意义</strong>: 环境衰变（environment decay）是安全研究基础设施的隐痛，规则复用降低重复 LLM 调用成本的思路务实。</li>
+<li><strong>锐评</strong>: 选题冷门但扎实——69.7% 的历史构建跑不起来这个数据本身就值得被引用，很多安全 benchmark 的可复现性其实是幻觉。规则复用 + agent 修复的组合是对的（别什么都丢给 LLM 重新推）。只是这篇的受众窄（SE/安全基础设施），对 recsys/ads 关注者是边缘读物。⚠️</li>
+</ul>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2610.27784v1" target="_blank" rel="noopener">📖 AI 精读</a></div><h2>⚙️ 高效推理与部署</h2><div class="paper-card" data-topic="⚙️ 高效推理与部署"><h3>10. BitMTP: When Multi-Token Prediction Meets Low-Bit Large Language Models</h3>
+<ul>
+<li><strong>作者</strong>: Ning Zhang, Shihao Wang, Jinrui Zhang, Chaodong Xiao, Lei Zhang</li>
+<li><strong>机构</strong>: Email: , ††thanks: Corresponding author. This work is supported by the PolyU-OPPO Joint Innovative Research Center, Affiliation: Department of Computing, The Hong Kong Polytechnic University, Affiliation: </li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2610.28500v1">arXiv</a> | <a href="https://arxiv.org/pdf/2610.28500v1">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2610.28500v1/F1.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2610.28500v1/F2.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: <span class="wikilink">BitMTP</span> 把超低比特 LLM 骨干（<span class="wikilink">BitNet</span> b1.58 式三值）和多 token 预测（<span class="wikilink">MTP</span>）结合：两者本应互补（前者省存储/访存，后者省解码步数），但直接组合无法在同等质量下加速解码。论文给出联合设计，配 <span class="wikilink">CUDA</span> 实现，在 <span class="wikilink">MBPP</span> 等上测，涉及 <span class="wikilink">AR</span> 解码和 <span class="wikilink">KV</span> cache。</li>
+<li><strong>对比方法/Baselines</strong>: 纯 <span class="wikilink">BitNet</span>、纯 <span class="wikilink">MTP</span>、全精度 <span class="wikilink">AR</span> 基线</li>
+<li><strong>借鉴意义</strong>: 推理部署的两条省钱路线第一次被认真拼起来，对端侧/低成本 LLM serving 有直接工程意义。</li>
+<li><strong>锐评</strong>: 选题务实——低比特和 MTP 大家都在用，但组合起来掉质量是真实的工程痛点，有人去啃这块硬骨头值得鼓励。带 CUDA 实现说明不是纸上谈兵。风险在于：三值骨干本身质量损失 + MTP 的 draft 接受率，两个误差源叠加，最终的『同质量下加速比』才是硬指标，必须看实测 wall-clock 而非理论 FLOPs。👀</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2610.28500v1" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="⚙️ 高效推理与部署"><h3>11. ACE-Compression: An Ability-Centric Evaluation of Compressed Large Language Models</h3>
+<ul>
+<li><strong>作者</strong>: Jiahui Ning, Liang Chen, Yuchen Liang, Yi Zhang, Fenglei Fan</li>
+<li><strong>机构</strong>: Affiliation: Rensselaer Polytechnic Institute Sichuan University, Affiliation: City University of Hong Kong Tongji University, Affiliation: </li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2610.27913v1">arXiv</a> | <a href="https://arxiv.org/pdf/2610.27913v1">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2610.27913v1/fig2_experimental_setup.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2610.27913v1/fig3_procedural.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: <span class="wikilink">ACE-Compression</span> 提出能力中心（ability-centric）的压缩 LLM 评测：标准做法只量保留的任务性能，但压缩扰动分布式知识，任务分数掩盖了哪些底层能力存活、哪些悄悄崩塌。对比 <span class="wikilink">AWQ</span>、<span class="wikilink">GPTQ</span>、<span class="wikilink">BnB</span>、非结构化稀疏等压缩方法在 <span class="wikilink">ToMBench</span>、<span class="wikilink">CharacterEval</span>、<span class="wikilink">PsychoBench</span> 等能力维度的表现。</li>
+<li><strong>对比方法/Baselines</strong>: <span class="wikilink">AWQ</span>、<span class="wikilink">GPTQ</span>、<span class="wikilink">BnB</span>、Unstructured-Sparse</li>
+<li><strong>借鉴意义</strong>: 压缩部署是 LLM 落地刚需，指出『任务分数掩盖能力崩塌』的评测盲区有价值。</li>
+<li><strong>锐评</strong>: 角度是对的——压缩后 MMLU 不掉不代表心智推理、角色扮演能力没崩，细粒度能力评测确实被忽视。但这是一篇『指出问题』的评测论文，不提供让压缩更好的方法，读完你知道哪些能力会崩，然后呢？对做压缩的人是警示，对要解决问题的人帮助有限。👀</li>
+</ul>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2610.27913v1" target="_blank" rel="noopener">📖 AI 精读</a></div><h2>🤝 多 Agent 系统</h2><div class="paper-card" data-topic="🤝 多 Agent 系统"><h3>12. Does Multi-Agent Collaboration Pay When Agents Serve Users? Testing Agent Scaling in Dual-Control Settings</h3>
+<ul>
+<li><strong>作者</strong>: Ethan Yang, Xiangcheng Shi</li>
+<li><strong>机构</strong>: Affiliation: University of Pennsylvania, Affiliation: </li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2610.27655v1">arXiv</a> | <a href="https://arxiv.org/pdf/2610.27655v1">PDF</a></li>
+<li>
+<p><strong>来源</strong>: 📄 arXiv 关键词检索</p>
+</li>
+<li>
+<p><strong>核心方法</strong>: 测试多 agent 协作（<span class="wikilink">MAS</span>）在『agent 服务用户』的 dual-control 设定下还值不值。既有结论（Kim et al. 2026）给出 capability-saturation 规则：单 agent 弱时协作有益、强到约 45% 准确率后协作反而有害。但那是在无用户参与的 autonomous 基准上得出的。本文在有用户介入的双控设定下重测 <span class="wikilink">SAS</span> vs <span class="wikilink">MAS</span> 的 scaling。</p>
+</li>
+<li><strong>对比方法/Baselines</strong>: 单 agent 系统 <span class="wikilink">SAS</span>、四种通用 <span class="wikilink">MAS</span> 架构（独立/中心化/去中心化/混合）</li>
+<li><strong>借鉴意义</strong>: 推荐/客服/导购场景本质都是『agent 服务用户』，autonomous benchmark 的结论未必成立，这篇补上了有用户在环的关键变量。</li>
+<li><strong>锐评</strong>: 好问题——学界一堆 MAS 结论都在无人参与的 benchmark 上刷出来的，一旦有真实用户介入，协作收益的账完全可能翻盘。挑战既有 scaling 规律的实证研究比又一个 MAS framework 有用。就看它的 dual-control 设定是否足够真实、样本量够不够撑起结论，别又是小规模玩具实验下的大胆断言。👀</li>
+</ul>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2610.27655v1" target="_blank" rel="noopener">📖 AI 精读</a></div><h2>🔐 LLM 安全与水印</h2><div class="paper-card" data-topic="🔐 LLM 安全与水印"><h3>13. A Unified Attack Framework against Statistical Generative Watermarks for Large Language Models</h3>
+<ul>
+<li><strong>作者</strong>: Romina Omidi, Nima Naderloui, Yuan Hong, Binghui Wang</li>
+<li><strong>机构</strong>: Email: , Affiliation: Illinois Institute of Technology, Affiliation: University of Connecticut, Affiliation: </li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2610.27653v1">arXiv</a> | <a href="https://arxiv.org/pdf/2610.27653v1">PDF</a></li>
+<li>
+<p><strong>来源</strong>: 📄 arXiv 关键词检索</p>
+</li>
+<li>
+<p><strong>核心方法</strong>: 提出针对统计式生成水印的统一攻击框架，识别出 <span class="wikilink">KGW</span>（及变体）、<span class="wikilink">GumbelSoft</span>、<span class="wikilink">DipMark</span>、<span class="wikilink">ITS</span>、<span class="wikilink">SynthID</span> 等一大类方法共享的弱点，用统一视角发起去水印攻击，评测 TPR 等指标，涉及 PRF 等水印机制。</p>
+</li>
+<li><strong>对比方法/Baselines</strong>: 七种主流水印方案（<span class="wikilink">KGW</span>、<span class="wikilink">DipMark</span>、<span class="wikilink">SynthID</span> 等）</li>
+<li><strong>借鉴意义</strong>: LLM 文本溯源/水印是内容安全的基础设施，统一攻击揭示共性弱点对水印设计是重要的反向压力测试。</li>
+<li><strong>锐评</strong>: 找到一类方法的共同命门比逐个攻破有分量——如果真的是『统计式水印的结构性缺陷』而非实现细节，那是对整条技术路线的警告。SynthID 都被点名了，Google 该紧张了。保留意见：攻击强度要配合质量保持度看，能去水印但把文本改得不能用的攻击没有实战意义。👀</li>
+</ul>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2610.27653v1" target="_blank" rel="noopener">📖 AI 精读</a></div><h2>💻 代码与 LLM 能力</h2><div class="paper-card" data-topic="💻 代码与 LLM 能力"><h3>14. Hallucinations of Large Language Models in Cross-Language Code Translation: Phenomena and Mitigation</h3>
+<ul>
+<li><strong>作者</strong>: Yali Du, Yunji Zhang, Ming Li</li>
+<li><strong>机构</strong>: Note:, email: lim@lamda.nju.edu.cn, Affiliation: National Key Laboratory for Novel Software Technology, and the School of Artificial Intelligence, Nanjing University, China, email: zhangyj@lamda.nju.edu.cn, email:, email: duyl@lamda.nju.edu.cn, Affiliation:</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2610.27868v1">arXiv</a> | <a href="https://arxiv.org/pdf/2610.27868v1">PDF</a></li>
+<li>
+<p><strong>来源</strong>: 📄 arXiv 关键词检索</p>
+</li>
+<li>
+<p><strong>核心方法</strong>: 系统研究 LLM 跨语言代码翻译中的幻觉现象并给缓解方案。定义 <span class="wikilink">HaluCodeTran</span>：生成代码与源程序冲突、违反目标语言事实、引入上下文不一致依赖三类幻觉。在 <span class="wikilink">CodeNet</span> 上测，对比 <span class="wikilink">CoT</span>、<span class="wikilink">RA</span>、<span class="wikilink">CoVe</span> 等缓解策略，用 <span class="wikilink">DeepSeek</span> 等模型。</p>
+</li>
+<li><strong>对比方法/Baselines</strong>: <span class="wikilink">CoT</span>、<span class="wikilink">RA</span>（检索增强）、<span class="wikilink">CoVe</span>（chain-of-verification）</li>
+<li><strong>借鉴意义</strong>: 代码翻译/迁移是 LLM 落地高频场景，把幻觉按三类现象拆开并针对性缓解，比笼统说『模型会犯错』有用。</li>
+<li><strong>锐评</strong>: 幻觉三分类（违反源程序/违反目标语言/依赖不一致）切得清楚，这种现象学梳理对实际用 LLM 做代码迁移的人有参考价值。但缓解方案全是 CoT/CoVe 这些现成招式的组合，novelty 偏弱，更像是一篇扎实的 empirical study 而非方法创新。当 benchmark + 分析读。🫠</li>
+</ul>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2610.27868v1" target="_blank" rel="noopener">📖 AI 精读</a></div><h2>🖼️ 多模态 Agent（略过向）</h2><div class="paper-card" data-topic="🖼️ 多模态 Agent（略过向）"><h3>15. Agentic Ensemble with Vision-Language Models for Visual Anomaly Detection</h3>
+<ul>
+<li><strong>作者</strong>: Shangquan Sun, Wenjun Luo, Xu He, Yoonsoo Lee, Shijian Lu</li>
+<li><strong>机构</strong>: ††thanks: Shangquan Sun, Wenjun Luo, Xu He, and Shijian Lu are with the College of Computing and Data Science, Nanyang Technological University, Singapore. Shijian Lu is the corresponding author (e-mail: Shijian.Lu@ntu.edu.sg).††thanks: Yoonsoo Lee is with Manufacturing Engineering, Hyundai Motor Company, Wenjun Luo</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2610.28560v1">arXiv</a> | <a href="https://arxiv.org/pdf/2610.28560v1">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2610.28560v1/AnomalyAgent.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: <span class="wikilink">AnomalyAgent</span> 用 VLM 做视觉异常检测的 agentic ensemble：多个预训练检测器分数/异常图在它们明显分歧时固定融合规则会失效，于是用 VLM agent 动态仲裁融合。在 <span class="wikilink">VisA</span> 等上测 <span class="wikilink">AUROC</span>/<span class="wikilink">AP</span>，对比 <span class="wikilink">AdaCLIP</span>。</li>
+<li><strong>对比方法/Baselines</strong>: <span class="wikilink">AdaCLIP</span>、固定融合规则的 ensemble</li>
+<li><strong>借鉴意义</strong>: 工业质检相关，但与推荐/广告/LLM agent 核心关注交集小。</li>
+<li><strong>锐评</strong>: 把『ensemble 融合规则』换成『VLM agent 仲裁』，本质是用大模型当了个加权投票器。思路不难想，效果估计也就 incremental。VLM 推理成本 vs 固定规则的精度提升，性价比存疑。和用户关注领域也不太沾边。🫠</li>
+</ul>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2610.28560v1" target="_blank" rel="noopener">📖 AI 精读</a></div><h2>🎮 强化学习表征</h2><div class="paper-card" data-topic="🎮 强化学习表征"><h3>16. Reframing Object-Centric Reinforcement Learning: From Absolute to Relative Representations</h3>
+<ul>
+<li><strong>作者</strong>: Cedric Derstroff, Jannis Blüml11footnotemark:, Janosch Moos, Michael Girstl, Zihan Ye, Debora Clever, Kristian Kersting</li>
+<li><strong>机构</strong>: Affiliation: Technische Universität Darmstadt, Affiliation: German Research Center for Artificial Intelligence (DFKI), Affiliation: The Hessian Center for Artificial Intelligence (hessian.AI), Affiliation: Centre for Cognitive Science, Affiliation: </li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2610.28197v1">arXiv</a> | <a href="https://arxiv.org/pdf/2610.28197v1">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2610.28197v1/teaser.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: <span class="wikilink">ORCA</span> 重构 object-centric RL 的表征：现有方法给每个物体一个固定全局坐标，但决策通常取决于物体间的相对位置。改用相对表征，选一个锚点物体（游戏里用 player），对比绝对坐标的 <span class="wikilink">OCT</span>/<span class="wikilink">PPOMLP</span>，在 <span class="wikilink">HackAtari</span> 上测。</li>
+<li><strong>对比方法/Baselines</strong>: 绝对坐标 object-centric baseline、<span class="wikilink">OCT</span>、<span class="wikilink">PPOMLP</span></li>
+<li><strong>借鉴意义</strong>: RL 表征层面的改进，与推荐/agent 核心关注交集小。</li>
+<li><strong>锐评</strong>: 『决策靠相对位置而非绝对坐标』是个合理直觉，但也相当显然——人玩游戏当然看相对关系。换坐标系能涨点不奇怪，奇怪的是这么直接的 idea 居然还没被充分做过（如果真是）。贡献更像是把常识做成了方法，Atari 上的提升要看是否跨游戏稳定。🫠</li>
+</ul>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2610.28197v1" target="_blank" rel="noopener">📖 AI 精读</a></div></div>
+<div id="panel-生成式检索与推荐" class="tab-panel"><h2>📊 生成式检索与推荐</h2><div class="paper-card" data-topic="📊 生成式检索与推荐"><h3>1. Evolving Semantic Indexes for Generative Retrieval</h3>
+<ul>
+<li><strong>作者</strong>: Jinming Nian, Jyun-Yu Jiang, Henry Tsai, Yi Fang, Zhirong Liang</li>
+<li><strong>机构</strong>: Email: , Email: henrytsai@haas.executivealumni.berkeley.edu, Affiliation: Santa Clara University, Affiliation: </li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2610.28568v1">arXiv</a> | <a href="https://arxiv.org/pdf/2610.28568v1">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2610.28568v1/method.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: 把生成式检索（<span class="wikilink">GR</span>）里一直靠手工拍脑袋的语义 ID（<span class="wikilink">SID</span>）设计——构造、碰撞处理、解码、训练四个互相耦合又不可微的组件——交给一个 LLM 驱动的进化搜索 <span class="wikilink">EVOLVE</span> 去自动优化。核心是把离散、相互依赖、无法端到端梯度优化的设计空间，用 block-wise 的进化/搜索框架探索，在 <span class="wikilink">NQ</span> 等检索基准上对比 <span class="wikilink">TIGER</span> 等手工 SID。</li>
+<li><strong>对比方法/Baselines</strong>: <span class="wikilink">TIGER</span>（手工 SID 的代表）、标准 <span class="wikilink">GR</span> 管线、<span class="wikilink">SEARCH</span> 相关基线</li>
+<li><strong>借鉴意义</strong>: 直接打在 recsys/生成式检索的命门上：所有人都知道 SID 设计决定 GR 上限，但没人能端到端优化它。能自动搜索出更好的 SID，对工业级 generative recommendation 是真·降本提效。</li>
+<li><strong>锐评</strong>: 终于有人不装了——承认 SID 设计就是 GR 的玄学，然后真去自动化它。切入点精准，四个不可微组件的拆解很到位。唯一担心：进化搜索的计算开销和 SID 空间爆炸，论文最好给出搜索成本 vs 收益曲线，否则就是『用 100 倍算力换 2% recall』的老套路。摘要没提搜索预算，存疑。🔥</li>
+</ul>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2610.28568v1" target="_blank" rel="noopener">📖 AI 精读</a></div></div>
+<div id="panel-长程agent信用分配今日三连" class="tab-panel"><h2>🧠 长程 Agent 信用分配（今日三连）</h2><div class="paper-card" data-topic="🧠 长程 Agent 信用分配（今日三连）"><h3>2. Self-Credit: Credit Assignment for Long-Horizon Agentic RL via Intra-group Rescaling</h3>
+<ul>
+<li><strong>作者</strong>: Fangcong Yin, Ming Yin, Tanvi Bhandarkar, Aashu Singh, Eryk Helenowski, Shlok Kumar Mishra, Saghar Hosseini, Karthik Abinav Sankararaman, Greg Durrett, Dinkar Juyal</li>
+<li><strong>机构</strong>: Affiliation: New York University, Affiliation: Duke University, Affiliation: </li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2610.28388v1">arXiv</a> | <a href="https://arxiv.org/pdf/2610.28388v1">PDF</a></li>
+<li>
+<p><strong>来源</strong>: 📄 arXiv 关键词检索</p>
+</li>
+<li>
+<p><strong>核心方法</strong>: <span class="wikilink">Self-Credit</span> 针对 RLVR 奖励稀疏、长程任务信用分配难的问题，用自生成的信用分配在 group-based RL（<span class="wikilink">GRPO</span> 家族）内部做 intra-group rescaling，把稀疏的 outcome reward 变成 dense 监督信号。三个组件搭在组内相对比较上，在 <span class="wikilink">BrowseComp</span>、<span class="wikilink">GAIA</span> 等 deep search 基准测。</p>
+</li>
+<li><strong>对比方法/Baselines</strong>: <span class="wikilink">GRPO</span>、<span class="wikilink">GiGPO</span>、<span class="wikilink">ECHO</span></li>
+<li><strong>借鉴意义</strong>: 长程 agent 训练（deep search、多轮 tool use）的核心瓶颈就是稀疏奖励下的信用分配，和推荐里的延迟/稀疏反馈问题同构，方法可迁移。</li>
+<li><strong>锐评</strong>: intra-group rescaling 的思路干净，不引入额外 reward model 这点加分（省钱）。但今天 FALCA、TrajEvolve、Self-Credit 三篇都在做长程信用分配，彼此几乎不引用对方，强烈怀疑是同一波人卷同一个坑。想看谁真的 SOTA 得把三篇放一起 benchmark，现在各说各话。👀</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2610.28388v1" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🧠 长程 Agent 信用分配（今日三连）"><h3>3. Capable Teacher, Myopic Scorer: Reward-Free Teacher Repair for Agentic On-Policy Distillation</h3>
+<ul>
+<li><strong>作者</strong>: Shu Zhao, Tan Yu</li>
+<li><strong>机构</strong>: Email: , Affiliation: NVIDIA, Affiliation: </li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2610.28586v1">arXiv</a> | <a href="https://arxiv.org/pdf/2610.28586v1">PDF</a></li>
+<li>
+<p><strong>来源</strong>: 📄 arXiv 关键词检索</p>
+</li>
+<li>
+<p><strong>核心方法</strong>: <span class="wikilink">TCOD</span>（Capable Teacher, Myopic Scorer）质疑 agentic on-policy 蒸馏（<span class="wikilink">OPD</span>）里流行的 compounding error 叙事：主流方法假设学生跑偏后会离开 teacher 可靠区域，于是用 episode 课程、teacher 引导轮次把训练限制在该区域内。这篇提出 reward-free 的 teacher repair，直接修复 teacher 打分短视的问题，在 <span class="wikilink">WebShop</span>、<span class="wikilink">ScienceWorld</span> 上对比 <span class="wikilink">TCOD</span>-F2B、<span class="wikilink">FutureBridge</span>。</p>
+</li>
+<li><strong>对比方法/Baselines</strong>: ReOPD、TCOD-F2B、Guided-OPD、<span class="wikilink">FutureBridge</span></li>
+<li><strong>借鉴意义</strong>: on-policy 蒸馏是训练小 agent 的主流路线，推翻『compounding error 是主因』的共识会改变整个蒸馏课程设计思路。</li>
+<li><strong>锐评</strong>: NVIDIA 出手，观点锋利——不跟着『把训练困在 teacher 舒适区』的叙事走，而是说问题出在 teacher 自己打分短视（myopic scorer）。这种挑战共识的分析型论文比又一个 framework 有价值得多。标题起得也好。扣分项：reward-free repair 的泛化边界要看实验，别只在两个 toy 环境上成立。👀</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2610.28586v1" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🧠 长程 Agent 信用分配（今日三连）"><h3>4. FALCA: Falsification-Aware Reinforcement Learning with Hierarchical Credit Assignment for Long-Horizon Deep Search Agents</h3>
+<ul>
+<li><strong>作者</strong>: Zijun Dou, Kun Luo, Chaofan Li, Shuqi Lu, Zheng Liu\corresponding</li>
+<li><strong>机构</strong>: royz.dou,luokun695,zhengliu1026@gmail.com</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2610.28361v1">arXiv</a> | <a href="https://arxiv.org/pdf/2610.28361v1">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2610.28361v1/method7.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: <span class="wikilink">FALCA</span> 给 long-horizon deep search agent 做『证伪感知』+分层信用分配：针对 agent 早期错误（锚定错误候选、收集部分支持证据、忽略矛盾）沿轨迹被放大的问题，用 falsification-aware 的 RL 在多层级做 credit assignment，基于 <span class="wikilink">ReAct</span>/IRCoT 式的推理-检索交织。在 <span class="wikilink">BrowseComp</span>、<span class="wikilink">GAIA</span>、<span class="wikilink">WideSearch</span> 上测。</li>
+<li><strong>对比方法/Baselines</strong>: <span class="wikilink">SFT</span> baseline、outcome-based <span class="wikilink">RL</span>、<span class="wikilink">ReAct</span> 式 agent</li>
+<li><strong>借鉴意义</strong>: deep search / 深度检索 agent 和搜索推荐场景高度相关，证伪机制对抗『确认偏误式证据收集』是个有意思的角度。</li>
+<li><strong>锐评</strong>: 『证伪感知』这个点子不错——让 agent 主动找反例而不是一路确认自己的错误猜测，比单纯堆 reward 聪明。但 falsification + hierarchical credit 两个 buzzword 叠一起，复杂度上去了，消融必须说清到底是哪个在起作用，否则就是把简单问题包装复杂。和 Self-Credit 同基准，建议对照看。👀</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2610.28361v1" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🧠 长程 Agent 信用分配（今日三连）"><h3>5. TrajEvolve: Trajectory Evolution for Reinforcement Learning with Hindsight Credit Assignment</h3>
+<ul>
+<li><strong>作者</strong>: Yi Wen, Hao Chen11footnotemark:, Wanyu Wang, Maolin Wang, Pengyue Jia, Derong Xu, Huize Tan, Yingyi Zhang, Wenlin Zhang, Weihong Luo, Xiku Du, Xiangyu Zhao</li>
+<li><strong>机构</strong>: Email: , Affiliation: City University of Hong Kong, Affiliation: Tencent, Affiliation: Nanjing University, Affiliation: </li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2610.28060v1">arXiv</a> | <a href="https://arxiv.org/pdf/2610.28060v1">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2610.28060v1/framework.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: <span class="wikilink">TrajEvolve</span> 用 hindsight credit assignment 做轨迹进化：针对长程任务里成功轨迹采样不足、收敛慢的问题，对已有轨迹做 hindsight 式改写与信用重分配，基于 <span class="wikilink">GRPO</span>/<span class="wikilink">GiGPO</span>/<span class="wikilink">RLOO</span> 家族，在 <span class="wikilink">WebShop</span> 等上测。</li>
+<li><strong>对比方法/Baselines</strong>: <span class="wikilink">GRPO</span>、<span class="wikilink">PPO</span>、<span class="wikilink">GiGPO</span>、<span class="wikilink">RLOO</span></li>
+<li><strong>借鉴意义</strong>: hindsight 思路（把失败轨迹重标为对另一目标成功）在 agent RL 里复用经典 HER 思想，解决稀疏成功样本。</li>
+<li><strong>锐评</strong>: hindsight 在机器人 RL 里是老朋友了（HER），搬到 LLM agent 轨迹上算合理迁移，但也正因为老，novelty 要打个问号。和 Self-Credit 都在 group-based RL 上做 rescaling，差异点需要论文自己讲清楚——否则读者会觉得今天这三篇是同一篇的三个 ablation。🫠</li>
+</ul>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2610.28060v1" target="_blank" rel="noopener">📖 AI 精读</a></div></div>
+<div id="panel-推理与记忆" class="tab-panel"><h2>🧠 推理与记忆</h2><div class="paper-card" data-topic="🧠 推理与记忆"><h3>6. MemT-1.0: Towards Memory-Native Evolution</h3>
+<ul>
+<li><strong>作者</strong>: MemTensor Team</li>
+<li><strong>链接</strong>: <a href="https://arxiv.org/abs/2610.26825">arXiv</a> | <a href="https://arxiv.org/pdf/2610.26825">PDF</a></li>
+<li><strong>来源</strong>: 🔥 HF Trending，⬆️ 147</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2610.26825v2/memt-arc.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2610.26825v2/application.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2610.26825v2/figure_efficiency.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: <span class="wikilink">MemT-1.0</span> 把记忆做成基础模型的原生能力（memory-native），不靠外挂检索。基于 Metis，用 Gated DeltaNet-2 在每一轮内做稳定的 token 级记忆更新；每个选中的 Transformer block 加一个 native memory block，并行跑原始注意力和记忆注意力，含动态局部记忆 + 可训练 hyper memory，配 native 的存取流程。在 <span class="wikilink">LoCoMo</span> 上测，涉及 <span class="wikilink">CPT</span>/<span class="wikilink">LoRA</span>/<span class="wikilink">KD</span> 训练。</li>
+<li><strong>对比方法/Baselines</strong>: 外挂记忆检索方案、<span class="wikilink">DeepSeek</span> 等基线、<span class="wikilink">BEAM</span></li>
+<li><strong>借鉴意义</strong>: 把记忆内化进模型计算而非外挂 RAG，是记忆架构的另一条技术路线，对长期个性化/用户建模有潜在价值。HF 147 赞说明关注度高。</li>
+<li><strong>锐评</strong>: MemTensor 团队继续押『记忆原生化』这条线，HF 147 upvote 不是白来的。架构图（并行原始+记忆注意力）看着挺讲究，但『memory foundation model』这种宏大叙事最怕实测拉胯——只报 LoCoMo 一个 benchmark 远远不够，长程记忆的评测必须多样化。另外 Gated DeltaNet-2 + hyper memory 的训练稳定性和成本，摘要只说『stable』没给数，持保留。👀</li>
+</ul>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2610.26825" target="_blank" rel="noopener">📖 AI 精读</a></div></div>
+<div id="panel-llm路由与编排" class="tab-panel"><h2>🤖 LLM 路由与编排</h2><div class="paper-card" data-topic="🤖 LLM 路由与编排"><h3>7. COMPASS: Routing via Capability-Oriented Model Profiling with Adaptive Search, Selection, and Tool Use</h3>
+<ul>
+<li><strong>作者</strong>: Amin Rezaei</li>
+<li><strong>机构</strong>: University of Minnesota</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2610.27822v1">arXiv</a> | <a href="https://arxiv.org/pdf/2610.27822v1">PDF</a></li>
+<li>
+<p><strong>来源</strong>: 📄 arXiv 关键词检索</p>
+</li>
+<li>
+<p><strong>核心方法</strong>: <span class="wikilink">COMPASS</span> 把 LLM 路由从『训练一个专用 router』改成 agentic：LLM 跟着一份 routing recipe，用工具去收集各候选模型的性能和成本证据，必要时先看候选答案再选模型，避免模型/任务变化时 router 需要重训。在 <span class="wikilink">TerminalBench</span> 等上对比 <span class="wikilink">Avengers-Pro</span>、<span class="wikilink">FrugalGPT</span>。</p>
+</li>
+<li><strong>对比方法/Baselines</strong>: <span class="wikilink">FrugalGPT</span>、<span class="wikilink">Avengers-Pro</span>、one-step trainable routers</li>
+<li><strong>借鉴意义</strong>: 模型路由是降本核心（贵模型只在该用时用），把它 agentic 化解决了 router 随模型迭代就失效的痛点，工程价值明确。</li>
+<li><strong>锐评</strong>: 痛点抓得准——专用 router 确实一换模型就废。用 agent 动态查证据选模型，优雅但贵：每次路由都要额外的工具调用和候选答案 inspection，省下的钱可能被路由本身的开销吃掉。关键看它给没给『路由开销 vs 节省成本』的净收益账，没有的话就是拆东墙补西墙。👀</li>
+</ul>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2610.27822v1" target="_blank" rel="noopener">📖 AI 精读</a></div></div>
+<div id="panel-agent落地与韧性" class="tab-panel"><h2>🛒 Agent 落地与韧性</h2><div class="paper-card" data-topic="🛒 Agent 落地与韧性"><h3>8. RITE: Evaluating End-to-End Resilience to Silent Tool Errors in E-Commerce Agentic Systems</h3>
+<ul>
+<li><strong>作者</strong>: Wenshuo Zhang, Yuquan Lin, Yushi Sun, Yishi Lin, Rui Sheng, Peng He, Han Gao, Jikai Wang, Yifeng Rong, Co-corresponding authors</li>
+<li><strong>机构</strong>: Affiliation: The Hong Kong University of Science and Technology, Affiliation: Tencentwzhangeb@connect.ust.hk, {crazyrong, teddyjkwang}@tencent.com, Affiliation: </li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2610.27777v1">arXiv</a> | <a href="https://arxiv.org/pdf/2610.27777v1">PDF</a></li>
+<li>
+<p><strong>来源</strong>: 📄 arXiv 关键词检索</p>
+</li>
+<li>
+<p><strong>核心方法</strong>: <span class="wikilink">RITE</span> 评测 e-commerce agent 对 silent tool error（工具静默返回错误值、无显式失败信号）的端到端韧性。形式化 Silent-error Resilience Task：agent 收到 query，反复从工具集选择执行，其中某次工具悄悄返回错误结果，看 agent 能否仍完成原任务。用 RSR（韧性成功率）在 <span class="wikilink">GLM-5</span>、<span class="wikilink">Claude-Opus</span> 等上测。</p>
+</li>
+<li><strong>对比方法/Baselines</strong>: 多个 LLM backbone（<span class="wikilink">GLM-5</span>、<span class="wikilink">Claude-Opus</span> 等）的横向对比</li>
+<li><strong>借鉴意义</strong>: 电商 agent 是最接近钱的落地场景，silent error（工具返回看似合理实则错误的值）正是工业部署最隐蔽的坑，评测维度切中要害。</li>
+<li><strong>锐评</strong>: 这个问题真实到让人头皮发麻——工具不报错但返回错值，比直接崩溃危险一百倍，因为错误会静默传播进最终决策。Tencent 做电商 agent 评测找这个角度很专业。扣分：benchmark 论文的价值取决于它暴露的失败模式有多系统，如果只是『各模型 RSR 排个名』就浪费了好选题。👀</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2610.27777v1" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="🛒 Agent 落地与韧性"><h3>9. RELAY: Scaling Historical Build Restoration through Rule Reuse and Agentic Repair</h3>
+<ul>
+<li><strong>作者</strong>: Olivier Nourry, Yoshiki Higo</li>
+<li><strong>机构</strong>: Affiliation: The University of Osaka, Osaka, Japan, Journal: TOSEMCCS: Software and its engineering Software evolutionCCS: Software and its engineering Maintaining softwareCCS: Software and its engineering Software maintenance toolsCCS: Computing methodologies Intelligent agentsCCS: Security and privacy Software security engineering, email:, Affiliation: </li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2610.27784v1">arXiv</a> | <a href="https://arxiv.org/pdf/2610.27784v1">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2610.27784v1/figures/pipeline-figure-v9-preview.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2610.27784v1/figures/rule-figure-v4-preview.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: <span class="wikilink">RELAY</span> 做历史软件构建的修复：漏洞 benchmark 和 SE 研究依赖重建历史软件，但构建依赖的基础镜像、包会独立于源码变化而失效。在 14159 个 <span class="wikilink">OSS</span>-Fuzz 案例上发现 69.7% 已无法重建；用规则复用 + agentic repair（<span class="wikilink">LLM</span>/<span class="wikilink">GPT-5</span>）扩展修复，失败症状可归为少数几类复发模式。</li>
+<li><strong>对比方法/Baselines</strong>: 无规则复用的纯 agentic repair、人工修复</li>
+<li><strong>借鉴意义</strong>: 环境衰变（environment decay）是安全研究基础设施的隐痛，规则复用降低重复 LLM 调用成本的思路务实。</li>
+<li><strong>锐评</strong>: 选题冷门但扎实——69.7% 的历史构建跑不起来这个数据本身就值得被引用，很多安全 benchmark 的可复现性其实是幻觉。规则复用 + agent 修复的组合是对的（别什么都丢给 LLM 重新推）。只是这篇的受众窄（SE/安全基础设施），对 recsys/ads 关注者是边缘读物。⚠️</li>
+</ul>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2610.27784v1" target="_blank" rel="noopener">📖 AI 精读</a></div></div>
+<div id="panel-高效推理与部署" class="tab-panel"><h2>⚙️ 高效推理与部署</h2><div class="paper-card" data-topic="⚙️ 高效推理与部署"><h3>10. BitMTP: When Multi-Token Prediction Meets Low-Bit Large Language Models</h3>
+<ul>
+<li><strong>作者</strong>: Ning Zhang, Shihao Wang, Jinrui Zhang, Chaodong Xiao, Lei Zhang</li>
+<li><strong>机构</strong>: Email: , ††thanks: Corresponding author. This work is supported by the PolyU-OPPO Joint Innovative Research Center, Affiliation: Department of Computing, The Hong Kong Polytechnic University, Affiliation: </li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2610.28500v1">arXiv</a> | <a href="https://arxiv.org/pdf/2610.28500v1">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2610.28500v1/F1.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2610.28500v1/F2.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: <span class="wikilink">BitMTP</span> 把超低比特 LLM 骨干（<span class="wikilink">BitNet</span> b1.58 式三值）和多 token 预测（<span class="wikilink">MTP</span>）结合：两者本应互补（前者省存储/访存，后者省解码步数），但直接组合无法在同等质量下加速解码。论文给出联合设计，配 <span class="wikilink">CUDA</span> 实现，在 <span class="wikilink">MBPP</span> 等上测，涉及 <span class="wikilink">AR</span> 解码和 <span class="wikilink">KV</span> cache。</li>
+<li><strong>对比方法/Baselines</strong>: 纯 <span class="wikilink">BitNet</span>、纯 <span class="wikilink">MTP</span>、全精度 <span class="wikilink">AR</span> 基线</li>
+<li><strong>借鉴意义</strong>: 推理部署的两条省钱路线第一次被认真拼起来，对端侧/低成本 LLM serving 有直接工程意义。</li>
+<li><strong>锐评</strong>: 选题务实——低比特和 MTP 大家都在用，但组合起来掉质量是真实的工程痛点，有人去啃这块硬骨头值得鼓励。带 CUDA 实现说明不是纸上谈兵。风险在于：三值骨干本身质量损失 + MTP 的 draft 接受率，两个误差源叠加，最终的『同质量下加速比』才是硬指标，必须看实测 wall-clock 而非理论 FLOPs。👀</li>
+</ul><a class="papers-cool-btn" href="https://papers.cool/arxiv/2610.28500v1" target="_blank" rel="noopener">📖 AI 精读</a></div><div class="paper-card" data-topic="⚙️ 高效推理与部署"><h3>11. ACE-Compression: An Ability-Centric Evaluation of Compressed Large Language Models</h3>
+<ul>
+<li><strong>作者</strong>: Jiahui Ning, Liang Chen, Yuchen Liang, Yi Zhang, Fenglei Fan</li>
+<li><strong>机构</strong>: Affiliation: Rensselaer Polytechnic Institute Sichuan University, Affiliation: City University of Hong Kong Tongji University, Affiliation: </li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2610.27913v1">arXiv</a> | <a href="https://arxiv.org/pdf/2610.27913v1">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2610.27913v1/fig2_experimental_setup.png" /></div>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2610.27913v1/fig3_procedural.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: <span class="wikilink">ACE-Compression</span> 提出能力中心（ability-centric）的压缩 LLM 评测：标准做法只量保留的任务性能，但压缩扰动分布式知识，任务分数掩盖了哪些底层能力存活、哪些悄悄崩塌。对比 <span class="wikilink">AWQ</span>、<span class="wikilink">GPTQ</span>、<span class="wikilink">BnB</span>、非结构化稀疏等压缩方法在 <span class="wikilink">ToMBench</span>、<span class="wikilink">CharacterEval</span>、<span class="wikilink">PsychoBench</span> 等能力维度的表现。</li>
+<li><strong>对比方法/Baselines</strong>: <span class="wikilink">AWQ</span>、<span class="wikilink">GPTQ</span>、<span class="wikilink">BnB</span>、Unstructured-Sparse</li>
+<li><strong>借鉴意义</strong>: 压缩部署是 LLM 落地刚需，指出『任务分数掩盖能力崩塌』的评测盲区有价值。</li>
+<li><strong>锐评</strong>: 角度是对的——压缩后 MMLU 不掉不代表心智推理、角色扮演能力没崩，细粒度能力评测确实被忽视。但这是一篇『指出问题』的评测论文，不提供让压缩更好的方法，读完你知道哪些能力会崩，然后呢？对做压缩的人是警示，对要解决问题的人帮助有限。👀</li>
+</ul>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2610.27913v1" target="_blank" rel="noopener">📖 AI 精读</a></div></div>
+<div id="panel-多agent系统" class="tab-panel"><h2>🤝 多 Agent 系统</h2><div class="paper-card" data-topic="🤝 多 Agent 系统"><h3>12. Does Multi-Agent Collaboration Pay When Agents Serve Users? Testing Agent Scaling in Dual-Control Settings</h3>
+<ul>
+<li><strong>作者</strong>: Ethan Yang, Xiangcheng Shi</li>
+<li><strong>机构</strong>: Affiliation: University of Pennsylvania, Affiliation: </li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2610.27655v1">arXiv</a> | <a href="https://arxiv.org/pdf/2610.27655v1">PDF</a></li>
+<li>
+<p><strong>来源</strong>: 📄 arXiv 关键词检索</p>
+</li>
+<li>
+<p><strong>核心方法</strong>: 测试多 agent 协作（<span class="wikilink">MAS</span>）在『agent 服务用户』的 dual-control 设定下还值不值。既有结论（Kim et al. 2026）给出 capability-saturation 规则：单 agent 弱时协作有益、强到约 45% 准确率后协作反而有害。但那是在无用户参与的 autonomous 基准上得出的。本文在有用户介入的双控设定下重测 <span class="wikilink">SAS</span> vs <span class="wikilink">MAS</span> 的 scaling。</p>
+</li>
+<li><strong>对比方法/Baselines</strong>: 单 agent 系统 <span class="wikilink">SAS</span>、四种通用 <span class="wikilink">MAS</span> 架构（独立/中心化/去中心化/混合）</li>
+<li><strong>借鉴意义</strong>: 推荐/客服/导购场景本质都是『agent 服务用户』，autonomous benchmark 的结论未必成立，这篇补上了有用户在环的关键变量。</li>
+<li><strong>锐评</strong>: 好问题——学界一堆 MAS 结论都在无人参与的 benchmark 上刷出来的，一旦有真实用户介入，协作收益的账完全可能翻盘。挑战既有 scaling 规律的实证研究比又一个 MAS framework 有用。就看它的 dual-control 设定是否足够真实、样本量够不够撑起结论，别又是小规模玩具实验下的大胆断言。👀</li>
+</ul>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2610.27655v1" target="_blank" rel="noopener">📖 AI 精读</a></div></div>
+<div id="panel-llm安全与水印" class="tab-panel"><h2>🔐 LLM 安全与水印</h2><div class="paper-card" data-topic="🔐 LLM 安全与水印"><h3>13. A Unified Attack Framework against Statistical Generative Watermarks for Large Language Models</h3>
+<ul>
+<li><strong>作者</strong>: Romina Omidi, Nima Naderloui, Yuan Hong, Binghui Wang</li>
+<li><strong>机构</strong>: Email: , Affiliation: Illinois Institute of Technology, Affiliation: University of Connecticut, Affiliation: </li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2610.27653v1">arXiv</a> | <a href="https://arxiv.org/pdf/2610.27653v1">PDF</a></li>
+<li>
+<p><strong>来源</strong>: 📄 arXiv 关键词检索</p>
+</li>
+<li>
+<p><strong>核心方法</strong>: 提出针对统计式生成水印的统一攻击框架，识别出 <span class="wikilink">KGW</span>（及变体）、<span class="wikilink">GumbelSoft</span>、<span class="wikilink">DipMark</span>、<span class="wikilink">ITS</span>、<span class="wikilink">SynthID</span> 等一大类方法共享的弱点，用统一视角发起去水印攻击，评测 TPR 等指标，涉及 PRF 等水印机制。</p>
+</li>
+<li><strong>对比方法/Baselines</strong>: 七种主流水印方案（<span class="wikilink">KGW</span>、<span class="wikilink">DipMark</span>、<span class="wikilink">SynthID</span> 等）</li>
+<li><strong>借鉴意义</strong>: LLM 文本溯源/水印是内容安全的基础设施，统一攻击揭示共性弱点对水印设计是重要的反向压力测试。</li>
+<li><strong>锐评</strong>: 找到一类方法的共同命门比逐个攻破有分量——如果真的是『统计式水印的结构性缺陷』而非实现细节，那是对整条技术路线的警告。SynthID 都被点名了，Google 该紧张了。保留意见：攻击强度要配合质量保持度看，能去水印但把文本改得不能用的攻击没有实战意义。👀</li>
+</ul>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2610.27653v1" target="_blank" rel="noopener">📖 AI 精读</a></div></div>
+<div id="panel-代码与llm能力" class="tab-panel"><h2>💻 代码与 LLM 能力</h2><div class="paper-card" data-topic="💻 代码与 LLM 能力"><h3>14. Hallucinations of Large Language Models in Cross-Language Code Translation: Phenomena and Mitigation</h3>
+<ul>
+<li><strong>作者</strong>: Yali Du, Yunji Zhang, Ming Li</li>
+<li><strong>机构</strong>: Note:, email: lim@lamda.nju.edu.cn, Affiliation: National Key Laboratory for Novel Software Technology, and the School of Artificial Intelligence, Nanjing University, China, email: zhangyj@lamda.nju.edu.cn, email:, email: duyl@lamda.nju.edu.cn, Affiliation:</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2610.27868v1">arXiv</a> | <a href="https://arxiv.org/pdf/2610.27868v1">PDF</a></li>
+<li>
+<p><strong>来源</strong>: 📄 arXiv 关键词检索</p>
+</li>
+<li>
+<p><strong>核心方法</strong>: 系统研究 LLM 跨语言代码翻译中的幻觉现象并给缓解方案。定义 <span class="wikilink">HaluCodeTran</span>：生成代码与源程序冲突、违反目标语言事实、引入上下文不一致依赖三类幻觉。在 <span class="wikilink">CodeNet</span> 上测，对比 <span class="wikilink">CoT</span>、<span class="wikilink">RA</span>、<span class="wikilink">CoVe</span> 等缓解策略，用 <span class="wikilink">DeepSeek</span> 等模型。</p>
+</li>
+<li><strong>对比方法/Baselines</strong>: <span class="wikilink">CoT</span>、<span class="wikilink">RA</span>（检索增强）、<span class="wikilink">CoVe</span>（chain-of-verification）</li>
+<li><strong>借鉴意义</strong>: 代码翻译/迁移是 LLM 落地高频场景，把幻觉按三类现象拆开并针对性缓解，比笼统说『模型会犯错』有用。</li>
+<li><strong>锐评</strong>: 幻觉三分类（违反源程序/违反目标语言/依赖不一致）切得清楚，这种现象学梳理对实际用 LLM 做代码迁移的人有参考价值。但缓解方案全是 CoT/CoVe 这些现成招式的组合，novelty 偏弱，更像是一篇扎实的 empirical study 而非方法创新。当 benchmark + 分析读。🫠</li>
+</ul>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2610.27868v1" target="_blank" rel="noopener">📖 AI 精读</a></div></div>
+<div id="panel-多模态agent略过向" class="tab-panel"><h2>🖼️ 多模态 Agent（略过向）</h2><div class="paper-card" data-topic="🖼️ 多模态 Agent（略过向）"><h3>15. Agentic Ensemble with Vision-Language Models for Visual Anomaly Detection</h3>
+<ul>
+<li><strong>作者</strong>: Shangquan Sun, Wenjun Luo, Xu He, Yoonsoo Lee, Shijian Lu</li>
+<li><strong>机构</strong>: ††thanks: Shangquan Sun, Wenjun Luo, Xu He, and Shijian Lu are with the College of Computing and Data Science, Nanyang Technological University, Singapore. Shijian Lu is the corresponding author (e-mail: Shijian.Lu@ntu.edu.sg).††thanks: Yoonsoo Lee is with Manufacturing Engineering, Hyundai Motor Company, Wenjun Luo</li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2610.28560v1">arXiv</a> | <a href="https://arxiv.org/pdf/2610.28560v1">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2610.28560v1/AnomalyAgent.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: <span class="wikilink">AnomalyAgent</span> 用 VLM 做视觉异常检测的 agentic ensemble：多个预训练检测器分数/异常图在它们明显分歧时固定融合规则会失效，于是用 VLM agent 动态仲裁融合。在 <span class="wikilink">VisA</span> 等上测 <span class="wikilink">AUROC</span>/<span class="wikilink">AP</span>，对比 <span class="wikilink">AdaCLIP</span>。</li>
+<li><strong>对比方法/Baselines</strong>: <span class="wikilink">AdaCLIP</span>、固定融合规则的 ensemble</li>
+<li><strong>借鉴意义</strong>: 工业质检相关，但与推荐/广告/LLM agent 核心关注交集小。</li>
+<li><strong>锐评</strong>: 把『ensemble 融合规则』换成『VLM agent 仲裁』，本质是用大模型当了个加权投票器。思路不难想，效果估计也就 incremental。VLM 推理成本 vs 固定规则的精度提升，性价比存疑。和用户关注领域也不太沾边。🫠</li>
+</ul>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2610.28560v1" target="_blank" rel="noopener">📖 AI 精读</a></div></div>
+<div id="panel-强化学习表征" class="tab-panel"><h2>🎮 强化学习表征</h2><div class="paper-card" data-topic="🎮 强化学习表征"><h3>16. Reframing Object-Centric Reinforcement Learning: From Absolute to Relative Representations</h3>
+<ul>
+<li><strong>作者</strong>: Cedric Derstroff, Jannis Blüml11footnotemark:, Janosch Moos, Michael Girstl, Zihan Ye, Debora Clever, Kristian Kersting</li>
+<li><strong>机构</strong>: Affiliation: Technische Universität Darmstadt, Affiliation: German Research Center for Artificial Intelligence (DFKI), Affiliation: The Hessian Center for Artificial Intelligence (hessian.AI), Affiliation: Centre for Cognitive Science, Affiliation: </li>
+<li><strong>链接</strong>: <a href="http://arxiv.org/abs/2610.28197v1">arXiv</a> | <a href="https://arxiv.org/pdf/2610.28197v1">PDF</a></li>
+<li><strong>来源</strong>: 📄 arXiv 关键词检索</li>
+</ul>
+<div class="paper-figure"><img alt="" loading="lazy" src="https://arxiv.org/html/2610.28197v1/teaser.png" /></div>
+<ul>
+<li><strong>核心方法</strong>: <span class="wikilink">ORCA</span> 重构 object-centric RL 的表征：现有方法给每个物体一个固定全局坐标，但决策通常取决于物体间的相对位置。改用相对表征，选一个锚点物体（游戏里用 player），对比绝对坐标的 <span class="wikilink">OCT</span>/<span class="wikilink">PPOMLP</span>，在 <span class="wikilink">HackAtari</span> 上测。</li>
+<li><strong>对比方法/Baselines</strong>: 绝对坐标 object-centric baseline、<span class="wikilink">OCT</span>、<span class="wikilink">PPOMLP</span></li>
+<li><strong>借鉴意义</strong>: RL 表征层面的改进，与推荐/agent 核心关注交集小。</li>
+<li><strong>锐评</strong>: 『决策靠相对位置而非绝对坐标』是个合理直觉，但也相当显然——人玩游戏当然看相对关系。换坐标系能涨点不奇怪，奇怪的是这么直接的 idea 居然还没被充分做过（如果真是）。贡献更像是把常识做成了方法，Atari 上的提升要看是否跨游戏稳定。🫠</li>
+</ul>
+<hr /><a class="papers-cool-btn" href="https://papers.cool/arxiv/2610.28197v1" target="_blank" rel="noopener">📖 AI 精读</a></div></div>
+<hr>
+<h2>被排除的论文</h2>
+<ul>
+<li>GBClaw: An agentic AI framework for atomistic grain boundary research — 材料科学（晶界/原子尺度力学）垂直应用，与推荐/广告/LLM agent 核心无关</li>
+<li>RaspAssistant as an Agentic Framework for Automating Adsorption Simulation — 多孔材料吸附模拟自动化，材料科学垂直领域</li>
+<li>Auto-Director: Multi-Agent Collaboration for Autonomous Video Editing — 视频剪辑 agent，偏多媒体创作，与关注领域交集弱</li>
+<li>PI-MLLM: Psychophysics-Inspired MLLM for Oddly Satisfying Video Emotion Analysis — 视频情感分析（ASMR 类），命中 negative 的情感/感官方向</li>
+<li>Learn to Modify: Self-evolving Multi-agent for Text-to-Motion Generation — 文本到动作生成，偏动作/动画，与推荐广告无关</li>
+<li>Interruption-Aware Recurrent RL for UAS Navigation — 无人机导航，命中 negative（robot/autonomous navigation）</li>
+<li>Cross-Scale Generalization of Pointer Networks for Capacitated Drone Delivery Routing — 无人机配送路由优化，运筹 + robot 方向</li>
+<li>Agentic discovery of interpretable car-following laws — 交通流/车辆跟驰模型，自动驾驶相关，命中 negative</li>
+<li>Toward Agentic AI for the 6G Physical Layer — 6G 基带芯片/物理层算法，通信硬件垂直领域</li>
+<li>Prescribed Performance Guided Safe RL for Roundabout Navigation — 自动驾驶环岛导航，命中 negative（self-driving）</li>
+<li>OverSeer: Multi-Agent World Models Beyond What Agents See — 多 agent 视频世界模型，偏视频生成/具身，与推荐广告核心弱相关</li>
+<li>S2-MAS: Society-Scale Multi-Agent Simulation with 500M Household Agents — 社会经济模拟，规模惊人但偏经济学仿真，与核心关注交集弱</li>
+<li>LatBridge: Model Replacement in Latent-Communication Multi-Agent Systems — latent 通信多 agent 的模型替换接口，偏系统工程细节，优先级低</li>
+</ul>
+<p>长程 agent 的『信用分配』正在成为今年 RL-for-agent 的主战场——一天三篇撞题，说明稀疏奖励 + 长 horizon 是公认瓶颈，但各做各的、互不 benchmark 的内卷态势已现，下一步该出统一评测了。</p></div>
+<footer style="text-align:center;color:var(--text2);margin:3em 0 1em;font-size:0.85em;">
+  Generated by daily-papers-web &middot; Powered by Claude Code
+</footer>
+<script src="tabs.js"></script>
+
+</body>
+</html>
